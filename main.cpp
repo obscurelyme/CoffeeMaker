@@ -59,7 +59,10 @@ int main(int argc, char **argv)
     {
         spdlog::debug("Could not load Roboto-Regular.ttf from directory {}", fontFilePath);
     }
-    spdlog::debug("Successfully loaded {} font-family.", font.getInfo().family);
+    else
+    {
+        spdlog::debug("Successfully loaded {} font-family.", font.getInfo().family);
+    }
 
     sf::CircleShape shape(50.f);
     shape.setFillColor(sf::Color(100, 250, 50));
