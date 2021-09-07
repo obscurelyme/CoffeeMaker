@@ -26,4 +26,4 @@ cp -r assets build/Debug/assets
 
 ### Here is the result directory after a debug build
 
-![Screenshot](doc/debug-libs-screenshot.png)
+![Screenshot](doc/debug-libs-screenshot.PNG)
