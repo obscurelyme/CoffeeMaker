@@ -45,3 +45,9 @@ cp -r assets build/Debug/assets
 ### Here is a screenshot of the crash that happens
 
 ![Screenshot](doc/stack-screenshot.PNG)
+
+### OSX
+
+The build seems to work.
+
+![Screenshot](doc/osx-screenshot.png)
