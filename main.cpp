@@ -108,7 +108,7 @@ int main(int argc, char **argv)
         window.clear(sf::Color::Blue);
 
         window.draw(shape);
-        // window.draw(text); // program crashes on window.display() when this is called
+        window.draw(text); // program crashes on window.display() when this is called
 
         window.display();
     }
