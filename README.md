@@ -4,8 +4,22 @@
 Launch VS Code
 CMake Tools will configure assuming you have the following packages installed
 
-sfml:x64-windows
-spdlog:x64-windows
+sfml
+spdlog
+```
+
+To install dependencies, run...vcpkg installs x86 by default
+
+```
+vcpkg install sfml
+vcpkg install spdlog
+```
+
+If you need x64 (as used in this project)
+
+```
+vcpkg install sfml:x64-windows
+vcpkg install spdlog:x64-windows
 ```
 
 ### Post build
