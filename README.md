@@ -23,3 +23,7 @@ On Max/Linux, you can run the cp -r
 ```
 cp -r assets build/Debug/assets
 ```
+
+### Here is the result directory after a debug build
+
+![Screenshot](doc/debug-libs-screenshot.png)
