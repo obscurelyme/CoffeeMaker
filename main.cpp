@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics.hpp>
@@ -36,6 +38,7 @@ int main(int argc, char **argv)
 {
     spdlog::set_level(spdlog::level::debug);
     spdlog::info("Hello SFML");
+    spdlog::info("FreeType version {}.{}.{}", FREETYPE_MAJOR, FREETYPE_MINOR, FREETYPE_PATCH);
 
     sf::RenderWindow window{sf::VideoMode{800, 600}, "Hello SFML"};
     window.setVerticalSyncEnabled(true);
