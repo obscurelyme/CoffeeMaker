@@ -14,7 +14,7 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 add_executable(main App.cpp)
-include_directories(include)
+target_include_directories(main PRIVATE include)
 # target_link_libraries(main PRIVATE sfml-system sfml-network sfml-graphics sfml-window)
 target_link_libraries(main PRIVATE spdlog::spdlog spdlog::spdlog_header_only)
 if (WIN32)
@@ -22,6 +22,9 @@ if (WIN32)
 elseif(APPLE)
   target_link_libraries(main PRIVATE SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_ttf)
 endif()
+
+## DPI Awareness
+set_property(TARGET main PROPERTY VS_DPI_AWARE "ON")
 
 # Unit Tests ##########
 

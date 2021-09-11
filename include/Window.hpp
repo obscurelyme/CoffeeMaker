@@ -3,9 +3,25 @@
 
 #include <SDL2/SDL.h>
 #include <string>
+#include <fmt/core.h>
 
 namespace CoffeeMaker
 {
+  const float BASE_DPI = 96.0f;
+
+  class DotsPerInch
+  {
+  public:
+    float diagonal;
+    float horizontal;
+    float vertical;
+
+    std::string toString()
+    {
+      return fmt::format("Diagonal {}, Horizontal {}, Vertical {}", diagonal, horizontal, vertical);
+    }
+  };
+
   /**
    * Base window class from which other windows may inherit from
    */
@@ -16,6 +32,8 @@ namespace CoffeeMaker
     {
       int windowFlags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
       _window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, windowFlags);
+      _dpi = DotsPerInch();
+      _dpiScale = _dpi.diagonal / CoffeeMaker::BASE_DPI;
     }
     ~Window()
     {
@@ -44,8 +62,22 @@ namespace CoffeeMaker
       return SDL_GetNumVideoDisplays();
     }
 
+    CoffeeMaker::DotsPerInch DotsPerInch()
+    {
+      CoffeeMaker::DotsPerInch dpi;
+      SDL_GetDisplayDPI(SDL_GetWindowDisplayIndex(_window), &(dpi.diagonal), &(dpi.horizontal), &(dpi.vertical));
+      return dpi;
+    }
+
+    float DPIScale()
+    {
+      return _dpiScale;
+    }
+
   private:
     SDL_Window *_window;
+    CoffeeMaker::DotsPerInch _dpi;
+    float _dpiScale;
   };
 }
 
