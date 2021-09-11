@@ -7,13 +7,14 @@ set(CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 20)
 
-find_package(OpenGL)
+# find_package(OpenGL)
 find_package(sdl2-ttf CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 # find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 add_executable(main App.cpp)
+include_directories(include)
 # target_link_libraries(main PRIVATE sfml-system sfml-network sfml-graphics sfml-window)
 target_link_libraries(main PRIVATE spdlog::spdlog spdlog::spdlog_header_only)
 if (WIN32)
@@ -22,3 +23,11 @@ elseif(APPLE)
   target_link_libraries(main PRIVATE SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_ttf)
 endif()
 
+# Unit Tests ##########
+
+find_package(CppUnit CONFIG REQUIRED)
+
+set(VCPKG_INCLUDE "${VCPKG_INSTALLED_DIR}/x64-windows/include")
+add_executable(CoffeeMakerWindowUnitTests tests/main.cpp)
+target_include_directories(CoffeeMakerWindowUnitTests PRIVATE "${VCPKG_INCLUDE}")
+target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE CppUnit)
