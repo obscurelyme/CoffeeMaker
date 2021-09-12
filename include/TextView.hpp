@@ -5,29 +5,17 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "Color.hpp"
+#include "Renderer.hpp"
+
 namespace CoffeeMaker
 {
-
-  SDL_Color Color(unsigned char r = 0, unsigned char g = 0, unsigned char b = 0, unsigned char a = 255)
-  {
-    SDL_Color c{.r = r,
-                .g = g,
-                .b = b,
-                .a = a};
-    return c;
-  }
-
   class TextView
   {
   public:
-    TextView() : textContent(""), color(CoffeeMaker::Color()), renderer(nullptr), font(nullptr) {}
-    TextView(std::string textContent) : textContent(textContent), color(CoffeeMaker::Color()), renderer(nullptr), font(nullptr) {}
+    TextView() : textContent(""), color(CoffeeMaker::Color()), renderer(CoffeeMaker::Renderer::Instance()), font(nullptr) {}
+    TextView(std::string textContent) : textContent(textContent), color(CoffeeMaker::Color()), renderer(CoffeeMaker::Renderer::Instance()), font(nullptr) {}
     ~TextView() {}
-
-    void AssignToRenderer(SDL_Renderer *sdlRenderer)
-    {
-      renderer = sdlRenderer;
-    }
 
     void Render()
     {

@@ -7,16 +7,20 @@ set(CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 20)
 
-# find_package(OpenGL)
 find_package(sdl2-image CONFIG REQUIRED)
 find_package(sdl2-ttf CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
-# find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
-add_executable(main App.cpp)
+set(COFFEEMAKER_MAIN src/App.cpp)
+set(COFFEEMAKER_ROOT_SOURCES src/Renderer.cpp src/Window.cpp src/Color.cpp)
+set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp)
+set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES})
+
+set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES})
+
+add_executable(main ${COFFEEMAKER_EXE_SOURCES})
 target_include_directories(main PRIVATE include)
-# target_link_libraries(main PRIVATE sfml-system sfml-network sfml-graphics sfml-window)
 target_link_libraries(main PRIVATE spdlog::spdlog spdlog::spdlog_header_only)
 if (WIN32)
   target_link_libraries(main PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_ttf SDL2::SDL2_image)
@@ -25,13 +29,24 @@ elseif(APPLE)
 endif()
 
 ## DPI Awareness
-set_property(TARGET main PROPERTY VS_DPI_AWARE "ON")
+set_target_properties(main PROPERTIES VS_DPI_AWARE "ON")
+set_target_properties(main PROPERTIES VS_GLOBAL_VcpkgEnabled true)
+# set_target_properties(main PROPERTIES VS_GLOBAL_VcpkgTriplet "x64-windows-static") # Uncomment to use static libraries instead
 
 # Unit Tests ##########
+
+set(COFFEEMAKER_TEST_MAIN tests/main.cpp)
+# set(COFFEEMAKER_TEST_SOURCES)
+set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES})
 
 find_package(CppUnit CONFIG REQUIRED)
 
 set(VCPKG_INCLUDE "${VCPKG_INSTALLED_DIR}/x64-windows/include")
-add_executable(CoffeeMakerWindowUnitTests tests/main.cpp)
-target_include_directories(CoffeeMakerWindowUnitTests PRIVATE "${VCPKG_INCLUDE}")
-target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE CppUnit)
+add_executable(CoffeeMakerWindowUnitTests ${COFFEEMAKER_TEST_EXE_SOURCES})
+target_include_directories(CoffeeMakerWindowUnitTests PRIVATE "${VCPKG_INCLUDE}" include)
+target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE CppUnit spdlog::spdlog spdlog::spdlog_header_only)
+if (WIN32)
+  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_ttf SDL2::SDL2_image)
+elseif(APPLE)
+  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_ttf SDL2::SDL2_image)
+endif()

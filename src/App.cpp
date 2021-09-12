@@ -10,6 +10,7 @@
 #include "Widgets/Button.hpp"
 #include "Widgets/Image.hpp"
 #include "Utilities.hpp"
+#include "Primitives/Rect.hpp"
 
 void input();
 
@@ -37,16 +38,15 @@ int main(int argc, char **argv)
   fontManager.loadFont("Roboto/Roboto-Regular");
 
   CoffeeMaker::Window win("Hello, SDL!", 800, 600);
-  CoffeeMaker::Renderer renderer(&win);
+  CoffeeMaker::Renderer renderer;
 
   CoffeeMaker::TextView text{"Hello, World!"};
-  text.AssignToRenderer(renderer.Instance());
   text.SetFont(fontManager.useFont("Roboto/Roboto-Regular"));
 
   CoffeeMaker::Button button;
   CoffeeMaker::Widgets::Image img("loaded.png");
-  img.AssignToRenderer(renderer.Instance());
   img.LoadImage();
+  CoffeeMaker::Shapes::Rect rect(100, 100);
 
   spdlog::info("Display count: {}", win.DisplayCount());
   spdlog::info("Current Window DPI {}", win.DotsPerInch().toString());
@@ -56,8 +56,9 @@ int main(int argc, char **argv)
     input();
 
     renderer.BeginRender();
-    img.Render();
-    text.Render();
+    // img.Render();
+    // text.Render();
+    rect.Render();
     renderer.EndRender();
   }
 

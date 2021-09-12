@@ -3,7 +3,8 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "../Window.hpp"
+#include "Window.hpp"
+#include "Renderer.hpp"
 #include "Utilities.hpp"
 
 namespace CoffeeMaker
@@ -20,7 +21,7 @@ namespace CoffeeMaker
         return nullptr;
       }
 
-      surface = SDL_ConvertSurface(loaded, CoffeeMaker::GLOBAL_SCREEN_SURFACE->format, 0);
+      surface = SDL_ConvertSurface(loaded, SDL_GetWindowSurface(Window::Instance())->format, 0);
       SDL_FreeSurface(loaded);
 
       return surface;
@@ -29,15 +30,15 @@ namespace CoffeeMaker
     class Image
     {
     public:
-      Image(std::string filePath) : filePath(CoffeeMaker::Utilities::WithinImagesDirectory(filePath)) {}
+      Image(std::string filePath) : filePath(CoffeeMaker::Utilities::WithinImagesDirectory(filePath)), renderer(CoffeeMaker::Renderer::Instance()) {}
 
-      void *LoadImage()
+      void LoadImage()
       {
         SDL_Surface *loaded = IMG_Load(filePath.c_str());
 
         if (loaded == NULL)
         {
-          return nullptr;
+          return;
         }
 
         // surface = SDL_ConvertSurface(loaded, CoffeeMaker::GLOBAL_SCREEN_SURFACE->format, 0);
@@ -48,11 +49,6 @@ namespace CoffeeMaker
         clientRect.x = loaded->clip_rect.x;
         clientRect.y = loaded->clip_rect.y;
         SDL_FreeSurface(loaded);
-      }
-
-      void AssignToRenderer(SDL_Renderer *sdlRenderer)
-      {
-        renderer = sdlRenderer;
       }
 
       void Render()
