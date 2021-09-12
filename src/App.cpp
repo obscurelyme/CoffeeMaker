@@ -1,7 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
-#include <spdlog/spdlog.h>
 #include <filesystem>
 #include "FontManager.hpp"
 #include "Window.hpp"
@@ -11,6 +10,7 @@
 #include "Widgets/Image.hpp"
 #include "Utilities.hpp"
 #include "Primitives/Rect.hpp"
+#include "Logger.hpp"
 
 void input();
 
@@ -20,17 +20,17 @@ SDL_Event event;
 int main(int argc, char **argv)
 {
   CoffeeMaker::Utilities::EXECUTABLE_PATH = argv[0];
-  spdlog::set_level(spdlog::level::debug);
+  CoffeeMaker::Logger::Init();
 
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
   {
-    spdlog::critical("Could not initialize SDL2!");
+    CoffeeMaker::Logger::Critical("Could not initialize SDL2!");
     exit(1);
   }
 
   if (IMG_Init(IMG_INIT_PNG) == 0)
   {
-    spdlog::critical("Could not initialize SDL2 Images");
+    CoffeeMaker::Logger::Critical("Could not initialize SDL2 Images");
     exit(1);
   }
 
@@ -48,8 +48,8 @@ int main(int argc, char **argv)
   img.LoadImage();
   CoffeeMaker::Shapes::Rect rect(100, 100);
 
-  spdlog::info("Display count: {}", win.DisplayCount());
-  spdlog::info("Current Window DPI {}", win.DotsPerInch().toString());
+  CoffeeMaker::Logger::Info(fmt::format("Display count: {}", win.DisplayCount()));
+  CoffeeMaker::Logger::Info(fmt::format("Current Window DPI {}", win.DotsPerInch().toString()));
 
   while (!quit)
   {
@@ -65,6 +65,8 @@ int main(int argc, char **argv)
   renderer.Destroy();
   win.Destroy();
   SDL_Quit();
+
+  CoffeeMaker::Logger::Destroy();
 
   return 0;
 }

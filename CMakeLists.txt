@@ -13,7 +13,7 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 set(COFFEEMAKER_MAIN src/App.cpp)
-set(COFFEEMAKER_ROOT_SOURCES src/Renderer.cpp src/Window.cpp src/Color.cpp)
+set(COFFEEMAKER_ROOT_SOURCES src/Renderer.cpp src/Window.cpp src/Color.cpp src/Logger.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES})
 
