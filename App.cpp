@@ -1,11 +1,15 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include <spdlog/spdlog.h>
 #include <filesystem>
 #include "FontManager.hpp"
 #include "Window.hpp"
 #include "Renderer.hpp"
 #include "TextView.hpp"
+#include "Widgets/Button.hpp"
+#include "Widgets/Image.hpp"
+#include "Utilities.hpp"
 
 void input();
 
@@ -14,11 +18,18 @@ SDL_Event event;
 
 int main(int argc, char **argv)
 {
+  CoffeeMaker::Utilities::EXECUTABLE_PATH = argv[0];
   spdlog::set_level(spdlog::level::debug);
 
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
   {
     spdlog::critical("Could not initialize SDL2!");
+    exit(1);
+  }
+
+  if (IMG_Init(IMG_INIT_PNG) == 0)
+  {
+    spdlog::critical("Could not initialize SDL2 Images");
     exit(1);
   }
 
@@ -32,13 +43,20 @@ int main(int argc, char **argv)
   text.AssignToRenderer(renderer.Instance());
   text.SetFont(fontManager.useFont("Roboto/Roboto-Regular"));
 
+  CoffeeMaker::Button button;
+  CoffeeMaker::Widgets::Image img("loaded.png");
+  img.AssignToRenderer(renderer.Instance());
+  img.LoadImage();
+
   spdlog::info("Display count: {}", win.DisplayCount());
   spdlog::info("Current Window DPI {}", win.DotsPerInch().toString());
 
   while (!quit)
   {
     input();
+
     renderer.BeginRender();
+    img.Render();
     text.Render();
     renderer.EndRender();
   }

@@ -8,6 +8,8 @@
 namespace CoffeeMaker
 {
   const float BASE_DPI = 96.0f;
+  SDL_Surface *GLOBAL_SCREEN_SURFACE;
+  float GLOBAL_DPI_SCALE = 1.0f;
 
   class DotsPerInch
   {
@@ -34,6 +36,10 @@ namespace CoffeeMaker
       _window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, windowFlags);
       _dpi = DotsPerInch();
       _dpiScale = _dpi.diagonal / CoffeeMaker::BASE_DPI;
+
+      // TODO: need a better way to do this...use global variables contained to namespace for now
+      GLOBAL_DPI_SCALE = _dpiScale;
+      GLOBAL_SCREEN_SURFACE = SDL_GetWindowSurface(_window);
     }
     ~Window()
     {

@@ -78,7 +78,10 @@
     "xtree": "cpp",
     "xutility": "cpp",
     "__config": "cpp",
-    "__nullptr": "cpp"
+    "__nullptr": "cpp",
+    "deque": "cpp",
+    "set": "cpp",
+    "strstream": "cpp"
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"

@@ -7,6 +7,7 @@
 #include <fmt/core.h>
 #include <SDL2/SDL_ttf.h>
 #include <spdlog/spdlog.h>
+#include "Utilities.hpp"
 
 namespace CoffeeMaker
 {
@@ -35,7 +36,7 @@ namespace CoffeeMaker
      */
     void loadFont(std::string name)
     {
-      std::string fontFilePath = fmt::format("{}{}", std::filesystem::weakly_canonical(std::filesystem::path(_executable)).parent_path().string(), fmt::format("/assets/fonts/{}.ttf", name));
+      std::string fontFilePath = fmt::format("{}{}", CoffeeMaker::Utilities::ExecutableWorkingDirectory(), fmt::format("/assets/fonts/{}.ttf", name));
       // TODO recognize DPI Scaling
       TTF_Font *font = TTF_OpenFont(fontFilePath.c_str(), 1 * 16);
       if (font == nullptr)
