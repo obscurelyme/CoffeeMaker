@@ -74,7 +74,7 @@ void TestWithMocking::testPersonCanTalkToOtherPerson() {
 
   person1.talkTo(person2);
 
-  CPPUNIT_ASSERT(person2.acknowledgeCallCount() == 2);
+  CPPUNIT_ASSERT(person2.acknowledgeCallCount() == 1);
 }
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestWithMocking);
