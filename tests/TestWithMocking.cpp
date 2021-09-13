@@ -4,6 +4,33 @@
 
 #include "TestWithMocking.hpp"
 
+/**
+ * MockPerson class contains noop methods from the IPerson interface.
+ */
+class MockPerson : public IPerson
+{
+  public:
+    mutable int talkToCallCount;
+    mutable int acknowledgeCallCount;
+    mutable int getNameCallCount;
+
+    MockPerson(): talkToCallCount(0), acknowledgeCallCount(0), getNameCallCount(0) {}
+
+    void talkTo(const IPerson&) const {
+      talkToCallCount++;
+    }
+    void acknowledge(const IPerson&) const {
+      acknowledgeCallCount++;
+    }
+    std::string getName() const {
+      getNameCallCount++;
+      return "";
+    }
+
+    std::string name;
+    int age;
+};
+
 Person::Person(): name(""), age(0) {}
 
 std::string Person::getName() const {
@@ -36,31 +63,12 @@ void TestWithMocking::testInitializePersonDataMembers() {
 void TestWithMocking::testPersonCanTalkToOtherPerson() {
   Person person1;
   person1.name = "John";
-
-  /**
-   * MockPerson class contains noop methods from the IPerson interface.
-   */
-  class MockPerson : public IPerson
-  {
-    public:
-      void talkTo(const IPerson&) const {
-        // noop
-      }
-      void acknowledge(const IPerson&) const {
-        // noop
-      }
-      std::string getName() const {
-        return "";
-      }
-
-      std::string name;
-      int age;
-  };
-
   MockPerson person2;
-  // Person person2;
   person2.name = "Jane";
-  CPPUNIT_ASSERT_NO_THROW(person1.talkTo(person2));
+
+  person1.talkTo(person2);
+
+  CPPUNIT_ASSERT(person2.acknowledgeCallCount == 2);
 }
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestWithMocking);
