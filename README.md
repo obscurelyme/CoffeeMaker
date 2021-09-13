@@ -1,53 +1,41 @@
-# Hello SFML
+# Semi-Pro CPP
 
-```
-Launch VS Code
-CMake Tools will configure assuming you have the following packages installed
+A neat little repository to practice CPP at the semi-professional level.
 
-sfml
-spdlog
-```
+## Installation
 
-To install dependencies, run...vcpkg installs x86 by default
+### Windows
 
-```
-vcpkg install sfml
-vcpkg install spdlog
+You'll need to fetch the cpp library dependencies using `vcpkg`
+
+```sh
+vcpkg install sdl2 sdl2-ttf sdl2-image spdlog cppunit
 ```
 
-If you need x64 (as used in this project)
+This step could take a minute because `vcpkg` is going to download and compile each of those libraries.
 
-```
-vcpkg install sfml:x64-windows
-vcpkg install spdlog:x64-windows
-```
-
-### Post build
-
-On windows, you can run the post-build-windows.bat file
-
-```
-.\post-build-windows.bat
-```
-
-This will copy over the font assets into the `build/DEBUG/assets`
-
-On Max/Linux, you can run the cp -r
-
-```
-cp -r assets build/Debug/assets
-```
-
-### Here is the result directory after a debug build
-
-![Screenshot](doc/debug-libs-screenshot.PNG)
-
-### Here is a screenshot of the crash that happens
-
-![Screenshot](doc/stack-screenshot.PNG)
+Open up `VS Code` and assuming you have both `Cmake` and `Cmake Tools` extensions installed, it will going ahead and configure the project for you. You should be able to build both the main and test executable.
 
 ### OSX
 
-The build seems to work.
+You will need to have autoconf, automake, and libtool installed in order to leverage `cppunit`
 
-![Screenshot](doc/osx-screenshot.png)
+You can install these dependencies using `Homebrew` with the command
+
+```sh
+brew install automake autoconf libtool
+```
+
+Next, you'll need to fetch the cpp library dependencies using `vcpkg`
+
+```sh
+vcpkg install sdl2 sdl2-ttf sdl2-image spdlog cppunit
+```
+
+This step could take a minute because `vcpkg` is going to download and compile each of those libraries.
+
+Open up `VS Code` and assuming you have both `Cmake` and `Cmake Tools` extensions installed, it will going ahead and configure the project for you. You should be able to build both the main and test executable.
+
+### Linux
+
+You should be able to follow the [OSX](#OSX) steps.
