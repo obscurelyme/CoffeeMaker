@@ -4,26 +4,32 @@
 
 #include "TestWithMocking.hpp"
 
+#define CREATE_CALL_COUNT_SPY(function)  \
+  public:                 \
+    mutable int _##function##CallCount; \
+    int function##CallCount() { return _##function##CallCount; }
+
+
 /**
  * MockPerson class contains noop methods from the IPerson interface.
  */
 class MockPerson : public IPerson
 {
+  CREATE_CALL_COUNT_SPY(talkTo)
+  CREATE_CALL_COUNT_SPY(acknowledge)
+  CREATE_CALL_COUNT_SPY(getName)
+
   public:
-    mutable int talkToCallCount;
-    mutable int acknowledgeCallCount;
-    mutable int getNameCallCount;
-
-    MockPerson(): talkToCallCount(0), acknowledgeCallCount(0), getNameCallCount(0) {}
-
     void talkTo(const IPerson&) const {
-      talkToCallCount++;
+      _talkToCallCount++;
     }
+
     void acknowledge(const IPerson&) const {
-      acknowledgeCallCount++;
+      _acknowledgeCallCount++;
     }
+
     std::string getName() const {
-      getNameCallCount++;
+      _getNameCallCount++;
       return "";
     }
 
@@ -68,7 +74,7 @@ void TestWithMocking::testPersonCanTalkToOtherPerson() {
 
   person1.talkTo(person2);
 
-  CPPUNIT_ASSERT(person2.acknowledgeCallCount == 2);
+  CPPUNIT_ASSERT(person2.acknowledgeCallCount() == 2);
 }
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestWithMocking);
