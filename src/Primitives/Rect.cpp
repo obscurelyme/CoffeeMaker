@@ -11,8 +11,8 @@ Rect::Rect(int height, int width, int top, int left) : color(Color())
 {
   clientRect.h = height;
   clientRect.w = width;
-  clientRect.x = top;
-  clientRect.y = left;
+  clientRect.y = top;
+  clientRect.x = left;
 }
 
 int Rect::Height()
