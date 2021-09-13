@@ -48,7 +48,7 @@ endif()
 # Unit Tests ##########
 
 set(COFFEEMAKER_TEST_MAIN tests/main.cpp)
-set(COFFEEMAKER_TEST_SOURCES tests/ComplexNumber.cpp tests/Complex.cpp)
+set(COFFEEMAKER_TEST_SOURCES tests/ComplexNumber.cpp tests/Complex.cpp tests/TestWithMocking.cpp)
 set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES} ${COFFEEMAKER_TEST_SOURCES})
 
 find_package(CppUnit CONFIG REQUIRED)

@@ -10,7 +10,7 @@ class Complex {
      * operators defined outside a class take 2 arguments
      */
     friend bool operator==(const Complex& lhs, const Complex& rhs);
-		friend Complex operator+(const Complex& lhs, const Complex& rhs);
+    friend Complex operator+(const Complex& lhs, const Complex& rhs);
 
   public:
     Complex(double r, double i = 0);
