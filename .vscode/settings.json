@@ -81,7 +81,8 @@
     "__nullptr": "cpp",
     "deque": "cpp",
     "set": "cpp",
-    "strstream": "cpp"
+    "strstream": "cpp",
+    "__string": "cpp"
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"

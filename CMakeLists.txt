@@ -48,14 +48,14 @@ endif()
 # Unit Tests ##########
 
 set(COFFEEMAKER_TEST_MAIN tests/main.cpp)
-# set(COFFEEMAKER_TEST_SOURCES)
-set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES})
+set(COFFEEMAKER_TEST_SOURCES tests/ComplexNumber.cpp tests/Complex.cpp)
+set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES} ${COFFEEMAKER_TEST_SOURCES})
 
 find_package(CppUnit CONFIG REQUIRED)
 
 set(VCPKG_INCLUDE "${VCPKG_INSTALLED_DIR}/x64-windows/include")
 add_executable(CoffeeMakerWindowUnitTests ${COFFEEMAKER_TEST_EXE_SOURCES})
-target_include_directories(CoffeeMakerWindowUnitTests PRIVATE "${VCPKG_INCLUDE}" include)
+target_include_directories(CoffeeMakerWindowUnitTests PRIVATE "${VCPKG_INCLUDE}" include tests/include)
 target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE CppUnit spdlog::spdlog spdlog::spdlog_header_only)
 if (WIN32)
   target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_ttf SDL2::SDL2_image)
@@ -67,4 +67,10 @@ endif()
 if (APPLE)
   execute_process(COMMAND rm "-rf" "${PROJECT_BINARY_DIR}/assets")
   execute_process(COMMAND bash "${PROJECT_SOURCE_DIR}/post-build-osx.sh")
+endif()
+
+if (MSVC)
+  target_compile_options(CoffeeMakerWindowUnitTests PRIVATE /W4 /WRAP_EXCLUDE)
+else()
+  target_compile_options(CoffeeMakerWindowUnitTests PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()

@@ -11,7 +11,7 @@ namespace CoffeeMaker
   public:
     Renderer();
 
-    static SDL_Renderer *Instance();
+    static SDL_Renderer * Instance();
     void Render();
     void BeginRender();
     void EndRender();

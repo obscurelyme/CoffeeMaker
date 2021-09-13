@@ -1,75 +1,27 @@
+#include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/TestResult.h>
-#include <cppunit/TestResultCollector.h>
-#include <cppunit/TestCase.h>
-#include <cppunit/CompilerOutputter.h>
-#include <cppunit/BriefTestProgressListener.h>
-#include <cppunit/XmlOutputter.h>
 #include <iostream>
 
-class BasicMath
+int main(int argc, char** argv)
 {
-public:
-  int Addition(int x, int y)
-  {
-    return x + y;
-  }
+	CppUnit::TextUi::TestRunner testRunner;
+	CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
 
-  int Subtraction(int x, int y)
-  {
-    return x - y;
-  }
-};
+	testRunner.addTest(registry.makeTest());
 
-class TestBasicMathFixture : CppUnit::TestFixture
-{
-private:
-  BasicMath *bm;
+	if (argc > 1) {
+		/**
+		 * Test name format is [className]::[methodName]
+		 * ie: MyTestSuite::testCase
+		 */
+		std::cout << "Running isolated test: " << argv[1] << std::endl;
 
-public:
-  void setUp()
-  {
-    bm = new BasicMath();
-  }
+		bool wasSuccessful = testRunner.run(argv[1], false);
 
-  void tearDown()
-  {
-    delete bm;
-  }
+		return wasSuccessful ? 0 : 1;
+	}
 
-  void testAddition()
-  {
-    CPPUNIT_ASSERT_EQUAL(bm->Addition(5, 5), 11);
-  }
+	bool wasSuccessful = testRunner.run("", false);
 
-  void testSubtraction()
-  {
-    CPPUNIT_ASSERT_EQUAL(bm->Subtraction(5, 5), 0);
-  }
-};
-
-// CPPUNIT_TEST_SUITE_REGISTRATION(TestBasicMathFixture);
-
-int main()
-{
-  CppUnit::TestCaller<TestBasicMathFixture> test("Test Basic Math Functions", &TestBasicMathFixture::testAddition);
-  CppUnit::TestResultCollector collectedResults;
-  CppUnit::BriefTestProgressListener progress;
-  CppUnit::TestResult result;
-
-  result.addListener(&progress);
-  result.addListener(&collectedResults);
-
-  test.run(&result);
-
-  CppUnit::CompilerOutputter compilerOutputter(&collectedResults, std::cerr);
-  compilerOutputter.write();
-
-  std::ofstream xmlFileOut("cppTestBasicMathFunction.xml");
-  CppUnit::XmlOutputter xmlOut(&collectedResults, xmlFileOut);
-  xmlOut.write();
-
-  return collectedResults.wasSuccessful() ? 0 : 1;
+  return wasSuccessful ? 0 : 1;
 }

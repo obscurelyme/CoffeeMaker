@@ -28,7 +28,7 @@ namespace CoffeeMaker
     Window(std::string title, int width, int height);
     ~Window();
 
-    static SDL_Window *const Instance();
+    static SDL_Window * Instance();
     /**
      * Explicitly calls the destructor
      */

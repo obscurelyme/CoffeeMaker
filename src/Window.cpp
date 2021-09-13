@@ -26,7 +26,7 @@ Window::~Window()
   }
 }
 
-SDL_Window *const Window::Instance()
+SDL_Window * Window::Instance()
 {
   return _window;
 }
