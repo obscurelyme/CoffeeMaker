@@ -40,5 +40,15 @@ void CoffeeMakerShapesRect::testExplicitDimensionsConstructor() {
   CPPUNIT_ASSERT_EQUAL(75, rect.Left());
 }
 
+void CoffeeMakerShapesRect::testDefaultColor() {
+  CoffeeMaker::Shapes::Rect rect;
+  SDL_Color black { .r = 0, .g = 0, .b = 0, .a = 255 };
+
+  CPPUNIT_ASSERT_EQUAL(black.r, rect.color.r);
+  CPPUNIT_ASSERT_EQUAL(black.g, rect.color.g);
+  CPPUNIT_ASSERT_EQUAL(black.b, rect.color.b);
+  CPPUNIT_ASSERT_EQUAL(black.a, rect.color.a);
+}
+
 CPPUNIT_TEST_SUITE_REGISTRATION(CoffeeMakerShapesRect);
 
