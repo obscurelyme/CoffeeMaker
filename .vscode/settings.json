@@ -1,6 +1,7 @@
 {
   "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
   "files.associations": {
+    "*.tsx": "typescriptreact",
     "filesystem": "cpp",
     "algorithm": "cpp",
     "array": "cpp",
@@ -75,10 +76,19 @@
     "xstring": "cpp",
     "xtr1common": "cpp",
     "xtree": "cpp",
-    "xutility": "cpp"
+    "xutility": "cpp",
+    "__config": "cpp",
+    "__nullptr": "cpp",
+    "deque": "cpp",
+    "set": "cpp",
+    "strstream": "cpp",
+    "__string": "cpp",
+    "__node_handle": "cpp",
+    "__split_buffer": "cpp",
+    "stack": "cpp",
+    "string_view": "cpp"
   },
   "cmake.configureSettings": {
-    "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
-    "VCPKG_TARGET_TRIPLET": "x64-windows"
+    "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"
   }
 }
