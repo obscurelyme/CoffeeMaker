@@ -10,6 +10,7 @@
 #include "Widgets/Image.hpp"
 #include "Utilities.hpp"
 #include "Primitives/Rect.hpp"
+#include "Primitives/Line.hpp"
 #include "Logger.hpp"
 
 void input();
@@ -47,19 +48,29 @@ int main(int, char **argv)
   CoffeeMaker::Widgets::Image img("loaded.png");
   img.LoadImage();
   CoffeeMaker::Shapes::Rect rect(100, 100);
+  CoffeeMaker::Shapes::Line line(100, 600 / 2, 800 / 2, 0);
 
   CoffeeMaker::Logger::Info(fmt::format("Display count: {}", win.DisplayCount()));
   CoffeeMaker::Logger::Info(fmt::format("Current Window DPI {}", win.GetScreenDPI().toString()));
 
   while (!quit)
   {
+    // get input
     input();
 
+    // run logic
+    line.Rotate(5);
+
+    // render
     renderer.BeginRender();
     // img.Render();
     // text.Render();
-    rect.Render();
+    // rect.Render();
+    line.Render();
     renderer.EndRender();
+
+    // Cap framerate
+    SDL_Delay(16);
   }
 
   renderer.Destroy();
