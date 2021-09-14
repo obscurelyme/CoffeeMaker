@@ -6,6 +6,13 @@
 
 namespace CoffeeMaker
 {
+  class IRenderer
+  {
+    public:
+      virtual ~IRenderer() = default;
+      virtual SDL_Renderer * Instance() = 0;
+  };
+
   class Renderer
   {
   public:

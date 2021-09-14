@@ -7,6 +7,37 @@
 
 namespace CoffeeMaker
 {
+  /**
+   * Window Interface
+   */
+  class IWindow
+  {
+    public:
+      virtual ~IWindow() = default;
+      virtual int DisplayCount() = 0;
+      virtual float DPIScale() = 0;
+      virtual SDL_DisplayMode DisplayMode() = 0;
+      virtual std::string DisplayName() = 0;
+      virtual std::string PixelFormatName(Uint32 format) = 0;
+      virtual int DisplayBounds() = 0;
+      virtual int DisplayUsableBounds() = 0;
+      virtual SDL_Window* Handle() = 0;
+  };
+
+  /**
+   * Static class to work with instances of a window object.
+   */
+  class GlobalWindow
+  {
+    public:
+      static IWindow * Instance();
+
+      GlobalWindow(IWindow* win);
+
+    private:
+      static IWindow* _instance;
+  };
+
   class ScreenDPI
   {
   public:
@@ -22,7 +53,7 @@ namespace CoffeeMaker
   /**
    * Base window class from which other windows may inherit from
    */
-  class Window
+  class Window : public IWindow
   {
   public:
     Window(std::string title, int width, int height);

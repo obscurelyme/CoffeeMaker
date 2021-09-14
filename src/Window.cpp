@@ -2,6 +2,18 @@
 
 using namespace CoffeeMaker;
 
+IWindow* GlobalWindow::_instance = nullptr;
+
+GlobalWindow::GlobalWindow(IWindow* win) {
+  if (_instance == nullptr) {
+    _instance = win;
+  }
+}
+
+IWindow * GlobalWindow::Instance() {
+  return _instance;
+}
+
 std::string ScreenDPI::toString()
 {
   return fmt::format("Diagonal {}, Horizontal {}, Vertical {}", diagonal, horizontal, vertical);
