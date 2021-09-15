@@ -73,6 +73,8 @@ if (APPLE)
   execute_process(COMMAND bash "${PROJECT_SOURCE_DIR}/post-build-osx.sh")
 endif()
 
+execute_process(COMMAND python "${PROJECT_SOURCE_DIR}/scripts/copyAssets.py")
+
 # Set Warnings
 if (MSVC)
   target_compile_options(CoffeeMakerWindowUnitTests PRIVATE /W4 /WX)

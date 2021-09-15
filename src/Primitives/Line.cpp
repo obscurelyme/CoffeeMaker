@@ -12,7 +12,7 @@ using namespace CoffeeMaker::Shapes;
 
 Line::Line() : color(Color()) {}
 
-Line::Line(int length, int top, int left, float angle) : length(length), top(top), left(left), angleDegrees(angle), color(Color())
+Line::Line(int length, int top, int left, float angle) : angleDegrees(angle), top(top), left(left), length(length), color(Color())
 {
   angleRadians = angleDegrees * (float)(M_PI / 180);
   // Parametric Form, truncated to int
@@ -24,8 +24,8 @@ Line::~Line() {}
 
 void Line::Render()
 {
-  SDL_SetRenderDrawColor(Renderer::Instance(), color.r, color.g, color.b, color.a);
-  SDL_RenderDrawLine(Renderer::Instance(), left, top, endX, endY);
+  SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), color.r, color.g, color.b, color.a);
+  SDL_RenderDrawLine(CoffeeMaker::Renderer::Instance(), left, top, endX, endY);
 }
 
 void Line::Rotate(float angle)

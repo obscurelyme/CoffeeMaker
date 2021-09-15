@@ -15,7 +15,7 @@ namespace CoffeeMaker
   class FontManager
   {
   public:
-    FontManager(const char *exe) : _executable(exe), _fonts({})
+    FontManager() : _fonts({})
     {
       if (TTF_Init() == -1)
       {
@@ -59,7 +59,6 @@ namespace CoffeeMaker
 
   private:
     std::map<std::string, TTF_Font *> _fonts;
-    const char *_executable;
   };
 
 }

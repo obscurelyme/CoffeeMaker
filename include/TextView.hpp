@@ -13,8 +13,8 @@ namespace CoffeeMaker
   class TextView
   {
   public:
-    TextView() : textContent(""), color(CoffeeMaker::Color()), renderer(CoffeeMaker::Renderer::Instance()), font(nullptr) {}
-    TextView(std::string textContent) : textContent(textContent), color(CoffeeMaker::Color()), renderer(CoffeeMaker::Renderer::Instance()), font(nullptr) {}
+    TextView() : textContent(""), color(CoffeeMaker::Color()), font(nullptr), renderer(CoffeeMaker::Renderer::Instance()) {}
+    TextView(std::string textContent) : textContent(textContent), color(CoffeeMaker::Color()), font(nullptr), renderer(CoffeeMaker::Renderer::Instance()) {}
     ~TextView() {}
 
     void Render()

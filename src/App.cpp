@@ -35,7 +35,7 @@ int main(int, char **argv)
     exit(1);
   }
 
-  CoffeeMaker::FontManager fontManager(argv[0]);
+  CoffeeMaker::FontManager fontManager;
   fontManager.loadFont("Roboto/Roboto-Regular");
 
   CoffeeMaker::BasicWindow win("Hello, SDL!", 800, 600);
