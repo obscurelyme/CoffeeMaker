@@ -52,6 +52,10 @@ BasicWindow::~BasicWindow()
 {
   if (_window != nullptr)
   {
+    if (GlobalWindow::Instance() == this)
+    {
+      GlobalWindow::Unset();
+    }
     SDL_DestroyWindow(_window);
     _window = nullptr;
   }

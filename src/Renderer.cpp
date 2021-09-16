@@ -13,6 +13,11 @@ Renderer::Renderer()
   }
 }
 
+Renderer::~Renderer()
+{
+  Destroy();
+}
+
 SDL_Renderer *Renderer::Instance()
 {
   return _renderer;

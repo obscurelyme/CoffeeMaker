@@ -14,7 +14,7 @@ namespace CoffeeMaker
     SDL_Surface *loadImageSurface(std::string filePath)
     {
       SDL_Surface *surface = nullptr;
-      std::string resolvedPath = CoffeeMaker::Utilities::WithinImagesDirectory(filePath);
+      std::string resolvedPath = fmt::format("{}/{}/{}", CoffeeMaker::Utilities::AssetsDirectory(), "images", filePath);
       SDL_Surface *loaded = IMG_Load(resolvedPath.c_str());
       if (loaded == NULL)
       {
@@ -30,7 +30,7 @@ namespace CoffeeMaker
     class Image
     {
     public:
-      Image(std::string filePath) : filePath(CoffeeMaker::Utilities::WithinImagesDirectory(filePath)), renderer(CoffeeMaker::Renderer::Instance()) {}
+      Image(std::string filePath) : filePath(fmt::format("{}/{}/{}", CoffeeMaker::Utilities::AssetsDirectory(), "images", filePath)), renderer(CoffeeMaker::Renderer::Instance()) {}
 
       void LoadImage()
       {

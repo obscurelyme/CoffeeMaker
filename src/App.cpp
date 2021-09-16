@@ -18,9 +18,9 @@ void input();
 bool quit = false;
 SDL_Event event;
 
-int main(int, char **argv)
+int main(int, char **)
 {
-  CoffeeMaker::Utilities::EXECUTABLE_PATH = argv[0];
+  CoffeeMaker::Texture::SetTextureDirectory();
   CoffeeMaker::Logger::Init();
 
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
@@ -45,6 +45,7 @@ int main(int, char **argv)
   text.SetFont(fontManager.useFont("Roboto/Roboto-Regular"));
 
   // CoffeeMaker::Button button;
+  CoffeeMaker::Texture texture("test.png");
   CoffeeMaker::Widgets::Image img("loaded.png");
   img.LoadImage();
   CoffeeMaker::Shapes::Rect rect(100, 100);
@@ -63,9 +64,11 @@ int main(int, char **argv)
 
     // render
     renderer.BeginRender();
+
     // img.Render();
     // text.Render();
     // rect.Render();
+    texture.Render(0, 0);
     line.Render();
     renderer.EndRender();
 

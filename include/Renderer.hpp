@@ -8,17 +8,18 @@ namespace CoffeeMaker
 {
   class IRenderer
   {
-    public:
-      virtual ~IRenderer() = default;
-      virtual SDL_Renderer * Instance() = 0;
+  public:
+    virtual ~IRenderer() = default;
+    virtual SDL_Renderer *Instance() = 0;
   };
 
   class Renderer
   {
   public:
     Renderer();
+    ~Renderer();
 
-    static SDL_Renderer * Instance();
+    static SDL_Renderer *Instance();
     void Render();
     void BeginRender();
     void EndRender();
@@ -26,6 +27,15 @@ namespace CoffeeMaker
 
   private:
     static SDL_Renderer *_renderer;
+  };
+
+  class GlobalRenderer
+  {
+  public:
+    IRenderer *Instance();
+
+  private:
+    GlobalRenderer();
   };
 
 } // namespace CoffeeMaker
