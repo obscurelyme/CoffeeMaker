@@ -7,6 +7,7 @@
 
 #include "Renderer.hpp"
 #include "Window.hpp"
+#include "TestBed.hpp"
 
 class CoffeeMakerTextureTest : public CppUnit::TestFixture
 {
@@ -14,6 +15,7 @@ class CoffeeMakerTextureTest : public CppUnit::TestFixture
   CPPUNIT_TEST(testCreateTexture);
   CPPUNIT_TEST(testLoadTexture);
   CPPUNIT_TEST(testRender);
+  CPPUNIT_TEST(testCreateTextureColor);
   CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -23,10 +25,12 @@ public:
   void testCreateTexture();
   void testLoadTexture();
   void testRender();
+  void testCreateTextureColor();
 
 private:
-  CoffeeMaker::Renderer *_renderer;
-  CoffeeMaker::IWindow *_window;
+  CoffeeMaker::Test::TestBed *_testBed;
+  // CoffeeMaker::Renderer *_renderer;
+  // CoffeeMaker::IWindow *_window;
 };
 
 #endif

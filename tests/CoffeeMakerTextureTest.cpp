@@ -3,36 +3,22 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "CoffeeMakerTextureTest.hpp"
-#include "Widgets/Button.hpp"
+#include "Texture.hpp"
 #include "Utilities.hpp"
 #include "Logger.hpp"
+#include "Color.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 void CoffeeMakerTextureTest::setUp()
 {
-  if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-  {
-    CPPUNIT_FAIL("SDL was not successfully initialized");
-  }
-  if (IMG_Init(IMG_INIT_PNG) != 2)
-  {
-    CPPUNIT_FAIL("SDL_Image was not successfully initialized");
-  }
-  CoffeeMaker::Utilities::Init(SDL_GetBasePath());
-  CoffeeMaker::Texture::SetTextureDirectory();
-  CoffeeMaker::Logger::Init();
-  _window = new CoffeeMaker::BasicWindow("test window", 500, 500);
-  _renderer = new CoffeeMaker::Renderer();
+  _testBed = new CoffeeMaker::Test::TestBed();
 }
 
 void CoffeeMakerTextureTest::tearDown()
 {
-  delete _renderer;
-  delete _window;
-  IMG_Quit();
-  SDL_Quit();
+  delete _testBed;
 }
 
 void CoffeeMakerTextureTest::testCreateTexture()
@@ -55,11 +41,27 @@ void CoffeeMakerTextureTest::testLoadTexture()
 void CoffeeMakerTextureTest::testRender()
 {
   CoffeeMaker::Texture texture("test.png");
-  _renderer->BeginRender();
+  _testBed->BeginRender();
 
   texture.Render(50, 50);
 
-  _renderer->EndRender();
+  _testBed->EndRender();
+  SDL_Delay(1000); // just so you can see the image
+
+  CPPUNIT_ASSERT_EQUAL(true, true);
+}
+
+void CoffeeMakerTextureTest::testCreateTextureColor()
+{
+  CoffeeMaker::Texture texture(CoffeeMaker::Color(255, 0, 0, 255));
+  texture.SetHeight(50);
+  texture.SetWidth(100);
+
+  _testBed->BeginRender();
+
+  texture.Render(50, 50);
+
+  _testBed->EndRender();
   SDL_Delay(1000); // just so you can see the image
 
   CPPUNIT_ASSERT_EQUAL(true, true);

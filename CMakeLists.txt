@@ -24,7 +24,13 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 set(COFFEEMAKER_MAIN src/App.cpp)
-set(COFFEEMAKER_ROOT_SOURCES src/Renderer.cpp src/Window.cpp src/Color.cpp src/Logger.cpp src/Utilities.cpp)
+set(COFFEEMAKER_ROOT_SOURCES
+  src/Renderer.cpp
+  src/Window.cpp
+  src/Color.cpp
+  src/Logger.cpp
+  src/Utilities.cpp
+  src/Texture.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cpp)
 set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES})
@@ -53,7 +59,12 @@ endif()
 
 set(COFFEEMAKER_TEST_MAIN tests/main.cpp)
 set(COFFEEMAKER_DEMO_TEST_SOURCES tests/ComplexNumber.cpp tests/Complex.cpp tests/TestWithMocking.cpp)
-set(COFFEEMAKER_TEST_SOURCES tests/CoffeeMakerShapesRect.cpp tests/CoffeeMakerTextureTest.cpp tests/CoffeeMakerUtilities.cpp)
+set(COFFEEMAKER_TEST_SOURCES
+  tests/TestBed.cpp
+  tests/CoffeeMakerShapesRect.cpp
+  tests/CoffeeMakerTextureTest.cpp
+  tests/CoffeeMakerUtilities.cpp
+  tests/CoffeeMakerWidgetButton.cpp)
 set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES} ${COFFEEMAKER_TEST_SOURCES})
 
 find_package(CppUnit CONFIG REQUIRED)
