@@ -1,5 +1,5 @@
-#include "Renderer.hpp"
 #include "Window.hpp"
+#include "Renderer.hpp"
 
 using namespace CoffeeMaker;
 
