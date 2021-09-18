@@ -35,8 +35,8 @@ namespace CoffeeMaker
   private:
     static std::string _textureDirectory;
 
-    SDL_Color _color;
     SDL_Texture *_texture;
+    SDL_Color _color;
     int _height;
     int _width;
   };

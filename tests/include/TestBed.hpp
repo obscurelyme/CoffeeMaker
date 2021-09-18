@@ -1,5 +1,5 @@
 #ifndef _coffeemaker_testbed_hpp
-#define _cofeemaker_testbed_hpp
+#define _coffeemaker_testbed_hpp
 
 #include "Window.hpp"
 #include "Renderer.hpp"

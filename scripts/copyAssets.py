@@ -31,9 +31,10 @@ src = os.path.join(baseDir, "assets")
 dest = ""
 sys = platform.system()
 
-if (sys == "Windows"):
-  dest = os.path.join(baseDir, "build/Debug/assets")
-else:
-  dest = os.path.join(baseDir, "build/assets")
+# if (sys == "Windows"):
+#   dest = os.path.join(baseDir, "build/Debug/assets")
+# else:
+
+dest = os.path.join(baseDir, "build/assets")
 
 shutil.copytree(src, dest)

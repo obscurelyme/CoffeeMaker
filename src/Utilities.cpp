@@ -3,7 +3,7 @@
 
 namespace CoffeeMaker::Utilities
 {
-  extern const char *_baseDir = "";
+  const char *_baseDir = "";
 }
 
 void CoffeeMaker::Utilities::Init(const char *base)
