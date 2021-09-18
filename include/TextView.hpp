@@ -7,44 +7,30 @@
 
 #include "Color.hpp"
 #include "Renderer.hpp"
+#include "Widgets/Component.hpp"
 
 namespace CoffeeMaker
 {
-  class TextView
+  class TextView : public Component
   {
   public:
-    TextView() : textContent(""), color(CoffeeMaker::Color()), font(nullptr), renderer(CoffeeMaker::Renderer::Instance()) {}
-    TextView(std::string textContent) : textContent(textContent), color(CoffeeMaker::Color()), font(nullptr), renderer(CoffeeMaker::Renderer::Instance()) {}
-    ~TextView() {}
+    TextView();
+    TextView(std::string textContent);
+    ~TextView();
 
-    void Render()
-    {
-      SDL_Surface *surface;
-      SDL_Texture *texture;
+    void Render();
+    void SetFont(TTF_Font *f);
+    void SetText(const std::string &textContent);
+    void SetTextContentTexture();
 
-      surface = TTF_RenderText_Blended(font, textContent.c_str(), color);
-      texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-      textBoard.w = surface->w;
-      textBoard.h = surface->h;
-      textBoard.x = 0; // x - textBoard.w;
-      textBoard.y = 0; // y - textBoard.h;
-
-      SDL_FreeSurface(surface);
-      SDL_RenderCopy(renderer, texture, NULL, &textBoard);
-      SDL_DestroyTexture(texture);
-    }
-
-    void SetFont(TTF_Font *f)
-    {
-      font = f;
-    }
-
-    std::string textContent;
     SDL_Color color;
+
+  private:
+    std::string _textContent;
     TTF_Font *font;
     SDL_Renderer *renderer;
-    SDL_Rect textBoard;
+    SDL_Rect _textBoard;
+    SDL_Texture *_texture;
   };
 
 } // namespace CoffeeMaker

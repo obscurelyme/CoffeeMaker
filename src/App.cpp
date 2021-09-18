@@ -12,6 +12,7 @@
 #include "Primitives/Rect.hpp"
 #include "Primitives/Line.hpp"
 #include "Logger.hpp"
+#include "Color.hpp"
 
 #include <chrono>
 
@@ -50,14 +51,20 @@ int main(int, char **)
   CoffeeMaker::Logger::Info(fmt::format("Initialization time took: {}", elapsedSeconds.count()));
 
   CoffeeMaker::TextView text{"Hello, World!"};
+  text.color = CoffeeMaker::Color(255, 255, 255, 255);
   text.SetFont(fontManager.useFont("Roboto/Roboto-Regular"));
+  text.SetTextContentTexture();
 
   CoffeeMaker::Button button;
+  button.clientRect.y = 100;
+  button.clientRect.x = 200;
   CoffeeMaker::Texture texture("test.png");
   CoffeeMaker::Widgets::Image img("loaded.png");
   img.LoadImage();
   CoffeeMaker::Shapes::Rect rect(100, 100);
   CoffeeMaker::Shapes::Line line(100, 600 / 2, 800 / 2, 0);
+
+  button.AppendChild(&text);
 
   CoffeeMaker::Logger::Info(fmt::format("Display count: {}", win.DisplayCount()));
   CoffeeMaker::Logger::Info(fmt::format("Current Window DPI {}", win.GetScreenDPI().toString()));

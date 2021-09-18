@@ -5,11 +5,12 @@
 #include <string>
 #include "Color.hpp"
 #include "Texture.hpp"
+#include "Component.hpp"
 
 namespace CoffeeMaker
 {
 
-  class Button
+  class Button : public Component
   {
   public:
     Button();
@@ -29,7 +30,6 @@ namespace CoffeeMaker
     int height;
     int padding;
     void *children;
-    SDL_Rect _clientRect;
     Texture _texture;
 
   private:

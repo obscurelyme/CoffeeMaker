@@ -3,11 +3,17 @@
 
 using namespace CoffeeMaker;
 
-Button::Button() : top(0), left(0), width(150), height(50), padding(0), _clientRect(), _texture(), _hovered(false) {}
+Button::Button() : top(0), left(0), width(150), height(50), padding(0), _texture(), _hovered(false)
+{
+  clientRect.h = height;
+  clientRect.w = width;
+  clientRect.x = left;
+  clientRect.y = top;
+}
 
 bool Button::_HitDetection(const int &mouseX, const int &mouseY)
 {
-  return left + width >= mouseX && left <= mouseX && top + height >= mouseY && top <= mouseY;
+  return clientRect.x + clientRect.w >= mouseX && clientRect.x <= mouseX && clientRect.y + clientRect.h >= mouseY && clientRect.y <= mouseY;
 }
 
 void Button::OnEvent(const SDL_Event *event)
@@ -39,6 +45,25 @@ void Button::OnEvent(const SDL_Event *event)
     break;
   case SDL_MOUSEBUTTONUP:
     break;
+  case SDL_KEYDOWN:
+    switch (event->key.keysym.sym)
+    {
+    case SDLK_UP:
+      clientRect.y -= 5;
+      break;
+    case SDLK_DOWN:
+      clientRect.y += 5;
+      break;
+    case SDLK_LEFT:
+      clientRect.x -= 5;
+      break;
+    case SDLK_RIGHT:
+      clientRect.x += 5;
+      break;
+    default:
+      break;
+    }
+    break;
   default:
     break;
   }
@@ -58,7 +83,11 @@ void Button::OnMouseleave()
 
 void Button::Render()
 {
-  _texture.Render(top, left, height, width);
+  _texture.Render(clientRect.y, clientRect.x, clientRect.h, clientRect.w);
+  for (auto i = std::begin(_children); i != std::end(_children); ++i)
+  {
+    (*i)->Render();
+  }
 }
 
 void Button::OnClick(void (*callback)(void))

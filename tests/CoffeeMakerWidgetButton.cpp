@@ -24,10 +24,10 @@ void CoffeeMakerWidgetButton::testButtonCreatesTexture()
 {
   CoffeeMaker::Button button;
 
-  CPPUNIT_ASSERT_EQUAL(0, button._clientRect.x);
-  CPPUNIT_ASSERT_EQUAL(0, button._clientRect.y);
-  CPPUNIT_ASSERT_EQUAL(0, button._clientRect.w);
-  CPPUNIT_ASSERT_EQUAL(0, button._clientRect.h);
+  CPPUNIT_ASSERT_EQUAL(0, button.left);
+  CPPUNIT_ASSERT_EQUAL(0, button.top);
+  CPPUNIT_ASSERT_EQUAL(150, button.width);
+  CPPUNIT_ASSERT_EQUAL(50, button.height);
 }
 
 void CoffeeMakerWidgetButton::testButtonRender()
