@@ -4,6 +4,7 @@ set(VCPKG_FEATURE_FLAGS "versions")
 
 project(MyDemoApp VERSION 0.1.0)
 
+set(VCPKG_INCLUDE "${VCPKG_INSTALLED_DIR}/x64-windows/include")
 
 set(C_STANDARD_REQUIRED TRUE)
 set(CXX_STANDARD_REQUIRED TRUE)
@@ -69,7 +70,6 @@ set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES}
 
 find_package(CppUnit CONFIG REQUIRED)
 
-set(VCPKG_INCLUDE "${VCPKG_INSTALLED_DIR}/x64-windows/include")
 add_executable(CoffeeMakerWindowUnitTests ${COFFEEMAKER_TEST_EXE_SOURCES})
 target_include_directories(CoffeeMakerWindowUnitTests PRIVATE "${VCPKG_INCLUDE}" include tests/include)
 target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE CppUnit spdlog::spdlog spdlog::spdlog_header_only)

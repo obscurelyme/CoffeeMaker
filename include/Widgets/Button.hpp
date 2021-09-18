@@ -16,9 +16,9 @@ namespace CoffeeMaker
 
     void Draw();
 
-    void OnEvent(SDL_Event *e);
+    void OnEvent(const SDL_Event *e);
     void OnMouseover();
-    void OnClick();
+    void OnClick(void (*callback)(void));
     void OnMouseleave();
 
     void Render();
@@ -31,6 +31,11 @@ namespace CoffeeMaker
     void *children;
     SDL_Rect _clientRect;
     Texture _texture;
+
+  private:
+    bool _HitDetection(const int &mouseX, const int &mouseY);
+
+    bool _hovered;
   };
 
 } // CoffeeMaker

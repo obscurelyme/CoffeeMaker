@@ -15,6 +15,8 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
+  if (_renderer == nullptr)
+    return;
   Destroy();
 }
 

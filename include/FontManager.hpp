@@ -36,7 +36,7 @@ namespace CoffeeMaker
      */
     void loadFont(std::string name)
     {
-      std::string fontFilePath = fmt::format("{}{}", CoffeeMaker::Utilities::AssetsDirectory(), fmt::format("/assets/fonts/{}.ttf", name));
+      std::string fontFilePath = fmt::format("{}{}", CoffeeMaker::Utilities::AssetsDirectory(), fmt::format("/fonts/{}.ttf", name));
       // TODO recognize DPI Scaling
       TTF_Font *font = TTF_OpenFont(fontFilePath.c_str(), 1 * 16);
       if (font == nullptr)

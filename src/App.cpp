@@ -13,6 +13,8 @@
 #include "Primitives/Line.hpp"
 #include "Logger.hpp"
 
+#include <chrono>
+
 void input();
 
 bool quit = false;
@@ -20,6 +22,9 @@ SDL_Event event;
 
 int main(int, char **)
 {
+  // Start clock
+  auto start = std::chrono::steady_clock::now();
+
   CoffeeMaker::Texture::SetTextureDirectory();
   CoffeeMaker::Logger::Init();
 
@@ -40,11 +45,14 @@ int main(int, char **)
 
   CoffeeMaker::BasicWindow win("Hello, SDL!", 800, 600);
   CoffeeMaker::Renderer renderer;
+  auto end = std::chrono::steady_clock::now();
+  std::chrono::duration<float> elapsedSeconds = end - start;
+  CoffeeMaker::Logger::Info(fmt::format("Initialization time took: {}", elapsedSeconds.count()));
 
   CoffeeMaker::TextView text{"Hello, World!"};
   text.SetFont(fontManager.useFont("Roboto/Roboto-Regular"));
 
-  // CoffeeMaker::Button button;
+  CoffeeMaker::Button button;
   CoffeeMaker::Texture texture("test.png");
   CoffeeMaker::Widgets::Image img("loaded.png");
   img.LoadImage();
@@ -57,19 +65,27 @@ int main(int, char **)
   while (!quit)
   {
     // get input
-    input();
+    while (SDL_PollEvent(&event))
+    {
+      if (event.type == SDL_QUIT)
+      {
+        quit = true;
+      }
+      button.OnEvent(&event);
+    }
 
     // run logic
-    line.Rotate(5);
+    // line.Rotate(5);
 
     // render
     renderer.BeginRender();
 
+    button.Render();
     // img.Render();
     // text.Render();
     // rect.Render();
-    texture.Render(0, 0);
-    line.Render();
+    // texture.Render(0, 0);
+    // line.Render();
     renderer.EndRender();
 
     // Cap framerate
