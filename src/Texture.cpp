@@ -14,14 +14,19 @@ void Texture::SetTextureDirectory()
   Texture::_textureDirectory = fmt::format("{}/{}", CoffeeMaker::Utilities::AssetsDirectory(), "images");
 }
 
-Texture::Texture() : _texture(nullptr), _color(Color()), _height(0), _width(0) {}
+Texture::Texture() : _texture(nullptr), _color(Color()), _height(0), _width(0), _useColorKey(false) {}
 
-Texture::Texture(const std::string &filePath) : _texture(nullptr), _color(Color()), _height(0), _width(0)
+Texture::Texture(const std::string &filePath) : _texture(nullptr), _color(Color()), _height(0), _width(0), _useColorKey(false)
 {
   LoadFromFile(filePath);
 }
 
-Texture::Texture(const SDL_Color &color) : _texture(nullptr), _color(color), _height(0), _width(0) {}
+Texture::Texture(const SDL_Color &color) : _texture(nullptr), _color(color), _height(0), _width(0), _useColorKey(false) {}
+
+Texture::Texture(const std::string &filePath, bool useColorKey) :
+  _texture(nullptr), _height(0), _width(0), _useColorKey(useColorKey) {
+  LoadFromFile(filePath);
+}
 
 Texture::~Texture()
 {
@@ -44,6 +49,10 @@ void Texture::LoadFromFile(const std::string &filePath)
     return;
   }
 
+  if (_useColorKey)
+  {
+    SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, COLOR_KEY.r, COLOR_KEY.g, COLOR_KEY.b));
+  }
   _texture = SDL_CreateTextureFromSurface(CoffeeMaker::Renderer::Instance(), surface);
   _height = surface->h;
   _width = surface->w;

@@ -32,7 +32,8 @@ set(COFFEEMAKER_ROOT_SOURCES
   src/Logger.cpp
   src/Utilities.cpp
   src/Texture.cpp
-  src/TextView.cpp)
+  src/TextView.cpp
+  src/Cursor.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cpp)
 set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/Component.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES})

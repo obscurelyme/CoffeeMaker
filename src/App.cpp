@@ -13,6 +13,7 @@
 #include "Primitives/Line.hpp"
 #include "Logger.hpp"
 #include "Color.hpp"
+#include "Cursor.hpp"
 
 #include <chrono>
 
@@ -41,6 +42,7 @@ int main(int, char **)
     exit(1);
   }
 
+  CoffeeMaker::Cursor cursor("cursor.png");
   CoffeeMaker::FontManager fontManager;
   fontManager.loadFont("Roboto/Roboto-Regular");
 

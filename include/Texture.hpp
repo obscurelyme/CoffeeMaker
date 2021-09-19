@@ -7,13 +7,18 @@
 
 namespace CoffeeMaker
 {
-
   class Texture
   {
   public:
+    static constexpr SDL_Color COLOR_KEY = { .r = 213, .g = 57, .b = 213, .a = 255 };
     Texture();
     explicit Texture(const std::string &filePath);
     explicit Texture(const SDL_Color &color);
+    /**
+     * Load a texture from the given file path and use the given
+     * color key to set transparent pixels.
+     */
+    Texture(const std::string &filePath, const bool useColorKey);
     ~Texture();
 
     void LoadFromFile(const std::string &filePath);
@@ -39,6 +44,7 @@ namespace CoffeeMaker
     SDL_Color _color;
     int _height;
     int _width;
+    bool _useColorKey;
   };
 
 }
