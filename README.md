@@ -1,53 +1,23 @@
 # Hello SFML
 
-```
-Launch VS Code
-CMake Tools will configure assuming you have the following packages installed
+### Get Started
 
-sfml
-spdlog
-```
+This README assumes you have VS Code, vcpkg, and the VS Code cmake-tools extension installed
+You should be prompted to install all recommended extensions on VS Code startup.
 
-To install dependencies, run...vcpkg installs x86 by default
+Step 1: Choose your perferred Cmake Kit
 
-```
-vcpkg install sfml
-vcpkg install spdlog
-```
+- I typically use `Visual Studio Community 2019 Release - amd64`
 
-If you need x64 (as used in this project)
+Step 2: Run Cmake: Configure task
 
-```
-vcpkg install sfml:x64-windows
-vcpkg install spdlog:x64-windows
-```
+- This will run a localized `vcpkg install` which will place all project dependencies inside a directory
+  named `vcpkg_installed`
 
-### Post build
+Step 3: Run post-build-windows.bat
 
-On windows, you can run the post-build-windows.bat file
+- This will copy over the assets into the cmake generated build directory.
 
-```
-.\post-build-windows.bat
-```
+Step 4: Run the Cmake: Build task
 
-This will copy over the font assets into the `build/DEBUG/assets`
-
-On Max/Linux, you can run the cp -r
-
-```
-cp -r assets build/Debug/assets
-```
-
-### Here is the result directory after a debug build
-
-![Screenshot](doc/debug-libs-screenshot.PNG)
-
-### Here is a screenshot of the crash that happens
-
-![Screenshot](doc/stack-screenshot.PNG)
-
-### OSX
-
-The build seems to work.
-
-![Screenshot](doc/osx-screenshot.png)
+Step 5: Run the executable, you should see red text "Hello" on a blue background
