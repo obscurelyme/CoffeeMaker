@@ -2,6 +2,13 @@
 
 ### Get Started
 
+This Project leverages the vcpkg versions feature flag, and as such you will need to have the following environment \
+variable set on your machine....
+
+```
+VCPKG_FEATURE_FLAGS=versions
+```
+
 This README assumes you have VS Code, vcpkg, and the VS Code cmake-tools extension installed
 You should be prompted to install all recommended extensions on VS Code startup.
 

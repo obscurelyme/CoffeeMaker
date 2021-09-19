@@ -2,7 +2,7 @@
   "name": "my-demo-app",
   "version": "1.0.0",
   "dependencies": ["freetype", "sfml", "spdlog"],
-  "builtin-baseline": "d4aa0d2bfeb8c136570306968699174203896815",
+  "builtin-baseline": "4428702c1c56fdb7cb779584efdcba254d7b57ca",
   "overrides": [
     {
       "name": "freetype",
