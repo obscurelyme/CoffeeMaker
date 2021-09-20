@@ -2,9 +2,9 @@
 
 using namespace CoffeeMaker;
 
-TextView::TextView() : _textContent(""), color(CoffeeMaker::Color()), font(nullptr), renderer(CoffeeMaker::Renderer::Instance()), _texture(nullptr) {}
+TextView::TextView() : color(CoffeeMaker::Color()), _textContent(""), font(nullptr), renderer(CoffeeMaker::Renderer::Instance()), _texture(nullptr) {}
 
-TextView::TextView(std::string textContent) : _textContent(textContent), color(CoffeeMaker::Color()), font(nullptr), renderer(CoffeeMaker::Renderer::Instance()), _texture(nullptr) {}
+TextView::TextView(std::string textContent) : color(CoffeeMaker::Color()), _textContent(textContent), font(nullptr), renderer(CoffeeMaker::Renderer::Instance()), _texture(nullptr) {}
 
 TextView::~TextView()
 {
