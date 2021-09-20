@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.15.0)
 
-set(VCPKG_FEATURE_FLAGS "versions")
+set(VCPKG_TARGET_TRIPLET "x64-windows-static")
+set(VCPKG_TARGET_ARCHITECTURE "x64")
+set(VCPKG_CRT_LINKAGE "static")
+set(VCPKG_LIBRARY_LINKAGE "static")
+set(VCPKG_MANIFEST_MODE "ON")
+
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebug")
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
 
@@ -78,6 +84,7 @@ endif()
 if (WIN32)
   set_target_properties(main PROPERTIES VS_DPI_AWARE "ON")
   set_target_properties(main PROPERTIES VS_GLOBAL_VcpkgEnabled true)
+  set_target_properties(main PROPERTIES VS_GLOBAL_VcpkgEnableManifest true)
 endif()
 # set_target_properties(main PROPERTIES VS_GLOBAL_VcpkgTriplet "x64-windows-static") # Uncomment to use static libraries instead
 

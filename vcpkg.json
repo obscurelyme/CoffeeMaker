@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "name": "semi-pro-cpp",
+  "version": "1.0.0",
+  "dependencies": ["sdl2", "sdl2-image", "sdl2-ttf", "spdlog", "cppunit"],
+  "builtin-baseline": "4428702c1c56fdb7cb779584efdcba254d7b57ca"
+}

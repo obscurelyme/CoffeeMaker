@@ -94,7 +94,8 @@
     "random": "cpp"
   },
   "cmake.configureSettings": {
-    "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"
+    "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
+    "VCPKG_TARGET_TRIPLET": "x64-windows-static"
   },
   "[cpp]": {
     "editor.formatOnSave": true,
@@ -105,5 +106,5 @@
   "c-cpp-flylint.lizard.enable": false,
   "c-cpp-flylint.flexelint.enable": false,
   "c-cpp-flylint.cppcheck.enable": true,
-  "c-cpp-flylint.cppcheck.standard": ["c++20"],
+  "c-cpp-flylint.cppcheck.standard": ["c++20"]
 }

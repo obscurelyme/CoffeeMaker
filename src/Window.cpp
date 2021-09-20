@@ -23,7 +23,7 @@ void GlobalWindow::Set(IWindow *win) {
 void GlobalWindow::Unset() { _instance = nullptr; }
 
 std::string ScreenDPI::toString() {
-  return fmt::format("Diagonal {}, Horizontal {}, Vertical {}", diagonal, horizontal, vertical);
+  return fmt::format(fmt::runtime("Diagonal {}, Horizontal {}, Vertical {}"), diagonal, horizontal, vertical);
 }
 
 SDL_Window *BasicWindow::_window = nullptr;
