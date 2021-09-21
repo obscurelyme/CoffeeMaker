@@ -84,10 +84,7 @@ void Button::OnMouseleave()
 void Button::Render()
 {
   _texture.Render(clientRect.y, clientRect.x, clientRect.h, clientRect.w);
-  for (auto i = std::begin(_children); i != std::end(_children); ++i)
-  {
-    (*i)->Render();
-  }
+  Component::Render();
 }
 
 void Button::OnClick(void (*callback)(void))

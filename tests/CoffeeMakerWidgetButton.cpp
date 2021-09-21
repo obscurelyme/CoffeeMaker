@@ -6,9 +6,15 @@
 #include "Widgets/Button.hpp"
 #include "TestBed.hpp"
 
-void CoffeeMakerWidgetButton::setUp() {}
+void CoffeeMakerWidgetButton::setUp()
+{
+  _testBed = new CoffeeMaker::Test::TestBed();
+}
 
-void CoffeeMakerWidgetButton::tearDown() {}
+void CoffeeMakerWidgetButton::tearDown()
+{
+  delete _testBed;
+}
 
 void CoffeeMakerWidgetButton::testButtonCreation()
 {
@@ -32,46 +38,42 @@ void CoffeeMakerWidgetButton::testButtonCreatesTexture()
 
 void CoffeeMakerWidgetButton::testButtonRender()
 {
-  CoffeeMaker::Test::TestBed testBed;
-
   CoffeeMaker::Button button;
   button.top = 50;
   button.left = 50;
 
-  testBed.BeginRender();
+  _testBed->BeginRender();
 
   CPPUNIT_ASSERT_NO_THROW(button.Render());
 
-  testBed.EndRender();
+  _testBed->EndRender();
   SDL_Delay(1000);
 }
 
 void CoffeeMakerWidgetButton::testButtonOnMousemotionEvent()
 {
-  CoffeeMaker::Test::TestBed testBed;
-
   CoffeeMaker::Button button;
   button.top = 50;
   button.left = 50;
 
   // Initial render the button
-  testBed.BeginRender();
+  _testBed->BeginRender();
   CPPUNIT_ASSERT_NO_THROW(button.Render());
-  testBed.EndRender();
+  _testBed->EndRender();
   SDL_Delay(1000);
 
   // Mouseover the button
   button.OnMouseover();
-  testBed.BeginRender();
+  _testBed->BeginRender();
   CPPUNIT_ASSERT_NO_THROW(button.Render());
-  testBed.EndRender();
+  _testBed->EndRender();
   SDL_Delay(1000);
 
   // Mouseleave the button
   button.OnMouseleave();
-  testBed.BeginRender();
+  _testBed->BeginRender();
   CPPUNIT_ASSERT_NO_THROW(button.Render());
-  testBed.EndRender();
+  _testBed->EndRender();
   SDL_Delay(1000);
 }
 

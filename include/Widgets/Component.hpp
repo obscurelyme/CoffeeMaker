@@ -14,7 +14,7 @@ namespace CoffeeMaker
     ~Component() = default;
 
     void AppendChild(Component *component);
-    virtual void Render() = 0;
+    virtual void Render();
 
     SDL_Rect viewport;
     SDL_Rect clientRect;

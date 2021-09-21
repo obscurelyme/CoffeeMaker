@@ -5,8 +5,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "Renderer.hpp"
-#include "Window.hpp"
 #include "TestBed.hpp"
 
 class CoffeeMakerTextureTest : public CppUnit::TestFixture

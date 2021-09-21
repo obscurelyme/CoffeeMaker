@@ -22,3 +22,17 @@ void Component::AppendChild(Component *component)
   component->_parent = this;
   _children.push_back(component);
 }
+
+/**
+ * Render all children of the component
+ */
+void Component::Render() {
+  SDL_RenderSetViewport(Renderer::Instance(), &clientRect);
+  for (auto i = std::begin(_children); i != std::end(_children); ++i)
+  {
+    (*i)->Render();
+  }
+  if (_parent == nullptr) {
+    SDL_RenderSetViewport(Renderer::Instance(), &viewport);
+  }
+}

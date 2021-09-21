@@ -5,6 +5,8 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "TestBed.hpp"
+
 class CoffeeMakerWidgetButton : public CppUnit::TestFixture
 {
   CPPUNIT_TEST_SUITE(CoffeeMakerWidgetButton);
@@ -22,6 +24,9 @@ public:
   void testButtonCreatesTexture();
   void testButtonRender();
   void testButtonOnMousemotionEvent();
+
+private:
+  CoffeeMaker::Test::TestBed *_testBed;
 };
 
 #endif

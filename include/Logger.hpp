@@ -32,4 +32,13 @@ namespace CoffeeMaker
 
 } // namespace CoffeeMaker
 
+// Logging macros
+#define CM_LOGGER_INIT()            CoffeeMaker::Logger::Init()
+#define CM_LOGGER_DESTROY()         CoffeeMaker::Logger::Destroy()
+#define CM_LOGGER_CRITICAL(...)     CoffeeMaker::Logger::Instance()->critical(__VA_ARGS__)
+#define CM_LOGGER_ERROR(...)        CoffeeMaker::Logger::Instance()->error(__VA_ARGS__)
+#define CM_LOGGER_WARN(...)         CoffeeMaker::Logger::Instance()->warn(__VA_ARGS__)
+#define CM_LOGGER_INFO(...)         CoffeeMaker::Logger::Instance()->info(__VA_ARGS__)
+#define CM_LOGGER_TRACE(...)        CoffeeMaker::Logger::Instance()->trace(__VA_ARGS__)
+
 #endif

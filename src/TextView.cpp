@@ -20,12 +20,12 @@ void TextView::Render()
   if (_texture != nullptr)
   {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    if (_parent != nullptr)
-    {
-      // Render should be relative to the parent position
-      _textBoard.x = ((_parent->clientRect.w - _textBoard.w) / 2) + _parent->clientRect.x;
-      _textBoard.y = ((_parent->clientRect.h - _textBoard.h) / 2) + _parent->clientRect.y;
-    }
+    // if (_parent != nullptr)
+    // {
+    //   // Render should be relative to the parent position
+    //   _textBoard.x = ((_parent->clientRect.w - _textBoard.w) / 2) + _parent->clientRect.x;
+    //   _textBoard.y = ((_parent->clientRect.h - _textBoard.h) / 2) + _parent->clientRect.y;
+    // }
     SDL_RenderCopy(renderer, _texture, NULL, &_textBoard);
   }
 }

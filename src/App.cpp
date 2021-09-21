@@ -14,6 +14,7 @@
 #include "Logger.hpp"
 #include "Color.hpp"
 #include "Cursor.hpp"
+#include "Widgets/View.hpp"
 
 #include <chrono>
 
@@ -27,20 +28,22 @@ int main(int, char **)
   // Start clock
   auto start = std::chrono::steady_clock::now();
 
-  CoffeeMaker::Texture::SetTextureDirectory();
-  CoffeeMaker::Logger::Init();
+  CM_LOGGER_INIT();
 
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
   {
-    CoffeeMaker::Logger::Critical("Could not initialize SDL2!");
+    CM_LOGGER_CRITICAL("Could not initialize SDL2!");
     exit(1);
   }
 
   if (IMG_Init(IMG_INIT_PNG) == 0)
   {
-    CoffeeMaker::Logger::Critical("Could not initialize SDL2 Images");
+    CM_LOGGER_CRITICAL("Could not initialize SDL2 Images");
     exit(1);
   }
+
+  CoffeeMaker::Utilities::Init(SDL_GetBasePath());
+  CoffeeMaker::Texture::SetTextureDirectory();
 
   CoffeeMaker::Cursor cursor("cursor.png");
   CoffeeMaker::FontManager fontManager;
@@ -52,24 +55,26 @@ int main(int, char **)
   std::chrono::duration<float> elapsedSeconds = end - start;
   CoffeeMaker::Logger::Info(fmt::format("Initialization time took: {}", elapsedSeconds.count()));
 
+  // NOTE: Construct the UI
+  CoffeeMaker::Widgets::View view(800, 600);
+  CoffeeMaker::Widgets::View view2(400, 300, CoffeeMaker::Widgets::ViewXProps::RIGHT_ALIGNED, CoffeeMaker::Widgets::ViewYProps::BOTTOM_ALIGNED);
+
   CoffeeMaker::TextView text{"Hello, World!"};
   text.color = CoffeeMaker::Color(255, 255, 255, 255);
   text.SetFont(fontManager.useFont("Roboto/Roboto-Regular"));
   text.SetTextContentTexture();
 
   CoffeeMaker::Button button;
+  CoffeeMaker::Button button2;
   button.clientRect.y = 100;
   button.clientRect.x = 200;
-  CoffeeMaker::Texture texture("test.png");
-  CoffeeMaker::Widgets::Image img("loaded.png");
-  img.LoadImage();
-  CoffeeMaker::Shapes::Rect rect(100, 100);
-  CoffeeMaker::Shapes::Line line(100, 600 / 2, 800 / 2, 0);
-
   button.AppendChild(&text);
 
-  CoffeeMaker::Logger::Info(fmt::format("Display count: {}", win.DisplayCount()));
-  CoffeeMaker::Logger::Info(fmt::format("Current Window DPI {}", win.GetScreenDPI().toString()));
+  view.AppendChild(&button);
+  view2.AppendChild(&button2);
+
+  CM_LOGGER_INFO("Display count: {}", win.DisplayCount());
+  CM_LOGGER_INFO("Current Window DPI {}", win.GetScreenDPI().toString());
 
   while (!quit)
   {
@@ -84,17 +89,13 @@ int main(int, char **)
     }
 
     // run logic
-    // line.Rotate(5);
 
     // render
     renderer.BeginRender();
 
-    button.Render();
-    // img.Render();
-    // text.Render();
-    // rect.Render();
-    // texture.Render(0, 0);
-    // line.Render();
+    view.Render();
+    view2.Render();
+
     renderer.EndRender();
 
     // Cap framerate
@@ -104,7 +105,7 @@ int main(int, char **)
   renderer.Destroy();
   SDL_Quit();
 
-  CoffeeMaker::Logger::Destroy();
+  CM_LOGGER_DESTROY();
 
   return 0;
 }
