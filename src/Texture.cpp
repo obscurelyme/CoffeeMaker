@@ -87,6 +87,18 @@ void Texture::Render(int top, int left, int height, int width)
   SDL_RenderCopy(CoffeeMaker::Renderer::Instance(), _texture, NULL, &renderQuad);
 }
 
+void Texture::Render(const SDL_Rect &clip, const SDL_Rect &renderRect)
+{
+  if (_texture == nullptr)
+  {
+    SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), _color.r, _color.g, _color.b, _color.a);
+    SDL_RenderFillRect(CoffeeMaker::Renderer::Instance(), &renderRect);
+    return;
+  }
+
+  SDL_RenderCopy(CoffeeMaker::Renderer::Instance(), _texture, &clip, &renderRect);
+}
+
 void Texture::SetAlpha(Uint8 alpha)
 {
   if (_texture == nullptr)

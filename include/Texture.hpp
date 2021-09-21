@@ -30,6 +30,7 @@ namespace CoffeeMaker
      * For use when the Texture's dimensions are controled by its parent
      */
     void Render(int top, int left, int height, int width);
+    void Render(const SDL_Rect &clip, const SDL_Rect &renderRect);
     int Height() const;
     int Width() const;
     void SetHeight(int const height);

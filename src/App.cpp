@@ -5,20 +5,15 @@
 #include "FontManager.hpp"
 #include "Window.hpp"
 #include "Renderer.hpp"
-#include "TextView.hpp"
-#include "Widgets/Button.hpp"
-#include "Widgets/Image.hpp"
 #include "Utilities.hpp"
-#include "Primitives/Rect.hpp"
-#include "Primitives/Line.hpp"
 #include "Logger.hpp"
-#include "Color.hpp"
 #include "Cursor.hpp"
-#include "Widgets/View.hpp"
+#include "Texture.hpp"
+
+#include "Game/Entity.hpp"
+#include "Game/Tiles.hpp"
 
 #include <chrono>
-
-void input();
 
 bool quit = false;
 SDL_Event event;
@@ -27,7 +22,6 @@ int main(int, char **)
 {
   // Start clock
   auto start = std::chrono::steady_clock::now();
-
   CM_LOGGER_INIT();
 
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
@@ -53,28 +47,13 @@ int main(int, char **)
   CoffeeMaker::Renderer renderer;
   auto end = std::chrono::steady_clock::now();
   std::chrono::duration<float> elapsedSeconds = end - start;
-  CoffeeMaker::Logger::Info(fmt::format("Initialization time took: {}", elapsedSeconds.count()));
 
-  // NOTE: Construct the UI
-  CoffeeMaker::Widgets::View view(800, 600);
-  CoffeeMaker::Widgets::View view2(400, 300, CoffeeMaker::Widgets::ViewXProps::RIGHT_ALIGNED, CoffeeMaker::Widgets::ViewYProps::BOTTOM_ALIGNED);
-
-  CoffeeMaker::TextView text{"Hello, World!"};
-  text.color = CoffeeMaker::Color(255, 255, 255, 255);
-  text.SetFont(fontManager.useFont("Roboto/Roboto-Regular"));
-  text.SetTextContentTexture();
-
-  CoffeeMaker::Button button;
-  CoffeeMaker::Button button2;
-  button.clientRect.y = 100;
-  button.clientRect.x = 200;
-  button.AppendChild(&text);
-
-  view.AppendChild(&button);
-  view2.AppendChild(&button2);
-
+  CM_LOGGER_INFO("Initialization time took: {}", elapsedSeconds.count());
   CM_LOGGER_INFO("Display count: {}", win.DisplayCount());
   CM_LOGGER_INFO("Current Window DPI {}", win.GetScreenDPI().toString());
+
+  Enemy enemy;
+  Tiles tiles("space.png", 800, 600);
 
   while (!quit)
   {
@@ -85,16 +64,16 @@ int main(int, char **)
       {
         quit = true;
       }
-      button.OnEvent(&event);
     }
 
     // run logic
+    enemy.Update();
 
     // render
     renderer.BeginRender();
 
-    view.Render();
-    view2.Render();
+    tiles.Render();
+    enemy.Render();
 
     renderer.EndRender();
 
@@ -104,19 +83,7 @@ int main(int, char **)
 
   renderer.Destroy();
   SDL_Quit();
-
   CM_LOGGER_DESTROY();
 
   return 0;
-}
-
-void input()
-{
-  while (SDL_PollEvent(&event))
-  {
-    if (event.type == SDL_QUIT)
-    {
-      quit = true;
-    }
-  }
 }
