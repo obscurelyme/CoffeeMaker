@@ -57,6 +57,7 @@ namespace CoffeeMaker
     SDL_Rect DisplayBounds() const;
     SDL_Rect DisplayUsableBounds() const;
     SDL_Window *Handle() const;
+    void ShowWindow() const;
 
   private:
     ScreenDPI SetScreenDPI();

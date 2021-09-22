@@ -21,6 +21,7 @@ namespace CoffeeMaker
     void Render();
     void SetFont(TTF_Font *f);
     void SetText(const std::string &textContent);
+    void SetColor(const SDL_Color& color);
     void SetTextContentTexture();
 
     SDL_Color color;

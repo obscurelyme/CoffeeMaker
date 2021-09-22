@@ -41,7 +41,7 @@ SDL_Window *BasicWindow::_window = nullptr;
 
 BasicWindow::BasicWindow(std::string title, int width, int height)
 {
-  int windowFlags = SDL_WINDOW_SHOWN;
+  int windowFlags = SDL_WINDOW_HIDDEN;
   _window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, windowFlags);
   _screenDpi = SetScreenDPI();
   _dpiScale = _screenDpi.diagonal / ScreenDPI::BASE_DPI;
@@ -122,4 +122,8 @@ SDL_Rect BasicWindow::DisplayUsableBounds() const
 SDL_Window *BasicWindow::Handle() const
 {
   return _window;
+}
+
+void BasicWindow::ShowWindow() const {
+  SDL_ShowWindow(_window);
 }

@@ -8,7 +8,8 @@
 #include "Utilities.hpp"
 #include "Logger.hpp"
 #include "Cursor.hpp"
-#include "Texture.hpp"
+#include "FPS.hpp"
+#include "TextView.hpp"
 
 #include "Game/Entity.hpp"
 #include "Game/Tiles.hpp"
@@ -39,14 +40,21 @@ int main(int, char **)
   CoffeeMaker::Utilities::Init(SDL_GetBasePath());
   CoffeeMaker::Texture::SetTextureDirectory();
 
-  CoffeeMaker::Cursor cursor("cursor.png");
-  CoffeeMaker::FontManager fontManager;
-  fontManager.loadFont("Roboto/Roboto-Regular");
-
   CoffeeMaker::BasicWindow win("Hello, SDL!", 800, 600);
   CoffeeMaker::Renderer renderer;
+
+  CoffeeMaker::Cursor cursor("cursor.png");
+  CoffeeMaker::FontManager::Init();
+  CoffeeMaker::FontManager::LoadFont("Roboto/Roboto-Regular");
+  CoffeeMaker::FontManager::LoadFont("Roboto/Roboto-Black");
+
   auto end = std::chrono::steady_clock::now();
   std::chrono::duration<float> elapsedSeconds = end - start;
+
+  CoffeeMaker::FPS fpsCounter;
+  // CoffeeMaker::TextView text("00");
+  // text.SetFont(CoffeeMaker::FontManager::UseFont("Roboto/Roboto-Regular"));
+  // text.SetTextContentTexture();
 
   CM_LOGGER_INFO("Initialization time took: {}", elapsedSeconds.count());
   CM_LOGGER_INFO("Display count: {}", win.DisplayCount());
@@ -54,6 +62,8 @@ int main(int, char **)
 
   Enemy enemy;
   Tiles tiles("space.png", 800, 600);
+
+  win.ShowWindow();
 
   while (!quit)
   {
@@ -68,12 +78,14 @@ int main(int, char **)
 
     // run logic
     enemy.Update();
+    fpsCounter.Update();
 
     // render
     renderer.BeginRender();
 
     tiles.Render();
     enemy.Render();
+    fpsCounter.Render();
 
     renderer.EndRender();
 
