@@ -10,6 +10,8 @@
 #include "Cursor.hpp"
 #include "FPS.hpp"
 #include "TextView.hpp"
+#include "Timer.hpp"
+#include "Color.hpp"
 
 #include "Game/Entity.hpp"
 #include "Game/Tiles.hpp"
@@ -51,8 +53,12 @@ int main(int, char **)
   auto end = std::chrono::steady_clock::now();
   std::chrono::duration<float> elapsedSeconds = end - start;
 
+  CoffeeMaker::Timer timer;
   CoffeeMaker::FPS fpsCounter;
-  // CoffeeMaker::TextView text("00");
+  CoffeeMaker::TextView text("00");
+  text.SetFont(CoffeeMaker::FontManager::UseFont("Roboto/Roboto-Black"));
+  // text.SetFont("Roboto/Roboto-Black");
+  text.SetColor(CoffeeMaker::Color(255, 255, 0, 255));
   // text.SetFont(CoffeeMaker::FontManager::UseFont("Roboto/Roboto-Regular"));
   // text.SetTextContentTexture();
 
@@ -74,11 +80,28 @@ int main(int, char **)
       {
         quit = true;
       }
+      if (event.type == SDL_KEYDOWN) {
+        if (event.key.keysym.sym == SDLK_s) {
+          if (timer.IsStarted()) {
+            timer.Stop();
+          } else {
+            timer.Start();
+          }
+        }
+        if (event.key.keysym.sym == SDLK_p) {
+          if (timer.IsPaused()) {
+            timer.Unpause();
+          } else {
+            timer.Pause();
+          }
+        }
+      }
     }
 
     // run logic
     enemy.Update();
     fpsCounter.Update();
+    text.SetText(std::to_string(timer.GetTicks()));
 
     // render
     renderer.BeginRender();
@@ -86,11 +109,12 @@ int main(int, char **)
     tiles.Render();
     enemy.Render();
     fpsCounter.Render();
+    text.Render();
 
     renderer.EndRender();
 
     // Cap framerate
-    SDL_Delay(16);
+    // SDL_Delay(16);
   }
 
   renderer.Destroy();

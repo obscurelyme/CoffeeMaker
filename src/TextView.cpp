@@ -2,9 +2,9 @@
 
 using namespace CoffeeMaker;
 
-TextView::TextView() : color(CoffeeMaker::Color()), _textContent(""), font(nullptr), renderer(CoffeeMaker::Renderer::Instance()), _texture(nullptr) {}
+TextView::TextView() : color(CoffeeMaker::Color()), _textContent(""), _font(nullptr), renderer(CoffeeMaker::Renderer::Instance()), _texture(nullptr) {}
 
-TextView::TextView(std::string textContent) : color(CoffeeMaker::Color()), _textContent(textContent), font(nullptr), renderer(CoffeeMaker::Renderer::Instance()), _texture(nullptr) {}
+TextView::TextView(std::string textContent) : color(CoffeeMaker::Color()), _textContent(textContent), _font(nullptr), renderer(CoffeeMaker::Renderer::Instance()), _texture(nullptr) {}
 
 TextView::~TextView()
 {
@@ -17,16 +17,22 @@ TextView::~TextView()
 
 void TextView::Render()
 {
-  if (_texture != nullptr)
-  {
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderCopy(renderer, _texture, NULL, &_textBoard);
+  if (_font == nullptr) {
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Text View : Render", "Cannot render TextView because it has no assigned font!", nullptr);
+    exit(1);
   }
+  if (_texture == nullptr) {
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Text View : Render", "Cannot render TextView because it has no assigned texture!", nullptr);
+    exit(1);
+  }
+
+  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+  SDL_RenderCopy(renderer, _texture, NULL, &_textBoard);
 }
 
 void TextView::SetFont(TTF_Font *f)
 {
-  font = f;
+  _font = f;
 }
 
 void TextView::SetText(const std::string &textContent)
@@ -37,10 +43,10 @@ void TextView::SetText(const std::string &textContent)
 
 void TextView::SetTextContentTexture()
 {
-  if (font != nullptr)
+  if (_font != nullptr)
   {
     SDL_Surface *surface;
-    surface = TTF_RenderText_Blended(font, _textContent.c_str(), color);
+    surface = TTF_RenderText_Blended(_font, _textContent.c_str(), color);
     _texture = SDL_CreateTextureFromSurface(renderer, surface);
     _textBoard.w = surface->w;
     _textBoard.h = surface->h;

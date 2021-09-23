@@ -28,7 +28,7 @@ namespace CoffeeMaker
 
   private:
     std::string _textContent;
-    TTF_Font *font;
+    TTF_Font *_font;
     SDL_Renderer *renderer;
     SDL_Rect _textBoard;
     SDL_Texture *_texture;
