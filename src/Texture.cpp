@@ -2,10 +2,38 @@
 #include "Utilities.hpp"
 #include "Renderer.hpp"
 #include "Logger.hpp"
+#include "MessageBox.hpp"
 
 #include <SDL2/SDL_image.h>
 
 using namespace CoffeeMaker;
+
+SDL_Texture* CoffeeMaker::createRectTextureFromSurface(int height, int width, const SDL_Color& color) {
+  #if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    int rmask = 0xff000000;
+    int gmask = 0x00ff0000;
+    int bmask = 0x0000ff00;
+    int amask = 0x000000ff;
+  #else
+    int rmask = 0x000000ff;
+    int gmask = 0x0000ff00;
+    int bmask = 0x00ff0000;
+    int amask = 0xff000000;
+  #endif
+  SDL_Surface* surface = SDL_CreateRGBSurface(0, width, height, 32, rmask, gmask, bmask, amask);
+  if (surface == NULL) {
+    CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("SDL_CreateRGBSurface Error", "Could not create surface");
+  }
+
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(Renderer::Instance(), surface);
+  if (texture == NULL) {
+    CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("SDL_CreateTextureFromSurface Error", "Could not create textgure");
+  }
+
+  SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
+  SDL_FreeSurface(surface);
+  return texture;
+}
 
 std::string Texture::_textureDirectory = "";
 
@@ -44,8 +72,9 @@ void Texture::LoadFromFile(const std::string &filePath)
   surface = IMG_Load(path.c_str());
   if (surface == nullptr)
   {
-    // TODO: something went wrong loading the texture
-    Logger::Error(fmt::format("Could not load surface at filepath {}", filePath));
+    std::string msg = fmt::format("Could not load surface at filepath {}", filePath);
+    CM_LOGGER_ERROR(msg);
+    CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("Error loading texture", msg);
     return;
   }
 
@@ -57,6 +86,12 @@ void Texture::LoadFromFile(const std::string &filePath)
   _height = surface->h;
   _width = surface->w;
   SDL_FreeSurface(surface);
+}
+
+void Texture::CreateFromSurface(int height, int width, const SDL_Color &c) {
+  _texture = createRectTextureFromSurface(height, width, c);
+  _width = 10;
+  _height = 25;
 }
 
 void Texture::Render(int top, int left)
@@ -97,6 +132,24 @@ void Texture::Render(const SDL_Rect &clip, const SDL_Rect &renderRect)
   }
 
   SDL_RenderCopy(CoffeeMaker::Renderer::Instance(), _texture, &clip, &renderRect);
+}
+
+void Texture::Render(const SDL_Rect &clip, const SDL_Rect &renderRect, double rotation) {
+  if (_texture == nullptr) {
+    CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("Error rendering texture", "Cannot render texture with nullptr");
+    return;
+  }
+  SDL_RendererFlip flip = SDL_FLIP_NONE;
+  SDL_RenderCopyEx(CoffeeMaker::Renderer::Instance(), _texture, &clip, &renderRect, rotation, NULL, flip);
+}
+
+void Texture::Render(const SDL_Rect &renderRect, double rotation) {
+  if (_texture == nullptr) {
+    CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("Error rendering texture", "Cannot render texture with nullptr");
+    return;
+  }
+  SDL_RendererFlip flip = SDL_FLIP_NONE;
+  SDL_RenderCopyEx(CoffeeMaker::Renderer::Instance(), _texture, NULL, &renderRect, rotation, NULL, flip);
 }
 
 void Texture::SetAlpha(Uint8 alpha)
@@ -147,4 +200,8 @@ void Texture::SetHeight(int const height)
 void Texture::SetWidth(int const width)
 {
   _width = width;
+}
+
+SDL_Texture* Texture::Handle() const {
+  return _texture;
 }

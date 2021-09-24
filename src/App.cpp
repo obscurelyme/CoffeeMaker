@@ -45,7 +45,7 @@ int main(int, char **)
   CoffeeMaker::BasicWindow win("Hello, SDL!", 800, 600);
   CoffeeMaker::Renderer renderer;
 
-  CoffeeMaker::Cursor cursor("cursor.png");
+  // CoffeeMaker::Cursor cursor("cursor.png");
   CoffeeMaker::FontManager::Init();
   CoffeeMaker::FontManager::LoadFont("Roboto/Roboto-Regular");
   CoffeeMaker::FontManager::LoadFont("Roboto/Roboto-Black");
@@ -67,6 +67,7 @@ int main(int, char **)
   CM_LOGGER_INFO("Current Window DPI {}", win.GetScreenDPI().toString());
 
   Enemy enemy;
+  Player player;
   Tiles tiles("space.png", 800, 600);
 
   win.ShowWindow();
@@ -80,6 +81,7 @@ int main(int, char **)
       {
         quit = true;
       }
+
       if (event.type == SDL_KEYDOWN) {
         if (event.key.keysym.sym == SDLK_s) {
           if (timer.IsStarted()) {
@@ -99,6 +101,7 @@ int main(int, char **)
     }
 
     // run logic
+    player.Update();
     enemy.Update();
     fpsCounter.Update();
     text.SetText(std::to_string(timer.GetTicks()));
@@ -107,6 +110,7 @@ int main(int, char **)
     renderer.BeginRender();
 
     tiles.Render();
+    player.Render();
     enemy.Render();
     fpsCounter.Render();
     text.Render();
@@ -114,7 +118,7 @@ int main(int, char **)
     renderer.EndRender();
 
     // Cap framerate
-    // SDL_Delay(16);
+    SDL_Delay(16);
   }
 
   renderer.Destroy();

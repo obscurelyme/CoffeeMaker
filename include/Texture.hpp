@@ -7,6 +7,8 @@
 
 namespace CoffeeMaker
 {
+  SDL_Texture* createRectTextureFromSurface(int height, int width, const SDL_Color &color);
+
   class Texture
   {
   public:
@@ -22,6 +24,7 @@ namespace CoffeeMaker
     ~Texture();
 
     void LoadFromFile(const std::string &filePath);
+    void CreateFromSurface(int height, int width, const SDL_Color &color);
     void SetColor(SDL_Color color = Color());
     void SetAlpha(Uint8 alpha);
     void SetBlendMode(SDL_BlendMode blend);
@@ -31,10 +34,13 @@ namespace CoffeeMaker
      */
     void Render(int top, int left, int height, int width);
     void Render(const SDL_Rect &clip, const SDL_Rect &renderRect);
+    void Render(const SDL_Rect &clip, const SDL_Rect &renderRect, double rotation);
+    void Render(const SDL_Rect &renderRect, double rotation);
     int Height() const;
     int Width() const;
     void SetHeight(int const height);
     void SetWidth(int const width);
+    SDL_Texture* Handle() const;
 
     static void SetTextureDirectory();
 

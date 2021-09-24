@@ -45,6 +45,10 @@ void TextView::SetTextContentTexture()
 {
   if (_font != nullptr)
   {
+    if (_texture != nullptr) {
+      SDL_DestroyTexture(_texture);
+      _texture = nullptr;
+    }
     SDL_Surface *surface;
     surface = TTF_RenderText_Blended(_font, _textContent.c_str(), color);
     _texture = SDL_CreateTextureFromSurface(renderer, surface);
