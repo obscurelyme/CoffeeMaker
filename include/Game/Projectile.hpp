@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include "Texture.hpp"
 #include <memory>
+#include <glm/glm.hpp>
 
 class Projectile {
   public:
@@ -15,8 +16,11 @@ class Projectile {
   private:
     static std::shared_ptr<CoffeeMaker::Texture> _texture;
     bool _fired;
-    SDL_Rect _clientRect;
+    SDL_FRect _clientRect;
     double _rotation;
+    int _endX;
+    int _endY;
+    glm::vec2 _movement;
 };
 
 #endif

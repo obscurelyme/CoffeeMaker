@@ -1,8 +1,7 @@
 #include "Game/Entity.hpp"
 #include "Renderer.hpp"
-#define _USE_MATH_DEFINES
-#include <math.h>
 #include "Logger.hpp"
+#include <glm/glm.hpp>
 
 Enemy::Enemy() {
   _priorTicks = SDL_GetTicks();
@@ -55,13 +54,9 @@ void Player::Update() {
   SDL_GetMouseState(&_mouseX, &_mouseY);
   int xx = _mouseX - _clientRect.x;
   int yy = _mouseY - _clientRect.y;
-  if (xx == 0) {
-    // Dividing by 0 will result in a crash
-    _rotation = 0;
-    return;
-  }
-  float t = (float)(yy / xx);
-  _rotation = (atan2(yy, xx) * (180/M_PI)) + 360;
+
+  _rotation = glm::degrees(glm::atan((float)yy, (float)xx));
+
   _projectile.Update();
 }
 
@@ -73,5 +68,5 @@ void Player::Render() {
 }
 
 void Player::Fire() {
-  _projectile.Fire(_clientRect.x, _clientRect.y, _rotation + 90);
+  _projectile.Fire(_clientRect.x, _clientRect.y, _rotation);
 }

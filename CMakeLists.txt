@@ -23,6 +23,7 @@ find_package(sdl2-image CONFIG REQUIRED)
 find_package(sdl2-ttf CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 
 set(COFFEEMAKER_MAIN src/App.cpp)
 set(COFFEEMAKER_ROOT_SOURCES
@@ -37,7 +38,8 @@ set(COFFEEMAKER_ROOT_SOURCES
   src/FPS.cpp
   src/FontManager.cpp
   src/Timer.cpp
-  src/MessageBox.cpp)
+  src/MessageBox.cpp
+  src/Transform.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cpp)
 set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/Component.cpp src/Widgets/View.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES})
@@ -48,7 +50,7 @@ set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SO
 
 add_executable(main ${COFFEEMAKER_EXE_SOURCES})
 target_include_directories(main PRIVATE include)
-target_link_libraries(main PRIVATE spdlog::spdlog spdlog::spdlog_header_only)
+target_link_libraries(main PRIVATE spdlog::spdlog spdlog::spdlog_header_only glm::glm)
 if (WIN32)
   message("Building for Win32")
   target_link_libraries(main PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_ttf SDL2::SDL2_image)
@@ -81,7 +83,7 @@ find_package(CppUnit CONFIG REQUIRED)
 
 add_executable(CoffeeMakerWindowUnitTests ${COFFEEMAKER_TEST_EXE_SOURCES})
 target_include_directories(CoffeeMakerWindowUnitTests PRIVATE "${VCPKG_INCLUDE}" include tests/include)
-target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE CppUnit spdlog::spdlog spdlog::spdlog_header_only)
+target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE CppUnit spdlog::spdlog spdlog::spdlog_header_only glm::glm)
 if (WIN32)
   target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_ttf SDL2::SDL2_image)
 elseif(APPLE)
