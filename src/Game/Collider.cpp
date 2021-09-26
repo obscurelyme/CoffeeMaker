@@ -71,6 +71,12 @@ bool Collider::_AxisAlignedBoundingBoxHit(Collider* collider) const {
 }
 
 void Collider::Render() {
-  CM_LOGGER_INFO("Rendering collider: {}", _id);
-  _texture.Render(clientRect.y, clientRect.x);
+  if (_id != 27) {
+    CM_LOGGER_INFO("Rendering collider: {}", _id);
+  }
+
+  SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), 0, 255, 0, 255);
+  SDL_RenderDrawRectF(CoffeeMaker::Renderer::Instance(), &clientRect);
+
+  // _texture.Render(clientRect.y, clientRect.x);
 }

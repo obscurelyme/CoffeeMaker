@@ -11,8 +11,10 @@ Player::Player() {
   // NOTE: center the player sprite in the viewport
   _clientRect.x = (vp.w - _clientRect.w) / 2;
   _clientRect.y = (vp.h - _clientRect.h) / 2;
-  Projectile projectile;
-  _projectiles.fill(projectile);
+  for (int i = 0; i < 25; i++) {
+    Projectile projectile;
+    _projectiles.emplace_back(projectile);
+  }
   _currentProjectile = 0;
 }
 

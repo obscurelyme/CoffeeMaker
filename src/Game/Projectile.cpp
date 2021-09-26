@@ -57,7 +57,6 @@ void Projectile::Fire(float x, float y, double rotation) {
     _movement = glm::normalize(calc);
 
     collider->active = true;
-    // CM_LOGGER_INFO("({}, {})", _movement.x, _movement.y);
   }
 }
 

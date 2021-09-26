@@ -2,7 +2,7 @@
 #include <SDL2/SDL.h>
 #include "Texture.hpp"
 #include "Projectile.hpp"
-#include <array>
+#include <vector>
 
 class Player : public Entity {
   public:
@@ -23,7 +23,7 @@ class Player : public Entity {
     double _rotation;
     int _mouseX;
     int _mouseY;
-    std::array<Projectile, 25> _projectiles;
+    std::vector<Projectile> _projectiles;
     int _currentProjectile;
     bool _firing;
 };
