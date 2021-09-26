@@ -5,7 +5,7 @@
 
 class Transform {
   public:
-    Transform(int x = 0, int y = 0);
+    Transform(float x = 0.0f, float y = 0.0f);
     ~Transform();
 
     const glm::vec2& Position() const;

@@ -29,6 +29,7 @@ namespace CoffeeMaker
     void SetAlpha(Uint8 alpha);
     void SetBlendMode(SDL_BlendMode blend);
     void Render(int top, int left);
+    void Render(float top, float left);
     /**
      * For use when the Texture's dimensions are controled by its parent
      */

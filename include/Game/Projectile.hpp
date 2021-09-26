@@ -6,21 +6,27 @@
 #include <memory>
 #include <glm/glm.hpp>
 
+#include "Game/Collider.hpp"
+
 class Projectile {
   public:
     Projectile();
-    void Fire(int initialXPosition, int initialYPosition, double rotation);
+    ~Projectile();
+
+    void Fire(float initialXPosition, float initialYPosition, double rotation);
     void Reload();
     void Update();
     void Render();
+
   private:
     static std::shared_ptr<CoffeeMaker::Texture> _texture;
     bool _fired;
     SDL_FRect _clientRect;
     double _rotation;
-    int _endX;
-    int _endY;
+    float _endX;
+    float _endY;
     glm::vec2 _movement;
+    Collider* collider;
 };
 
 #endif

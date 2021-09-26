@@ -39,12 +39,13 @@ set(COFFEEMAKER_ROOT_SOURCES
   src/FontManager.cpp
   src/Timer.cpp
   src/MessageBox.cpp
-  src/Transform.cpp)
+  src/Transform.cpp
+  src/InputManager.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cpp)
 set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/Component.cpp src/Widgets/View.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES})
 
-set(GAME_SOURCES src/Game/Entity.cpp src/Game/Tiles.cpp src/Game/Projectile.cpp)
+set(GAME_SOURCES src/Game/Collider.cpp src/Game/Enemy.cpp src/Game/Player.cpp src/Game/Tiles.cpp src/Game/Projectile.cpp)
 
 set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES})
 
@@ -76,7 +77,8 @@ set(COFFEEMAKER_TEST_SOURCES
   tests/CoffeeMakerTextureTest.cpp
   tests/CoffeeMakerUtilities.cpp
   tests/CoffeeMakerWidgetButton.cpp
-  tests/CoffeeMakerWidgetView.cpp)
+  tests/CoffeeMakerWidgetView.cpp
+  tests/CoffeeMakerComponent.cpp)
 set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES} ${COFFEEMAKER_TEST_SOURCES})
 
 find_package(CppUnit CONFIG REQUIRED)

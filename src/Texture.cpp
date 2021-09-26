@@ -30,6 +30,13 @@ SDL_Texture* CoffeeMaker::createRectTextureFromSurface(int height, int width, co
     CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("SDL_CreateTextureFromSurface Error", "Could not create textgure");
   }
 
+  // TODO Need to manually fill in the pixels
+  // for (int i = 0; i < surface->w; i++) {
+  //   for (int j = 0; j < surface->h; j++) {
+  //     surface->pixels[i + j] = 255;
+  //   }
+  // }
+
   SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
   SDL_FreeSurface(surface);
   return texture;
@@ -106,6 +113,20 @@ void Texture::Render(int top, int left)
   }
 
   SDL_RenderCopy(CoffeeMaker::Renderer::Instance(), _texture, NULL, &renderQuad);
+}
+
+void Texture::Render(float top, float left)
+{
+  SDL_FRect renderQuad = {.x = left, .y = top, .w = (float)_width, .h = (float)_height};
+
+  if (_texture == nullptr)
+  {
+    SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), _color.r, _color.g, _color.b, _color.a);
+    SDL_RenderDrawRectF(CoffeeMaker::Renderer::Instance(), &renderQuad);
+    return;
+  }
+
+  SDL_RenderCopyF(CoffeeMaker::Renderer::Instance(), _texture, NULL, &renderQuad);
 }
 
 void Texture::Render(int top, int left, int height, int width)

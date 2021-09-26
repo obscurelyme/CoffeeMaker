@@ -1,6 +1,6 @@
 #include "Transform.hpp"
 
-Transform::Transform(int x, int y) {
+Transform::Transform(float x, float y) {
   vec2.x = x;
   vec2.y = y;
 }

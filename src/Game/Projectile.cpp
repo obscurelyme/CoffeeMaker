@@ -11,13 +11,22 @@ Projectile::Projectile(): _fired(false), _rotation(0) {
   }
   _clientRect.w = 16;
   _clientRect.h = 16;
+  collider = new Collider(false);
+  collider->clientRect.w = 32;
+  collider->clientRect.h = 32;
+  collider->clientRect.x = _clientRect.x;
+  collider->clientRect.y = _clientRect.y;
+}
+
+Projectile::~Projectile() {
+  // delete collider;
 }
 
 void Projectile::Render() {
   if (_fired) {
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), Projectile::_texture->Handle(), NULL, &_clientRect, _rotation + 90, NULL, flip);
-    // Projectile::_texture->Render(_clientRect, _rotation + 90);
+    collider->Render();
   }
 }
 
@@ -25,24 +34,27 @@ void Projectile::Update() {
   if (_fired) {
     _clientRect.x += _movement.x * 5;
     _clientRect.y += _movement.y * 5;
-    // CM_LOGGER_INFO("({}, {})", _clientRect.x, _clientRect.y);
+
+    // NOTE: probably want this separated out
+    collider->Update(_clientRect);
   }
 }
 
-void Projectile::Fire(int x, int y, double rotation) {
+void Projectile::Fire(float x, float y, double rotation) {
   if (!_fired) {
     _fired = true;
     _clientRect.x = x;
     _clientRect.y = y;
     _rotation = rotation;
 
-    _endX = (int)(x + 900 * cos(glm::radians(rotation)));
-    _endY = (int)(y + 900 * sin(glm::radians(rotation)));
+    _endX = (float)(x + 900 * cos(glm::radians(rotation)));
+    _endY = (float)(y + 900 * sin(glm::radians(rotation)));
     glm::vec2 calc;
     calc.x = _endX - x;
     calc.y = _endY - y;
     _movement = glm::normalize(calc);
 
+    collider->active = true;
     // CM_LOGGER_INFO("({}, {})", _movement.x, _movement.y);
   }
 }

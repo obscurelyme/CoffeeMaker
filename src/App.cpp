@@ -12,9 +12,12 @@
 #include "TextView.hpp"
 #include "Timer.hpp"
 #include "Color.hpp"
+#include "InputManager.hpp"
 
-#include "Game/Entity.hpp"
+#include "Game/Enemy.hpp"
+#include "Game/Player.hpp"
 #include "Game/Tiles.hpp"
+#include "Game/Collider.hpp"
 
 #include <chrono>
 
@@ -55,12 +58,6 @@ int main(int, char **)
 
   CoffeeMaker::Timer timer;
   CoffeeMaker::FPS fpsCounter;
-  CoffeeMaker::TextView text("00");
-  text.SetFont(CoffeeMaker::FontManager::UseFont("Roboto/Roboto-Black"));
-  // text.SetFont("Roboto/Roboto-Black");
-  text.SetColor(CoffeeMaker::Color(255, 255, 0, 255));
-  // text.SetFont(CoffeeMaker::FontManager::UseFont("Roboto/Roboto-Regular"));
-  // text.SetTextContentTexture();
 
   CM_LOGGER_INFO("Initialization time took: {}", elapsedSeconds.count());
   CM_LOGGER_INFO("Display count: {}", win.DisplayCount());
@@ -68,43 +65,34 @@ int main(int, char **)
 
   Enemy enemy;
   Player player;
+  Collider collide(true);
+  collide.SetHeight(64);
+  collide.SetWidth(32);
+
   Tiles tiles("space.png", 800, 600);
 
   win.ShowWindow();
+  CoffeeMaker::InputManager::Init();
 
-  while (!quit)
-  {
+  while (!quit) {
     // get input
-    while (SDL_PollEvent(&event))
-    {
-      if (event.type == SDL_QUIT)
-      {
+    while (SDL_PollEvent(&event)) {
+      if (event.type == SDL_QUIT) {
         quit = true;
       }
 
-      if (event.type == SDL_KEYDOWN) {
-        if (event.key.keysym.sym == SDLK_s) {
-          if (timer.IsStarted()) {
-            timer.Stop();
-          } else {
-            timer.Start();
-          }
-        }
-        if (event.key.keysym.sym == SDLK_p) {
-          if (timer.IsPaused()) {
-            timer.Unpause();
-          } else {
-            timer.Pause();
-          }
-        }
+      if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
+        CoffeeMaker::InputManager::HandleKeyBoardEvent(&event.key);
       }
     }
+
+    // physics step
+    Collider::PhysicsUpdate();
 
     // run logic
     player.Update();
     enemy.Update();
     fpsCounter.Update();
-    text.SetText(std::to_string(timer.GetTicks()));
 
     // render
     renderer.BeginRender();
@@ -113,10 +101,11 @@ int main(int, char **)
     player.Render();
     enemy.Render();
     fpsCounter.Render();
-    text.Render();
+    collide.Render();
 
     renderer.EndRender();
 
+    CoffeeMaker::InputManager::ClearAllPresses();
     // Cap framerate
     SDL_Delay(16);
   }
