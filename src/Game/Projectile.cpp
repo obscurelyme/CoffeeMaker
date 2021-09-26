@@ -19,6 +19,8 @@ Projectile::Projectile(): _fired(false), _rotation(0) {
 }
 
 Projectile::~Projectile() {
+  // TODO: fix clean up here. uncommenting in current state will crash application due to this being called
+  // from Player constructor
   // delete collider;
 }
 

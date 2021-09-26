@@ -71,5 +71,6 @@ bool Collider::_AxisAlignedBoundingBoxHit(Collider* collider) const {
 }
 
 void Collider::Render() {
+  CM_LOGGER_INFO("Rendering collider: {}", _id);
   _texture.Render(clientRect.y, clientRect.x);
 }
