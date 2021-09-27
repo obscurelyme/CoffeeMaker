@@ -2,17 +2,17 @@
 #define _coffeemaker_button_hpp
 
 #include <SDL2/SDL.h>
+
 #include <string>
+
 #include "Color.hpp"
 #include "Texture.hpp"
-#include "Component.hpp"
+#include "Widgets/UIComponent.hpp"
 
-namespace CoffeeMaker
-{
+namespace CoffeeMaker {
 
-  class Button : public Component
-  {
-  public:
+  class Button : public UIComponent {
+    public:
     Button();
 
     void Draw();
@@ -32,12 +32,12 @@ namespace CoffeeMaker
     void *children;
     Texture _texture;
 
-  private:
+    private:
     bool _HitDetection(const int &mouseX, const int &mouseY);
 
     bool _hovered;
   };
 
-} // CoffeeMaker
+}  // namespace CoffeeMaker
 
 #endif

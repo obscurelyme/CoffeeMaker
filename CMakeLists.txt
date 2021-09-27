@@ -33,7 +33,6 @@ set(COFFEEMAKER_ROOT_SOURCES
   src/Logger.cpp
   src/Utilities.cpp
   src/Texture.cpp
-  src/TextView.cpp
   src/Cursor.cpp
   src/FPS.cpp
   src/FontManager.cpp
@@ -42,7 +41,7 @@ set(COFFEEMAKER_ROOT_SOURCES
   src/Transform.cpp
   src/InputManager.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cpp)
-set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/Component.cpp src/Widgets/View.cpp)
+set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/UIComponent.cpp src/Widgets/View.cpp src/Widgets/Text.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES})
 
 set(GAME_SOURCES src/Game/Collider.cpp src/Game/Enemy.cpp src/Game/Player.cpp src/Game/Tiles.cpp src/Game/Projectile.cpp)
@@ -78,7 +77,8 @@ set(COFFEEMAKER_TEST_SOURCES
   tests/CoffeeMakerUtilities.cpp
   tests/CoffeeMakerWidgetButton.cpp
   tests/CoffeeMakerWidgetView.cpp
-  tests/CoffeeMakerComponent.cpp)
+  tests/CoffeeMakerComponent.cpp
+  tests/CoffeeMakerWidgetText.cpp)
 set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES} ${COFFEEMAKER_TEST_SOURCES})
 
 find_package(CppUnit CONFIG REQUIRED)

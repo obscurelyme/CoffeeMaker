@@ -3,35 +3,28 @@
 
 #include <SDL2/SDL.h>
 
-#include "Component.hpp"
+#include "Properties.hpp"
+#include "Widgets/UIComponent.hpp"
+
+using namespace CoffeeMaker::UIProperties;
 
 namespace CoffeeMaker {
 
-namespace Widgets {
+  namespace Widgets {
 
-enum class ViewXProps { CENTERED, LEFT_ALIGNED, RIGHT_ALIGNED };
+    class View : public UIComponent {
+      public:
+      View();
+      View(int width, int height, HorizontalAlignment xAlign = HorizontalAlignment::Left,
+           VerticalAlignment yAlign = VerticalAlignment::Top, int spacing = 0);
+      ~View() = default;
 
-enum class ViewYProps { CENTERED, TOP_ALIGNED, BOTTOM_ALIGNED };
+      void Render();
 
-class View : public Component {
- public:
-  View(int width, int height, ViewXProps xProperties = ViewXProps::LEFT_ALIGNED,
-       ViewYProps yProperties = ViewYProps::TOP_ALIGNED, int spacing = 0);
-  ~View() = default;
+      int spacing;
+    };
 
-  void Render();
-
-  int spacing;
-
- private:
-  int _DerivedXPosition();
-  int _DerivedYPosition();
-
-  ViewXProps _xProps;
-  ViewYProps _yProps;
-};
-
-}  // namespace Widgets
+  }  // namespace Widgets
 
 }  // namespace CoffeeMaker
 

@@ -4,17 +4,18 @@
 #include "FontManager.hpp"
 
 using namespace CoffeeMaker;
+using namespace CoffeeMaker::UIProperties;
 
 FPS::FPS() {
   _priorTime = SDL_GetTicks();
   _currentTime = _priorTime;
 
-  _textView.SetFont(FontManager::UseFont("Roboto/Roboto-Regular"));
-  _textView.SetText("00");
-  _textView.SetColor(Color(255, 255, 0, 255));  // Yellow
-  _textView.SetXAlignment(TextAlignmentX::Centered);
-  _textView.SetYAlignment(TextAlignmentY::BottomAligned);
-  _view.AppendChild(&_textView);
+  _text.SetFont(FontManager::UseFont("Roboto/Roboto-Regular"));
+  _text.SetText("00");
+  _text.SetColor(Color(255, 255, 0, 255));  // Yellow
+  _text.SetHorizontalAlignment(HorizontalAlignment::Centered);
+  _text.SetVerticalAlignment(VerticalAlignment::Bottom);
+  _view.AppendChild(&_text);
 }
 
 FPS::~FPS() {}
@@ -24,7 +25,7 @@ void FPS::Update() {
   _currentTime = SDL_GetTicks();
 
   if (_currentTime - _priorTime >= _msInASecond) {
-    _textView.SetText(std::to_string(_countedFrames));
+    _text.SetText(std::to_string(_countedFrames));
     _priorTime = _currentTime;
     _countedFrames = 0;
   }

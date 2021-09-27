@@ -16,9 +16,9 @@
 #include "InputManager.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
-#include "TextView.hpp"
 #include "Timer.hpp"
 #include "Utilities.hpp"
+#include "Widgets/Text.hpp"
 #include "Window.hpp"
 
 bool quit = false;
@@ -55,6 +55,14 @@ int main(int, char **) {
 
   CoffeeMaker::Timer timer;
   CoffeeMaker::FPS fpsCounter;
+
+  CoffeeMaker::Widgets::View scoreView{200, 75, CoffeeMaker::UIProperties::HorizontalAlignment::Centered,
+                                       CoffeeMaker::UIProperties::VerticalAlignment::Top};
+  CoffeeMaker::Widgets::Text scoreText;
+  scoreText.SetFont(CoffeeMaker::FontManager::UseFont("Roboto/Roboto-Regular"));
+  scoreText.SetText("Hello, World!");
+  scoreText.SetColor(CoffeeMaker::Color(0, 255, 255, 255));
+  scoreView.AppendChild(&scoreText);
 
   CM_LOGGER_INFO("Initialization time took: {}", elapsedSeconds.count());
   CM_LOGGER_INFO("Display count: {}", win.DisplayCount());
@@ -99,6 +107,7 @@ int main(int, char **) {
     enemy.Render();
     fpsCounter.Render();
     collide.Render();
+    scoreView.Render();
 
     renderer.EndRender();
 

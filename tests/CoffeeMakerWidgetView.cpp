@@ -1,18 +1,16 @@
 
+#include "CoffeeMakerWidgetView.hpp"
+
 #include <cppunit/TestAssert.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "CoffeeMakerWidgetView.hpp"
-
 #include "Widgets/View.hpp"
 
-void CoffeeMakerWidgetView::setUp() {
-  _testBed = new CoffeeMaker::Test::TestBed();
-}
+using namespace CoffeeMaker::UIProperties;
 
-void CoffeeMakerWidgetView::tearDown() {
-  delete _testBed;
-}
+void CoffeeMakerWidgetView::setUp() { _testBed = new CoffeeMaker::Test::TestBed(); }
+
+void CoffeeMakerWidgetView::tearDown() { delete _testBed; }
 
 void CoffeeMakerWidgetView::testDefaultViewport() {
   CoffeeMaker::Widgets::View view(100, 150);
@@ -29,7 +27,7 @@ void CoffeeMakerWidgetView::testDefaultViewport() {
 }
 
 void CoffeeMakerWidgetView::testCentered() {
-  CoffeeMaker::Widgets::View view(100, 150, CoffeeMaker::Widgets::ViewXProps::CENTERED, CoffeeMaker::Widgets::ViewYProps::CENTERED);
+  CoffeeMaker::Widgets::View view(100, 150, HorizontalAlignment::Centered, VerticalAlignment::Centered);
 
   CPPUNIT_ASSERT_EQUAL(200, view.clientRect.x);
   CPPUNIT_ASSERT_EQUAL(175, view.clientRect.y);
@@ -38,7 +36,7 @@ void CoffeeMakerWidgetView::testCentered() {
 }
 
 void CoffeeMakerWidgetView::testRightBottomAligned() {
-  CoffeeMaker::Widgets::View view(100, 150, CoffeeMaker::Widgets::ViewXProps::RIGHT_ALIGNED, CoffeeMaker::Widgets::ViewYProps::BOTTOM_ALIGNED);
+  CoffeeMaker::Widgets::View view(100, 150, HorizontalAlignment::Right, VerticalAlignment::Bottom);
 
   CPPUNIT_ASSERT_EQUAL(400, view.clientRect.x);
   CPPUNIT_ASSERT_EQUAL(350, view.clientRect.y);
@@ -47,4 +45,3 @@ void CoffeeMakerWidgetView::testRightBottomAligned() {
 }
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoffeeMakerWidgetView);
-
