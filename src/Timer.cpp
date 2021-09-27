@@ -2,7 +2,8 @@
 
 using namespace CoffeeMaker;
 
-Timer::Timer(): _startTicks(0), _pausedTicks(0), _paused(false), _started(false) {}
+Timer::Timer()
+    : _startTicks(0), _pausedTicks(0), _paused(false), _started(false) {}
 
 void Timer::Start() {
   _started = true;
@@ -50,10 +51,6 @@ Uint32 Timer::GetTicks() {
   return time;
 }
 
-bool Timer::IsPaused() {
-  return _paused;
-}
+bool Timer::IsPaused() { return _paused; }
 
-bool Timer::IsStarted() {
-  return _started;
-}
+bool Timer::IsStarted() { return _started; }

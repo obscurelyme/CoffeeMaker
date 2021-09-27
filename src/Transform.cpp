@@ -7,6 +7,4 @@ Transform::Transform(float x, float y) {
 
 Transform::~Transform() {}
 
-const glm::vec2& Transform::Position() const {
-  return vec2;
-}
+const glm::vec2& Transform::Position() const { return vec2; }

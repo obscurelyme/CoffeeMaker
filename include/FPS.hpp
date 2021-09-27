@@ -8,23 +8,23 @@ using namespace CoffeeMaker::Widgets;
 
 namespace CoffeeMaker {
 
-  class FPS {
-    public:
-      FPS();
-      ~FPS();
+class FPS {
+ public:
+  FPS();
+  ~FPS();
 
-      void Update();
-      void Render();
+  void Update();
+  void Render();
 
-    private:
-      View _view{50, 50, ViewXProps::RIGHT_ALIGNED, ViewYProps::TOP_ALIGNED};
-      TextView _textView;
-      unsigned int _countedFrames;
-      const unsigned int _msInASecond = 1000;
-      unsigned int _priorTime;
-      unsigned int _currentTime;
-  };
+ private:
+  View _view{50, 50, ViewXProps::RIGHT_ALIGNED, ViewYProps::TOP_ALIGNED};
+  TextView _textView;
+  unsigned int _countedFrames;
+  const unsigned int _msInASecond = 1000;
+  unsigned int _priorTime;
+  unsigned int _currentTime;
+};
 
-}
+}  // namespace CoffeeMaker
 
 #endif

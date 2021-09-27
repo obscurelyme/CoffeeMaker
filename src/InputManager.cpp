@@ -1,4 +1,5 @@
 #include "InputManager.hpp"
+
 #include "Logger.hpp"
 
 using namespace CoffeeMaker;

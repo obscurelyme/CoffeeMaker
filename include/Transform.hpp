@@ -4,14 +4,14 @@
 #include <glm/glm.hpp>
 
 class Transform {
-  public:
-    Transform(float x = 0.0f, float y = 0.0f);
-    ~Transform();
+ public:
+  Transform(float x = 0.0f, float y = 0.0f);
+  ~Transform();
 
-    const glm::vec2& Position() const;
+  const glm::vec2& Position() const;
 
-  private:
-    glm::vec2 vec2;
+ private:
+  glm::vec2 vec2;
 };
 
 #endif

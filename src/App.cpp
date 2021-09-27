@@ -1,43 +1,40 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+
+#include <chrono>
 #include <filesystem>
-#include "FontManager.hpp"
-#include "Window.hpp"
-#include "Renderer.hpp"
-#include "Utilities.hpp"
-#include "Logger.hpp"
+
+#include "Color.hpp"
 #include "Cursor.hpp"
 #include "FPS.hpp"
-#include "TextView.hpp"
-#include "Timer.hpp"
-#include "Color.hpp"
-#include "InputManager.hpp"
-
+#include "FontManager.hpp"
+#include "Game/Collider.hpp"
 #include "Game/Enemy.hpp"
 #include "Game/Player.hpp"
 #include "Game/Tiles.hpp"
-#include "Game/Collider.hpp"
-
-#include <chrono>
+#include "InputManager.hpp"
+#include "Logger.hpp"
+#include "Renderer.hpp"
+#include "TextView.hpp"
+#include "Timer.hpp"
+#include "Utilities.hpp"
+#include "Window.hpp"
 
 bool quit = false;
 SDL_Event event;
 
-int main(int, char **)
-{
+int main(int, char **) {
   // Start clock
   auto start = std::chrono::steady_clock::now();
   CM_LOGGER_INIT();
 
-  if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
-  {
+  if (SDL_Init(SDL_INIT_EVERYTHING) == -1) {
     CM_LOGGER_CRITICAL("Could not initialize SDL2!");
     exit(1);
   }
 
-  if (IMG_Init(IMG_INIT_PNG) == 0)
-  {
+  if (IMG_Init(IMG_INIT_PNG) == 0) {
     CM_LOGGER_CRITICAL("Could not initialize SDL2 Images");
     exit(1);
   }

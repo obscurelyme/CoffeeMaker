@@ -2,19 +2,20 @@
 #define _coffeemaker_cursor_hpp
 
 #include <SDL2/SDL.h>
+
 #include <string>
 
 namespace CoffeeMaker {
 
-  class Cursor {
-    public:
-      Cursor(const std::string& filePath);
-      ~Cursor();
+class Cursor {
+ public:
+  Cursor(const std::string& filePath);
+  ~Cursor();
 
-    private:
-      SDL_Cursor* _cursor;
-  };
+ private:
+  SDL_Cursor* _cursor;
+};
 
-}
+}  // namespace CoffeeMaker
 
 #endif

@@ -2,41 +2,43 @@
 
 using namespace CoffeeMaker;
 
-TextView::TextView() :
-  color(CoffeeMaker::Color()),
-  _textContent(""),
-  _font(nullptr),
-  renderer(CoffeeMaker::Renderer::Instance()),
-  _texture(nullptr),
-  _xProps(TextAlignmentX::LeftAligned),
-  _yProps(TextAlignmentY::TopAligned) {}
+TextView::TextView()
+    : color(CoffeeMaker::Color()),
+      _textContent(""),
+      _font(nullptr),
+      renderer(CoffeeMaker::Renderer::Instance()),
+      _texture(nullptr),
+      _xProps(TextAlignmentX::LeftAligned),
+      _yProps(TextAlignmentY::TopAligned) {}
 
-TextView::TextView(std::string textContent) :
-  color(CoffeeMaker::Color()),
-  _textContent(textContent),
-  _font(nullptr),
-  renderer(CoffeeMaker::Renderer::Instance()),
-  _texture(nullptr),
-  _xProps(TextAlignmentX::LeftAligned),
-  _yProps(TextAlignmentY::TopAligned) {}
+TextView::TextView(std::string textContent)
+    : color(CoffeeMaker::Color()),
+      _textContent(textContent),
+      _font(nullptr),
+      renderer(CoffeeMaker::Renderer::Instance()),
+      _texture(nullptr),
+      _xProps(TextAlignmentX::LeftAligned),
+      _yProps(TextAlignmentY::TopAligned) {}
 
-TextView::~TextView()
-{
-  if (_texture != nullptr)
-  {
-    // SDL renderer destroys textures automatically when calling SDL_DestroyRenderer
+TextView::~TextView() {
+  if (_texture != nullptr) {
+    // SDL renderer destroys textures automatically when calling
+    // SDL_DestroyRenderer
     _texture = nullptr;
   }
 }
 
-void TextView::Render()
-{
+void TextView::Render() {
   if (_font == nullptr) {
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Text View : Render", "Cannot render TextView because it has no assigned font!", nullptr);
+    SDL_ShowSimpleMessageBox(
+        SDL_MESSAGEBOX_ERROR, "Text View : Render",
+        "Cannot render TextView because it has no assigned font!", nullptr);
     exit(1);
   }
   if (_texture == nullptr) {
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Text View : Render", "Cannot render TextView because it has no assigned texture!", nullptr);
+    SDL_ShowSimpleMessageBox(
+        SDL_MESSAGEBOX_ERROR, "Text View : Render",
+        "Cannot render TextView because it has no assigned texture!", nullptr);
     exit(1);
   }
 
@@ -46,21 +48,15 @@ void TextView::Render()
   SDL_RenderCopy(renderer, _texture, NULL, &_textBoard);
 }
 
-void TextView::SetFont(TTF_Font *f)
-{
-  _font = f;
-}
+void TextView::SetFont(TTF_Font *f) { _font = f; }
 
-void TextView::SetText(const std::string &textContent)
-{
+void TextView::SetText(const std::string &textContent) {
   _textContent = textContent;
   SetTextContentTexture();
 }
 
-void TextView::SetTextContentTexture()
-{
-  if (_font != nullptr)
-  {
+void TextView::SetTextContentTexture() {
+  if (_font != nullptr) {
     if (_texture != nullptr) {
       SDL_DestroyTexture(_texture);
       _texture = nullptr;
@@ -74,7 +70,7 @@ void TextView::SetTextContentTexture()
   }
 }
 
-void TextView::SetColor(const SDL_Color& newColor) {
+void TextView::SetColor(const SDL_Color &newColor) {
   color.r = newColor.r;
   color.g = newColor.g;
   color.b = newColor.b;

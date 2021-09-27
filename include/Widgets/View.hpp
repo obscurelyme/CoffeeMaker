@@ -1,45 +1,38 @@
 #ifndef _coffeemaker_view_hpp
 #define _coffeemaker_view_hpp
 
-#include "Component.hpp"
-
 #include <SDL2/SDL.h>
+
+#include "Component.hpp"
 
 namespace CoffeeMaker {
 
-  namespace Widgets {
+namespace Widgets {
 
-    enum class ViewXProps {
-      CENTERED,
-      LEFT_ALIGNED,
-      RIGHT_ALIGNED
-    };
+enum class ViewXProps { CENTERED, LEFT_ALIGNED, RIGHT_ALIGNED };
 
-    enum class ViewYProps {
-      CENTERED,
-      TOP_ALIGNED,
-      BOTTOM_ALIGNED
-    };
+enum class ViewYProps { CENTERED, TOP_ALIGNED, BOTTOM_ALIGNED };
 
-    class View : public Component {
-      public:
-        View(int width, int height, ViewXProps xProperties = ViewXProps::LEFT_ALIGNED, ViewYProps yProperties = ViewYProps::TOP_ALIGNED, int spacing = 0);
-        ~View() = default;
+class View : public Component {
+ public:
+  View(int width, int height, ViewXProps xProperties = ViewXProps::LEFT_ALIGNED,
+       ViewYProps yProperties = ViewYProps::TOP_ALIGNED, int spacing = 0);
+  ~View() = default;
 
-        void Render();
+  void Render();
 
-        int spacing;
+  int spacing;
 
-      private:
-        int _DerivedXPosition();
-        int _DerivedYPosition();
+ private:
+  int _DerivedXPosition();
+  int _DerivedYPosition();
 
-        ViewXProps _xProps;
-        ViewYProps _yProps;
-    };
+  ViewXProps _xProps;
+  ViewYProps _yProps;
+};
 
-  }
+}  // namespace Widgets
 
-}
+}  // namespace CoffeeMaker
 
 #endif

@@ -5,27 +5,27 @@
 
 namespace CoffeeMaker {
 
-  class Timer {
-    public:
-      Timer();
+class Timer {
+ public:
+  Timer();
 
-      void Start();
-      Uint32 GetTicks();
-      void Pause();
-      void Unpause();
-      void Stop();
+  void Start();
+  Uint32 GetTicks();
+  void Pause();
+  void Unpause();
+  void Stop();
 
-      bool IsStarted();
-      bool IsPaused();
+  bool IsStarted();
+  bool IsPaused();
 
-    private:
-      Uint32 _startTicks;
-      Uint32 _pausedTicks;
+ private:
+  Uint32 _startTicks;
+  Uint32 _pausedTicks;
 
-      bool _paused;
-      bool _started;
-  };
+  bool _paused;
+  bool _started;
+};
 
-}
+}  // namespace CoffeeMaker
 
 #endif
