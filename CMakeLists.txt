@@ -44,7 +44,7 @@ set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cp
 set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/UIComponent.cpp src/Widgets/View.cpp src/Widgets/Text.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES})
 
-set(GAME_SOURCES src/Game/Collider.cpp src/Game/Enemy.cpp src/Game/Player.cpp src/Game/Tiles.cpp src/Game/Projectile.cpp)
+set(GAME_SOURCES src/Game/Scene.cpp src/Game/Collider.cpp src/Game/Enemy.cpp src/Game/Player.cpp src/Game/Tiles.cpp src/Game/Projectile.cpp)
 
 set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES})
 

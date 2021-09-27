@@ -10,9 +10,7 @@
 #include "FPS.hpp"
 #include "FontManager.hpp"
 #include "Game/Collider.hpp"
-#include "Game/Enemy.hpp"
-#include "Game/Player.hpp"
-#include "Game/Tiles.hpp"
+#include "Game/Scene.hpp"
 #include "InputManager.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
@@ -68,13 +66,8 @@ int main(int, char **) {
   CM_LOGGER_INFO("Display count: {}", win.DisplayCount());
   CM_LOGGER_INFO("Current Window DPI {}", win.GetScreenDPI().toString());
 
-  Enemy enemy;
-  Player player;
-  Collider collide(true);
-  collide.SetHeight(64);
-  collide.SetWidth(32);
-
-  Tiles tiles("space.png", 800, 600);
+  Scene scene;
+  scene.Init();
 
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
@@ -95,18 +88,14 @@ int main(int, char **) {
     Collider::PhysicsUpdate();
 
     // run logic
-    player.Update();
-    enemy.Update();
     fpsCounter.Update();
+    scene.Update();
 
     // render
     renderer.BeginRender();
 
-    tiles.Render();
-    player.Render();
-    enemy.Render();
+    scene.Render();
     fpsCounter.Render();
-    collide.Render();
     scoreView.Render();
 
     renderer.EndRender();

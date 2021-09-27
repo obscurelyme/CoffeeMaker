@@ -2,6 +2,7 @@
 #define _tiles_hpp
 
 #include <string>
+
 #include "Texture.hpp"
 
 /**
@@ -9,19 +10,20 @@
  */
 class Tiles {
   public:
-    /**
-     * Construct the tiling based on the viewport width and height
-     * and the height/width of the loaded texture
-     */
-    Tiles(const std::string& filePath, int viewportWidth, int viewportHeight);
-    ~Tiles() = default;
+  Tiles();
+  /**
+   * Construct the tiling based on the viewport width and height
+   * and the height/width of the loaded texture
+   */
+  Tiles(const std::string& filePath, int viewportWidth, int viewportHeight);
+  ~Tiles() = default;
 
-    void Render();
+  void Render();
 
   private:
-    CoffeeMaker::Texture _texture;
-    int _viewportWidth;
-    int _viewportHeight;
+  CoffeeMaker::Texture _texture;
+  int _viewportWidth;
+  int _viewportHeight;
 };
 
 #endif
