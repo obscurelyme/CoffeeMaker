@@ -2,9 +2,23 @@
 
 using namespace CoffeeMaker;
 
-TextView::TextView() : color(CoffeeMaker::Color()), _textContent(""), _font(nullptr), renderer(CoffeeMaker::Renderer::Instance()), _texture(nullptr) {}
+TextView::TextView() :
+  color(CoffeeMaker::Color()),
+  _textContent(""),
+  _font(nullptr),
+  renderer(CoffeeMaker::Renderer::Instance()),
+  _texture(nullptr),
+  _xProps(TextAlignmentX::LeftAligned),
+  _yProps(TextAlignmentY::TopAligned) {}
 
-TextView::TextView(std::string textContent) : color(CoffeeMaker::Color()), _textContent(textContent), _font(nullptr), renderer(CoffeeMaker::Renderer::Instance()), _texture(nullptr) {}
+TextView::TextView(std::string textContent) :
+  color(CoffeeMaker::Color()),
+  _textContent(textContent),
+  _font(nullptr),
+  renderer(CoffeeMaker::Renderer::Instance()),
+  _texture(nullptr),
+  _xProps(TextAlignmentX::LeftAligned),
+  _yProps(TextAlignmentY::TopAligned) {}
 
 TextView::~TextView()
 {
@@ -26,6 +40,8 @@ void TextView::Render()
     exit(1);
   }
 
+  _textBoard.x = DeriveXAxisPosition();
+  _textBoard.y = DeriveYAxisPosition();
   SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
   SDL_RenderCopy(renderer, _texture, NULL, &_textBoard);
 }
@@ -54,8 +70,6 @@ void TextView::SetTextContentTexture()
     _texture = SDL_CreateTextureFromSurface(renderer, surface);
     _textBoard.w = surface->w;
     _textBoard.h = surface->h;
-    _textBoard.x = 0; //(viewPort.w - surface->w) / 2;
-    _textBoard.y = 0; //(viewPort.h - surface->h) / 2;
     SDL_FreeSurface(surface);
   }
 }
@@ -66,4 +80,38 @@ void TextView::SetColor(const SDL_Color& newColor) {
   color.b = newColor.b;
   color.a = newColor.a;
   SetTextContentTexture();
+}
+
+void TextView::SetXAlignment(TextAlignmentX xAlignment) {
+  _xProps = xAlignment;
+}
+
+void TextView::SetYAlignment(TextAlignmentY yAlignment) {
+  _yProps = yAlignment;
+}
+
+int TextView::DeriveXAxisPosition() {
+  SDL_Rect currentViewport;
+  SDL_RenderGetViewport(Renderer::Instance(), &currentViewport);
+
+  if (_xProps == TextAlignmentX::Centered) {
+    return (currentViewport.w - _textBoard.w) / 2;
+  } else if (_xProps == TextAlignmentX::RightAligned) {
+    return (currentViewport.w - _textBoard.w);
+  } else {
+    return 0;
+  }
+}
+
+int TextView::DeriveYAxisPosition() {
+  SDL_Rect currentViewport;
+  SDL_RenderGetViewport(Renderer::Instance(), &currentViewport);
+
+  if (_yProps == TextAlignmentY::Centered) {
+    return (currentViewport.h - _textBoard.h) / 2;
+  } else if (_yProps == TextAlignmentY::BottomAligned) {
+    return (currentViewport.h - _textBoard.h);
+  } else {
+    return 0;
+  }
 }

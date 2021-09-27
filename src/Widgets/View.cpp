@@ -33,5 +33,8 @@ int View::_DerivedYPosition() {
 }
 
 void View::Render() {
+  SDL_Color c{ .r = 200, .g = 0, .b = 200, .a = 255 };
+  SDL_SetRenderDrawColor(Renderer::Instance(), c.r, c.g, c.b, c.a);
+  SDL_RenderDrawRect(Renderer::Instance(), &clientRect);
   Component::Render();
 }

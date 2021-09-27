@@ -17,7 +17,7 @@ Component::Component(const SDL_Rect clientRect) : clientRect(clientRect)
   SDL_RenderGetViewport(Renderer::Instance(), &viewport);
 }
 
-void Component::AppendChild(Component *component)
+void Component::AppendChild(Component* const component)
 {
   component->_parent = this;
   _children.push_back(component);
