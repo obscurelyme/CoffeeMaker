@@ -1,5 +1,7 @@
 {
   "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "C_Cpp.clang_format_path": "${workspaceDirectory}/.clang-format",
+  "C_Cpp.formatting": "clangFormat",
   "files.associations": {
     "*.tsx": "typescriptreact",
     "filesystem": "cpp",
@@ -91,5 +93,9 @@
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  },
+  "[cpp]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "xaver.clang-format"
   }
 }
