@@ -27,10 +27,13 @@ namespace CoffeeMaker {
       SDL_Color color;
 
       private:
+      std::string _id;
       std::string _textContent;
       TTF_Font *_font;
       SDL_Renderer *renderer;
       SDL_Texture *_texture;
+
+      static int _textId;
     };
   }  // namespace Widgets
 

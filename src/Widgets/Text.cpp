@@ -5,19 +5,25 @@
 using namespace CoffeeMaker::Widgets;
 using namespace CoffeeMaker::UIProperties;
 
+int Text::_textId = 0;
+
 Text::Text() :
     color(CoffeeMaker::Color()),
     _textContent(""),
     _font(nullptr),
     renderer(CoffeeMaker::Renderer::Instance()),
-    _texture(nullptr) {}
+    _texture(nullptr) {
+  _id = "Text-" + std::to_string(++_textId);
+}
 
 Text::Text(std::string textContent) :
     color(CoffeeMaker::Color()),
     _textContent(textContent),
     _font(nullptr),
     renderer(CoffeeMaker::Renderer::Instance()),
-    _texture(nullptr) {}
+    _texture(nullptr) {
+  _id = "Text-" + std::to_string(++_textId);
+}
 
 Text::~Text() {
   if (_texture != nullptr) {
@@ -76,5 +82,7 @@ void Text::SetColor(const SDL_Color &newColor) {
   color.g = newColor.g;
   color.b = newColor.b;
   color.a = newColor.a;
-  SetTextContentTexture();
+  if (_textContent != "") {
+    SetTextContentTexture();
+  }
 }

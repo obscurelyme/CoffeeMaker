@@ -36,6 +36,8 @@ void UIComponent::Render() {
   if (_debugRendering) {
     DebugRender();
   }
+  // for nested views, this doesn't work. need to fetch the absolute position and
+  // then set that position as the viewport.
   SDL_RenderSetViewport(Renderer::Instance(), &clientRect);
   for (auto i = std::begin(_children); i != std::end(_children); ++i) {
     (*i)->Render();

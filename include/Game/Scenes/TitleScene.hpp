@@ -1,16 +1,24 @@
-#include "Game/Entity.hpp"
 #include "Game/Scene.hpp"
-#include "Game/Tiles.hpp"
+#include "Widgets/Button.hpp"
+#include "Widgets/Text.hpp"
 #include "Widgets/UIComponent.hpp"
+#include "Widgets/View.hpp"
 
-class MainScene : public Scene {
+class TitleScene : public Scene {
   public:
   virtual void Render();
   virtual void Update();
   virtual void Init();
   virtual void Destroy();
 
+  void Play();
+  void Quit();
+
   private:
-  Tiles* _backgroundTiles;
-  std::vector<UIComponent*> _entities;
+  SDL_Color _backgroundColor;
+  CoffeeMaker::Widgets::View* _view;
+  CoffeeMaker::Widgets::Text* _title;
+  // CoffeeMaker::Button* _playButton;
+  CoffeeMaker::Button* _quitButton;
+  std::vector<CoffeeMaker::UIComponent*> _entities;
 };
