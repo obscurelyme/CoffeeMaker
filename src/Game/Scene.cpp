@@ -3,32 +3,37 @@
 #include "Game/Enemy.hpp"
 #include "Game/Player.hpp"
 
+int SceneManager::_currentSceneIndex = -1;
+std::vector<Scene*> SceneManager::scenes = {};
+Scene* SceneManager::_currentScene = nullptr;
+
+void SceneManager::UpdateCurrentScene() { _currentScene->Update(); }
+
+void SceneManager::RenderCurrentScene() { _currentScene->Render(); }
+
+void SceneManager::AddScene(Scene* scene) { scenes.push_back(scene); }
+
+void SceneManager::LoadScene() {
+  // NOTE: Handle first scene case
+  if (_currentSceneIndex == -1) {
+    _currentScene = scenes[++_currentSceneIndex];
+    _currentScene->Init();
+    return;
+  }
+  // NOTE: If not the first scene, clean up and then move to next scene
+  _currentScene->Destroy();
+  if (_currentSceneIndex + 1 < (int)scenes.size()) {
+    _currentScene = scenes[++_currentSceneIndex];
+  } else {
+    // NOTE: wrap scenes for now...
+    _currentSceneIndex = 0;
+    _currentScene = scenes[_currentSceneIndex];
+  }
+  _currentScene->Init();
+}
+
 int Scene::_sceneId = 0;
 
 Scene::Scene() { _id = "Scene-" + std::to_string(++_sceneId); }
 
 Scene::~Scene() {}
-
-void Scene::Render() {
-  _backgroundTiles->Render();
-  for (auto& entity : _entities) {
-    entity->Render();
-  }
-}
-
-void Scene::Update() {
-  for (auto& entity : _entities) {
-    entity->Update();
-  }
-}
-
-void Scene::Init() {
-  _backgroundTiles = new Tiles("space.png", 800, 600);
-  Player* p = new Player();
-  Enemy* enemy = new Enemy();
-
-  _entities.push_back(p);
-  _entities.push_back(enemy);
-}
-
-void Scene::Destroy() { _entities.clear(); }

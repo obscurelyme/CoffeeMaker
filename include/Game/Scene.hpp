@@ -1,26 +1,20 @@
 #ifndef _scene_hpp
 #define _scene_hpp
 
-#include <array>
 #include <string>
 #include <vector>
-
-#include "Game/Entity.hpp"
-#include "Game/Tiles.hpp"
 
 class Scene {
   public:
   Scene();
   ~Scene();
 
-  void Render();
-  void Update();
-  void Init();
-  void Destroy();
+  virtual void Render() = 0;
+  virtual void Update() = 0;
+  virtual void Init() = 0;
+  virtual void Destroy() = 0;
 
   private:
-  Tiles* _backgroundTiles;
-  std::vector<Entity*> _entities;
   std::string _id;
 
   static int _sceneId;
@@ -28,11 +22,15 @@ class Scene {
 
 class SceneManager {
   public:
-  void LoadScene(int sceneIndex);
-  std::array<Scene* const, 2> scenes;
+  static void UpdateCurrentScene();
+  static void RenderCurrentScene();
+  static void LoadScene();
+  static void AddScene(Scene* scene);
+  static std::vector<Scene*> scenes;
 
   private:
-  int _currentSceneIndex;
+  static int _currentSceneIndex;
+  static Scene* _currentScene;
 };
 
 #endif

@@ -11,6 +11,7 @@
 #include "FontManager.hpp"
 #include "Game/Collider.hpp"
 #include "Game/Scene.hpp"
+#include "Game/Scenes/MainScene.hpp"
 #include "InputManager.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
@@ -66,9 +67,8 @@ int main(int, char **) {
   CM_LOGGER_INFO("Display count: {}", win.DisplayCount());
   CM_LOGGER_INFO("Current Window DPI {}", win.GetScreenDPI().toString());
 
-  Scene scene;
-  scene.Init();
-
+  SceneManager::AddScene(new MainScene());
+  SceneManager::LoadScene();
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
 
@@ -89,12 +89,12 @@ int main(int, char **) {
 
     // run logic
     fpsCounter.Update();
-    scene.Update();
+    SceneManager::UpdateCurrentScene();
 
     // render
     renderer.BeginRender();
 
-    scene.Render();
+    SceneManager::RenderCurrentScene();
     fpsCounter.Render();
     scoreView.Render();
 
