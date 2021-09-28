@@ -18,13 +18,14 @@
 #include "Renderer.hpp"
 #include "Timer.hpp"
 #include "Utilities.hpp"
+#include "Widgets/Button.hpp"
 #include "Widgets/Text.hpp"
 #include "Window.hpp"
 
 bool quit = false;
 SDL_Event event;
 
-int main(int, char **) {
+int main(int, char**) {
   // Start clock
   auto start = std::chrono::steady_clock::now();
   CM_LOGGER_INIT();
@@ -81,6 +82,10 @@ int main(int, char **) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
         quit = true;
+      }
+
+      for (auto& button : CoffeeMaker::Button::buttons) {
+        button->OnEvent(&event);
       }
 
       if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {

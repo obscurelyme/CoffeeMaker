@@ -2,6 +2,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <functional>
+
 #include "Color.hpp"
 #include "FontManager.hpp"
 #include "Renderer.hpp"
@@ -33,17 +35,19 @@ void TitleScene::Init() {
   _title->SetColor(Color(255, 255, 255, 255));
   _title->SetHorizontalAlignment(HorizontalAlignment::Centered);
   _title->SetVerticalAlignment(VerticalAlignment::Top);
-  _view->AppendChild(_title);
+  // _view->AppendChild(_title);
+  _entities.push_back(_title);
 
-  // _playButton = new Button();
-  // _playButton->SetVerticalAlignment(VerticalAlignment::Bottom);
-  // Text* _playButtonText = new Text();
-  // _playButtonText->SetHorizontalAlignment(HorizontalAlignment::Centered);
-  // _playButtonText->SetVerticalAlignment(VerticalAlignment::Centered);
-  // _playButtonText->SetFont(FontManager::UseFont("Roboto/Roboto-Regular"));
-  // _playButtonText->SetColor(Color(255, 255, 255, 255));
-  // _playButtonText->SetText("Play");
-  // _playButton->AppendChild(_playButtonText);
+  _playButton = new Button();
+  _playButton->SetVerticalAlignment(VerticalAlignment::Bottom);
+  Text* _playButtonText = new Text();
+  _playButtonText->SetHorizontalAlignment(HorizontalAlignment::Centered);
+  _playButtonText->SetVerticalAlignment(VerticalAlignment::Centered);
+  _playButtonText->SetFont(FontManager::UseFont("Roboto/Roboto-Regular"));
+  _playButtonText->SetColor(Color(255, 255, 255, 255));
+  _playButtonText->SetText("Play");
+  _playButton->AppendChild(_playButtonText);
+  _playButton->onClickCallback = std::bind(&TitleScene::Play, this);
 
   _quitButton = new Button();
   _quitButton->SetHorizontalAlignment(HorizontalAlignment::Right);
@@ -55,11 +59,13 @@ void TitleScene::Init() {
   _quitButtonText->SetColor(Color(255, 255, 255, 255));
   _quitButtonText->SetText("Quit");
   _quitButton->AppendChild(_quitButtonText);
+  _quitButton->onClickCallback = std::bind(&TitleScene::Quit, this);
 
   // _view->AppendChild(_playButton);
-  _view->AppendChild(_quitButton);
+  // _view->AppendChild(_quitButton);
 
-  _entities.push_back(_view);
+  _entities.push_back(_quitButton);
+  _entities.push_back(_playButton);
 }
 
 void TitleScene::Destroy() {

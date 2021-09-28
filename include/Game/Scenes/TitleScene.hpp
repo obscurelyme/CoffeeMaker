@@ -18,7 +18,7 @@ class TitleScene : public Scene {
   SDL_Color _backgroundColor;
   CoffeeMaker::Widgets::View* _view;
   CoffeeMaker::Widgets::Text* _title;
-  // CoffeeMaker::Button* _playButton;
+  CoffeeMaker::Button* _playButton;
   CoffeeMaker::Button* _quitButton;
   std::vector<CoffeeMaker::UIComponent*> _entities;
 };

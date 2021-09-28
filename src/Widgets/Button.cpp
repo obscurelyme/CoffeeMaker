@@ -4,11 +4,14 @@
 
 using namespace CoffeeMaker;
 
+std::vector<Button *> Button::buttons = {};
+
 Button::Button() : top(0), left(0), width(150), height(50), padding(0), _texture(), _hovered(false) {
   clientRect.h = height;
   clientRect.w = width;
   clientRect.x = left;
   clientRect.y = top;
+  buttons.push_back(this);
 }
 
 bool Button::_HitDetection(const int &mouseX, const int &mouseY) {
@@ -33,7 +36,7 @@ void Button::OnEvent(const SDL_Event *event) {
       break;
     case SDL_MOUSEBUTTONDOWN:
       if (_hovered) {
-        OnClick([]() { std::cout << "Button was clicked" << std::endl; });
+        OnClick();
       }
       break;
     case SDL_MOUSEBUTTONUP:
@@ -78,4 +81,4 @@ void Button::Render() {
   UIComponent::Render();
 }
 
-void Button::OnClick(void (*callback)(void)) { callback(); }
+void Button::OnClick() { onClickCallback(); }

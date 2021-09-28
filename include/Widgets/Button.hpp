@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 
+#include <functional>
 #include <string>
 
 #include "Color.hpp"
@@ -19,7 +20,7 @@ namespace CoffeeMaker {
 
     void OnEvent(const SDL_Event *e);
     void OnMouseover();
-    void OnClick(void (*callback)(void));
+    void OnClick();
     void OnMouseleave();
 
     void Render();
@@ -31,6 +32,9 @@ namespace CoffeeMaker {
     int padding;
     void *children;
     Texture _texture;
+    std::function<void()> onClickCallback;
+
+    static std::vector<Button *> buttons;
 
     private:
     bool _HitDetection(const int &mouseX, const int &mouseY);

@@ -12,7 +12,7 @@ namespace CoffeeMaker {
     public:
     UIComponent();
     UIComponent(const SDL_Rect clientRect);
-    virtual ~UIComponent() = default;
+    virtual ~UIComponent();
 
     /**
      * Toggle the rendering of the clientRect for the component

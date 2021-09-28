@@ -8,6 +8,8 @@ using namespace CoffeeMaker::UIProperties;
 
 bool UIComponent::_debugRendering = true;
 
+UIComponent::~UIComponent() { _children.clear(); }
+
 UIComponent::UIComponent() : _parent(nullptr) {
   SDL_RenderGetViewport(Renderer::Instance(), &viewport);
   clientRect.h = viewport.h;
