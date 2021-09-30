@@ -23,8 +23,7 @@ void GlobalWindow::Set(IWindow *win) {
 void GlobalWindow::Unset() { _instance = nullptr; }
 
 std::string ScreenDPI::toString() {
-  return fmt::format("Diagonal {}, Horizontal {}, Vertical {}", diagonal,
-                     horizontal, vertical);
+  return fmt::format("Diagonal {}, Horizontal {}, Vertical {}", diagonal, horizontal, vertical);
 }
 
 SDL_Window *BasicWindow::_window = nullptr;
@@ -32,8 +31,7 @@ SDL_Window *BasicWindow::_window = nullptr;
 BasicWindow::BasicWindow(std::string title, int width, int height) {
   int windowFlags = SDL_WINDOW_HIDDEN;
   _window =
-      SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED,
-                       SDL_WINDOWPOS_UNDEFINED, width, height, windowFlags);
+      SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, windowFlags);
   _screenDpi = SetScreenDPI();
   _dpiScale = _screenDpi.diagonal / ScreenDPI::BASE_DPI;
   GlobalWindow::Set(this);
@@ -53,8 +51,7 @@ int BasicWindow::DisplayCount() const { return SDL_GetNumVideoDisplays(); }
 
 ScreenDPI BasicWindow::SetScreenDPI() {
   ScreenDPI dpi;
-  SDL_GetDisplayDPI(SDL_GetWindowDisplayIndex(_window), &(dpi.diagonal),
-                    &(dpi.horizontal), &(dpi.vertical));
+  SDL_GetDisplayDPI(SDL_GetWindowDisplayIndex(_window), &(dpi.diagonal), &(dpi.horizontal), &(dpi.vertical));
   return dpi;
 }
 
@@ -68,17 +65,11 @@ SDL_DisplayMode BasicWindow::DisplayMode() const {
   return displayMode;
 }
 
-std::string BasicWindow::DisplayName() const {
-  return SDL_GetDisplayName(SDL_GetWindowDisplayIndex(_window));
-}
+std::string BasicWindow::DisplayName() const { return SDL_GetDisplayName(SDL_GetWindowDisplayIndex(_window)); }
 
-Uint32 BasicWindow::PixelFormat() const {
-  return SDL_GetWindowPixelFormat(_window);
-}
+Uint32 BasicWindow::PixelFormat() const { return SDL_GetWindowPixelFormat(_window); }
 
-std::string BasicWindow::PixelFormatName() const {
-  return SDL_GetPixelFormatName(SDL_GetWindowPixelFormat(_window));
-}
+std::string BasicWindow::PixelFormatName() const { return SDL_GetPixelFormatName(SDL_GetWindowPixelFormat(_window)); }
 
 SDL_Rect BasicWindow::DisplayBounds() const {
   SDL_Rect bounds;

@@ -8,9 +8,8 @@ SDL_Renderer *Renderer::_renderer = nullptr;
 
 Renderer::Renderer() {
   if (_renderer == nullptr) {
-    _renderer = SDL_CreateRenderer(
-        GlobalWindow::Instance()->Handle(), -1,
-        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    _renderer = SDL_CreateRenderer(GlobalWindow::Instance()->Handle(), -1,
+                                   SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   }
 }
 

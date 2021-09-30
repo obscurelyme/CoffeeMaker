@@ -35,8 +35,7 @@ void TitleScene::Init() {
   _title->SetColor(Color(255, 255, 255, 255));
   _title->SetHorizontalAlignment(HorizontalAlignment::Centered);
   _title->SetVerticalAlignment(VerticalAlignment::Top);
-  // _view->AppendChild(_title);
-  _entities.push_back(_title);
+  _view->AppendChild(_title);
 
   _playButton = new Button();
   _playButton->SetVerticalAlignment(VerticalAlignment::Bottom);
@@ -61,11 +60,10 @@ void TitleScene::Init() {
   _quitButton->AppendChild(_quitButtonText);
   _quitButton->onClickCallback = std::bind(&TitleScene::Quit, this);
 
-  // _view->AppendChild(_playButton);
-  // _view->AppendChild(_quitButton);
+  _view->AppendChild(_playButton);
+  _view->AppendChild(_quitButton);
 
-  _entities.push_back(_quitButton);
-  _entities.push_back(_playButton);
+  _entities.push_back(_view);
 }
 
 void TitleScene::Destroy() {

@@ -29,6 +29,7 @@ namespace CoffeeMaker {
     protected:
     int DeriveXPosition();
     int DeriveYPosition();
+    void RepositionChildren();
     void DebugRender();
 
     std::vector<UIComponent *> _children;

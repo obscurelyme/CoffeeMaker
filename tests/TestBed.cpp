@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 #include <cppunit/TestAssert.h>
 
+#include "FontManager.hpp"
 #include "Logger.hpp"
 #include "Texture.hpp"
 #include "Utilities.hpp"
@@ -20,6 +21,8 @@ TestBed::TestBed() {
   CoffeeMaker::Utilities::Init(SDL_GetBasePath());
   CoffeeMaker::Texture::SetTextureDirectory();
   CoffeeMaker::Logger::Init();
+  CoffeeMaker::FontManager::Init();
+  CoffeeMaker::FontManager::LoadFont("Roboto/Roboto-Regular");
   _window = new CoffeeMaker::BasicWindow("test window", 500, 500);
   _renderer = new CoffeeMaker::Renderer();
 

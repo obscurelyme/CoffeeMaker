@@ -13,6 +13,7 @@ class CoffeeMakerWidgetText : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(CoffeeMakerWidgetText);
   CPPUNIT_TEST(testCreation);
   CPPUNIT_TEST(testNestedPosition);
+  CPPUNIT_TEST(testNestedPositionX2);
   CPPUNIT_TEST_SUITE_END();
 
   public:
@@ -21,6 +22,7 @@ class CoffeeMakerWidgetText : public CppUnit::TestFixture {
 
   void testCreation();
   void testNestedPosition();
+  void testNestedPositionX2();
 
   private:
   TestBed* _testBed;

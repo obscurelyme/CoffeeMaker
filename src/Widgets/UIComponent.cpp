@@ -28,7 +28,20 @@ UIComponent::UIComponent(const SDL_Rect clientRect) : clientRect(clientRect), _p
 
 void UIComponent::AppendChild(UIComponent* const component) {
   component->_parent = this;
+  component->clientRect.x = component->DeriveXPosition();
+  component->clientRect.y = component->DeriveYPosition();
+
+  component->RepositionChildren();
+
   _children.push_back(component);
+}
+
+void UIComponent::RepositionChildren() {
+  for (auto& child : _children) {
+    child->clientRect.x = child->DeriveXPosition();
+    child->clientRect.y = child->DeriveYPosition();
+    child->RepositionChildren();
+  }
 }
 
 /**
@@ -40,13 +53,13 @@ void UIComponent::Render() {
   }
   // for nested views, this doesn't work. need to fetch the absolute position and
   // then set that position as the viewport.
-  SDL_RenderSetViewport(Renderer::Instance(), &clientRect);
+  // SDL_RenderSetViewport(Renderer::Instance(), &clientRect);
   for (auto i = std::begin(_children); i != std::end(_children); ++i) {
     (*i)->Render();
   }
-  if (_parent == nullptr) {
-    SDL_RenderSetViewport(Renderer::Instance(), &viewport);
-  }
+  // if (_parent == nullptr) {
+  //   SDL_RenderSetViewport(Renderer::Instance(), &viewport);
+  // }
 }
 
 void UIComponent::DebugRender() {
@@ -64,29 +77,55 @@ void UIComponent::SetHorizontalAlignment(CoffeeMaker::UIProperties::HorizontalAl
 void UIComponent::SetVerticalAlignment(CoffeeMaker::UIProperties::VerticalAlignment yAlign) { _yAlign = yAlign; }
 
 int UIComponent::DeriveXPosition() {
-  SDL_Rect currentViewport;
-  SDL_RenderGetViewport(Renderer::Instance(), &currentViewport);
+  SDL_Rect relativeParent = _parent != nullptr ? _parent->clientRect : viewport;
 
   if (_xAlign == HorizontalAlignment::Centered) {
-    return (currentViewport.w - clientRect.w) / 2;
+    return ((relativeParent.w - clientRect.w) / 2) + relativeParent.x;
   } else if (_xAlign == HorizontalAlignment::Right) {
-    return (currentViewport.w - clientRect.w);
+    return (relativeParent.w - clientRect.w) + relativeParent.x;
   } else {
-    return 0;
+    return 0 + relativeParent.x;
   }
 }
 
 int UIComponent::DeriveYPosition() {
-  SDL_Rect currentViewport;
-  SDL_RenderGetViewport(Renderer::Instance(), &currentViewport);
+  SDL_Rect relativeParent = _parent != nullptr ? _parent->clientRect : viewport;
 
   if (_yAlign == VerticalAlignment::Centered) {
-    return (currentViewport.h - clientRect.h) / 2;
+    return ((relativeParent.h - clientRect.h) / 2) + relativeParent.y;
   } else if (_yAlign == VerticalAlignment::Bottom) {
-    return (currentViewport.h - clientRect.h);
+    return (relativeParent.h - clientRect.h) + relativeParent.y;
   } else {
-    return 0;
+    return 0 + relativeParent.y;
   }
 }
+
+// OLD
+// int UIComponent::DeriveXPosition() {
+//   SDL_Rect currentViewport;
+//   SDL_RenderGetViewport(Renderer::Instance(), &currentViewport);
+
+//   if (_xAlign == HorizontalAlignment::Centered) {
+//     return (currentViewport.w - clientRect.w) / 2;
+//   } else if (_xAlign == HorizontalAlignment::Right) {
+//     return (currentViewport.w - clientRect.w);
+//   } else {
+//     return 0;
+//   }
+// }
+
+// OLD
+// int UIComponent::DeriveYPosition() {
+//   SDL_Rect currentViewport;
+//   SDL_RenderGetViewport(Renderer::Instance(), &currentViewport);
+
+//   if (_yAlign == VerticalAlignment::Centered) {
+//     return (currentViewport.h - clientRect.h) / 2;
+//   } else if (_yAlign == VerticalAlignment::Bottom) {
+//     return (currentViewport.h - clientRect.h);
+//   } else {
+//     return 0;
+//   }
+// }
 
 void UIComponent::SetDebugRender(bool toggle) { _debugRendering = toggle; }

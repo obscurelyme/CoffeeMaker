@@ -7,24 +7,27 @@
 
 #include "TestBed.hpp"
 
-class CoffeeMakerWidgetView : public CppUnit::TestFixture
-{
+class CoffeeMakerWidgetView : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(CoffeeMakerWidgetView);
   CPPUNIT_TEST(testDefaultViewport);
   CPPUNIT_TEST(testCentered);
   CPPUNIT_TEST(testRightBottomAligned);
+  CPPUNIT_TEST(testNestedAligned);
+  CPPUNIT_TEST(testOutOfOrderNestedAligned);
   CPPUNIT_TEST_SUITE_END();
 
   public:
-    void setUp();
-    void tearDown();
+  void setUp();
+  void tearDown();
 
-    void testDefaultViewport();
-    void testCentered();
-    void testRightBottomAligned();
+  void testDefaultViewport();
+  void testCentered();
+  void testRightBottomAligned();
+  void testNestedAligned();
+  void testOutOfOrderNestedAligned();
 
   private:
-    CoffeeMaker::Test::TestBed *_testBed;
+  CoffeeMaker::Test::TestBed *_testBed;
 };
 
 #endif

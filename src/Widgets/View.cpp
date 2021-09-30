@@ -15,9 +15,4 @@ View::View(int width, int height, HorizontalAlignment xAlign, VerticalAlignment 
   clientRect.y = UIComponent::DeriveYPosition();
 }
 
-void View::Render() {
-  // SDL_Color c{.r = 200, .g = 0, .b = 200, .a = 255};
-  // SDL_SetRenderDrawColor(Renderer::Instance(), c.r, c.g, c.b, c.a);
-  // SDL_RenderDrawRect(Renderer::Instance(), &clientRect);
-  UIComponent::Render();
-}
+void View::Render() { UIComponent::Render(); }
