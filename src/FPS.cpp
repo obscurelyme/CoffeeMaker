@@ -1,5 +1,7 @@
 #include "FPS.hpp"
 
+#include <memory>
+
 #include "Color.hpp"
 #include "FontManager.hpp"
 
@@ -15,7 +17,7 @@ FPS::FPS() {
   _text.SetColor(Color(255, 255, 0, 255));  // Yellow
   _text.SetHorizontalAlignment(HorizontalAlignment::Centered);
   _text.SetVerticalAlignment(VerticalAlignment::Bottom);
-  _view.AppendChild(&_text);
+  // _view.AppendChild(std::make_shared<UIComponent>(&_text));
 }
 
 FPS::~FPS() {}

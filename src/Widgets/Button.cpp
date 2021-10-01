@@ -1,17 +1,30 @@
 #include "Widgets/Button.hpp"
 
+#include <algorithm>
 #include <iostream>
 
 using namespace CoffeeMaker;
 
-std::vector<Button *> Button::buttons = {};
+std::map<std::string, Button *> Button::buttons = {};
+std::queue<std::function<void()>> Button::onClickCallbacks;
 
 Button::Button() : top(0), left(0), width(150), height(50), padding(0), _texture(), _hovered(false) {
   clientRect.h = height;
   clientRect.w = width;
   clientRect.x = left;
   clientRect.y = top;
-  buttons.push_back(this);
+  _id = "Button-" + _id;
+  buttons.emplace(_id, this);
+}
+
+Button::~Button() {
+  for (auto it = buttons.begin(); it != buttons.end();) {
+    if (it->first == _id) {
+      it = buttons.erase(it);
+    } else {
+      ++it;
+    }
+  }
 }
 
 bool Button::_HitDetection(const int &mouseX, const int &mouseY) {
@@ -81,4 +94,15 @@ void Button::Render() {
   UIComponent::Render();
 }
 
-void Button::OnClick() { onClickCallback(); }
+void Button::OnClick() { onClickCallbacks.push(onClickCallback); }
+
+/**
+ * Process the onClick callbacks at a separate stage within the run loop
+ */
+void Button::ProcessEvents() {
+  while (!onClickCallbacks.empty()) {
+    auto callback = onClickCallbacks.front();
+    onClickCallbacks.pop();
+    callback();
+  }
+}

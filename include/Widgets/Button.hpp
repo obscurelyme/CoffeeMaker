@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 
 #include <functional>
+#include <map>
+#include <queue>
 #include <string>
 
 #include "Color.hpp"
@@ -15,6 +17,7 @@ namespace CoffeeMaker {
   class Button : public UIComponent {
     public:
     Button();
+    ~Button();
 
     void Draw();
 
@@ -25,6 +28,8 @@ namespace CoffeeMaker {
 
     void Render();
 
+    static void ProcessEvents();
+
     int top;
     int left;
     int width;
@@ -34,10 +39,12 @@ namespace CoffeeMaker {
     Texture _texture;
     std::function<void()> onClickCallback;
 
-    static std::vector<Button *> buttons;
+    static std::map<std::string, Button *> buttons;
+    static std::queue<std::function<void()>> onClickCallbacks;
 
     private:
     bool _HitDetection(const int &mouseX, const int &mouseY);
+    int index;
 
     bool _hovered;
   };

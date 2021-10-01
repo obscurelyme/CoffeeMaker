@@ -22,6 +22,7 @@ namespace CoffeeMaker {
     void BeginRender();
     void EndRender();
     void Destroy();
+    static bool Exists();
 
     private:
     static SDL_Renderer *_renderer;

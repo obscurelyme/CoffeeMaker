@@ -31,3 +31,5 @@ void Renderer::Destroy() {
   SDL_DestroyRenderer(_renderer);
   _renderer = nullptr;
 }
+
+bool Renderer::Exists() { return _renderer != nullptr; }

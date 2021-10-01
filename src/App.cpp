@@ -4,6 +4,7 @@
 
 #include <chrono>
 #include <filesystem>
+#include <iostream>
 
 #include "Color.hpp"
 #include "Cursor.hpp"
@@ -25,6 +26,11 @@
 bool quit = false;
 SDL_Event event;
 
+// SDL_AssertState appHandler(const SDL_AssertData* data, void*) {
+//   std::cout << "Error executing function: " << data->function << std::endl;
+//   return SDL_ASSERTION_IGNORE;
+// };
+
 int main(int, char**) {
   // Start clock
   auto start = std::chrono::steady_clock::now();
@@ -39,6 +45,8 @@ int main(int, char**) {
     CM_LOGGER_CRITICAL("Could not initialize SDL2 Images");
     exit(1);
   }
+
+  // SDL_SetAssertionHandler(appHandler, nullptr);
 
   CoffeeMaker::Utilities::Init(SDL_GetBasePath());
   CoffeeMaker::Texture::SetTextureDirectory();
@@ -85,13 +93,15 @@ int main(int, char**) {
       }
 
       for (auto& button : CoffeeMaker::Button::buttons) {
-        button->OnEvent(&event);
+        button.second->OnEvent(&event);
       }
 
       if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
         CoffeeMaker::InputManager::HandleKeyBoardEvent(&event.key);
       }
     }
+
+    // CoffeeMaker::Inputloop->run();
 
     // physics step
     Collider::PhysicsUpdate();
@@ -109,6 +119,8 @@ int main(int, char**) {
     renderer.EndRender();
 
     CoffeeMaker::InputManager::ClearAllPresses();
+
+    CoffeeMaker::Button::ProcessEvents();
     // Cap framerate
     SDL_Delay(16);
   }

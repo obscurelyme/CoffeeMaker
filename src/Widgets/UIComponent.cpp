@@ -7,8 +7,15 @@ using namespace CoffeeMaker;
 using namespace CoffeeMaker::UIProperties;
 
 bool UIComponent::_debugRendering = true;
+int UIComponent::_uid = 0;
 
-UIComponent::~UIComponent() { _children.clear(); }
+UIComponent::~UIComponent() {
+  _parent = nullptr;
+  for (std::shared_ptr<UIComponent> child : _children) {
+    child->_parent = nullptr;
+  }
+  _children.clear();
+}
 
 UIComponent::UIComponent() : _parent(nullptr) {
   SDL_RenderGetViewport(Renderer::Instance(), &viewport);
@@ -18,6 +25,7 @@ UIComponent::UIComponent() : _parent(nullptr) {
   clientRect.y = viewport.y;
   _xAlign = HorizontalAlignment::Left;
   _yAlign = VerticalAlignment::Top;
+  _id = "UIComponent-" + std::to_string(++_uid);
 }
 
 UIComponent::UIComponent(const SDL_Rect clientRect) : clientRect(clientRect), _parent(nullptr) {
@@ -26,7 +34,7 @@ UIComponent::UIComponent(const SDL_Rect clientRect) : clientRect(clientRect), _p
   _yAlign = VerticalAlignment::Top;
 }
 
-void UIComponent::AppendChild(UIComponent* const component) {
+void UIComponent::AppendChild(const std::shared_ptr<UIComponent>& component) {
   component->_parent = this;
   component->clientRect.x = component->DeriveXPosition();
   component->clientRect.y = component->DeriveYPosition();

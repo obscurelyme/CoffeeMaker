@@ -89,7 +89,8 @@
     "__split_buffer": "cpp",
     "stack": "cpp",
     "string_view": "cpp",
-    "bitset": "cpp"
+    "bitset": "cpp",
+    "queue": "cpp"
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"

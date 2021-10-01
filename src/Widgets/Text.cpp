@@ -29,6 +29,9 @@ Text::~Text() {
   if (_texture != nullptr) {
     // SDL renderer destroys textures automatically when calling
     // SDL_DestroyRenderer
+    if (CoffeeMaker::Renderer::Exists()) {
+      SDL_DestroyTexture(_texture);
+    }
     _texture = nullptr;
   }
 }

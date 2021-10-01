@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <memory>
+#include <string>
 #include <vector>
 
 #include "Properties.hpp"
@@ -18,7 +20,7 @@ namespace CoffeeMaker {
      * Toggle the rendering of the clientRect for the component
      */
     static void SetDebugRender(bool toggle);
-    void AppendChild(UIComponent *const component);
+    void AppendChild(const std::shared_ptr<UIComponent>& component);
     virtual void Render();
     void SetHorizontalAlignment(CoffeeMaker::UIProperties::HorizontalAlignment xAlign);
     void SetVerticalAlignment(CoffeeMaker::UIProperties::VerticalAlignment yAlign);
@@ -32,13 +34,15 @@ namespace CoffeeMaker {
     void RepositionChildren();
     void DebugRender();
 
-    std::vector<UIComponent *> _children;
-    UIComponent *_parent;
+    std::vector<std::shared_ptr<UIComponent>> _children;
+    UIComponent* _parent;
     CoffeeMaker::UIProperties::HorizontalAlignment _xAlign;
     CoffeeMaker::UIProperties::VerticalAlignment _yAlign;
+    std::string _id;
 
     private:
     static bool _debugRendering;
+    static int _uid;
   };
 }  // namespace CoffeeMaker
 
