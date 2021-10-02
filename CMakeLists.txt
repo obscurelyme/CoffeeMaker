@@ -52,7 +52,8 @@ set(GAME_SOURCES
   src/Game/Enemy.cpp
   src/Game/Player.cpp
   src/Game/Tiles.cpp
-  src/Game/Projectile.cpp)
+  src/Game/Projectile.cpp
+  src/Game/Menus/Menu.cpp)
 
 set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES})
 

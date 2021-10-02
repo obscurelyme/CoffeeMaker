@@ -32,6 +32,15 @@ void SceneManager::LoadScene() {
   _currentScene->Init();
 }
 
+void SceneManager::LoadScene(int index) {
+  if (scenes.size() >= index && index >= 0) {
+    _currentScene->Destroy();
+    _currentSceneIndex = index;
+    _currentScene = scenes[_currentSceneIndex];
+    _currentScene->Init();
+  }
+}
+
 int Scene::_sceneId = 0;
 
 Scene::Scene() { _id = "Scene-" + std::to_string(++_sceneId); }
