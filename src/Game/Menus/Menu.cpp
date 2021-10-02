@@ -18,7 +18,7 @@ void Menu::Init() {
   std::shared_ptr<Button> returnToMain(new Button());
   std::shared_ptr<Text> returnToMainText(new Text());
   returnToMainText->SetFont(FontManager::UseFont("Roboto/Roboto-Regular"));
-  returnToMainText->SetText("Return to Game");
+  returnToMainText->SetText("Return to Main Menu");
   returnToMainText->SetColor(Color(255, 255, 255, 255));
   std::shared_ptr<Button> play(new Button());
 
@@ -27,7 +27,7 @@ void Menu::Init() {
   // play->onClickCallback = std::bind(&Menu::Hide, this);
 
   _view->AppendChild(returnToMain);
-  // returnToMain->AppendChild(returnToMainText);
+  returnToMain->AppendChild(returnToMainText);
   // _view->AppendChild(quit);
   // _view->AppendChild(play);
 }
