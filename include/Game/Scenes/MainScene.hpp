@@ -18,5 +18,5 @@ class MainScene : public Scene {
   Player* _player;
   Enemy* _enemy;
   std::vector<Entity*> _entities;
-  std::unique_ptr<Menu> _menu;
+  Menu* _menu;
 };

@@ -70,9 +70,6 @@ void TitleScene::Init() {
 
 void TitleScene::Destroy() {
   // Clear out entities
-  // for (UIComponent* entity : _entities) {
-  //   delete entity;
-  // }
   _entities.clear();
 }
 

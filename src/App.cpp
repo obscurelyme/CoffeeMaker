@@ -130,6 +130,7 @@ int main(int, char**) {
   }
 
   SceneManager::DestroyAllScenes();
+  CoffeeMaker::FontManager::Destroy();
   renderer.Destroy();
   SDL_Quit();
   CM_LOGGER_DESTROY();

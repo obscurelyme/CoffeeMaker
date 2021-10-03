@@ -26,6 +26,7 @@ void MainScene::Update() {
 }
 
 void MainScene::Init() {
+  _menu = new Menu();
   _menu->Init();
   _backgroundTiles = new Tiles("space.png", 800, 600);
   _player = new Player();
@@ -40,6 +41,7 @@ void MainScene::Destroy() {
   delete _backgroundTiles;
   delete _player;
   delete _enemy;
+  delete _menu;
 }
 
-MainScene::MainScene() : _menu(std::make_unique<Menu>()) {}
+MainScene::MainScene() {}
