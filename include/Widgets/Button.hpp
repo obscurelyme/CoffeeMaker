@@ -28,6 +28,7 @@ namespace CoffeeMaker {
 
     void Render();
 
+    static void PollEvents(const SDL_Event *const event);
     static void ProcessEvents();
 
     int top;

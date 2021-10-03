@@ -96,6 +96,12 @@ void Button::Render() {
 
 void Button::OnClick() { onClickCallbacks.push(onClickCallback); }
 
+void Button::PollEvents(const SDL_Event *const event) {
+  for (auto &button : CoffeeMaker::Button::buttons) {
+    button.second->OnEvent(event);
+  }
+}
+
 /**
  * Process the onClick callbacks at a separate stage within the run loop
  */

@@ -92,9 +92,7 @@ int main(int, char**) {
         quit = true;
       }
 
-      for (auto& button : CoffeeMaker::Button::buttons) {
-        button.second->OnEvent(&event);
-      }
+      CoffeeMaker::Button::PollEvents(&event);
 
       if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
         CoffeeMaker::InputManager::HandleKeyBoardEvent(&event.key);
