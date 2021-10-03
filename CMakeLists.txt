@@ -39,7 +39,8 @@ set(COFFEEMAKER_ROOT_SOURCES
   src/Timer.cpp
   src/MessageBox.cpp
   src/Transform.cpp
-  src/InputManager.cpp)
+  src/InputManager.cpp
+  src/Event.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cpp)
 set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/UIComponent.cpp src/Widgets/View.cpp src/Widgets/Text.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES})
@@ -84,7 +85,8 @@ set(COFFEEMAKER_TEST_SOURCES
   # tests/CoffeeMakerShapesRect.cpp
   # tests/CoffeeMakerTextureTest.cpp
   # tests/CoffeeMakerUtilities.cpp
-  tests/CoffeeMakerWidgetButton.cpp
+  # tests/CoffeeMakerWidgetButton.cpp
+  tests/CoffeeMakerEvents.cpp
   # tests/CoffeeMakerWidgetView.cpp
   # tests/CoffeeMakerComponent.cpp
   # tests/CoffeeMakerWidgetText.cpp

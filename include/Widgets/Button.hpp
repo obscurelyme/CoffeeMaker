@@ -9,6 +9,7 @@
 #include <string>
 
 #include "Color.hpp"
+#include "Event.hpp"
 #include "Texture.hpp"
 #include "Widgets/UIComponent.hpp"
 
@@ -16,8 +17,33 @@ namespace CoffeeMaker {
 
   class Button : public UIComponent {
     public:
+    enum class ButtonEventType {
+      OnClick,
+      MouseIn,
+      MouseOut,
+      MouseMotion = SDL_MOUSEMOTION,
+      MouseDown = SDL_MOUSEBUTTONDOWN,
+      MouseUp = SDL_MOUSEBUTTONUP
+    };
+
+    public:
     Button();
     ~Button();
+
+    /**
+     * Add an event listener to the button
+     */
+    inline void On(ButtonEventType type, Delegate delegate) {
+      auto e = _events.find(type);
+      if (e == _events.end()) {
+        _events.emplace(type, new Event());
+      }
+      _events.at(type)->AddListener(delegate);
+    }
+    /**
+     * Removes an event listener from the button
+     */
+    inline void Off(ButtonEventType type, Delegate delegate) { _events.at(type)->RemoveListener(delegate); }
 
     void SetBackgroundColor(const SDL_Color &color);
     void SetTexture(const Texture &texture);
@@ -27,6 +53,9 @@ namespace CoffeeMaker {
     void OnMouseover();
     void OnClick();
     void OnMouseleave();
+    void OnMouseUp(const Event &e);
+    void OnMouseDown(const Event &e);
+    void OnMouseMotion(const Event &e);
 
     void Render();
 
@@ -42,8 +71,11 @@ namespace CoffeeMaker {
     Texture _texture;
     std::function<void()> onClickCallback;
 
+    std::map<ButtonEventType, Event *> _events;
+
     static std::map<std::string, Button *> buttons;
     static std::queue<std::function<void()>> onClickCallbacks;
+    static std::queue<Event *> eventQueue;
 
     private:
     bool _HitDetection(const int &mouseX, const int &mouseY);

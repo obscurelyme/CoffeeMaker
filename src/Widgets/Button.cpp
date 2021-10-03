@@ -1,12 +1,16 @@
 #include "Widgets/Button.hpp"
 
 #include <algorithm>
+#include <functional>
 #include <iostream>
 
 using namespace CoffeeMaker;
 
 std::map<std::string, Button *> Button::buttons = {};
 std::queue<std::function<void()>> Button::onClickCallbacks;
+std::queue<Event *> Button::eventQueue;
+
+Delegate *createButtonDelegate(std::function<void(const Event &event)> fn) { return new Delegate(fn); }
 
 Button::Button() : top(0), left(0), width(150), height(50), padding(0), _texture(), _hovered(false) {
   clientRect.h = height;
@@ -15,6 +19,15 @@ Button::Button() : top(0), left(0), width(150), height(50), padding(0), _texture
   clientRect.y = top;
   _id = "Button-" + _id;
   buttons.emplace(_id, this);
+
+  // Add default events
+  _events.emplace(ButtonEventType::MouseMotion, new Event());
+  _events.emplace(ButtonEventType::MouseDown, new Event());
+  _events.emplace(ButtonEventType::MouseUp, new Event());
+
+  On(ButtonEventType::MouseMotion, Delegate{std::bind(&Button::OnMouseMotion, this, std::placeholders::_1)});
+  On(ButtonEventType::MouseDown, Delegate{std::bind(&Button::OnMouseDown, this, std::placeholders::_1)});
+  On(ButtonEventType::MouseUp, Delegate{std::bind(&Button::OnMouseUp, this, std::placeholders::_1)});
 }
 
 Button::~Button() {
@@ -24,6 +37,11 @@ Button::~Button() {
     } else {
       ++it;
     }
+  }
+  for (auto e : _events) {
+    e.second->RemoveAllListeners();
+    delete e.second;
+    e.second = nullptr;
   }
 }
 
@@ -36,6 +54,33 @@ void Button::SetTexture(const std::string &filePath) { _texture.LoadFromFile(fil
 bool Button::_HitDetection(const int &mouseX, const int &mouseY) {
   return clientRect.x + clientRect.w >= mouseX && clientRect.x <= mouseX && clientRect.y + clientRect.h >= mouseY &&
          clientRect.y <= mouseY;
+}
+
+void Button::OnMouseUp(const Event &) {
+  // noop
+}
+
+void Button::OnMouseDown(const Event &) {
+  if (_hovered) {
+    auto clickEvent = _events.find(ButtonEventType::OnClick);
+    if (clickEvent != _events.end()) {
+      eventQueue.push(clickEvent->second);
+    }
+  }
+}
+
+void Button::OnMouseMotion(const Event &) {
+  int x, y;
+  SDL_GetMouseState(&x, &y);
+  if (_HitDetection(x, y)) {
+    if (!_hovered) {
+      OnMouseover();
+    }
+    return;
+  }
+  if (_hovered) {
+    OnMouseleave();
+  }
 }
 
 void Button::OnEvent(const SDL_Event *event) {
@@ -59,24 +104,6 @@ void Button::OnEvent(const SDL_Event *event) {
       }
       break;
     case SDL_MOUSEBUTTONUP:
-      break;
-    case SDL_KEYDOWN:
-      switch (event->key.keysym.sym) {
-        case SDLK_UP:
-          clientRect.y -= 5;
-          break;
-        case SDLK_DOWN:
-          clientRect.y += 5;
-          break;
-        case SDLK_LEFT:
-          clientRect.x -= 5;
-          break;
-        case SDLK_RIGHT:
-          clientRect.x += 5;
-          break;
-        default:
-          break;
-      }
       break;
     default:
       break;
@@ -104,7 +131,11 @@ void Button::OnClick() { onClickCallbacks.push(onClickCallback); }
 
 void Button::PollEvents(const SDL_Event *const event) {
   for (auto &button : CoffeeMaker::Button::buttons) {
-    button.second->OnEvent(event);
+    auto &btnEvents = button.second->_events;
+    auto search = button.second->_events.find((ButtonEventType)event->type);
+    if (search != btnEvents.end()) {
+      eventQueue.push(search->second);
+    }
   }
 }
 
@@ -112,9 +143,15 @@ void Button::PollEvents(const SDL_Event *const event) {
  * Process the onClick callbacks at a separate stage within the run loop
  */
 void Button::ProcessEvents() {
-  while (!onClickCallbacks.empty()) {
-    auto callback = onClickCallbacks.front();
-    onClickCallbacks.pop();
-    callback();
+  // while (!onClickCallbacks.empty()) {
+  //   auto callback = onClickCallbacks.front();
+  //   onClickCallbacks.pop();
+  //   callback();
+  // }
+
+  while (!eventQueue.empty()) {
+    auto e = eventQueue.front();
+    eventQueue.pop();
+    e->Emit();
   }
 }

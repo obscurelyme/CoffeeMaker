@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "Color.hpp"
+#include "Event.hpp"
 #include "FontManager.hpp"
 #include "Renderer.hpp"
 #include "Widgets/Button.hpp"
@@ -47,7 +48,7 @@ void TitleScene::Init() {
   _playButtonText->SetColor(Color(255, 255, 255, 255));
   _playButtonText->SetText("Play");
   _playButton->AppendChild(_playButtonText);
-  _playButton->onClickCallback = std::bind(&TitleScene::Play, this);
+  _playButton->On(Button::ButtonEventType::OnClick, Delegate{std::bind(&TitleScene::Play, this)});
 
   std::shared_ptr<Button> _quitButton(new Button());
   _quitButton->SetHorizontalAlignment(HorizontalAlignment::Right);
@@ -59,7 +60,7 @@ void TitleScene::Init() {
   _quitButtonText->SetColor(Color(255, 255, 255, 255));
   _quitButtonText->SetText("Quit");
   _quitButton->AppendChild(_quitButtonText);
-  _quitButton->onClickCallback = std::bind(&TitleScene::Quit, this);
+  _quitButton->On(Button::ButtonEventType::OnClick, Delegate{std::bind(&TitleScene::Quit, this)});
 
   _view->AppendChild(_playButton);
   _view->AppendChild(_quitButton);

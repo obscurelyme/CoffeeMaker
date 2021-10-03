@@ -1,6 +1,7 @@
 #include "Game/Menus/Menu.hpp"
 
 #include "Color.hpp"
+#include "Event.hpp"
 #include "FontManager.hpp"
 #include "Game/Scene.hpp"
 
@@ -23,14 +24,10 @@ void Menu::Init() {
   returnToMainText->SetColor(Color(255, 255, 255, 255));
   std::shared_ptr<Button> play(new Button());
 
-  returnToMain->onClickCallback = std::bind(&Menu::ReturnToTitleScene, this);
-  // quit->onClickCallback = std::bind(&Menu::Hide, this);
-  // play->onClickCallback = std::bind(&Menu::Hide, this);
+  returnToMain->On(Button::ButtonEventType::OnClick, Delegate{std::bind(&Menu::ReturnToTitleScene, this)});
 
   _view->AppendChild(returnToMain);
   returnToMain->AppendChild(returnToMainText);
-  // _view->AppendChild(quit);
-  // _view->AppendChild(play);
 }
 
 void Menu::ReturnToTitleScene() {
