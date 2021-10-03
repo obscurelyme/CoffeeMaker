@@ -17,7 +17,7 @@ Menu::~Menu() {}
 void Menu::Init() {
   std::shared_ptr<Button> quit(new Button());
   std::shared_ptr<Button> returnToMain(new Button());
-  returnToMain->SetTexture("test.png");
+  returnToMain->SetTexture("test-button-background.png");
   std::shared_ptr<Text> returnToMainText(new Text());
   returnToMainText->SetFont(FontManager::UseFont("Roboto/Roboto-Regular"));
   returnToMainText->SetText("Return to Main Menu");
