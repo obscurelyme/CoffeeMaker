@@ -15,6 +15,8 @@ class MainScene : public Scene {
 
   private:
   Tiles* _backgroundTiles;
+  Player* _player;
+  Enemy* _enemy;
   std::vector<Entity*> _entities;
   std::unique_ptr<Menu> _menu;
 };

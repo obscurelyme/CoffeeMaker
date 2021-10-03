@@ -30,6 +30,7 @@ namespace CoffeeMaker {
 
   class Event {
     public:
+    ~Event();
     void Emit();
     void AddListener(EventListener listener);
     void RemoveListener(EventListener listener);

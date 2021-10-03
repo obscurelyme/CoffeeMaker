@@ -1,8 +1,10 @@
 #include "Game/Player.hpp"
-#include "Renderer.hpp"
-#include "Logger.hpp"
+
 #include <glm/glm.hpp>
+
 #include "InputManager.hpp"
+#include "Logger.hpp"
+#include "Renderer.hpp"
 
 Player::Player() {
   _firing = false;
@@ -12,10 +14,15 @@ Player::Player() {
   _clientRect.x = (vp.w - _clientRect.w) / 2;
   _clientRect.y = (vp.h - _clientRect.h) / 2;
   for (int i = 0; i < 25; i++) {
-    Projectile projectile;
-    _projectiles.emplace_back(projectile);
+    _projectiles.emplace_back(new Projectile());
   }
   _currentProjectile = 0;
+}
+
+Player::~Player() {
+  for (auto p : _projectiles) {
+    delete p;
+  }
 }
 
 void Player::Init() {}
@@ -36,26 +43,26 @@ void Player::Update() {
   _rotation = glm::degrees(glm::atan((float)yy, (float)xx));
 
   for (auto& projectile : _projectiles) {
-    projectile.Update();
+    projectile->Update();
   }
 }
 
 void Player::Render() {
   _texture.Render(_clipRect, _clientRect, _rotation + 90);
-    for (auto& projectile : _projectiles) {
-    projectile.Render();
+  for (auto& projectile : _projectiles) {
+    projectile->Render();
   }
 }
 
 void Player::Fire() {
   if (_currentProjectile <= 24) {
-    _projectiles[_currentProjectile++].Fire((float)_clientRect.x, (float)_clientRect.y, _rotation);
+    _projectiles[_currentProjectile++]->Fire((float)_clientRect.x, (float)_clientRect.y, _rotation);
   }
 }
 
 void Player::Reload() {
   for (auto& projectile : _projectiles) {
-    projectile.Reload();
+    projectile->Reload();
   }
   _currentProjectile = 0;
 }

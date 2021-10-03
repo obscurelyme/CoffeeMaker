@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <iostream>
 
+#include "Logger.hpp"
+
 using namespace CoffeeMaker;
 
 int Delegate::_uid = 0;
@@ -21,6 +23,8 @@ void Event::Emit() {
   };
   std::for_each(_listeners.begin(), _listeners.end(), e);
 }
+
+Event::~Event() { CM_LOGGER_INFO("Event was deleted"); }
 
 void Event::AddListener(EventListener listener) {
   // insert into the array

@@ -41,6 +41,12 @@ void SceneManager::LoadScene(int index) {
   }
 }
 
+void SceneManager::DestroyAllScenes() {
+  for (auto scene : scenes) {
+    delete scene;
+  }
+}
+
 int Scene::_sceneId = 0;
 
 Scene::Scene() { _id = "Scene-" + std::to_string(++_sceneId); }

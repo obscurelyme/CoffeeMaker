@@ -4,11 +4,14 @@
 #include <functional>
 #include <iostream>
 
+#include "Logger.hpp"
+
 using namespace CoffeeMaker;
 
 std::map<std::string, Button *> Button::buttons = {};
 std::queue<std::function<void()>> Button::onClickCallbacks;
 std::queue<Event *> Button::eventQueue;
+int Button::_buttonUid = 0;
 
 Delegate *createButtonDelegate(std::function<void(const Event &event)> fn) { return new Delegate(fn); }
 
@@ -17,8 +20,8 @@ Button::Button() : top(0), left(0), width(150), height(50), padding(0), _texture
   clientRect.w = width;
   clientRect.x = left;
   clientRect.y = top;
-  _id = "Button-" + _id;
-  buttons.emplace(_id, this);
+  _componentId = "CoffeeMaker::Widget::Button-" + std::to_string(++_buttonUid);
+  buttons.emplace(_componentId, this);
 
   // Add default events
   _events.emplace(ButtonEventType::MouseMotion, new Event());
@@ -31,8 +34,9 @@ Button::Button() : top(0), left(0), width(150), height(50), padding(0), _texture
 }
 
 Button::~Button() {
+  CM_LOGGER_INFO("{} is being deleted", _componentId);
   for (auto it = buttons.begin(); it != buttons.end();) {
-    if (it->first == _id) {
+    if (it->first == _componentId) {
       it = buttons.erase(it);
     } else {
       ++it;

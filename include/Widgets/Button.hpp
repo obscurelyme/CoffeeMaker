@@ -76,11 +76,13 @@ namespace CoffeeMaker {
     static std::map<std::string, Button *> buttons;
     static std::queue<std::function<void()>> onClickCallbacks;
     static std::queue<Event *> eventQueue;
+    static int _buttonUid;
 
     private:
     bool _HitDetection(const int &mouseX, const int &mouseY);
     int index;
     bool _hovered;
+    std::string _componentId;
   };
 
 }  // namespace CoffeeMaker
