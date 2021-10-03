@@ -84,9 +84,9 @@ set(COFFEEMAKER_TEST_SOURCES
   # tests/CoffeeMakerShapesRect.cpp
   # tests/CoffeeMakerTextureTest.cpp
   # tests/CoffeeMakerUtilities.cpp
-  # tests/CoffeeMakerWidgetButton.cpp
+  tests/CoffeeMakerWidgetButton.cpp
   # tests/CoffeeMakerWidgetView.cpp
-  tests/CoffeeMakerComponent.cpp
+  # tests/CoffeeMakerComponent.cpp
   # tests/CoffeeMakerWidgetText.cpp
   )
 set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES} ${COFFEEMAKER_TEST_SOURCES})

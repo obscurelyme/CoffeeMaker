@@ -27,6 +27,12 @@ Button::~Button() {
   }
 }
 
+void Button::SetBackgroundColor(const SDL_Color &color) { _texture.SetColor(color); }
+
+void Button::SetTexture(const Texture &texture) { _texture = texture; }
+
+void Button::SetTexture(const std::string &filePath) { _texture.LoadFromFile(filePath); }
+
 bool Button::_HitDetection(const int &mouseX, const int &mouseY) {
   return clientRect.x + clientRect.w >= mouseX && clientRect.x <= mouseX && clientRect.y + clientRect.h >= mouseY &&
          clientRect.y <= mouseY;

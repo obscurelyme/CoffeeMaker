@@ -7,16 +7,16 @@
 
 #include "TestBed.hpp"
 
-class CoffeeMakerWidgetButton : public CppUnit::TestFixture
-{
+class CoffeeMakerWidgetButton : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(CoffeeMakerWidgetButton);
   CPPUNIT_TEST(testButtonCreation);
   CPPUNIT_TEST(testButtonCreatesTexture);
   CPPUNIT_TEST(testButtonRender);
   CPPUNIT_TEST(testButtonOnMousemotionEvent);
+  CPPUNIT_TEST(testSetButtonBackgroundColor);
   CPPUNIT_TEST_SUITE_END();
 
-public:
+  public:
   void setUp();
   void tearDown();
 
@@ -24,8 +24,9 @@ public:
   void testButtonCreatesTexture();
   void testButtonRender();
   void testButtonOnMousemotionEvent();
+  void testSetButtonBackgroundColor();
 
-private:
+  private:
   CoffeeMaker::Test::TestBed *_testBed;
 };
 

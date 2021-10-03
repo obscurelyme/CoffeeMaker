@@ -73,11 +73,27 @@ Texture::~Texture() {
   }
 }
 
+Texture &Texture::operator=(const Texture &rhs) {
+  if (this == &rhs) {
+    return *this;
+  }
+
+  this->_color = rhs._color;
+  this->_width = rhs._width;
+  this->_height = rhs._height;
+  if (rhs._texture != nullptr) {
+    this->_surface = std::move(rhs._surface);
+    this->_texture = SDL_CreateTextureFromSurface(CoffeeMaker::Renderer::Instance(), this->_surface);
+  }
+
+  return *this;
+}
+
 void Texture::LoadFromFile(const std::string &filePath) {
-  SDL_Surface *surface = nullptr;
+  _surface = nullptr;
   std::string path = fmt::format("{}/{}", Texture::_textureDirectory, filePath);
-  surface = IMG_Load(path.c_str());
-  if (surface == nullptr) {
+  _surface = IMG_Load(path.c_str());
+  if (_surface == nullptr) {
     std::string msg = fmt::format("Could not load surface at filepath {}", filePath);
     CM_LOGGER_ERROR(msg);
     CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("Error loading texture", msg);
@@ -85,12 +101,12 @@ void Texture::LoadFromFile(const std::string &filePath) {
   }
 
   if (_useColorKey) {
-    SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, COLOR_KEY.r, COLOR_KEY.g, COLOR_KEY.b));
+    // SDL_SetColorKey(_surface, SDL_TRUE, SDL_MapRGB(_surface->format, COLOR_KEY.r, COLOR_KEY.g, COLOR_KEY.b));
   }
-  _texture = SDL_CreateTextureFromSurface(CoffeeMaker::Renderer::Instance(), surface);
-  _height = surface->h;
-  _width = surface->w;
-  SDL_FreeSurface(surface);
+  _texture = SDL_CreateTextureFromSurface(CoffeeMaker::Renderer::Instance(), _surface);
+  _height = _surface->h;
+  _width = _surface->w;
+  // SDL_FreeSurface(surface);
 }
 
 void Texture::CreateFromSurface(int height, int width, const SDL_Color &c) {

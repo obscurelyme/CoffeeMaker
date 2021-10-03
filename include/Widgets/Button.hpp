@@ -19,7 +19,9 @@ namespace CoffeeMaker {
     Button();
     ~Button();
 
-    void Draw();
+    void SetBackgroundColor(const SDL_Color &color);
+    void SetTexture(const Texture &texture);
+    void SetTexture(const std::string &filePath);
 
     void OnEvent(const SDL_Event *e);
     void OnMouseover();
@@ -46,7 +48,6 @@ namespace CoffeeMaker {
     private:
     bool _HitDetection(const int &mouseX, const int &mouseY);
     int index;
-
     bool _hovered;
   };
 
