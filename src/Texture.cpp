@@ -101,12 +101,12 @@ void Texture::LoadFromFile(const std::string &filePath) {
   }
 
   if (_useColorKey) {
-    // SDL_SetColorKey(_surface, SDL_TRUE, SDL_MapRGB(_surface->format, COLOR_KEY.r, COLOR_KEY.g, COLOR_KEY.b));
+    SDL_SetColorKey(_surface, SDL_TRUE, SDL_MapRGB(_surface->format, COLOR_KEY.r, COLOR_KEY.g, COLOR_KEY.b));
   }
   _texture = SDL_CreateTextureFromSurface(CoffeeMaker::Renderer::Instance(), _surface);
   _height = _surface->h;
   _width = _surface->w;
-  // SDL_FreeSurface(surface);
+  SDL_FreeSurface(_surface);
 }
 
 void Texture::CreateFromSurface(int height, int width, const SDL_Color &c) {

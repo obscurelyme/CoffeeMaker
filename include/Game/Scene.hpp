@@ -7,7 +7,7 @@
 class Scene {
   public:
   Scene();
-  ~Scene();
+  virtual ~Scene();
 
   virtual void Render() = 0;
   virtual void Update() = 0;
@@ -27,6 +27,7 @@ class SceneManager {
   static void LoadScene();
   static void LoadScene(int index);
   static void AddScene(Scene* scene);
+  static void DestroyAllScenes();
   static std::vector<Scene*> scenes;
 
   private:

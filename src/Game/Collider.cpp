@@ -1,7 +1,8 @@
 #include "Game/Collider.hpp"
+
+#include "Color.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
-#include "Color.hpp"
 
 int Collider::_colliderId = 0;
 std::vector<Collider*> Collider::_colliders = {};
@@ -14,7 +15,7 @@ void Collider::PhysicsUpdate() {
   }
 }
 
-Collider::Collider(bool active): active(active) {
+Collider::Collider(bool active) : active(active) {
   _id = ++_colliderId;
   _colliders.emplace_back(this);
   _texture.SetColor(CoffeeMaker::Color(0, 255, 0, 255));
@@ -24,9 +25,7 @@ Collider::Collider(bool active): active(active) {
   clientRect.w = 32;
 }
 
-Collider::~Collider() {
-
-}
+Collider::~Collider() {}
 
 void Collider::SetWidth(float w) {
   clientRect.w = w;
@@ -64,10 +63,10 @@ void Collider::CheckForCollision() {
 
 bool Collider::_AxisAlignedBoundingBoxHit(Collider* collider) const {
   return clientRect.x < collider->clientRect.x + collider->clientRect.w &&
-        clientRect.x + clientRect.w > collider->clientRect.x &&
+         clientRect.x + clientRect.w > collider->clientRect.x &&
 
-        clientRect.y < collider->clientRect.y + collider->clientRect.h &&
-        clientRect.y + clientRect.h > collider->clientRect.y;
+         clientRect.y < collider->clientRect.y + collider->clientRect.h &&
+         clientRect.y + clientRect.h > collider->clientRect.y;
 }
 
 void Collider::Render() {

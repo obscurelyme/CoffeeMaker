@@ -26,15 +26,22 @@ void MainScene::Update() {
 }
 
 void MainScene::Init() {
+  _menu = new Menu();
   _menu->Init();
   _backgroundTiles = new Tiles("space.png", 800, 600);
-  Player* p = new Player();
-  Enemy* enemy = new Enemy();
+  _player = new Player();
+  _enemy = new Enemy();
 
-  _entities.push_back(p);
-  _entities.push_back(enemy);
+  _entities.push_back(_player);
+  _entities.push_back(_enemy);
 }
 
-void MainScene::Destroy() { _entities.clear(); }
+void MainScene::Destroy() {
+  _entities.clear();
+  delete _backgroundTiles;
+  delete _player;
+  delete _enemy;
+  delete _menu;
+}
 
-MainScene::MainScene() : _menu(std::make_unique<Menu>()) {}
+MainScene::MainScene() {}

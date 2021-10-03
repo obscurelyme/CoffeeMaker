@@ -1,11 +1,13 @@
 #include "Game/Projectile.hpp"
+
 #include <glm/glm.hpp>
+
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
 std::shared_ptr<CoffeeMaker::Texture> Projectile::_texture = nullptr;
 
-Projectile::Projectile(): _fired(false), _rotation(0) {
+Projectile::Projectile() : _fired(false), _rotation(0) {
   if (Projectile::_texture == nullptr) {
     _texture = std::make_shared<CoffeeMaker::Texture>("missile.png", true);
   }
@@ -19,15 +21,16 @@ Projectile::Projectile(): _fired(false), _rotation(0) {
 }
 
 Projectile::~Projectile() {
-  // TODO: fix clean up here. uncommenting in current state will crash application due to this being called
-  // from Player constructor
-  // delete collider;
+  // TODO: fix clean up here. uncommenting in current state will crash application due to this being called from Player
+  // constructor
+  delete collider;
 }
 
 void Projectile::Render() {
   if (_fired) {
     SDL_RendererFlip flip = SDL_FLIP_NONE;
-    SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), Projectile::_texture->Handle(), NULL, &_clientRect, _rotation + 90, NULL, flip);
+    SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), Projectile::_texture->Handle(), NULL, &_clientRect,
+                      _rotation + 90, NULL, flip);
     collider->Render();
   }
 }

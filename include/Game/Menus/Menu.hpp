@@ -18,6 +18,7 @@ class Menu {
   void Show();
   void Hide();
   void Init();
+  void Destroy();
   void Render();
   bool IsShown();
 

@@ -1,3 +1,9 @@
+// clang-format off
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+// clang-format on
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -123,9 +129,13 @@ int main(int, char**) {
     SDL_Delay(16);
   }
 
+  SceneManager::DestroyAllScenes();
+  CoffeeMaker::FontManager::Destroy();
   renderer.Destroy();
   SDL_Quit();
   CM_LOGGER_DESTROY();
+
+  _CrtDumpMemoryLeaks();
 
   return 0;
 }

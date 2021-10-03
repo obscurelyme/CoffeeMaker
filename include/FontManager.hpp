@@ -21,7 +21,7 @@ namespace CoffeeMaker {
      */
     static void LoadFont(const std::string& name);
     static void Init();
-    static void Detroy();
+    static void Destroy();
     static TTF_Font* UseFont(const std::string& fontName);
 
     private:
