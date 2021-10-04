@@ -51,9 +51,15 @@ Button::~Button() {
 
 void Button::SetBackgroundColor(const SDL_Color &color) { _texture.SetColor(color); }
 
-void Button::SetTexture(const Texture &texture) { _texture = texture; }
+void Button::SetTexture(const Texture &texture) {
+  _texture = texture;
+  _textureColorMod = _texture.GetColorMod();
+}
 
-void Button::SetTexture(const std::string &filePath) { _texture.LoadFromFile(filePath); }
+void Button::SetTexture(const std::string &filePath) {
+  _texture.LoadFromFile(filePath);
+  _textureColorMod = _texture.GetColorMod();
+}
 
 bool Button::_HitDetection(const int &mouseX, const int &mouseY) {
   return clientRect.x + clientRect.w >= mouseX && clientRect.x <= mouseX && clientRect.y + clientRect.h >= mouseY &&
@@ -116,12 +122,12 @@ void Button::OnEvent(const SDL_Event *event) {
 
 void Button::OnMouseover() {
   _hovered = true;
-  _texture.SetColor(Color(0, 255, 0, 255));
+  _texture.SetColor(Color(0, 50, 0, 255));
 }
 
 void Button::OnMouseleave() {
   _hovered = false;
-  _texture.SetColor(Color(0, 0, 0, 255));
+  _texture.SetColor(_textureColorMod);
 }
 
 void Button::Render() {

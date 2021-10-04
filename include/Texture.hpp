@@ -28,6 +28,8 @@ namespace CoffeeMaker {
     void LoadFromFile(const std::string &filePath);
     void CreateFromSurface(int height, int width, const SDL_Color &color);
     void SetColor(SDL_Color color = Color());
+    // Get the additional color value multiplied into render copy operations.
+    SDL_Color GetColorMod();
     void SetAlpha(Uint8 alpha);
     void SetBlendMode(SDL_BlendMode blend);
     void Render(int top, int left);

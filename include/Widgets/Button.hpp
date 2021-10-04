@@ -70,6 +70,7 @@ namespace CoffeeMaker {
     void *children;
     Texture _texture;
     std::function<void()> onClickCallback;
+    SDL_Color _textureColorMod;
 
     std::map<ButtonEventType, Event *> _events;
 
