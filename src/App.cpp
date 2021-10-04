@@ -1,7 +1,9 @@
 // clang-format off
+#ifdef _WINDOWS
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
+#endif
 // clang-format on
 
 #include <SDL2/SDL.h>
@@ -135,7 +137,9 @@ int main(int, char**) {
   SDL_Quit();
   CM_LOGGER_DESTROY();
 
+#ifdef _WINDOWS
   _CrtDumpMemoryLeaks();
+#endif
 
   return 0;
 }

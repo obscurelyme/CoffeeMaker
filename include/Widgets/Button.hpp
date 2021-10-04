@@ -80,7 +80,7 @@ namespace CoffeeMaker {
 
     private:
     bool _HitDetection(const int &mouseX, const int &mouseY);
-    int index;
+    // int index;
     bool _hovered;
     std::string _componentId;
   };

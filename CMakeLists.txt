@@ -52,6 +52,7 @@ set(GAME_SOURCES
   src/Game/Scenes/MainScene.cpp
   src/Game/Scene.cpp
   src/Game/Collider.cpp
+  src/Game/Entity.cpp
   src/Game/Enemy.cpp
   src/Game/Player.cpp
   src/Game/Tiles.cpp

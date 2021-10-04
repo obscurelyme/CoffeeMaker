@@ -25,7 +25,7 @@ class SceneManager {
   static void UpdateCurrentScene();
   static void RenderCurrentScene();
   static void LoadScene();
-  static void LoadScene(int index);
+  static void LoadScene(unsigned long index);
   static void AddScene(Scene* scene);
   static void DestroyAllScenes();
   static std::vector<Scene*> scenes;

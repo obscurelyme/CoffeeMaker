@@ -32,7 +32,7 @@ void SceneManager::LoadScene() {
   _currentScene->Init();
 }
 
-void SceneManager::LoadScene(int index) {
+void SceneManager::LoadScene(unsigned long index) {
   if (scenes.size() >= index && index >= 0) {
     _currentScene->Destroy();
     _currentSceneIndex = index;

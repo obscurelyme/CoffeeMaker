@@ -5,11 +5,11 @@ Enemy::Enemy() {
   _ticks = _priorTicks;
 }
 
+Enemy::~Enemy() {}
+
 void Enemy::Init() {}
 
-void Enemy::Render() {
-  _texture.Render(_clipRect, _clientRect);
-}
+void Enemy::Render() { _texture.Render(_clipRect, _clientRect); }
 
 void Enemy::Update() {
   _ticks = SDL_GetTicks();
@@ -29,4 +29,3 @@ void Enemy::Update() {
     _clientRect.y = 632;
   }
 }
-

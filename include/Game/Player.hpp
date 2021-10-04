@@ -9,7 +9,7 @@
 class Player : public Entity {
   public:
   Player();
-  ~Player();
+  virtual ~Player();
 
   void Init();
   void Update();

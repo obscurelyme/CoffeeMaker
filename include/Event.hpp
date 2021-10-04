@@ -15,7 +15,7 @@ namespace CoffeeMaker {
     ~Delegate();
 
     inline void Invoke(const Event& event) { _function(event); }
-    inline bool operator==(const Delegate& rhs) { return _id == rhs._id; }
+    inline bool operator==(const Delegate& rhs) const { return _id == rhs._id; }
 
     private:
     std::function<void(const Event& event)> _function;
