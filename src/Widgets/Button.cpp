@@ -144,15 +144,9 @@ void Button::PollEvents(const SDL_Event *const event) {
 }
 
 /**
- * Process the onClick callbacks at a separate stage within the run loop
+ * Process the Button Event[s] at a separate stage within the run loop
  */
 void Button::ProcessEvents() {
-  // while (!onClickCallbacks.empty()) {
-  //   auto callback = onClickCallbacks.front();
-  //   onClickCallbacks.pop();
-  //   callback();
-  // }
-
   while (!eventQueue.empty()) {
     auto e = eventQueue.front();
     eventQueue.pop();
