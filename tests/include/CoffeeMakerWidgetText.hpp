@@ -14,11 +14,8 @@ class CoffeeMakerWidgetText : public CppUnit::TestFixture {
   CPPUNIT_TEST(testCreation);
   CPPUNIT_TEST(testNestedPosition);
   CPPUNIT_TEST(testNestedPositionX2);
-<<<<<<< Updated upstream
-=======
   CPPUNIT_TEST(testWrappedLength);
   CPPUNIT_TEST(testWrappedLengthLessThanParentWidth);
->>>>>>> Stashed changes
   CPPUNIT_TEST_SUITE_END();
 
   public:
@@ -28,11 +25,8 @@ class CoffeeMakerWidgetText : public CppUnit::TestFixture {
   void testCreation();
   void testNestedPosition();
   void testNestedPositionX2();
-<<<<<<< Updated upstream
-=======
   void testWrappedLength();
   void testWrappedLengthLessThanParentWidth();
->>>>>>> Stashed changes
 
   private:
   TestBed* _testBed;

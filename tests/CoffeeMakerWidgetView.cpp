@@ -4,9 +4,11 @@
 #include <cppunit/TestAssert.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "Utilities.hpp"
 #include "Widgets/View.hpp"
 
 using namespace CoffeeMaker::UIProperties;
+using namespace CoffeeMaker::Widgets;
 
 void CoffeeMakerWidgetView::setUp() { _testBed = new CoffeeMaker::Test::TestBed(); }
 
@@ -45,55 +47,55 @@ void CoffeeMakerWidgetView::testRightBottomAligned() {
 }
 
 void CoffeeMakerWidgetView::testNestedAligned() {
-  CoffeeMaker::Widgets::View view{150, 150, HorizontalAlignment::Centered, VerticalAlignment::Centered};
-  CoffeeMaker::Widgets::View view2{100, 100, HorizontalAlignment::Right, VerticalAlignment::Bottom};
-  CoffeeMaker::Widgets::View view3{25, 25, HorizontalAlignment::Centered, VerticalAlignment::Top};
+  Ref<View> view{new View(150, 150, HorizontalAlignment::Centered, VerticalAlignment::Centered)};
+  Ref<View> view2{new View(100, 100, HorizontalAlignment::Right, VerticalAlignment::Bottom)};
+  Ref<View> view3{new View(25, 25, HorizontalAlignment::Centered, VerticalAlignment::Top)};
 
-  view.AppendChild(&view2);
-  view2.AppendChild(&view3);
+  view->AppendChild(view2);
+  view2->AppendChild(view3);
 
-  _testBed->BeginRender();
+  // _testBed->BeginRender();
 
-  view.Render();
+  // view->Render();
 
-  _testBed->EndRender();
-  SDL_Delay(1000);
+  // _testBed->EndRender();
+  // SDL_Delay(1000);
 
   // Parent
-  CPPUNIT_ASSERT_EQUAL(175, view.clientRect.x);
-  CPPUNIT_ASSERT_EQUAL(175, view.clientRect.y);
+  CPPUNIT_ASSERT_EQUAL(175, view->clientRect.x);
+  CPPUNIT_ASSERT_EQUAL(175, view->clientRect.y);
   // Child
-  CPPUNIT_ASSERT_EQUAL(225, view2.clientRect.x);
-  CPPUNIT_ASSERT_EQUAL(225, view2.clientRect.y);
+  CPPUNIT_ASSERT_EQUAL(225, view2->clientRect.x);
+  CPPUNIT_ASSERT_EQUAL(225, view2->clientRect.y);
   // Grandchild
-  CPPUNIT_ASSERT_EQUAL(262, view3.clientRect.x);
-  CPPUNIT_ASSERT_EQUAL(225, view3.clientRect.y);
+  CPPUNIT_ASSERT_EQUAL(262, view3->clientRect.x);
+  CPPUNIT_ASSERT_EQUAL(225, view3->clientRect.y);
 }
 
 void CoffeeMakerWidgetView::testOutOfOrderNestedAligned() {
-  CoffeeMaker::Widgets::View view{150, 150, HorizontalAlignment::Centered, VerticalAlignment::Centered};
-  CoffeeMaker::Widgets::View view2{100, 100, HorizontalAlignment::Right, VerticalAlignment::Bottom};
-  CoffeeMaker::Widgets::View view3{25, 25, HorizontalAlignment::Centered, VerticalAlignment::Top};
+  Ref<View> view{new View(150, 150, HorizontalAlignment::Centered, VerticalAlignment::Centered)};
+  Ref<View> view2{new View(100, 100, HorizontalAlignment::Right, VerticalAlignment::Bottom)};
+  Ref<View> view3{new View(25, 25, HorizontalAlignment::Centered, VerticalAlignment::Top)};
 
-  view2.AppendChild(&view3);
-  view.AppendChild(&view2);
+  view2->AppendChild(view3);
+  view->AppendChild(view2);
 
-  _testBed->BeginRender();
+  // _testBed->BeginRender();
 
-  view.Render();
+  // view.Render();
 
-  _testBed->EndRender();
-  SDL_Delay(1000);
+  // _testBed->EndRender();
+  // SDL_Delay(1000);
 
   // Parent
-  CPPUNIT_ASSERT_EQUAL(175, view.clientRect.x);
-  CPPUNIT_ASSERT_EQUAL(175, view.clientRect.y);
+  CPPUNIT_ASSERT_EQUAL(175, view->clientRect.x);
+  CPPUNIT_ASSERT_EQUAL(175, view->clientRect.y);
   // Child
-  CPPUNIT_ASSERT_EQUAL(225, view2.clientRect.x);
-  CPPUNIT_ASSERT_EQUAL(225, view2.clientRect.y);
+  CPPUNIT_ASSERT_EQUAL(225, view2->clientRect.x);
+  CPPUNIT_ASSERT_EQUAL(225, view2->clientRect.y);
   // Grandchild
-  CPPUNIT_ASSERT_EQUAL(262, view3.clientRect.x);
-  CPPUNIT_ASSERT_EQUAL(225, view3.clientRect.y);
+  CPPUNIT_ASSERT_EQUAL(262, view3->clientRect.x);
+  CPPUNIT_ASSERT_EQUAL(225, view3->clientRect.y);
 }
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoffeeMakerWidgetView);

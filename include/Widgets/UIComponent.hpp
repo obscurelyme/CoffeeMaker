@@ -20,7 +20,11 @@ namespace CoffeeMaker {
      * Toggle the rendering of the clientRect for the component
      */
     static void SetDebugRender(bool toggle);
-    void AppendChild(const std::shared_ptr<UIComponent>& component);
+    virtual void AppendChild(const std::shared_ptr<UIComponent>& component);
+    /**
+     * Function that is executed upon becoming a child.
+     */
+    virtual void OnAppend();
     virtual void Render();
     void SetHorizontalAlignment(CoffeeMaker::UIProperties::HorizontalAlignment xAlign);
     void SetVerticalAlignment(CoffeeMaker::UIProperties::VerticalAlignment yAlign);
@@ -29,6 +33,7 @@ namespace CoffeeMaker {
     SDL_Rect clientRect;
 
     protected:
+    void CalcPosition();
     int DeriveXPosition();
     int DeriveYPosition();
     void RepositionChildren();

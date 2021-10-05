@@ -12,7 +12,8 @@ Text::Text() :
     _textContent(""),
     _font(nullptr),
     renderer(CoffeeMaker::Renderer::Instance()),
-    _texture(nullptr) {
+    _texture(nullptr),
+    _wrapLength(0) {
   _id = "Text-" + std::to_string(++_textId);
 }
 
@@ -21,19 +22,27 @@ Text::Text(std::string textContent) :
     _textContent(textContent),
     _font(nullptr),
     renderer(CoffeeMaker::Renderer::Instance()),
-    _texture(nullptr) {
+    _texture(nullptr),
+    _wrapLength(0) {
   _id = "Text-" + std::to_string(++_textId);
 }
 
 Text::~Text() {
   if (_texture != nullptr) {
-    // SDL renderer destroys textures automatically when calling
-    // SDL_DestroyRenderer
     if (CoffeeMaker::Renderer::Exists()) {
+      // NOTE: destroy the current texture if the Renderer still exists
+      // we do this because SDL_DestroyRenderer will auto destroy all
+      // textures it created.
       SDL_DestroyTexture(_texture);
     }
     _texture = nullptr;
   }
+  _font = nullptr;
+}
+
+void Text::OnAppend() {
+  SetTextContentTexture();
+  UIComponent::OnAppend();
 }
 
 void Text::Render() {
@@ -48,14 +57,17 @@ void Text::Render() {
     exit(1);
   }
 
-  clientRect.x = UIComponent::DeriveXPosition();
-  clientRect.y = UIComponent::DeriveYPosition();
+  // clientRect.x = UIComponent::DeriveXPosition();
+  // clientRect.y = UIComponent::DeriveYPosition();
   UIComponent::DebugRender();
   SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
   SDL_RenderCopy(renderer, _texture, NULL, &clientRect);
 }
 
-void Text::SetFont(TTF_Font *f) { _font = f; }
+void Text::SetFont(TTF_Font *f) {
+  _font = f;
+  SetTextContentTexture();
+}
 
 void Text::SetText(const std::string &textContent) {
   _textContent = textContent;
@@ -63,20 +75,22 @@ void Text::SetText(const std::string &textContent) {
 }
 
 void Text::SetTextContentTexture() {
-  if (_font != nullptr) {
+  if (_font != nullptr && _textContent != "") {
     if (_texture != nullptr) {
       SDL_DestroyTexture(_texture);
       _texture = nullptr;
     }
     SDL_Surface *surface;
-    surface = TTF_RenderText_Blended(_font, _textContent.c_str(), color);
+    surface = TTF_RenderText_Blended_Wrapped(_font, _textContent.c_str(), color, GetWrapLength());
+    if (surface == nullptr) {
+      MessageBox::ShowMessageBoxAndQuit(
+          "Text Surface Error", "Could not create a text surface for the given string: \"" + _textContent + "\"");
+    }
     _texture = SDL_CreateTextureFromSurface(renderer, surface);
     clientRect.w = surface->w;
     clientRect.h = surface->h;
     SDL_FreeSurface(surface);
-  } else {
-    CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("Cannot set text with NULL font",
-                                                   "Cannot generate a texture for text element when it's font is NULL");
+    CalcPosition();
   }
 }
 
@@ -85,7 +99,18 @@ void Text::SetColor(const SDL_Color &newColor) {
   color.g = newColor.g;
   color.b = newColor.b;
   color.a = newColor.a;
-  if (_textContent != "") {
-    SetTextContentTexture();
+  SetTextContentTexture();
+}
+
+void Text::SetWrapLength(Uint32 wrapLength) {
+  _wrapLength = wrapLength;
+  SetTextContentTexture();
+}
+
+Uint32 Text::GetWrapLength() const {
+  if (_wrapLength > 0) {
+    return _wrapLength;
   }
+
+  return _parent != nullptr ? _parent->clientRect.w : viewport.w;
 }
