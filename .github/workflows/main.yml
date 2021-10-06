@@ -2,19 +2,21 @@ name: CI
 
 on:
   push:
-    branches: [*]
+    branches:
+      - "**"
     pull_request:
-      branches: [master]
+      branches:
+        - "master"
 
 jobs:
-  Quality Check:
+  Quality Gate:
     runs-on: ubuntu-latest
 
     steps:
-      - name: lint
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: CppCheck
         uses: deep5050/cppcheck-action@v3.0
         with:
           enable: all
           std: c++20
-
-
