@@ -28,7 +28,7 @@ jobs:
       #     command: "cmake . -B:build -G Ninja"
       - run:
           name: "CppCheck"
-          command: "cppcheck -I ./include ./src --xml --enable=all --output-file=check.xml"
+          command: "cppcheck -I ./include ./src --xml --enable=all --output-file=check.xml && ./scripts/postCppCheck.sh"
       - store_artifacts:
           path: ./check.xml
 
