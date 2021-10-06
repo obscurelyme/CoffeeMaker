@@ -15,7 +15,7 @@ namespace CoffeeMaker {
     class Text : public UIComponent {
       public:
       Text();
-      Text(std::string textContent);
+      explicit Text(std::string textContent);
       ~Text();
 
       void Render();

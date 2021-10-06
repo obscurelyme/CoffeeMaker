@@ -98,5 +98,11 @@
   "[cpp]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "xaver.clang-format"
-  }
+  },
+  "c-cpp-flylint.clang.enable": false,
+  "c-cpp-flylint.flawfinder.enable": false,
+  "c-cpp-flylint.lizard.enable": false,
+  "c-cpp-flylint.flexelint.enable": false,
+  "c-cpp-flylint.cppcheck.enable": true,
+  "c-cpp-flylint.cppcheck.standard": ["c++20"],
 }

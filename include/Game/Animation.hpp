@@ -5,6 +5,12 @@
 
 class AnimationState {
   public:
+  AnimationState() : _next(nullptr), _prev(nullptr) {}
+  ~AnimationState() {
+    delete _next;
+    delete _prev;
+  }
+
   AnimationState* Next() const;
   AnimationState* Previous() const;
 

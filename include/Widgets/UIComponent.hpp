@@ -13,7 +13,7 @@ namespace CoffeeMaker {
   class UIComponent {
     public:
     UIComponent();
-    UIComponent(const SDL_Rect clientRect);
+    explicit UIComponent(const SDL_Rect clientRect);
     virtual ~UIComponent();
 
     /**

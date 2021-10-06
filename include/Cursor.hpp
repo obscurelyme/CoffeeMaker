@@ -7,14 +7,14 @@
 
 namespace CoffeeMaker {
 
-class Cursor {
- public:
-  Cursor(const std::string& filePath);
-  ~Cursor();
+  class Cursor {
+    public:
+    explicit Cursor(const std::string& filePath);
+    ~Cursor();
 
- private:
-  SDL_Cursor* _cursor;
-};
+    private:
+    SDL_Cursor* _cursor;
+  };
 
 }  // namespace CoffeeMaker
 

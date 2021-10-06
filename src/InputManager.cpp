@@ -11,13 +11,9 @@ void InputManager::Init() {
   _keys.fill(e);
 }
 
-void InputManager::KeyPressed(SDL_KeyboardEvent* event) {
-  _keys[event->keysym.scancode].IsPressed = true;
-}
+void InputManager::KeyPressed(SDL_KeyboardEvent* event) { _keys[event->keysym.scancode].IsPressed = true; }
 
-void InputManager::KeyReleased(SDL_KeyboardEvent* event) {
-  _keys[event->keysym.scancode].IsPressed = false;
-}
+void InputManager::KeyReleased(SDL_KeyboardEvent* event) { _keys[event->keysym.scancode].IsPressed = false; }
 
 void InputManager::ClearAllPresses() {
   for (auto& key : _keys) {
@@ -42,18 +38,10 @@ void InputManager::HandleKeyBoardEvent(SDL_KeyboardEvent* event) {
   }
 }
 
-bool InputManager::IsKeyDown(SDL_Scancode scanCode) {
-  return _keys[scanCode].IsPressed;
-}
+bool InputManager::IsKeyDown(SDL_Scancode scanCode) { return _keys[scanCode].IsPressed; }
 
-bool InputManager::IsKeyUp(SDL_Scancode scanCode) {
-  return !_keys[scanCode].IsPressed;
-}
+bool InputManager::IsKeyUp(SDL_Scancode scanCode) { return !_keys[scanCode].IsPressed; }
 
-bool InputManager::IsKeyPressed(SDL_Scancode scanCode) {
-  return _keys[scanCode].IsPressed;
-}
+bool InputManager::IsKeyPressed(SDL_Scancode scanCode) { return _keys[scanCode].IsPressed; }
 
-bool InputManager::IsKeyHeld(SDL_Scancode scanCode) {
-  return _keys[scanCode].IsHeld;
-}
+bool InputManager::IsKeyHeld(SDL_Scancode scanCode) { return _keys[scanCode].IsHeld; }

@@ -109,8 +109,9 @@ endif()
 
 
 if (APPLE)
-  execute_process(COMMAND rm "-rf" "${PROJECT_BINARY_DIR}/assets")
-  execute_process(COMMAND bash "${PROJECT_SOURCE_DIR}/post-build-osx.sh")
+  execute_process(COMMAND sh "${PROJECT_SOURCE_DIR}/post-build.sh")
+elseif(WIN32)
+  execute_process(COMMAND "${PROJECT_SOURCE_DIR}/post-build.bat")
 endif()
 
 # Set Warnings
