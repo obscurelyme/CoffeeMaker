@@ -9,7 +9,7 @@ on:
         - "master"
 
 jobs:
-  Quality Gate:
+  build:
     runs-on: ubuntu-latest
 
     steps:
