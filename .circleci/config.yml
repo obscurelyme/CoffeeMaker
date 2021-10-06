@@ -13,16 +13,19 @@ jobs:
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
+      -run:
+          name: "Install sudo"
+          command: "apt-get update && apt-get install -y sudo && rm -rf /var/lib/apt/lists/*"
       - run:
           name: "Install Git"
-          command: "apt-get install git"
+          command: "apt-get update && sudo apt-get install git"
       - checkout
       - run:
           name: "Install Clang"
           command: "apt-get install clang"
       - run:
           name: "Install Cmake"
-          command: "apt-get install cmake"
+          command: "apt-get update && sudo apt-get install -y cmake"
       - run:
           name: "Install Ninja"
           command: "apt-get install ninja-build"
