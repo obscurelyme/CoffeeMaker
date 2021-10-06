@@ -60,4 +60,14 @@ void CoffeeMakerWidgetText::testNestedPositionX2() {
   CPPUNIT_ASSERT_EQUAL(225, text.clientRect.y);
 }
 
+void CoffeeMakerWidgetText::testWrappedLengthLessThanParentWidth() {
+  Ref<View> view(new View(400, 400));
+  Ref<Text> text(new Text("lorem ipsum dolor sit amet, consectetur adip"));
+  text->SetFont(CoffeeMaker::FontManager::UseFont("Roboto/Roboto-Regular"));
+
+  view->AppendChild(text);
+
+  CPPUNIT_ASSERT_EQUAL(313, text->clientRect.w);
+}
+
 CPPUNIT_TEST_SUITE_REGISTRATION(CoffeeMakerWidgetText);
