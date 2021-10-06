@@ -21,14 +21,14 @@ jobs:
       #     command: "apt-get update && DEBIAN_FRONTEND=noninteractive TZ=America/Los_Angles apt-get install -y tzdata"
       - run:
           name: "Install Workflow"
-          command: "apt-get update && sudo apt-get install -y git clang cmake ninja-build"
+          command: "apt-get update && sudo apt-get install -y git clang cppcheck"
       - checkout
       # - run:
       #     name: "Configuring"
       #     command: "cmake . -B:build -G Ninja"
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: "CppCheck"
+          command: "cppcheck -I ./include ./src --enable=all"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
