@@ -28,7 +28,7 @@ jobs:
           command: "apt-get install -y clang"
       - run:
           name: "Install Cmake"
-          command: "apt-get update && sudo apt-get install -y cmake"
+          command: "apt-get update && sudo apt-get install -y --no-install-recommends cmake"
       - run:
           name: "Install Ninja"
           command: "apt-get install -y ninja-build"
