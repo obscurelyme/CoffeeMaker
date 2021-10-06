@@ -9,16 +9,16 @@ jobs:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      - image: ubuntu:latest
+      - image: debian:stable
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - run:
           name: "Install sudo"
           command: "apt-get update && apt-get install -y sudo && rm -rf /var/lib/apt/lists/*"
-      - run:
-          name: "tzdata"
-          command: "apt-get update && DEBIAN_FRONTEND=noninteractive TZ=America/Los_Angles apt-get install -y tzdata"
+      # - run:
+      #     name: "tzdata"
+      #     command: "apt-get update && DEBIAN_FRONTEND=noninteractive TZ=America/Los_Angles apt-get install -y tzdata"
       - run:
           name: "Install Workflow"
           command: "apt-get update && sudo apt-get install -y git clang cmake ninja-build"
