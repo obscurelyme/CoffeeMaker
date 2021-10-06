@@ -36,20 +36,24 @@ UIComponent::UIComponent(const SDL_Rect clientRect) : clientRect(clientRect), _p
 
 void UIComponent::AppendChild(const std::shared_ptr<UIComponent>& component) {
   component->_parent = this;
-  component->clientRect.x = component->DeriveXPosition();
-  component->clientRect.y = component->DeriveYPosition();
-
-  component->RepositionChildren();
-
+  component->OnAppend();
   _children.push_back(component);
+}
+
+void UIComponent::OnAppend() {
+  CalcPosition();
+  RepositionChildren();
 }
 
 void UIComponent::RepositionChildren() {
   for (auto& child : _children) {
-    child->clientRect.x = child->DeriveXPosition();
-    child->clientRect.y = child->DeriveYPosition();
-    child->RepositionChildren();
+    child->OnAppend();
   }
+}
+
+void UIComponent::CalcPosition() {
+  clientRect.x = UIComponent::DeriveXPosition();
+  clientRect.y = UIComponent::DeriveYPosition();
 }
 
 /**
@@ -80,9 +84,15 @@ void UIComponent::DebugRender() {
   SDL_SetRenderDrawColor(Renderer::Instance(), prevColor.r, prevColor.g, prevColor.b, prevColor.a);
 }
 
-void UIComponent::SetHorizontalAlignment(CoffeeMaker::UIProperties::HorizontalAlignment xAlign) { _xAlign = xAlign; }
+void UIComponent::SetHorizontalAlignment(CoffeeMaker::UIProperties::HorizontalAlignment xAlign) {
+  _xAlign = xAlign;
+  CalcPosition();
+}
 
-void UIComponent::SetVerticalAlignment(CoffeeMaker::UIProperties::VerticalAlignment yAlign) { _yAlign = yAlign; }
+void UIComponent::SetVerticalAlignment(CoffeeMaker::UIProperties::VerticalAlignment yAlign) {
+  _yAlign = yAlign;
+  CalcPosition();
+}
 
 int UIComponent::DeriveXPosition() {
   SDL_Rect relativeParent = _parent != nullptr ? _parent->clientRect : viewport;
@@ -107,33 +117,5 @@ int UIComponent::DeriveYPosition() {
     return 0 + relativeParent.y;
   }
 }
-
-// OLD
-// int UIComponent::DeriveXPosition() {
-//   SDL_Rect currentViewport;
-//   SDL_RenderGetViewport(Renderer::Instance(), &currentViewport);
-
-//   if (_xAlign == HorizontalAlignment::Centered) {
-//     return (currentViewport.w - clientRect.w) / 2;
-//   } else if (_xAlign == HorizontalAlignment::Right) {
-//     return (currentViewport.w - clientRect.w);
-//   } else {
-//     return 0;
-//   }
-// }
-
-// OLD
-// int UIComponent::DeriveYPosition() {
-//   SDL_Rect currentViewport;
-//   SDL_RenderGetViewport(Renderer::Instance(), &currentViewport);
-
-//   if (_yAlign == VerticalAlignment::Centered) {
-//     return (currentViewport.h - clientRect.h) / 2;
-//   } else if (_yAlign == VerticalAlignment::Bottom) {
-//     return (currentViewport.h - clientRect.h);
-//   } else {
-//     return 0;
-//   }
-// }
 
 void UIComponent::SetDebugRender(bool toggle) { _debugRendering = toggle; }
