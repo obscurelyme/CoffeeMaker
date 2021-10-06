@@ -12,12 +12,16 @@ jobs:
       - image: ubuntu
     environment:
       DEBIAN_FRONTEND: noninteractive
+      TZ: "America/Los_Angeles"
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - run:
           name: "Install sudo"
           command: "apt-get update && apt-get install -y sudo && rm -rf /var/lib/apt/lists/*"
+      - run:
+          name: "Install timedatectl"
+          command: apt-get update && sudo apt-get install -y timedatectl && sudo timedatectl set-timezone A"
       - run:
           name: "Install Git"
           command: "apt-get update && sudo apt-get install -y git"
