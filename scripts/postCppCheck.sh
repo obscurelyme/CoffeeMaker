@@ -1,6 +1,6 @@
 #!/bin/sh
 
-numErrors=$(cat ./reports/cppcheck.xml | grep "<error" | wc -l)
+numErrors=$(cmd < ./reports/cppcheck.xml | grep "<error" | wc -l)
 
 if [ $numErrors -gt 0 ]
 then
