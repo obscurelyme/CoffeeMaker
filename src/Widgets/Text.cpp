@@ -57,8 +57,6 @@ void Text::Render() {
     exit(1);
   }
 
-  // clientRect.x = UIComponent::DeriveXPosition();
-  // clientRect.y = UIComponent::DeriveYPosition();
   UIComponent::DebugRender();
   SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
   SDL_RenderCopy(renderer, _texture, NULL, &clientRect);

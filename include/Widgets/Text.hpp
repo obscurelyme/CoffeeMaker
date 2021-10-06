@@ -15,7 +15,7 @@ namespace CoffeeMaker {
     class Text : public UIComponent {
       public:
       Text();
-      Text(std::string textContent);
+      explicit Text(std::string textContent);
       ~Text();
 
       virtual void Render();
@@ -23,7 +23,7 @@ namespace CoffeeMaker {
       void SetText(const std::string &textContent);
       void SetColor(const SDL_Color &color);
       void SetWrapLength(Uint32 wrapLength);
-      virtual void OnAppend() override;
+      void OnAppend() override;
       Uint32 GetWrapLength() const;
 
       SDL_Color color;

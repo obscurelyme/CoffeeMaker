@@ -14,11 +14,11 @@ class CustomProgressListener : public CppUnit::TextTestProgressListener {
   void startTest(CppUnit::Test *test) override { std::cout << "Running test: " << test->getName() << std::endl; };
 
   // void addFailure(const CppUnit::TestFailure &failure) override{
-  //   TODO: do some stuff on failure
+  //   TODO(obscurelyme): do some stuff on failure
   // };
 
   // void endTestRun(CppUnit::Test *test, CppUnit::TestResult *eventManager) override{
-  //    TODO: do some stuff on end
+  //    TODO(obscurelyme): do some stuff on end
   // };
 };
 

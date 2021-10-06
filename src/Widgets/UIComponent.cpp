@@ -47,8 +47,7 @@ void UIComponent::OnAppend() {
 
 void UIComponent::RepositionChildren() {
   for (auto& child : _children) {
-    child->CalcPosition();
-    child->RepositionChildren();
+    child->OnAppend();
   }
 }
 

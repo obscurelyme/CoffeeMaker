@@ -54,13 +54,6 @@ void CoffeeMakerWidgetView::testNestedAligned() {
   view->AppendChild(view2);
   view2->AppendChild(view3);
 
-  // _testBed->BeginRender();
-
-  // view->Render();
-
-  // _testBed->EndRender();
-  // SDL_Delay(1000);
-
   // Parent
   CPPUNIT_ASSERT_EQUAL(175, view->clientRect.x);
   CPPUNIT_ASSERT_EQUAL(175, view->clientRect.y);
@@ -79,13 +72,6 @@ void CoffeeMakerWidgetView::testOutOfOrderNestedAligned() {
 
   view2->AppendChild(view3);
   view->AppendChild(view2);
-
-  // _testBed->BeginRender();
-
-  // view.Render();
-
-  // _testBed->EndRender();
-  // SDL_Delay(1000);
 
   // Parent
   CPPUNIT_ASSERT_EQUAL(175, view->clientRect.x);
