@@ -9,7 +9,6 @@
 using namespace CoffeeMaker;
 
 std::map<std::string, Button *> Button::buttons = {};
-std::queue<std::function<void()>> Button::onClickCallbacks;
 std::queue<Event *> Button::eventQueue;
 int Button::_buttonUid = 0;
 
@@ -20,17 +19,22 @@ Button::Button() : top(0), left(0), width(150), height(50), padding(0), _texture
   clientRect.w = width;
   clientRect.x = left;
   clientRect.y = top;
-  _componentId = "CoffeeMaker::Widget::Button-" + std::to_string(++_buttonUid);
-  buttons.emplace(_componentId, this);
+  _EmplaceButton();
+  _AttachDefaultEvents();
+}
 
-  // Add default events
-  _events.emplace(ButtonEventType::MouseMotion, new Event());
-  _events.emplace(ButtonEventType::MouseDown, new Event());
-  _events.emplace(ButtonEventType::MouseUp, new Event());
-
-  On(ButtonEventType::MouseMotion, Delegate{std::bind(&Button::OnMouseMotion, this, std::placeholders::_1)});
-  On(ButtonEventType::MouseDown, Delegate{std::bind(&Button::OnMouseDown, this, std::placeholders::_1)});
-  On(ButtonEventType::MouseUp, Delegate{std::bind(&Button::OnMouseUp, this, std::placeholders::_1)});
+Button::Button(const ButtonProperties &props) : top(0), left(0) {
+  if (props.type == ButtonPropsType::TextureBased) {
+    _defaultTexture = props.textureProps.defaultTexture;
+    _hoveredTexture = props.textureProps.hoveredTexture;
+  } else {
+    _defaultColor = props.colorProps.defaultColor;
+    _hoveredColor = props.colorProps.hoveredColor;
+  }
+  clientRect.h = props.height;
+  clientRect.w = props.width;
+  _EmplaceButton();
+  _AttachDefaultEvents();
 }
 
 Button::~Button() {
@@ -59,6 +63,16 @@ void Button::SetTexture(const Texture &texture) {
 void Button::SetTexture(const std::string &filePath) {
   _texture.LoadFromFile(filePath);
   _textureColorMod = _texture.GetColorMod();
+}
+
+void Button::SetWidth(Uint32 width) {
+  clientRect.w = width;
+  CalcPosition();
+}
+
+void Button::SetHeight(Uint32 height) {
+  clientRect.h = height;
+  CalcPosition();
 }
 
 bool Button::_HitDetection(const int &mouseX, const int &mouseY) {
@@ -93,33 +107,6 @@ void Button::OnMouseMotion(const Event &) {
   }
 }
 
-void Button::OnEvent(const SDL_Event *event) {
-  switch (event->type) {
-    case SDL_MOUSEMOTION:
-      int x, y;
-      SDL_GetMouseState(&x, &y);
-      if (_HitDetection(x, y)) {
-        if (!_hovered) {
-          OnMouseover();
-        }
-        break;
-      }
-      if (_hovered) {
-        OnMouseleave();
-      }
-      break;
-    case SDL_MOUSEBUTTONDOWN:
-      if (_hovered) {
-        OnClick();
-      }
-      break;
-    case SDL_MOUSEBUTTONUP:
-      break;
-    default:
-      break;
-  }
-}
-
 void Button::OnMouseover() {
   _hovered = true;
   _texture.SetColor(Color(0, 50, 0, 255));
@@ -136,8 +123,6 @@ void Button::Render() {
   _texture.Render(clientRect.y, clientRect.x, clientRect.h, clientRect.w);
   UIComponent::Render();
 }
-
-void Button::OnClick() { onClickCallbacks.push(onClickCallback); }
 
 void Button::PollEvents(const SDL_Event *const event) {
   for (auto &button : CoffeeMaker::Button::buttons) {
@@ -158,4 +143,19 @@ void Button::ProcessEvents() {
     eventQueue.pop();
     e->Emit();
   }
+}
+
+void Button::_EmplaceButton() {
+  _componentId = "CoffeeMaker::Widget::Button-" + std::to_string(++_buttonUid);
+  buttons.emplace(_componentId, this);
+}
+
+void Button::_AttachDefaultEvents() {
+  _events.emplace(ButtonEventType::MouseMotion, new Event());
+  _events.emplace(ButtonEventType::MouseDown, new Event());
+  _events.emplace(ButtonEventType::MouseUp, new Event());
+
+  On(ButtonEventType::MouseMotion, Delegate{std::bind(&Button::OnMouseMotion, this, std::placeholders::_1)});
+  On(ButtonEventType::MouseDown, Delegate{std::bind(&Button::OnMouseDown, this, std::placeholders::_1)});
+  On(ButtonEventType::MouseUp, Delegate{std::bind(&Button::OnMouseUp, this, std::placeholders::_1)});
 }

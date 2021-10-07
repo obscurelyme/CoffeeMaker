@@ -11,9 +11,29 @@
 #include "Color.hpp"
 #include "Event.hpp"
 #include "Texture.hpp"
+#include "Utilities.hpp"
 #include "Widgets/UIComponent.hpp"
 
 namespace CoffeeMaker {
+
+  enum class ButtonPropsType { TextureBased, ColorBased };
+
+  struct ButtonTextureProperties {
+    Ref<Texture> defaultTexture;
+    Ref<Texture> hoveredTexture;
+  };
+
+  struct ButtonColorProperties {
+    SDL_Color defaultColor;
+    SDL_Color hoveredColor;
+  };
+
+  struct ButtonProperties {
+    ButtonPropsType type;
+    Uint32 height, width;
+    ButtonTextureProperties textureProps;
+    ButtonColorProperties colorProps;
+  };
 
   class Button : public UIComponent {
     public:
@@ -28,6 +48,7 @@ namespace CoffeeMaker {
 
     public:
     Button();
+    explicit Button(const ButtonProperties &props);
     ~Button();
 
     /**
@@ -48,16 +69,16 @@ namespace CoffeeMaker {
     void SetBackgroundColor(const SDL_Color &color);
     void SetTexture(const Texture &texture);
     void SetTexture(const std::string &filePath);
+    void SetWidth(Uint32 width);
+    void SetHeight(Uint32 height);
 
-    void OnEvent(const SDL_Event *e);
     void OnMouseover();
-    void OnClick();
     void OnMouseleave();
     void OnMouseUp(const Event &e);
     void OnMouseDown(const Event &e);
     void OnMouseMotion(const Event &e);
 
-    void Render();
+    void Render() override;
 
     static void PollEvents(const SDL_Event *const event);
     static void ProcessEvents();
@@ -69,19 +90,24 @@ namespace CoffeeMaker {
     int padding;
     void *children;
     Texture _texture;
-    std::function<void()> onClickCallback;
     SDL_Color _textureColorMod;
+
+    Ref<Texture> _defaultTexture;
+    Ref<Texture> _hoveredTexture;
+    SDL_Color _defaultColor;
+    SDL_Color _hoveredColor;
 
     std::map<ButtonEventType, Event *> _events;
 
     static std::map<std::string, Button *> buttons;
-    static std::queue<std::function<void()>> onClickCallbacks;
     static std::queue<Event *> eventQueue;
     static int _buttonUid;
 
     private:
+    // Emplaces the newly created button in the static vector of buttons
+    void _EmplaceButton();
+    void _AttachDefaultEvents();
     bool _HitDetection(const int &mouseX, const int &mouseY);
-    // int index;
     bool _hovered;
     std::string _componentId;
   };

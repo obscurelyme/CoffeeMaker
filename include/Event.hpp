@@ -11,7 +11,7 @@ namespace CoffeeMaker {
 
   class Delegate {
     public:
-    Delegate(std::function<void(const Event& event)> fn);
+    explicit Delegate(std::function<void(const Event& event)> fn);
     ~Delegate();
 
     inline void Invoke(const Event& event) { _function(event); }
