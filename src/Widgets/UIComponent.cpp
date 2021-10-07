@@ -45,6 +45,8 @@ void UIComponent::OnAppend() {
   RepositionChildren();
 }
 
+std::string UIComponent::ID() const { return _id; }
+
 void UIComponent::RepositionChildren() {
   for (auto& child : _children) {
     child->OnAppend();
@@ -54,6 +56,7 @@ void UIComponent::RepositionChildren() {
 void UIComponent::CalcPosition() {
   clientRect.x = UIComponent::DeriveXPosition();
   clientRect.y = UIComponent::DeriveYPosition();
+  RepositionChildren();
 }
 
 /**

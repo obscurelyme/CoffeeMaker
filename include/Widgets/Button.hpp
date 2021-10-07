@@ -15,25 +15,7 @@
 #include "Widgets/UIComponent.hpp"
 
 namespace CoffeeMaker {
-
-  enum class ButtonPropsType { TextureBased, ColorBased };
-
-  struct ButtonTextureProperties {
-    Ref<Texture> defaultTexture;
-    Ref<Texture> hoveredTexture;
-  };
-
-  struct ButtonColorProperties {
-    SDL_Color defaultColor;
-    SDL_Color hoveredColor;
-  };
-
-  struct ButtonProperties {
-    ButtonPropsType type;
-    Uint32 height, width;
-    ButtonTextureProperties textureProps;
-    ButtonColorProperties colorProps;
-  };
+  enum class ButtonType { Textured, Standard };
 
   class Button : public UIComponent {
     public:
@@ -48,7 +30,14 @@ namespace CoffeeMaker {
 
     public:
     Button();
-    explicit Button(const ButtonProperties &props);
+    /**
+     * Constructs a button that will use the provided colors
+     */
+    Button(const SDL_Color &defaultColor, const SDL_Color &hoveredColor, Uint32 width, Uint32 height);
+    /**
+     * Constructs a button that will display a default Texture and a hover Texture when appropriate
+     */
+    Button(const std::string &defaultTexture, const std::string &hoveredTexture);
     ~Button();
 
     /**
@@ -66,9 +55,6 @@ namespace CoffeeMaker {
      */
     inline void Off(ButtonEventType type, Delegate delegate) { _events.at(type)->RemoveListener(delegate); }
 
-    void SetBackgroundColor(const SDL_Color &color);
-    void SetTexture(const Texture &texture);
-    void SetTexture(const std::string &filePath);
     void SetWidth(Uint32 width);
     void SetHeight(Uint32 height);
 
@@ -79,23 +65,26 @@ namespace CoffeeMaker {
     void OnMouseMotion(const Event &e);
 
     void Render() override;
+    std::string ID() const override;
 
     static void PollEvents(const SDL_Event *const event);
     static void ProcessEvents();
 
-    int top;
-    int left;
-    int width;
-    int height;
-    int padding;
+    // int top;
+    // int left;
+    // int width;
+    // int height;
+    // int padding;
     void *children;
-    Texture _texture;
-    SDL_Color _textureColorMod;
+    // Texture _texture;
+    // SDL_Color _textureColorMod;
 
+    Ref<Texture> _currentTexture;
     Ref<Texture> _defaultTexture;
     Ref<Texture> _hoveredTexture;
     SDL_Color _defaultColor;
     SDL_Color _hoveredColor;
+    SDL_Color _currentColor;
 
     std::map<ButtonEventType, Event *> _events;
 
@@ -110,6 +99,7 @@ namespace CoffeeMaker {
     bool _HitDetection(const int &mouseX, const int &mouseY);
     bool _hovered;
     std::string _componentId;
+    ButtonType _type;
   };
 
 }  // namespace CoffeeMaker

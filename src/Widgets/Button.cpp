@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "Logger.hpp"
+#include "Renderer.hpp"
 
 using namespace CoffeeMaker;
 
@@ -14,25 +15,36 @@ int Button::_buttonUid = 0;
 
 Delegate *createButtonDelegate(std::function<void(const Event &event)> fn) { return new Delegate(fn); }
 
-Button::Button() : top(0), left(0), width(150), height(50), padding(0), _texture(), _hovered(false) {
-  clientRect.h = height;
-  clientRect.w = width;
-  clientRect.x = left;
-  clientRect.y = top;
+Button::Button() : _currentTexture(nullptr), _defaultTexture(nullptr), _hoveredTexture(nullptr), _hovered(false) {
+  _type = ButtonType::Standard;
+  clientRect.h = 50;
+  clientRect.w = 100;
+  clientRect.x = 0;
+  clientRect.y = 0;
   _EmplaceButton();
   _AttachDefaultEvents();
 }
 
-Button::Button(const ButtonProperties &props) : top(0), left(0) {
-  if (props.type == ButtonPropsType::TextureBased) {
-    _defaultTexture = props.textureProps.defaultTexture;
-    _hoveredTexture = props.textureProps.hoveredTexture;
-  } else {
-    _defaultColor = props.colorProps.defaultColor;
-    _hoveredColor = props.colorProps.hoveredColor;
-  }
-  clientRect.h = props.height;
-  clientRect.w = props.width;
+Button::Button(const SDL_Color &defaultColor, const SDL_Color &hoveredColor, Uint32 width, Uint32 height) :
+    _defaultTexture(nullptr),
+    _hoveredTexture(nullptr),
+    _defaultColor(defaultColor),
+    _hoveredColor(hoveredColor),
+    _hovered(false) {
+  _type = ButtonType::Standard;
+  clientRect.h = height;
+  clientRect.w = width;
+  _EmplaceButton();
+  _AttachDefaultEvents();
+}
+
+Button::Button(const std::string &defaultTexture, const std::string &hoveredTexture) : _hovered(false) {
+  _type = ButtonType::Textured;
+  _defaultTexture = std::make_shared<Texture>(defaultTexture);
+  _hoveredTexture = std::make_shared<Texture>(hoveredTexture);
+  _currentTexture = _defaultTexture;
+  clientRect.h = _currentTexture->Height();
+  clientRect.w = _currentTexture->Width();
   _EmplaceButton();
   _AttachDefaultEvents();
 }
@@ -51,18 +63,6 @@ Button::~Button() {
     delete e.second;
     e.second = nullptr;
   }
-}
-
-void Button::SetBackgroundColor(const SDL_Color &color) { _texture.SetColor(color); }
-
-void Button::SetTexture(const Texture &texture) {
-  _texture = texture;
-  _textureColorMod = _texture.GetColorMod();
-}
-
-void Button::SetTexture(const std::string &filePath) {
-  _texture.LoadFromFile(filePath);
-  _textureColorMod = _texture.GetColorMod();
 }
 
 void Button::SetWidth(Uint32 width) {
@@ -109,18 +109,28 @@ void Button::OnMouseMotion(const Event &) {
 
 void Button::OnMouseover() {
   _hovered = true;
-  _texture.SetColor(Color(0, 50, 0, 255));
+  _currentColor = _hoveredColor;
+  _currentTexture = _hoveredTexture;
+  // _texture.SetColor(Color(0, 50, 0, 255));
 }
 
 void Button::OnMouseleave() {
   _hovered = false;
-  _texture.SetColor(_textureColorMod);
+  _currentColor = _defaultColor;
+  _currentTexture = _defaultTexture;
+  // _texture.SetColor(_textureColorMod);
 }
 
 void Button::Render() {
   clientRect.x = UIComponent::DeriveXPosition();
   clientRect.y = UIComponent::DeriveYPosition();
-  _texture.Render(clientRect.y, clientRect.x, clientRect.h, clientRect.w);
+  if (_type == ButtonType::Textured) {
+    _currentTexture->Render(clientRect.y, clientRect.x, clientRect.h, clientRect.w);
+  } else {
+    SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), _currentColor.r, _currentColor.g, _currentColor.b,
+                           _currentColor.a);
+    SDL_RenderFillRect(CoffeeMaker::Renderer::Instance(), &clientRect);
+  }
   UIComponent::Render();
 }
 
@@ -159,3 +169,5 @@ void Button::_AttachDefaultEvents() {
   On(ButtonEventType::MouseDown, Delegate{std::bind(&Button::OnMouseDown, this, std::placeholders::_1)});
   On(ButtonEventType::MouseUp, Delegate{std::bind(&Button::OnMouseUp, this, std::placeholders::_1)});
 }
+
+std::string Button::ID() const { return _componentId; }

@@ -19,6 +19,8 @@ namespace CoffeeMaker {
       ~Text();
 
       virtual void Render();
+      std::string ID() const override;
+
       void SetFont(TTF_Font *f);
       void SetText(const std::string &textContent);
       void SetColor(const SDL_Color &color);
@@ -31,7 +33,7 @@ namespace CoffeeMaker {
       private:
       void SetTextContentTexture();
 
-      std::string _id;
+      std::string _componentId;
       std::string _textContent;
       TTF_Font *_font;
       SDL_Renderer *renderer;
