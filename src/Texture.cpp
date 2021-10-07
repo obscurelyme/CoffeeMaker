@@ -195,6 +195,14 @@ void Texture::SetColor(SDL_Color color) {
   SDL_SetTextureColorMod(_texture, color.r, color.g, color.b);
 }
 
+SDL_Color Texture::GetColorMod() {
+  SDL_Color colorMod = {.a = 255};
+  if (_texture != nullptr) {
+    SDL_GetTextureColorMod(_texture, &colorMod.r, &colorMod.g, &colorMod.b);
+  }
+  return colorMod;
+}
+
 void Texture::SetBlendMode(SDL_BlendMode blend) {
   if (_texture == nullptr) {
     Logger::Error("Could not set blend mode on NULL texture");

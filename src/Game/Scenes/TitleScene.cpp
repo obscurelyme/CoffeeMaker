@@ -39,7 +39,7 @@ void TitleScene::Init() {
   _title->SetVerticalAlignment(VerticalAlignment::Top);
   _view->AppendChild(_title);
 
-  std::shared_ptr<Button> _playButton(new Button());
+  std::shared_ptr<Button> _playButton(new Button("test-button-background.png", "test-button-background-hovered.png"));
   _playButton->SetVerticalAlignment(VerticalAlignment::Bottom);
   std::shared_ptr<Text> _playButtonText(new Text());
   _playButtonText->SetHorizontalAlignment(HorizontalAlignment::Centered);
@@ -50,7 +50,7 @@ void TitleScene::Init() {
   _playButton->AppendChild(_playButtonText);
   _playButton->On(Button::ButtonEventType::OnClick, Delegate{std::bind(&TitleScene::Play, this)});
 
-  std::shared_ptr<Button> _quitButton(new Button());
+  std::shared_ptr<Button> _quitButton(new Button("test-button-background.png", "test-button-background-hovered.png"));
   _quitButton->SetHorizontalAlignment(HorizontalAlignment::Right);
   _quitButton->SetVerticalAlignment(VerticalAlignment::Bottom);
   std::shared_ptr<Text> _quitButtonText(new Text());

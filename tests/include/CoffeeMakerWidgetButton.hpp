@@ -11,9 +11,11 @@ class CoffeeMakerWidgetButton : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(CoffeeMakerWidgetButton);
   CPPUNIT_TEST(testButtonCreation);
   CPPUNIT_TEST(testButtonCreatesTexture);
-  CPPUNIT_TEST(testButtonRender);
-  CPPUNIT_TEST(testButtonOnMousemotionEvent);
-  CPPUNIT_TEST(testSetButtonBackgroundColor);
+  CPPUNIT_TEST(testButtonDynamicPosition);
+  CPPUNIT_TEST(testButtonRenderTexture);
+  CPPUNIT_TEST(testButtonRenderTextureAndText);
+  CPPUNIT_TEST(testButtonRenderColor);
+  CPPUNIT_TEST(testTextAppendedToDefaultButton);
   CPPUNIT_TEST_SUITE_END();
 
   public:
@@ -22,9 +24,11 @@ class CoffeeMakerWidgetButton : public CppUnit::TestFixture {
 
   void testButtonCreation();
   void testButtonCreatesTexture();
-  void testButtonRender();
-  void testButtonOnMousemotionEvent();
-  void testSetButtonBackgroundColor();
+  void testButtonDynamicPosition();
+  void testButtonRenderTexture();
+  void testButtonRenderTextureAndText();
+  void testButtonRenderColor();
+  void testTextAppendedToDefaultButton();
 
   private:
   CoffeeMaker::Test::TestBed *_testBed;

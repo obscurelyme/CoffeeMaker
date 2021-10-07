@@ -11,9 +11,11 @@
 #include "Color.hpp"
 #include "Event.hpp"
 #include "Texture.hpp"
+#include "Utilities.hpp"
 #include "Widgets/UIComponent.hpp"
 
 namespace CoffeeMaker {
+  enum class ButtonType { Textured, Standard };
 
   class Button : public UIComponent {
     public:
@@ -28,6 +30,14 @@ namespace CoffeeMaker {
 
     public:
     Button();
+    /**
+     * Constructs a button that will use the provided colors
+     */
+    Button(const SDL_Color &defaultColor, const SDL_Color &hoveredColor, Uint32 width, Uint32 height);
+    /**
+     * Constructs a button that will display a default Texture and a hover Texture when appropriate
+     */
+    Button(const std::string &defaultTexture, const std::string &hoveredTexture);
     ~Button();
 
     /**
@@ -45,44 +55,46 @@ namespace CoffeeMaker {
      */
     inline void Off(ButtonEventType type, Delegate delegate) { _events.at(type)->RemoveListener(delegate); }
 
-    void SetBackgroundColor(const SDL_Color &color);
-    void SetTexture(const Texture &texture);
-    void SetTexture(const std::string &filePath);
+    void SetWidth(Uint32 width);
+    void SetHeight(Uint32 height);
 
-    void OnEvent(const SDL_Event *e);
     void OnMouseover();
-    void OnClick();
     void OnMouseleave();
     void OnMouseUp(const Event &e);
     void OnMouseDown(const Event &e);
     void OnMouseMotion(const Event &e);
 
-    void Render();
+    void Render() override;
+    std::string ID() const override;
 
     static void PollEvents(const SDL_Event *const event);
     static void ProcessEvents();
 
-    int top;
-    int left;
-    int width;
-    int height;
-    int padding;
     void *children;
-    Texture _texture;
-    std::function<void()> onClickCallback;
+
+    Ref<Texture> _currentTexture;
+    Ref<Texture> _defaultTexture;
+    Ref<Texture> _hoveredTexture;
+    SDL_Color _defaultColor;
+    SDL_Color _hoveredColor;
+    SDL_Color _currentColor;
 
     std::map<ButtonEventType, Event *> _events;
 
     static std::map<std::string, Button *> buttons;
-    static std::queue<std::function<void()>> onClickCallbacks;
     static std::queue<Event *> eventQueue;
     static int _buttonUid;
 
     private:
+    // Emplaces the newly created button in the static vector of buttons
+    void _EmplaceButton();
+    void _AttachDefaultEvents();
     bool _HitDetection(const int &mouseX, const int &mouseY);
-    // int index;
     bool _hovered;
     std::string _componentId;
+    ButtonType _type;
+
+    static std::map<std::string, Ref<Texture>> _cachedTextures;
   };
 
 }  // namespace CoffeeMaker

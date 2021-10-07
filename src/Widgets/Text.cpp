@@ -14,7 +14,7 @@ Text::Text() :
     renderer(CoffeeMaker::Renderer::Instance()),
     _texture(nullptr),
     _wrapLength(0) {
-  _id = "Text-" + std::to_string(++_textId);
+  _componentId = "CoffeeMaker::Widget::Text-" + std::to_string(++_textId);
 }
 
 Text::Text(std::string textContent) :
@@ -24,7 +24,7 @@ Text::Text(std::string textContent) :
     renderer(CoffeeMaker::Renderer::Instance()),
     _texture(nullptr),
     _wrapLength(0) {
-  _id = "Text-" + std::to_string(++_textId);
+  _componentId = "CoffeeMaker::Widget::Text-" + std::to_string(++_textId);
 }
 
 Text::~Text() {
@@ -105,10 +105,23 @@ void Text::SetWrapLength(Uint32 wrapLength) {
   SetTextContentTexture();
 }
 
+std::string Text::ID() const { return _componentId; }
+
 Uint32 Text::GetWrapLength() const {
   if (_wrapLength > 0) {
     return _wrapLength;
   }
 
-  return _parent != nullptr ? _parent->clientRect.w : viewport.w;
+  if (_parent != nullptr) {
+    if (_parent->clientRect.w <= 0) {
+      std::string message = fmt::format(
+          "Parent {} of Child {} does not have a valid width:\nExpected width is greater than 0 but actual width was "
+          "{}",
+          _parent->ID(), ID(), _parent->clientRect.w);
+      MessageBox::ShowMessageBoxAndQuit("Invalid parent width", message);
+    }
+    return _parent->clientRect.w;
+  }
+
+  return viewport.w;
 }
