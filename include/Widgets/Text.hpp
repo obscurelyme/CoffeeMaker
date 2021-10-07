@@ -18,7 +18,7 @@ namespace CoffeeMaker {
       explicit Text(std::string textContent);
       ~Text();
 
-      virtual void Render();
+      void Render() override;
       std::string ID() const override;
 
       void SetFont(TTF_Font *f);
