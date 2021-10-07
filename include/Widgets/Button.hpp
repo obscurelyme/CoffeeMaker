@@ -100,6 +100,8 @@ namespace CoffeeMaker {
     bool _hovered;
     std::string _componentId;
     ButtonType _type;
+
+    static std::map<std::string, Ref<Texture>> _cachedTextures;
   };
 
 }  // namespace CoffeeMaker

@@ -12,6 +12,7 @@ using namespace CoffeeMaker;
 std::map<std::string, Button *> Button::buttons = {};
 std::queue<Event *> Button::eventQueue;
 int Button::_buttonUid = 0;
+std::map<std::string, Ref<Texture>> Button::_cachedTextures = {};
 
 Delegate *createButtonDelegate(std::function<void(const Event &event)> fn) { return new Delegate(fn); }
 
@@ -40,8 +41,23 @@ Button::Button(const SDL_Color &defaultColor, const SDL_Color &hoveredColor, Uin
 
 Button::Button(const std::string &defaultTexture, const std::string &hoveredTexture) : _hovered(false) {
   _type = ButtonType::Textured;
-  _defaultTexture = std::make_shared<Texture>(defaultTexture);
-  _hoveredTexture = std::make_shared<Texture>(hoveredTexture);
+
+  auto it = _cachedTextures.find(defaultTexture);
+  if (it == _cachedTextures.end()) {
+    _defaultTexture = std::make_shared<Texture>(defaultTexture);
+    _cachedTextures.emplace(defaultTexture, _defaultTexture);
+  } else {
+    _defaultTexture = it->second;
+  }
+
+  auto it2 = _cachedTextures.find(hoveredTexture);
+  if (it2 == _cachedTextures.end()) {
+    _hoveredTexture = std::make_shared<Texture>(hoveredTexture);
+    _cachedTextures.emplace(hoveredTexture, _hoveredTexture);
+  } else {
+    _hoveredTexture = it2->second;
+  }
+
   _currentTexture = _defaultTexture;
   clientRect.h = _currentTexture->Height();
   clientRect.w = _currentTexture->Width();
