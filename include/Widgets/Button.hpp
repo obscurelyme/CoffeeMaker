@@ -70,14 +70,7 @@ namespace CoffeeMaker {
     static void PollEvents(const SDL_Event *const event);
     static void ProcessEvents();
 
-    // int top;
-    // int left;
-    // int width;
-    // int height;
-    // int padding;
     void *children;
-    // Texture _texture;
-    // SDL_Color _textureColorMod;
 
     Ref<Texture> _currentTexture;
     Ref<Texture> _defaultTexture;

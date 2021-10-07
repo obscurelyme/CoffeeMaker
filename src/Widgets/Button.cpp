@@ -127,14 +127,12 @@ void Button::OnMouseover() {
   _hovered = true;
   _currentColor = _hoveredColor;
   _currentTexture = _hoveredTexture;
-  // _texture.SetColor(Color(0, 50, 0, 255));
 }
 
 void Button::OnMouseleave() {
   _hovered = false;
   _currentColor = _defaultColor;
   _currentTexture = _defaultTexture;
-  // _texture.SetColor(_textureColorMod);
 }
 
 void Button::Render() {
