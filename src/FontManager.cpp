@@ -41,8 +41,9 @@ void FontManager::LoadFont(const std::string& fontName) {
   TTF_Font* font = TTF_OpenFont(fontFilePath.c_str(), 1 * 16);
   if (font == nullptr) {
     CM_LOGGER_CRITICAL("Could not load font from given filepath: {}", fontFilePath);
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Font Manager: LoadFont Failed",
-                             "The Font Mananger failed to load a font, program will terminate.", nullptr);
+    std::string message =
+        "The Font Mananger failed to load the font: " + fontName + " and because of this, the program will terminate.";
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Font Manager: LoadFont Failed", message.c_str(), nullptr);
     exit(1);
   }
 

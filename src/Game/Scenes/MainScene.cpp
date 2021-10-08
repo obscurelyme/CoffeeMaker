@@ -8,6 +8,10 @@ void MainScene::Render() {
     entity->Render();
   }
 
+  for (auto enemy : _enemies) {
+    enemy->Render();
+  }
+
   _menu->Render();
 }
 
@@ -20,6 +24,13 @@ void MainScene::Update() {
     }
   }
 
+  for (auto enemy : _enemies) {
+    if (!enemy->IsActive()) {
+      enemy->Spawn();
+    }
+    enemy->Update();
+  }
+
   for (auto& entity : _entities) {
     entity->Update();
   }
@@ -30,17 +41,20 @@ void MainScene::Init() {
   _menu->Init();
   _backgroundTiles = new Tiles("space.png", 800, 600);
   _player = new Player();
-  _enemy = new Enemy();
+  _enemies = {};
+
+  for (unsigned int i = 0; i < MAX_ENEMIES; i++) {
+    _enemies[i] = std::make_shared<Enemy>();
+  }
 
   _entities.push_back(_player);
-  _entities.push_back(_enemy);
 }
 
 void MainScene::Destroy() {
   _entities.clear();
+  _enemies.fill(nullptr);
   delete _backgroundTiles;
   delete _player;
-  delete _enemy;
   delete _menu;
 }
 

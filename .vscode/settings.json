@@ -90,7 +90,8 @@
     "stack": "cpp",
     "string_view": "cpp",
     "bitset": "cpp",
-    "queue": "cpp"
+    "queue": "cpp",
+    "random": "cpp"
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"
