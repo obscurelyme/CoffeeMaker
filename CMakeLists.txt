@@ -88,13 +88,14 @@ set(COFFEEMAKER_TEST_SOURCES
   # tests/CoffeeMakerShapesRect.cpp
   # tests/CoffeeMakerTextureTest.cpp
   # tests/CoffeeMakerUtilities.cpp
-  tests/CoffeeMakerWidgetButton.cpp
+  # tests/CoffeeMakerWidgetButton.cpp
   # tests/CoffeeMakerEvents.cpp
   # tests/CoffeeMakerWidgetView.cpp
   # tests/CoffeeMakerComponent.cpp
   # tests/CoffeeMakerWidgetText.cpp
+    tests/CheapAsteroidsEnemy.cpp
   )
-set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES} ${COFFEEMAKER_TEST_SOURCES})
+set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES} ${COFFEEMAKER_TEST_SOURCES})
 
 find_package(CppUnit CONFIG REQUIRED)
 
@@ -109,7 +110,6 @@ endif()
 
 
 if (APPLE)
-  execute_process(COMMAND rm "-rf" "${PROJECT_BINARY_DIR}/assets")
   execute_process(COMMAND sh "${PROJECT_SOURCE_DIR}/post-build.sh")
 elseif (WIN32)
   execute_process(COMMAND "${PROJECT_BINARY_DIR}/scripts/post-build.bat")

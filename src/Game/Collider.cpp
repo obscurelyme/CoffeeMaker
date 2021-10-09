@@ -15,7 +15,7 @@ void Collider::PhysicsUpdate() {
   }
 }
 
-Collider::Collider(bool active) : active(active) {
+Collider::Collider(Collider::Type type, bool active) : _type(type), active(active) {
   _id = ++_colliderId;
   _colliders.emplace_back(this);
   _texture.SetColor(CoffeeMaker::Color(0, 255, 0, 255));
@@ -23,9 +23,10 @@ Collider::Collider(bool active) : active(active) {
   clientRect.y = 0;
   clientRect.h = 32;
   clientRect.w = 32;
+  _listeners = {};
 }
 
-Collider::~Collider() {}
+Collider::~Collider() { _listeners.clear(); }
 
 void Collider::SetWidth(float w) {
   clientRect.w = w;
@@ -47,7 +48,10 @@ void Collider::Update(const SDL_FRect& position) {
 }
 
 void Collider::OnCollision(Collider* collider) {
-  CM_LOGGER_INFO("Collider {} Collided with Collider: {}", _id, collider->_id);
+  // CM_LOGGER_INFO("Collider {} Collided with Collider: {}", _id, collider->_id);
+  for (auto listener : _listeners) {
+    listener(collider);
+  }
 }
 
 void Collider::CheckForCollision() {
@@ -73,3 +77,7 @@ void Collider::Render() {
   SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), 0, 255, 0, 255);
   SDL_RenderDrawRectF(CoffeeMaker::Renderer::Instance(), &clientRect);
 }
+
+void Collider::OnCollide(std::function<void(Collider*)> callback) { _listeners.push_back(callback); }
+
+Collider::Type Collider::GetType() const { return _type; }
