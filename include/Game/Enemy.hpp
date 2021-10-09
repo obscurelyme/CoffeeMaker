@@ -19,7 +19,7 @@ class Enemy : public Entity {
 
   private:
   CoffeeMaker::Texture _texture{"creature.png", true};
-  // SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};
+  SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};
   SDL_FRect _clientRect{.x = 0, .y = 625, .w = 32, .h = 32};
   glm::vec2 _movement;
 

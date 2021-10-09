@@ -25,7 +25,7 @@ void Enemy::Init() {}
 
 void Enemy::Render() {
   SDL_RendererFlip flip = SDL_FLIP_NONE;
-  SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), NULL, &_clientRect, 90, NULL, flip);
+  SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), &_clipRect, &_clientRect, 90, NULL, flip);
 }
 
 void Enemy::Update() {
@@ -48,6 +48,12 @@ void Enemy::Update() {
     // }
     _clientRect.x += _movement.x;
     _clientRect.y += _movement.y;
+
+    if (_clientRect.x + _clientRect.w <= 0 || _clientRect.x + _clientRect.w >= 800 ||
+        _clientRect.y + _clientRect.h <= 0 || _clientRect.y + _clientRect.h >= 600) {
+      // Enemy is off screen
+      Spawn();
+    }
   }
 }
 
