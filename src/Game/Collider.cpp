@@ -15,7 +15,7 @@ void Collider::PhysicsUpdate() {
   }
 }
 
-Collider::Collider(Collider::Type type, bool active) : _type(type), active(active) {
+Collider::Collider(Collider::Type type, bool active) : active(active), _type(type) {
   _id = ++_colliderId;
   _colliders.emplace_back(this);
   _texture.SetColor(CoffeeMaker::Color(0, 255, 0, 255));
