@@ -12,6 +12,7 @@ void MainScene::Render() {
     enemy->Render();
   }
 
+  _hud->Render();
   _menu->Render();
 }
 
@@ -37,11 +38,12 @@ void MainScene::Update() {
 }
 
 void MainScene::Init() {
+  _hud = new HeadsUpDisplay();
   _menu = new Menu();
   _menu->Init();
   _backgroundTiles = new Tiles("space.png", 800, 600);
   _player = new Player();
-  _enemies = {};
+  // _enemies = {};
 
   for (unsigned int i = 0; i < MAX_ENEMIES; i++) {
     _enemies[i] = std::make_shared<Enemy>();
@@ -56,6 +58,7 @@ void MainScene::Destroy() {
   delete _backgroundTiles;
   delete _player;
   delete _menu;
+  delete _hud;
 }
 
 MainScene::MainScene() {}

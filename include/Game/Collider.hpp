@@ -13,7 +13,7 @@ class Collider {
   enum class Type { Default, Projectile, Enemy, Player };
   static void PhysicsUpdate();
 
-  Collider(Type type = Type::Default, bool active = true);
+  Collider(Type type = Type::Default, bool active = false);
   ~Collider();
 
   void Update(const SDL_FRect& position);

@@ -1,5 +1,6 @@
 #include "Widgets/Text.hpp"
 
+#include "FontManager.hpp"
 #include "MessageBox.hpp"
 
 using namespace CoffeeMaker::Widgets;
@@ -60,6 +61,11 @@ void Text::Render() {
   UIComponent::DebugRender();
   SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
   SDL_RenderCopy(renderer, _texture, NULL, &clientRect);
+}
+
+void Text::SetFont(const std::string &fontName) {
+  _font = FontManager::UseFont(fontName);
+  SetTextContentTexture();
 }
 
 void Text::SetFont(TTF_Font *f) {
