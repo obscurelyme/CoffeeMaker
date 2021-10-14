@@ -28,4 +28,10 @@ Once you've done this once, you can rename the container to whatever you wish on
 docker container rename [GENERATED_NAME] [NAME_YOU_WANT]
 ```
 
+Once you've done that, subsequent runs of the container would look like...
+
+```
+docker start -i [CONTAINER_NAME]
+```
+
 I recommend that you have the [Docker extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) installed if working with VS Code.
