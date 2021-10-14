@@ -2,12 +2,9 @@
 
 #include <vector>
 
-#include "Event.hpp"
 #include "Game/Entity.hpp"
 #include "Projectile.hpp"
 #include "Texture.hpp"
-
-extern CoffeeMaker::Event* incScore;
 
 class Player : public Entity {
   public:

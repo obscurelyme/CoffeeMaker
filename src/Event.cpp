@@ -21,7 +21,10 @@ void Event::Emit() {
   std::for_each(_listeners.begin(), _listeners.end(), e);
 }
 
-Event::~Event() { CM_LOGGER_INFO("Event was deleted"); }
+Event::~Event() {
+  RemoveAllListeners();
+  CM_LOGGER_INFO("Event was deleted");
+}
 
 void Event::AddListener(EventListener listener) {
   // insert into the array
@@ -32,6 +35,7 @@ void Event::RemoveListener(EventListener listener) {
   for (auto it = _listeners.begin(); it != _listeners.end();) {
     if (listener == *it) {
       it = _listeners.erase(it);
+      break;
     } else {
       ++it;
     }

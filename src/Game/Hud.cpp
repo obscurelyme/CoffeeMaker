@@ -2,7 +2,7 @@
 
 #include "Color.hpp"
 #include "Event.hpp"
-#include "Game/Player.hpp"
+#include "Game/PlayerEvents.hpp"
 #include "Widgets/Properties.hpp"
 
 using namespace CoffeeMaker::Widgets;

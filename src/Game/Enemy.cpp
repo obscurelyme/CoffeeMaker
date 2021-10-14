@@ -5,7 +5,7 @@
 #include <iostream>
 #include <random>
 
-#include "Game/Player.hpp"
+#include "Game/PlayerEvents.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
