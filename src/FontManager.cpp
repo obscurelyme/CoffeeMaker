@@ -17,8 +17,8 @@ void FontManager::Init() {
 }
 
 void FontManager::Destroy() {
-  for (const auto& [key, value] : _fonts) {
-    TTF_CloseFont(value);
+  for (const auto& font : _fonts) {
+    TTF_CloseFont(font.second);
   }
   _fonts.clear();
 }
