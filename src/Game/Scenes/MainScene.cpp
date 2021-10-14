@@ -12,6 +12,7 @@ void MainScene::Render() {
     enemy->Render();
   }
 
+  _hud->Render();
   _menu->Render();
 }
 
@@ -37,6 +38,7 @@ void MainScene::Update() {
 }
 
 void MainScene::Init() {
+  _hud = new HeadsUpDisplay();
   _menu = new Menu();
   _menu->Init();
   _backgroundTiles = new Tiles("space.png", 800, 600);
@@ -56,6 +58,7 @@ void MainScene::Destroy() {
   delete _backgroundTiles;
   delete _player;
   delete _menu;
+  delete _hud;
 }
 
 MainScene::MainScene() {}

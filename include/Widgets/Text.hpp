@@ -21,6 +21,7 @@ namespace CoffeeMaker {
       void Render() override;
       std::string ID() const override;
 
+      void SetFont(const std::string &fontName);
       void SetFont(TTF_Font *f);
       void SetText(const std::string &textContent);
       void SetColor(const SDL_Color &color);

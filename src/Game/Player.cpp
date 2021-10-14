@@ -6,6 +6,8 @@
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
+CoffeeMaker::Event* incScore = new CoffeeMaker::Event();
+
 Player::Player() {
   _firing = false;
   SDL_Rect vp;

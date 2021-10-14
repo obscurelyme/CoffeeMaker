@@ -17,11 +17,7 @@ Delegate::Delegate(std::function<void(const Event& event)> cb) {
 Delegate::~Delegate() { _function = nullptr; }
 
 void Event::Emit() {
-  auto e = [this](EventListener& listener) {
-    // Invoke all listeners
-    std::invoke(listener.Get(), *this);
-    // listener.Invoke(*this);
-  };
+  auto e = [this](EventListener& listener) { std::invoke(listener.Get(), *this); };
   std::for_each(_listeners.begin(), _listeners.end(), e);
 }
 

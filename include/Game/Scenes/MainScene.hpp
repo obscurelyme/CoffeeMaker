@@ -2,6 +2,7 @@
 
 #include "Game/Enemy.hpp"
 #include "Game/Entity.hpp"
+#include "Game/Hud.hpp"
 #include "Game/Menus/Menu.hpp"
 #include "Game/Player.hpp"
 #include "Game/Scene.hpp"
@@ -24,4 +25,5 @@ class MainScene : public Scene {
   std::array<Ref<Enemy>, MAX_ENEMIES> _enemies;
   std::vector<Entity*> _entities;
   Menu* _menu;
+  HeadsUpDisplay* _hud;
 };

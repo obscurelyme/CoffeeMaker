@@ -5,6 +5,7 @@
 #include <iostream>
 #include <random>
 
+#include "Game/Player.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
@@ -53,8 +54,8 @@ void Enemy::Update() {
     _clientRect.y += _movement.y;
     _collider->Update(_clientRect);
 
-    if (_clientRect.x + _clientRect.w <= 0 || _clientRect.x + _clientRect.w >= 800 ||
-        _clientRect.y + _clientRect.h <= 0 || _clientRect.y + _clientRect.h >= 600) {
+    if (_clientRect.x + _clientRect.w <= 0 || _clientRect.x >= 800 || _clientRect.y + _clientRect.h <= 0 ||
+        _clientRect.y >= 600) {
       // Enemy is off screen
       Spawn();
     }
@@ -82,7 +83,7 @@ bool Enemy::IsActive() const { return _active; }
 
 void Enemy::OnCollision(Collider* collider) {
   if (collider->GetType() == Collider::Type::Projectile) {
-    // get wrecked
+    incScore->Emit();
     Spawn();
   }
 }
