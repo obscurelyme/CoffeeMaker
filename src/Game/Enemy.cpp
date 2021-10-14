@@ -64,6 +64,7 @@ void Enemy::Update() {
 
 void Enemy::Spawn() {
   // Pick a random location around the player
+  _collider->active = false;
 
   double randomAngle = glm::radians(distribution(engine));
 
@@ -83,6 +84,7 @@ bool Enemy::IsActive() const { return _active; }
 
 void Enemy::OnCollision(Collider* collider) {
   if (collider->GetType() == Collider::Type::Projectile) {
+    CM_LOGGER_INFO("Enemy was hit by a projectile");
     incScore->Emit();
     Spawn();
   }

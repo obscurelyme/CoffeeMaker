@@ -27,12 +27,13 @@ Collider::Collider(Collider::Type type, bool active) : active(active), _type(typ
 }
 
 Collider::~Collider() {
+  active = false;
   _listeners.clear();
   for (auto colliderIter = _colliders.begin(); colliderIter != _colliders.end();) {
     if ((*colliderIter)->_id == _id) {
-      CM_LOGGER_INFO("Removing collider {} from vector", _id);
+      // CM_LOGGER_INFO("Removing collider {} from vector", _id);
       colliderIter = _colliders.erase(colliderIter);
-      CM_LOGGER_INFO("Vector size: {}", _colliders.size());
+      // CM_LOGGER_INFO("Vector size: {}", _colliders.size());
       break;
     }
     ++colliderIter;
@@ -59,7 +60,6 @@ void Collider::Update(const SDL_FRect& position) {
 }
 
 void Collider::OnCollision(Collider* collider) {
-  CM_LOGGER_INFO("Collider {} Collided with Collider: {}", _id, collider->_id);
   for (auto listener : _listeners) {
     listener(collider);
   }
