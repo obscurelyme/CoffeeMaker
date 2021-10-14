@@ -43,7 +43,7 @@ void MainScene::Init() {
   _menu->Init();
   _backgroundTiles = new Tiles("space.png", 800, 600);
   _player = new Player();
-  _enemies = {};
+  // _enemies = {};
 
   for (unsigned int i = 0; i < MAX_ENEMIES; i++) {
     _enemies[i] = std::make_shared<Enemy>();

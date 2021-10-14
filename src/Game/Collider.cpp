@@ -15,10 +15,10 @@ void Collider::PhysicsUpdate() {
   }
 }
 
-Collider::Collider(Collider::Type type, bool active) : active(active), _type(type) {
+Collider::Collider(Collider::Type type, bool active) : active(active), _type(type), _id(-1) {
   _id = ++_colliderId;
   _colliders.emplace_back(this);
-  _texture.SetColor(CoffeeMaker::Color(0, 255, 0, 255));
+  _texture.SetColor(CoffeeMaker::Colors::Green);
   clientRect.x = 0;
   clientRect.y = 0;
   clientRect.h = 32;
@@ -26,7 +26,18 @@ Collider::Collider(Collider::Type type, bool active) : active(active), _type(typ
   _listeners = {};
 }
 
-Collider::~Collider() { _listeners.clear(); }
+Collider::~Collider() {
+  _listeners.clear();
+  for (auto colliderIter = _colliders.begin(); colliderIter != _colliders.end();) {
+    if ((*colliderIter)->_id == _id) {
+      CM_LOGGER_INFO("Removing collider {} from vector", _id);
+      colliderIter = _colliders.erase(colliderIter);
+      CM_LOGGER_INFO("Vector size: {}", _colliders.size());
+      break;
+    }
+    ++colliderIter;
+  }
+}
 
 void Collider::SetWidth(float w) {
   clientRect.w = w;
@@ -48,7 +59,7 @@ void Collider::Update(const SDL_FRect& position) {
 }
 
 void Collider::OnCollision(Collider* collider) {
-  // CM_LOGGER_INFO("Collider {} Collided with Collider: {}", _id, collider->_id);
+  CM_LOGGER_INFO("Collider {} Collided with Collider: {}", _id, collider->_id);
   for (auto listener : _listeners) {
     listener(collider);
   }

@@ -10,6 +10,10 @@ namespace CoffeeMaker {
     extern SDL_Color Black;
     extern SDL_Color Yellow;
     extern SDL_Color White;
+    extern SDL_Color Green;
+    extern SDL_Color Red;
+    extern SDL_Color Blue;
+    extern SDL_Color Purple;
   }  // namespace Colors
 }  // namespace CoffeeMaker
 
