@@ -31,9 +31,7 @@ Collider::~Collider() {
   _listeners.clear();
   for (auto colliderIter = _colliders.begin(); colliderIter != _colliders.end();) {
     if ((*colliderIter)->_id == _id) {
-      // CM_LOGGER_INFO("Removing collider {} from vector", _id);
       colliderIter = _colliders.erase(colliderIter);
-      // CM_LOGGER_INFO("Vector size: {}", _colliders.size());
       break;
     }
     ++colliderIter;
