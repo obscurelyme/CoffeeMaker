@@ -1,8 +1,10 @@
 // clang-format off
+#ifdef _DEBUG
 #ifdef _WINDOWS
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
+#endif
 #endif
 // clang-format on
 
@@ -131,8 +133,10 @@ int main(int, char**) {
 
   CM_LOGGER_DESTROY();
 
+#ifdef _DEBUG
 #ifdef _WINDOWS
   _CrtDumpMemoryLeaks();
+#endif
 #endif
 
   return 0;
