@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.15.0)
 
-set(VCPKG_FEATURE_FLAGS "versions")
+set(VCPKG_MANIFEST_MODE ON)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
 
-project(MyDemoApp VERSION 0.1.0)
+project(CoffeeMaker VERSION 0.1.0)
 
 set(VCPKG_INCLUDE "${VCPKG_INSTALLED_DIR}/x64-windows/include")
 
@@ -26,6 +26,7 @@ find_package(sdl2-ttf CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 set(COFFEEMAKER_MAIN src/App.cpp)
 set(COFFEEMAKER_ROOT_SOURCES
@@ -65,7 +66,7 @@ set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SO
 
 add_executable(main ${COFFEEMAKER_EXE_SOURCES})
 target_include_directories(main PRIVATE include)
-target_link_libraries(main PRIVATE spdlog::spdlog spdlog::spdlog_header_only glm::glm)
+target_link_libraries(main PRIVATE fmt::fmt spdlog::spdlog spdlog::spdlog_header_only glm::glm)
 if (WIN32)
   message("Building for Win32")
   target_link_libraries(main PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_ttf SDL2::SDL2_image)
@@ -78,6 +79,7 @@ endif()
 if (WIN32)
   set_target_properties(main PROPERTIES VS_DPI_AWARE "ON")
   set_target_properties(main PROPERTIES VS_GLOBAL_VcpkgEnabled true)
+  set_target_properties(main PROPERTIES VS_GLOBAL_VcpkgEnableManifest true)
 endif()
 # set_target_properties(main PROPERTIES VS_GLOBAL_VcpkgTriplet "x64-windows-static") # Uncomment to use static libraries instead
 
@@ -111,10 +113,11 @@ elseif(APPLE)
 endif()
 
 
-if (APPLE)
+if (APPLE OR LINUX)
   execute_process(COMMAND sh "${PROJECT_SOURCE_DIR}/post-build.sh")
 elseif (WIN32)
-  execute_process(COMMAND "${PROJECT_BINARY_DIR}/scripts/post-build.bat")
+  # message(${PROJECT_SOURCE_DIR}/scripts/post-build.bat)
+  execute_process(COMMAND "${PROJECT_SOURCE_DIR}/scripts/post-build.bat")
 endif()
 
 # Set Warnings

@@ -28,6 +28,7 @@ TTF_Font* FontManager::UseFont(const std::string& fontName) {
   if (search != _fonts.end()) {
     return search->second;
   }
+
   std::string msg = fmt::format("Could not find font {}", fontName);
   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Font Manager : Use Font", msg.c_str(), nullptr);
   exit(1);
