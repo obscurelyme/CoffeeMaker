@@ -1,17 +1,28 @@
 #include "Game/Collider.hpp"
 
+#include <functional>
+
 #include "Color.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
 int Collider::_colliderId = 0;
 std::vector<Collider*> Collider::_colliders = {};
+std::queue<std::function<void()>> Collider::collisionQueue = {};
 
 void Collider::PhysicsUpdate() {
   for (auto& collider : _colliders) {
     if (collider->active) {
       collider->CheckForCollision();
     }
+  }
+}
+
+void Collider::ProcessCollisions() {
+  while (!collisionQueue.empty()) {
+    auto handleCollision = collisionQueue.front();
+    collisionQueue.pop();
+    handleCollision();
   }
 }
 
@@ -68,7 +79,7 @@ void Collider::CheckForCollision() {
     // NOTE: fitler out self
     if (collider->_id != _id && collider->active) {
       if (_AxisAlignedBoundingBoxHit(collider)) {
-        OnCollision(collider);
+        collisionQueue.push(std::bind(&Collider::OnCollision, this, collider));
       }
     }
   }
