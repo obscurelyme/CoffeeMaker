@@ -32,10 +32,6 @@ void Player::Update() {
     Fire();
   }
 
-  if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_R)) {
-    Reload();
-  }
-
   SDL_GetMouseState(&_mouseX, &_mouseY);
   int xx = _mouseX - _clientRect.x;
   int yy = _mouseY - _clientRect.y;
@@ -55,7 +51,16 @@ void Player::Render() {
 }
 
 void Player::Fire() {
-  if (_currentProjectile <= 24) {
+  // NOTE: sloppy but should kinda work for now
+  if (_currentProjectile < 24) {
+    if (!_projectiles[_currentProjectile + 1]->IsFired()) {
+      _projectiles[_currentProjectile++]->Fire((float)_clientRect.x, (float)_clientRect.y, _rotation);
+    } else {
+      _currentProjectile += 2;
+    }
+  } else if (_currentProjectile == 24) {
+    _currentProjectile = 0;
+    // NOTE: fire the next, or else projectiles are unavailable for a frame.
     _projectiles[_currentProjectile++]->Fire((float)_clientRect.x, (float)_clientRect.y, _rotation);
   }
 }
