@@ -52,14 +52,16 @@ void Player::Render() {
 
 void Player::Fire() {
   // NOTE: sloppy but should kinda work for now
-  if (_currentProjectile <= 24) {
+  if (_currentProjectile < 24) {
     if (!_projectiles[_currentProjectile + 1]->IsFired()) {
       _projectiles[_currentProjectile++]->Fire((float)_clientRect.x, (float)_clientRect.y, _rotation);
     } else {
       _currentProjectile += 2;
     }
-  } else if (_currentProjectile == 25) {
+  } else if (_currentProjectile == 24) {
     _currentProjectile = 0;
+    // NOTE: fire the next, or else projectiles are unavailable for a frame.
+    _projectiles[_currentProjectile++]->Fire((float)_clientRect.x, (float)_clientRect.y, _rotation);
   }
 }
 

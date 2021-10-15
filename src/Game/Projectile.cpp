@@ -47,6 +47,10 @@ void Projectile::Update() {
 
     // NOTE: probably want this separated out
     collider->Update(_clientRect);
+
+    if (IsOffScreen()) {
+      Reload();
+    }
   }
 }
 
@@ -77,3 +81,9 @@ void Projectile::Reload() {
 }
 
 bool Projectile::IsFired() const { return _fired; }
+
+bool Projectile::IsOffScreen() const {
+  // TODO: screen width and height should be dynamic
+  return _clientRect.x + _clientRect.w <= 0 || _clientRect.x >= 800 || _clientRect.y + _clientRect.h <= 0 ||
+         _clientRect.y >= 600;
+}
