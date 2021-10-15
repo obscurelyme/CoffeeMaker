@@ -20,11 +20,7 @@ Projectile::Projectile() : _fired(false), _rotation(0) {
   collider->clientRect.y = _clientRect.y;
 }
 
-Projectile::~Projectile() {
-  // TODO: fix clean up here. uncommenting in current state will crash application due to this being called from Player
-  // constructor
-  delete collider;
-}
+Projectile::~Projectile() { delete collider; }
 
 void Projectile::Render() {
   if (_fired) {
@@ -65,6 +61,7 @@ void Projectile::Fire(float x, float y, double rotation) {
 
 void Projectile::Reload() {
   if (_fired) {
+    collider->active = false;
     _fired = false;
   }
 }

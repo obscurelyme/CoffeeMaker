@@ -19,6 +19,7 @@ class Enemy : public Entity {
   void Spawn();
   bool IsActive() const;
   void OnCollision(Collider* collider);
+  bool IsOffScreen() const;
 
   private:
   CoffeeMaker::Texture _texture{"creature.png", true};
@@ -27,6 +28,7 @@ class Enemy : public Entity {
   glm::vec2 _movement;
   Ref<Collider> _collider;
 
+  bool _enteredScreen;
   bool _active;
   std::string _id;
 

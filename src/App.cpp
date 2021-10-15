@@ -19,6 +19,7 @@
 #include "FPS.hpp"
 #include "FontManager.hpp"
 #include "Game/Collider.hpp"
+#include "Game/PlayerEvents.hpp"
 #include "Game/Scene.hpp"
 #include "Game/Scenes/MainScene.hpp"
 #include "Game/Scenes/TitleScene.hpp"
@@ -135,6 +136,9 @@ int main(int, char**) {
   CoffeeMaker::FontManager::Destroy();
   renderer.Destroy();
   SDL_Quit();
+
+  incScore.reset();
+
   CM_LOGGER_DESTROY();
 
 #ifdef _WINDOWS

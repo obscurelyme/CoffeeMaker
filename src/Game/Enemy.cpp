@@ -14,7 +14,7 @@ std::random_device device;
 std::default_random_engine engine(device());
 std::uniform_real_distribution<double> distribution(0, 360);
 
-Enemy::Enemy() : _collider(nullptr), _active(false) {
+Enemy::Enemy() : _collider(nullptr), _enteredScreen(false), _active(false) {
   // _priorTicks = SDL_GetTicks();
   // _ticks = _priorTicks;
   _id = "Enemy-" + std::to_string(++_uid);
@@ -54,9 +54,12 @@ void Enemy::Update() {
     _clientRect.y += _movement.y;
     _collider->Update(_clientRect);
 
-    if (_clientRect.x + _clientRect.w <= 0 || _clientRect.x >= 800 || _clientRect.y + _clientRect.h <= 0 ||
-        _clientRect.y >= 600) {
-      // Enemy is off screen
+    if (!_enteredScreen && !IsOffScreen()) {
+      _enteredScreen = true;
+    }
+
+    if (IsOffScreen() && _enteredScreen) {
+      // Enemy went off screen
       Spawn();
     }
   }
@@ -64,6 +67,7 @@ void Enemy::Update() {
 
 void Enemy::Spawn() {
   // Pick a random location around the player
+  _collider->active = false;
 
   double randomAngle = glm::radians(distribution(engine));
 
@@ -86,4 +90,10 @@ void Enemy::OnCollision(Collider* collider) {
     incScore->Emit();
     Spawn();
   }
+}
+
+bool Enemy::IsOffScreen() const {
+  // TODO: screen width and height should be dynamic
+  return _clientRect.x + _clientRect.w <= 0 || _clientRect.x >= 800 || _clientRect.y + _clientRect.h <= 0 ||
+         _clientRect.y >= 600;
 }
