@@ -66,20 +66,6 @@ int main(int, char**) {
   std::chrono::duration<float> elapsedSeconds = end - start;
   CoffeeMaker::Logger::Info(fmt::format(fmt::runtime("Initialization time took: {0}"), elapsedSeconds.count()));
 
-  CoffeeMaker::TextView text{"Hello, World!"};
-  text.color = CoffeeMaker::Color(255, 255, 255, 255);
-  text.SetFont(fontManager.useFont("Roboto/Roboto-Regular"));
-  text.SetTextContentTexture();
-
-  CoffeeMaker::Button button;
-  button.clientRect.y = 100;
-  button.clientRect.x = 200;
-  CoffeeMaker::Texture texture("test.png");
-  CoffeeMaker::Widgets::Image img("loaded.png");
-  img.LoadImage();
-  CoffeeMaker::Shapes::Rect rect(100, 100);
-  CoffeeMaker::Shapes::Line line(100, 600 / 2, 800 / 2, 0);
-
   // CoffeeMaker::Cursor cursor("cursor.png");
   CoffeeMaker::FontManager::Init();
   CoffeeMaker::FontManager::LoadFont("Roboto/Roboto-Regular");

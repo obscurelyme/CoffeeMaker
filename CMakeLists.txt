@@ -8,7 +8,7 @@ set(VCPKG_MANIFEST_MODE "ON")
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebug")
 
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
+# set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
 
 project(MyDemoApp VERSION 0.1.0)
 
