@@ -105,5 +105,5 @@
   "c-cpp-flylint.lizard.enable": false,
   "c-cpp-flylint.flexelint.enable": false,
   "c-cpp-flylint.cppcheck.enable": true,
-  "c-cpp-flylint.cppcheck.standard": ["c++20"],
+  "c-cpp-flylint.cppcheck.standard": ["c++20"]
 }
