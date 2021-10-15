@@ -118,6 +118,7 @@ int main(int, char**) {
     CoffeeMaker::InputManager::ClearAllPresses();
 
     CoffeeMaker::Button::ProcessEvents();
+    Collider::ProcessCollisions();
     // Cap framerate
     SDL_Delay(16);
   }

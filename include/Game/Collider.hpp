@@ -4,6 +4,7 @@
 #include <SDL2/sdl.h>
 
 #include <functional>
+#include <queue>
 #include <vector>
 
 #include "Texture.hpp"
@@ -12,6 +13,8 @@ class Collider {
   public:
   enum class Type { Default, Projectile, Enemy, Player };
   static void PhysicsUpdate();
+  static void ProcessCollisions();
+  static std::queue<std::function<void()>> collisionQueue;
 
   Collider(Type type = Type::Default, bool active = false);
   ~Collider();

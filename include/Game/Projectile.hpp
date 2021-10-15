@@ -18,6 +18,9 @@ class Projectile {
   void Reload();
   void Update();
   void Render();
+  bool IsOffScreen() const;
+  void OnHit(Collider* collider);
+  bool IsFired() const;
 
   private:
   static std::shared_ptr<CoffeeMaker::Texture> _texture;

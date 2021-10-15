@@ -1,5 +1,6 @@
 #include "Game/Projectile.hpp"
 
+#include <functional>
 #include <glm/glm.hpp>
 
 #include "Logger.hpp"
@@ -18,9 +19,17 @@ Projectile::Projectile() : _fired(false), _rotation(0) {
   collider->clientRect.h = 32;
   collider->clientRect.x = _clientRect.x;
   collider->clientRect.y = _clientRect.y;
+  collider->OnCollide(std::bind(&Projectile::OnHit, this, std::placeholders::_1));
 }
 
 Projectile::~Projectile() { delete collider; }
+
+void Projectile::OnHit(Collider* c) {
+  if (c->GetType() == Collider::Type::Enemy) {
+    // this projectile will be considered "used", it can be deactivated and reloaded.
+    Reload();
+  }
+}
 
 void Projectile::Render() {
   if (_fired) {
@@ -46,6 +55,7 @@ void Projectile::Fire(float x, float y, double rotation) {
     _fired = true;
     _clientRect.x = x;
     _clientRect.y = y;
+    collider->Update(_clientRect);
     _rotation = rotation;
 
     _endX = (float)(x + 900 * cos(glm::radians(rotation)));
@@ -65,3 +75,5 @@ void Projectile::Reload() {
     _fired = false;
   }
 }
+
+bool Projectile::IsFired() const { return _fired; }
