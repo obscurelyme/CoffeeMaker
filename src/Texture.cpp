@@ -74,10 +74,10 @@ Texture::~Texture() {
 }
 
 void Texture::LoadFromFile(const std::string &filePath) {
-  SDL_Surface *surface = nullptr;
+  _surface = nullptr;
   std::string path = fmt::format(fmt::runtime("{}/{}"), Texture::_textureDirectory, filePath);
-  surface = IMG_Load(path.c_str());
-  if (surface == nullptr) {
+  _surface = IMG_Load(path.c_str());
+  if (_surface == nullptr) {
     // TODO: something went wrong loading the texture
     Logger::Error(fmt::format(fmt::runtime("Could not load surface at filepath {}"), filePath));
     return;
