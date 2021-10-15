@@ -36,8 +36,8 @@ TTF_Font* FontManager::UseFont(const std::string& fontName) {
 }
 
 void FontManager::LoadFont(const std::string& fontName) {
-  std::string fontFilePath =
-      fmt::format("{}{}", CoffeeMaker::Utilities::AssetsDirectory(), fmt::format("/fonts/{}.ttf", fontName));
+  std::string fontFilePath = fmt::format(fmt::runtime("{}{}"), CoffeeMaker::Utilities::AssetsDirectory(),
+                                         fmt::format(fmt::runtime("/fonts/{}.ttf"), fontName));
   // TODO recognize DPI Scaling
   TTF_Font* font = TTF_OpenFont(fontFilePath.c_str(), 1 * 16);
   if (font == nullptr) {

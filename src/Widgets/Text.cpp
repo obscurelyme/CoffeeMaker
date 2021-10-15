@@ -120,10 +120,9 @@ Uint32 Text::GetWrapLength() const {
 
   if (_parent != nullptr) {
     if (_parent->clientRect.w <= 0) {
-      std::string message = fmt::format(
-          "Parent {} of Child {} does not have a valid width:\nExpected width is greater than 0 but actual width was "
-          "{}",
-          _parent->ID(), ID(), _parent->clientRect.w);
+      std::string message = fmt::format(fmt::runtime("Parent {} of Child {} does not have a valid width:\nExpected "
+                                                     "width is greater than 0 but actual width was {}"),
+                                        _parent->ID(), ID(), _parent->clientRect.w);
       MessageBox::ShowMessageBoxAndQuit("Invalid parent width", message);
     }
     return _parent->clientRect.w;

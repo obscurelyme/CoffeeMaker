@@ -10,7 +10,8 @@ using namespace CoffeeMaker;
 
 Cursor::Cursor(const std::string& filePath) : _cursor(nullptr) {
   SDL_Surface* surface = nullptr;
-  std::string cursorImgPath = fmt::format("{}/{}/{}", CoffeeMaker::Utilities::AssetsDirectory(), "images", filePath);
+  std::string cursorImgPath =
+      fmt::format(fmt::runtime("{}/{}/{}"), CoffeeMaker::Utilities::AssetsDirectory(), "images", filePath);
   surface = IMG_Load(cursorImgPath.c_str());
   if (surface == nullptr) {
     Logger::Error("Could not load cursor surface");
