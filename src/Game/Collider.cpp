@@ -79,7 +79,6 @@ void Collider::CheckForCollision() {
     // NOTE: fitler out self
     if (collider->_id != _id && collider->active) {
       if (_AxisAlignedBoundingBoxHit(collider)) {
-        // OnCollision(collider);
         collisionQueue.push(std::bind(&Collider::OnCollision, this, collider));
       }
     }

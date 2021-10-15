@@ -15,8 +15,8 @@ std::default_random_engine engine(device());
 std::uniform_real_distribution<double> distribution(0, 360);
 
 Enemy::Enemy() : _collider(nullptr), _enteredScreen(false), _active(false) {
-  // _priorTicks = SDL_GetTicks();
-  // _ticks = _priorTicks;
+  _priorTicks = SDL_GetTicks();
+  _ticks = _priorTicks;
   _id = "Enemy-" + std::to_string(++_uid);
   _collider = std::make_shared<Collider>(Collider::Type::Enemy, _active);
   _collider->OnCollide(std::bind(&Enemy::OnCollision, this, std::placeholders::_1));
@@ -34,22 +34,18 @@ void Enemy::Render() {
 
 void Enemy::Update() {
   if (_active) {
-    // _ticks = SDL_GetTicks();
-    // if (_ticks > _priorTicks + 750) {
-    //   if (_state == EnemyAnimationState::Idle) {
-    //     _state = EnemyAnimationState::Moving;
-    //     _clipRect.y = 32;
-    //   } else {
-    //     _state = EnemyAnimationState::Idle;
-    //     _clipRect.y = 0;
-    //   }
-    //   _priorTicks = _ticks;
-    // }
+    _ticks = SDL_GetTicks();
+    if (_ticks > _priorTicks + 750) {
+      if (_state == EnemyAnimationState::Idle) {
+        _state = EnemyAnimationState::Moving;
+        _clipRect.y = 32;
+      } else {
+        _state = EnemyAnimationState::Idle;
+        _clipRect.y = 0;
+      }
+      _priorTicks = _ticks;
+    }
 
-    // _clientRect.y -= _speed;
-    // if (_clientRect.y + _clientRect.h <= 0) {
-    //   _clientRect.y = 632;
-    // }
     _clientRect.x += _movement.x;
     _clientRect.y += _movement.y;
     _collider->Update(_clientRect);
