@@ -11,5 +11,5 @@ void CoffeeMaker::Utilities::Init(const char *base) { CoffeeMaker::Utilities::_b
 const std::string CoffeeMaker::Utilities::BaseDirectory() { return CoffeeMaker::Utilities::_baseDir; }
 
 const std::string CoffeeMaker::Utilities::AssetsDirectory() {
-  return fmt::format("{}{}", CoffeeMaker::Utilities::_baseDir, "assets");
+  return fmt::format(fmt::runtime("{}{}"), CoffeeMaker::Utilities::_baseDir, "assets");
 }

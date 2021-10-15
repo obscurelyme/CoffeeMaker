@@ -28,15 +28,16 @@ TTF_Font* FontManager::UseFont(const std::string& fontName) {
   if (search != _fonts.end()) {
     return search->second;
   }
-  std::string msg = fmt::format("Could not find font {}", fontName);
+
+  std::string msg = fmt::format(fmt::runtime("Could not find font {}"), fontName);
   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Font Manager : Use Font", msg.c_str(), nullptr);
   exit(1);
   return nullptr;
 }
 
 void FontManager::LoadFont(const std::string& fontName) {
-  std::string fontFilePath =
-      fmt::format("{}{}", CoffeeMaker::Utilities::AssetsDirectory(), fmt::format("/fonts/{}.ttf", fontName));
+  std::string fontFilePath = fmt::format(fmt::runtime("{}{}"), CoffeeMaker::Utilities::AssetsDirectory(),
+                                         fmt::format(fmt::runtime("/fonts/{}.ttf"), fontName));
   // TODO recognize DPI Scaling
   TTF_Font* font = TTF_OpenFont(fontFilePath.c_str(), 1 * 16);
   if (font == nullptr) {

@@ -46,7 +46,7 @@ SDL_Texture *CoffeeMaker::createRectTextureFromSurface(int height, int width, co
 std::string Texture::_textureDirectory = "";
 
 void Texture::SetTextureDirectory() {
-  Texture::_textureDirectory = fmt::format("{}/{}", CoffeeMaker::Utilities::AssetsDirectory(), "images");
+  Texture::_textureDirectory = fmt::format(fmt::runtime("{}/{}"), CoffeeMaker::Utilities::AssetsDirectory(), "images");
 }
 
 Texture::Texture() : _texture(nullptr), _color(Color()), _height(0), _width(0), _useColorKey(false) {}
@@ -91,10 +91,10 @@ Texture &Texture::operator=(const Texture &rhs) {
 
 void Texture::LoadFromFile(const std::string &filePath) {
   _surface = nullptr;
-  std::string path = fmt::format("{}/{}", Texture::_textureDirectory, filePath);
+  std::string path = fmt::format(fmt::runtime("{}/{}"), Texture::_textureDirectory, filePath);
   _surface = IMG_Load(path.c_str());
   if (_surface == nullptr) {
-    std::string msg = fmt::format("Could not load surface at filepath {}", filePath);
+    std::string msg = fmt::format(fmt::runtime("Could not load surface at filepath {}"), filePath);
     CM_LOGGER_ERROR(msg);
     CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("Error loading texture", msg);
     return;

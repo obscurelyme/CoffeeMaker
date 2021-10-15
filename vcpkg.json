@@ -1,0 +1,13 @@
+{
+  "name": "coffeemaker",
+  "version-string": "0.1.0",
+  "dependencies": [
+    "fmt",
+    "spdlog",
+    "sdl2",
+    "sdl2-ttf",
+    "sdl2-image",
+    "cppunit",
+    "glm"
+  ]
+}
