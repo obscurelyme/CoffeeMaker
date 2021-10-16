@@ -8,10 +8,10 @@
 using namespace CoffeeMaker::Widgets;
 using namespace CoffeeMaker::UIProperties;
 
-HeadsUpDisplay::HeadsUpDisplay() : _score(0) {
+HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
   score = std::make_shared<Text>("Score: 0");
   time = std::make_shared<Text>("Time: 0");
-  playerHealth = std::make_shared<Text>("Lives: 3");
+  playerHealth = std::make_shared<Text>("Lives: " + std::to_string(_life));
   score->SetFont("Roboto/Roboto-Regular");
   time->SetFont("Roboto/Roboto-Regular");
   playerHealth->SetFont("Roboto/Roboto-Regular");
@@ -32,13 +32,23 @@ HeadsUpDisplay::HeadsUpDisplay() : _score(0) {
   hudView->AppendChild(playerHealth);
 
   incScore->AddListener(_incScoreDelegate);
+  decLife->AddListener(_decLifeDelegate);
 }
 
-HeadsUpDisplay::~HeadsUpDisplay() { incScore->RemoveListener(_incScoreDelegate); }
+HeadsUpDisplay::~HeadsUpDisplay() {
+  incScore->RemoveListener(_incScoreDelegate);
+  decLife->RemoveListener(_decLifeDelegate);
+}
 
 void HeadsUpDisplay::Render() const { hudView->Render(); }
 
 void HeadsUpDisplay::IncrementScore() {
   _score += 10;
   score->SetText("Score: " + std::to_string(_score));
+}
+
+void HeadsUpDisplay::DecrementLife() {
+  --_life;
+  playerHealth->SetText("Life: " + std::to_string(_life));
+  // TODO: stop game if player life is 0
 }

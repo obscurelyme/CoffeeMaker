@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15.0)
 
 set(VCPKG_MANIFEST_MODE ON)
 
-if (MSVC)
+if (WIN32)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
 endif()
 
