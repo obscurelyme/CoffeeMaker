@@ -33,7 +33,7 @@ void SceneManager::LoadScene() {
 }
 
 void SceneManager::LoadScene(unsigned long index) {
-  if (scenes.size() >= index && index >= 0) {
+  if (scenes.size() >= index) {
     _currentScene->Destroy();
     _currentSceneIndex = index;
     _currentScene = scenes[_currentSceneIndex];

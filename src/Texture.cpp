@@ -196,7 +196,7 @@ void Texture::SetColor(SDL_Color color) {
 }
 
 SDL_Color Texture::GetColorMod() {
-  SDL_Color colorMod = {.a = 255};
+  SDL_Color colorMod = {.r = 255, .g = 255, .b = 255, .a = 255};
   if (_texture != nullptr) {
     SDL_GetTextureColorMod(_texture, &colorMod.r, &colorMod.g, &colorMod.b);
   }

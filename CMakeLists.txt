@@ -2,7 +2,13 @@ cmake_minimum_required(VERSION 3.15.0)
 
 set(VCPKG_MANIFEST_MODE ON)
 
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
+if (MSVC)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
+endif()
+
+if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
+  set(LINUX_PLATFORM TRUE)
+endif()
 
 project(CoffeeMaker VERSION 0.1.0)
 
@@ -73,6 +79,14 @@ if (WIN32)
 elseif(APPLE)
   message("Building for OSX")
   target_link_libraries(main PRIVATE SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_ttf SDL2::SDL2_image)
+elseif(LINUX_PLATFORM)
+  message("Linking dependencies for Linux")
+  # SDL2
+  target_link_libraries(main PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static)
+  # SDL2-image
+  target_link_libraries(main PRIVATE SDL2::SDL2_image)
+  # SDL2-ttf
+  target_link_libraries(main PRIVATE SDL2::SDL2_ttf)
 endif()
 
 ## DPI Awareness
@@ -81,7 +95,6 @@ if (WIN32)
   set_target_properties(main PROPERTIES VS_GLOBAL_VcpkgEnabled true)
   set_target_properties(main PROPERTIES VS_GLOBAL_VcpkgEnableManifest true)
 endif()
-# set_target_properties(main PROPERTIES VS_GLOBAL_VcpkgTriplet "x64-windows-static") # Uncomment to use static libraries instead
 
 # Unit Tests ##########
 
@@ -89,14 +102,14 @@ set(COFFEEMAKER_TEST_MAIN tests/main.cpp)
 set(COFFEEMAKER_DEMO_TEST_SOURCES tests/ComplexNumber.cpp tests/Complex.cpp tests/TestWithMocking.cpp)
 set(COFFEEMAKER_TEST_SOURCES
   tests/TestBed.cpp
-  # tests/CoffeeMakerShapesRect.cpp
-  # tests/CoffeeMakerTextureTest.cpp
-  # tests/CoffeeMakerUtilities.cpp
-  # tests/CoffeeMakerWidgetButton.cpp
-  # tests/CoffeeMakerEvents.cpp
-  # tests/CoffeeMakerWidgetView.cpp
-  # tests/CoffeeMakerComponent.cpp
-  # tests/CoffeeMakerWidgetText.cpp
+  tests/CoffeeMakerShapesRect.cpp
+  tests/CoffeeMakerTextureTest.cpp
+  tests/CoffeeMakerUtilities.cpp
+  tests/CoffeeMakerWidgetButton.cpp
+  tests/CoffeeMakerEvents.cpp
+  tests/CoffeeMakerWidgetView.cpp
+  tests/CoffeeMakerComponent.cpp
+  tests/CoffeeMakerWidgetText.cpp
     tests/CheapAsteroidsEnemy.cpp
   )
 set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES} ${COFFEEMAKER_TEST_SOURCES})
@@ -110,10 +123,18 @@ if (WIN32)
   target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_ttf SDL2::SDL2_image)
 elseif(APPLE)
   target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_ttf SDL2::SDL2_image)
+elseif(LINUX_PLATFORM)
+  message("Linking dependencies for Linux")
+  # SDL2
+  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static)
+  # SDL2-image
+  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2_image)
+  # SDL2-ttf
+  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2_ttf)
 endif()
 
 
-if (APPLE OR LINUX)
+if (APPLE OR LINUX_PLATFORM)
   message("Please run ${PROJECT_SOURCE_DIR}/scripts/post-build.sh if this is your first time configuring this project")
   # execute_process(COMMAND sh "${PROJECT_SOURCE_DIR}/post-build.sh")
 elseif (WIN32)
