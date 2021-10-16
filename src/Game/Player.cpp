@@ -1,12 +1,15 @@
 #include "Game/Player.hpp"
 
+#include <chrono>
+#include <functional>
 #include <glm/glm.hpp>
 
+#include "Game/PlayerEvents.hpp"
 #include "InputManager.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
-Player::Player() {
+Player::Player() : _collider(new Collider(Collider::Type::Player, true)), _active(true) {
   _firing = false;
   SDL_Rect vp;
   SDL_RenderGetViewport(CoffeeMaker::Renderer::Instance(), &vp);
@@ -17,34 +20,63 @@ Player::Player() {
     _projectiles.emplace_back(new Projectile());
   }
   _currentProjectile = 0;
+  _collider->Update(_clientRect);
+  _collider->OnCollide(std::bind(&Player::OnHit, this, std::placeholders::_1));
 }
 
 Player::~Player() {
+  delete _collider;
   for (auto p : _projectiles) {
     delete p;
+  }
+}
+
+void Player::OnHit(Collider* collider) {
+  if (collider->GetType() == Collider::Type::Enemy) {
+    // TODO: lose a life
+    _collider->active = false;
+    _active = false;
+    decLife->Emit();
+    _respawnTimerStart = std::chrono::steady_clock::now();
   }
 }
 
 void Player::Init() {}
 
 void Player::Update() {
-  if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_F)) {
-    Fire();
+  if (!_active) {
+    _respawnTimer = std::chrono::steady_clock::now() - _respawnTimerStart;
+    if (_respawnTimer.count() >= 3000) {
+      _active = true;
+      _collider->active = true;
+    }
   }
 
-  SDL_GetMouseState(&_mouseX, &_mouseY);
-  int xx = _mouseX - _clientRect.x;
-  int yy = _mouseY - _clientRect.y;
+  if (_active) {
+    if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_F)) {
+      Fire();
+    }
 
-  _rotation = glm::degrees(glm::atan((float)yy, (float)xx));
+    SDL_GetMouseState(&_mouseX, &_mouseY);
+    int xx = _mouseX - (int)_clientRect.x;
+    int yy = _mouseY - (int)_clientRect.y;
 
+    _rotation = glm::degrees(glm::atan((float)yy, (float)xx));
+  }
+
+  // NOTE: projectiles that have already been fired are still fine to be updated
   for (auto& projectile : _projectiles) {
     projectile->Update();
   }
 }
 
 void Player::Render() {
-  _texture.Render(_clipRect, _clientRect, _rotation + 90);
+  if (_active) {
+    _texture.Render(_clipRect, _clientRect, _rotation + 90);
+    _collider->Render();
+  }
+
+  // NOTE: projectiles that have already been fired are still fine to be rendered
   for (auto& projectile : _projectiles) {
     projectile->Render();
   }
