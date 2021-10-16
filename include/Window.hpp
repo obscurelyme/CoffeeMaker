@@ -44,20 +44,20 @@ namespace CoffeeMaker {
     BasicWindow(std::string title, int width, int height);
     ~BasicWindow();
 
-    int DisplayCount() const;
-    float DPIScale() const;
-    ScreenDPI GetScreenDPI() const;
-    SDL_DisplayMode DisplayMode() const;
-    std::string DisplayName() const;
-    Uint32 PixelFormat() const;
-    std::string PixelFormatName() const;
-    SDL_Rect DisplayBounds() const;
-    SDL_Rect DisplayUsableBounds() const;
-    SDL_Window *Handle() const;
+    int DisplayCount() const override;
+    float DPIScale() const override;
+    ScreenDPI GetScreenDPI() const override;
+    SDL_DisplayMode DisplayMode() const override;
+    std::string DisplayName() const override;
+    Uint32 PixelFormat() const override;
+    std::string PixelFormatName() const override;
+    SDL_Rect DisplayBounds() const override;
+    SDL_Rect DisplayUsableBounds() const override;
+    SDL_Window *Handle() const override;
     void ShowWindow() const;
 
     private:
-    ScreenDPI SetScreenDPI();
+    ScreenDPI SetScreenDPI() override;
     static SDL_Window *_window;
     CoffeeMaker::ScreenDPI _screenDpi;
     float _dpiScale;

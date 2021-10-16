@@ -1,10 +1,15 @@
 cmake_minimum_required(VERSION 3.15.0)
 
+set(VCPKG_TARGET_ARCHITECTURE "x64")
+set(VCPKG_CRT_LINKAGE "static")
+set(VCPKG_LIBRARY_LINKAGE "static")
+if (Win32)
+  set(VCPKG_TARGET_TRIPLET "x64-windows-static")
+endif()
+
 set(VCPKG_MANIFEST_MODE ON)
 
-if (MSVC)
-  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
-endif()
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebug")
 
 if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
   set(LINUX_PLATFORM TRUE)
