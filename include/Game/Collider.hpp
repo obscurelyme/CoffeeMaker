@@ -1,7 +1,7 @@
 #ifndef _collider_hpp
 #define _collider_hpp
 
-#include <SDL2/sdl.h>
+#include <SDL2/SDL.h>
 
 #include <functional>
 #include <queue>
