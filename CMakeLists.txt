@@ -98,40 +98,39 @@ endif()
 
 # Unit Tests ##########
 
-# set(COFFEEMAKER_TEST_MAIN tests/main.cpp)
-# set(COFFEEMAKER_DEMO_TEST_SOURCES tests/ComplexNumber.cpp tests/Complex.cpp tests/TestWithMocking.cpp)
-# set(COFFEEMAKER_TEST_SOURCES
-#   tests/TestBed.cpp
-#   tests/CoffeeMakerShapesRect.cpp
-#   tests/CoffeeMakerTextureTest.cpp
-#   tests/CoffeeMakerUtilities.cpp
-#   tests/CoffeeMakerWidgetButton.cpp
-#   tests/CoffeeMakerEvents.cpp
-#   tests/CoffeeMakerWidgetView.cpp
-#   tests/CoffeeMakerComponent.cpp
-#   tests/CoffeeMakerWidgetText.cpp
-#     tests/CheapAsteroidsEnemy.cpp
-#   )
-# set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES} ${COFFEEMAKER_TEST_SOURCES})
+set(COFFEEMAKER_TEST_MAIN tests/main.cpp)
+set(COFFEEMAKER_DEMO_TEST_SOURCES tests/ComplexNumber.cpp tests/Complex.cpp tests/TestWithMocking.cpp)
+set(COFFEEMAKER_TEST_SOURCES
+  tests/TestBed.cpp
+  tests/CoffeeMakerShapesRect.cpp
+  tests/CoffeeMakerTextureTest.cpp
+  tests/CoffeeMakerUtilities.cpp
+  tests/CoffeeMakerWidgetButton.cpp
+  tests/CoffeeMakerEvents.cpp
+  tests/CoffeeMakerWidgetView.cpp
+  tests/CoffeeMakerComponent.cpp
+  tests/CoffeeMakerWidgetText.cpp
+  tests/CheapAsteroidsEnemy.cpp)
+set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES} ${COFFEEMAKER_TEST_SOURCES})
 
-# find_package(CppUnit CONFIG REQUIRED)
+find_package(CppUnit CONFIG REQUIRED)
 
-# add_executable(CoffeeMakerWindowUnitTests ${COFFEEMAKER_TEST_EXE_SOURCES})
-# target_include_directories(CoffeeMakerWindowUnitTests PRIVATE "${VCPKG_INCLUDE}" include tests/include)
-# target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE CppUnit spdlog::spdlog spdlog::spdlog_header_only glm::glm)
-# if (WIN32)
-#   target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_ttf SDL2::SDL2_image)
-# elseif(APPLE)
-#   target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_ttf SDL2::SDL2_image)
-# elseif(LINUX_PLATFORM)
-#   message("Linking dependencies for Linux")
-#   # SDL2
-#   target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static)
-#   # SDL2-image
-#   target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2_image)
-#   # SDL2-ttf
-#   target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2_ttf)
-# endif()
+add_executable(CoffeeMakerWindowUnitTests ${COFFEEMAKER_TEST_EXE_SOURCES})
+target_include_directories(CoffeeMakerWindowUnitTests PRIVATE "${VCPKG_INCLUDE}" include tests/include)
+target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE CppUnit spdlog::spdlog spdlog::spdlog_header_only glm::glm)
+if (WIN32)
+  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_ttf SDL2::SDL2_image)
+elseif(APPLE)
+  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_ttf SDL2::SDL2_image)
+elseif(LINUX_PLATFORM)
+  message("Linking dependencies for Linux")
+  # SDL2
+  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static)
+  # SDL2-image
+  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2_image)
+  # SDL2-ttf
+  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2_ttf)
+endif()
 
 
 if (APPLE OR LINUX_PLATFORM)
@@ -144,9 +143,9 @@ endif()
 
 # Set Warnings
 if (MSVC)
-  # target_compile_options(CoffeeMakerWindowUnitTests PRIVATE /W4 /WX)
+  target_compile_options(CoffeeMakerWindowUnitTests PRIVATE /W4 /WX)
   target_compile_options(main PRIVATE /W4 /WX)
 else()
-  # target_compile_options(CoffeeMakerWindowUnitTests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  target_compile_options(CoffeeMakerWindowUnitTests PRIVATE -Wall -Wextra -Wpedantic -Werror)
   target_compile_options(main PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
