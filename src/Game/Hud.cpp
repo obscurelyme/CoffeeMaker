@@ -50,5 +50,4 @@ void HeadsUpDisplay::IncrementScore() {
 void HeadsUpDisplay::DecrementLife() {
   --_life;
   playerHealth->SetText("Life: " + std::to_string(_life));
-  // TODO: stop game if player life is 0
 }
