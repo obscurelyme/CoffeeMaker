@@ -130,7 +130,9 @@ int main(int, char**) {
   renderer.Destroy();
   SDL_Quit();
 
+  // TODO: clean this up
   incScore.reset();
+  decLife.reset();
 
   CM_LOGGER_DESTROY();
 

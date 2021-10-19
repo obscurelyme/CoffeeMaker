@@ -15,10 +15,13 @@ class HeadsUpDisplay {
 
   void Render() const;
   void IncrementScore();
+  void DecrementLife();
 
   private:
   unsigned int _score;
+  unsigned int _life;
   CoffeeMaker::Delegate _incScoreDelegate{std::bind(&HeadsUpDisplay::IncrementScore, this)};
+  CoffeeMaker::Delegate _decLifeDelegate{std::bind(&HeadsUpDisplay::DecrementLife, this)};
 
   Ref<CoffeeMaker::Widgets::Text> score;
   Ref<CoffeeMaker::Widgets::Text> playerHealth;
