@@ -18,6 +18,12 @@ void Collider::PhysicsUpdate() {
   }
 }
 
+void Collider::ClearAllUnprocessedCollisions() {
+  while (!collisionQueue.empty()) {
+    collisionQueue.pop();
+  }
+}
+
 void Collider::ProcessCollisions() {
   while (!collisionQueue.empty()) {
     auto handleCollision = collisionQueue.front();

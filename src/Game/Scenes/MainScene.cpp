@@ -1,5 +1,6 @@
 #include "Game/Scenes/MainScene.hpp"
 
+#include "Game/Collider.hpp"
 #include "InputManager.hpp"
 
 void MainScene::Render() {
@@ -55,6 +56,7 @@ void MainScene::Init() {
 void MainScene::Destroy() {
   _entities.clear();
   _enemies.fill(nullptr);
+  Collider::ClearAllUnprocessedCollisions();
   delete _backgroundTiles;
   delete _player;
   delete _menu;

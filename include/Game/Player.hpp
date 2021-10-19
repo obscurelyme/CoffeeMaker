@@ -35,4 +35,5 @@ class Player : public Entity {
   bool _active;
   std::chrono::steady_clock::time_point _respawnTimerStart;
   std::chrono::duration<float, std::milli> _respawnTimer;
+  unsigned int _lives;
 };

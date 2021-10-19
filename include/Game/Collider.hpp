@@ -1,7 +1,7 @@
 #ifndef _collider_hpp
 #define _collider_hpp
 
-#include <SDL2/sdl.h>
+#include <SDL2/SDL.h>
 
 #include <functional>
 #include <queue>
@@ -14,6 +14,12 @@ class Collider {
   enum class Type { Default, Projectile, Enemy, Player };
   static void PhysicsUpdate();
   static void ProcessCollisions();
+  /**
+   * Pops all unprocessed collisions within the collision queue without processing
+   * useful method for when the scene needs to be destroyed and collisions
+   * no longer matter.
+   */
+  static void ClearAllUnprocessedCollisions();
   static std::queue<std::function<void()>> collisionQueue;
 
   Collider(Type type = Type::Default, bool active = false);

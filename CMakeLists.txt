@@ -12,14 +12,14 @@ endif()
 
 project(CoffeeMaker VERSION 0.1.0)
 
-set(VCPKG_INCLUDE "${VCPKG_INSTALLED_DIR}/x64-windows/include")
+# set(VCPKG_INCLUDE "${VCPKG_INSTALLED_DIR}/include")
 
 set(C_STANDARD_REQUIRED TRUE)
 set(CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 20)
 
-if(APPLE)
+if(APPLE OR LINUX_PLATFORM)
 	set(CMAKE_THREAD_LIBS_INIT "-lpthread")
 	set(CMAKE_HAVE_THREADS_LIBRARY 1)
 	set(CMAKE_USE_WIN32_THREADS_INIT 0)
@@ -110,8 +110,7 @@ set(COFFEEMAKER_TEST_SOURCES
   tests/CoffeeMakerWidgetView.cpp
   tests/CoffeeMakerComponent.cpp
   tests/CoffeeMakerWidgetText.cpp
-    tests/CheapAsteroidsEnemy.cpp
-  )
+  tests/CheapAsteroidsEnemy.cpp)
 set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES} ${COFFEEMAKER_TEST_SOURCES})
 
 find_package(CppUnit CONFIG REQUIRED)
