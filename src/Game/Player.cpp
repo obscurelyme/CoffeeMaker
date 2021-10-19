@@ -5,11 +5,12 @@
 #include <glm/glm.hpp>
 
 #include "Game/PlayerEvents.hpp"
+#include "Game/Scene.hpp"
 #include "InputManager.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
-Player::Player() : _collider(new Collider(Collider::Type::Player, true)), _active(true) {
+Player::Player() : _collider(new Collider(Collider::Type::Player, true)), _active(true), _lives(3) {
   _firing = false;
   SDL_Rect vp;
   SDL_RenderGetViewport(CoffeeMaker::Renderer::Instance(), &vp);
@@ -33,9 +34,15 @@ Player::~Player() {
 
 void Player::OnHit(Collider* collider) {
   if (collider->GetType() == Collider::Type::Enemy) {
-    // TODO: lose a life
     _collider->active = false;
     _active = false;
+    // TODO: lose a life
+    if (_lives == 0) {
+      // TODO: end game
+      SceneManager::LoadScene(0);
+      return;
+    }
+    _lives--;
     decLife->Emit();
     _respawnTimerStart = std::chrono::steady_clock::now();
   }
