@@ -4,6 +4,7 @@
     "ms-vscode.cpptools",
     "twxs.cmake",
     "ms-vscode.cmake-tools",
-    "jbenden.c-cpp-flylint"
+    "jbenden.c-cpp-flylint",
+    "tabnine.tabnine-vscode"
   ]
 }
