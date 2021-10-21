@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Event.hpp"
+#include "Timer.hpp"
 #include "Utilities.hpp"
 #include "Widgets/Text.hpp"
 #include "Widgets/View.hpp"
@@ -27,6 +28,7 @@ class HeadsUpDisplay {
   Ref<CoffeeMaker::Widgets::Text> playerHealth;
   Ref<CoffeeMaker::Widgets::Text> time;
   std::unique_ptr<CoffeeMaker::Widgets::View> hudView;
+  CoffeeMaker::Timer _timer;
 };
 
 #endif

@@ -2,8 +2,7 @@
 
 using namespace CoffeeMaker;
 
-Timer::Timer()
-    : _startTicks(0), _pausedTicks(0), _paused(false), _started(false) {}
+Timer::Timer() : _startTicks(0), _pausedTicks(0), _paused(false), _started(false) {}
 
 void Timer::Start() {
   _started = true;
@@ -54,3 +53,13 @@ Uint32 Timer::GetTicks() {
 bool Timer::IsPaused() { return _paused; }
 
 bool Timer::IsStarted() { return _started; }
+
+std::string Timer::toString() {
+  float totalSeconds = GetTicks() / 1000.0f;
+  float totalMinutes = totalSeconds / 60;
+  int integerMinutes = totalMinutes;
+  float remainingSeconds = totalMinutes - integerMinutes;
+  int integerSeconds = remainingSeconds * 60;
+
+  return std::string(std::to_string(integerMinutes) + ":" + std::to_string(integerSeconds));
+}

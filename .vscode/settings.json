@@ -91,7 +91,15 @@
     "string_view": "cpp",
     "bitset": "cpp",
     "queue": "cpp",
-    "random": "cpp"
+    "random": "cpp",
+    "*.tcc": "cpp",
+    "codecvt": "cpp",
+    "cwctype": "cpp",
+    "memory_resource": "cpp",
+    "numeric": "cpp",
+    "numbers": "cpp",
+    "semaphore": "cpp",
+    "cinttypes": "cpp"
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"
