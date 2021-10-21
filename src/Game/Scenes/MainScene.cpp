@@ -36,6 +36,8 @@ void MainScene::Update() {
   for (auto& entity : _entities) {
     entity->Update();
   }
+
+  _hud->Update();
 }
 
 void MainScene::Init() {

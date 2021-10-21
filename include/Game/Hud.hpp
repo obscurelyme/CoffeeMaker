@@ -14,6 +14,7 @@ class HeadsUpDisplay {
   HeadsUpDisplay();
   ~HeadsUpDisplay();
 
+  void Update();
   void Render() const;
   void IncrementScore();
   void DecrementLife();

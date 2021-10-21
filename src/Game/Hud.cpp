@@ -42,10 +42,12 @@ HeadsUpDisplay::~HeadsUpDisplay() {
   decLife->RemoveListener(_decLifeDelegate);
 }
 
-void HeadsUpDisplay::Render() const {
-  time->SetText(const_cast<HeadsUpDisplay*>(this)->_timer.toString());
-  hudView->Render();
+void HeadsUpDisplay::Update() {
+  // TODO: reassign the timer view every second
+  time->SetText(_timer.toString());
 }
+
+void HeadsUpDisplay::Render() const { hudView->Render(); }
 
 void HeadsUpDisplay::IncrementScore() {
   _score += 10;
