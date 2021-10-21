@@ -21,10 +21,13 @@ class Player : public Entity {
   void OnHit(Collider* collider);
 
   private:
+  void UpdateRespawnImmunity();
+
   CoffeeMaker::Texture _texture{"creature.png", true};
   SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};
   SDL_FRect _clientRect{.x = 400, .y = 300, .w = 32, .h = 32};
 
+  bool _isImmune;
   double _rotation;
   int _mouseX;
   int _mouseY;
