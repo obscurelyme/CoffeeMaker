@@ -57,7 +57,7 @@ void Player::UpdateRespawnImmunity() {
   }
 }
 
-void Player::Update() {
+void Player::Update(float deltaTime) {
   UpdateRespawnImmunity();
 
   if (!_active) {
@@ -77,15 +77,15 @@ void Player::Update() {
     }
 
     SDL_GetMouseState(&_mouseX, &_mouseY);
-    int xx = _mouseX - (int)_clientRect.x;
-    int yy = _mouseY - (int)_clientRect.y;
+    float xx = (_mouseX - _clientRect.x) * deltaTime;
+    float yy = (_mouseY - _clientRect.y) * deltaTime;
 
-    _rotation = glm::degrees(glm::atan((float)yy, (float)xx));
+    _rotation = glm::degrees(glm::atan(yy, xx));
   }
 
   // NOTE: projectiles that have already been fired are still fine to be updated
   for (auto& projectile : _projectiles) {
-    projectile->Update();
+    projectile->Update(deltaTime);
   }
 }
 

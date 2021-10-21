@@ -13,7 +13,7 @@ class MainScene : public Scene {
   public:
   MainScene();
   virtual void Render();
-  virtual void Update();
+  virtual void Update(float deltaTime);
   virtual void Init();
   virtual void Destroy();
 

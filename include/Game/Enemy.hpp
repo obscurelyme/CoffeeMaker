@@ -14,7 +14,7 @@ class Enemy : public Entity {
   virtual ~Enemy();
 
   void Init();
-  void Update();
+  void Update(float deltaTime);
   void Render();
   void Spawn();
   bool IsActive() const;

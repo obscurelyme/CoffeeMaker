@@ -16,7 +16,7 @@ class Projectile {
 
   void Fire(float initialXPosition, float initialYPosition, double rotation);
   void Reload();
-  void Update();
+  void Update(float deltaTime);
   void Render();
   bool IsOffScreen() const;
   void OnHit(Collider* collider);

@@ -14,7 +14,7 @@ class Player : public Entity {
   virtual ~Player();
 
   void Init();
-  void Update();
+  void Update(float deltaTime);
   void Render();
   void Fire();
   void Reload();

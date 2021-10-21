@@ -6,7 +6,7 @@ enum class EnemyAnimationState { Idle, Moving };
 class Entity {
   public:
   virtual void Init() = 0;
-  virtual void Update() = 0;
+  virtual void Update(float deltaTime = 0.0f) = 0;
   virtual void Render() = 0;
 
   virtual ~Entity() = 0;
