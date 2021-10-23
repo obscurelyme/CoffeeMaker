@@ -18,6 +18,7 @@ namespace CoffeeMaker {
       explicit Text(std::string textContent);
       ~Text();
 
+      static SDL_Surface *CreateSurfaceFromText(const std::string &textContent);
       void Render() override;
       std::string ID() const override;
 

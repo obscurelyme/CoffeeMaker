@@ -10,6 +10,10 @@ Scene* SceneManager::_currentScene = nullptr;
 
 void SceneManager::UpdateCurrentScene(float deltaTime) { _currentScene->Update(deltaTime); }
 
+void SceneManager::PauseScene() { _currentScene->Pause(); }
+
+void SceneManager::UnpauseScene() { _currentScene->Unpause(); }
+
 void SceneManager::RenderCurrentScene() { _currentScene->Render(); }
 
 void SceneManager::AddScene(Scene* scene) { scenes.push_back(scene); }

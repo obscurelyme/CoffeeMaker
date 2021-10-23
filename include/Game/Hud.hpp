@@ -1,6 +1,8 @@
 #ifndef _headsupdisplay_hpp
 #define _headsupdisplay_hpp
 
+#include <SDL2/SDL.h>
+
 #include <string>
 
 #include "Event.hpp"
@@ -18,6 +20,11 @@ class HeadsUpDisplay {
   void Render() const;
   void IncrementScore();
   void DecrementLife();
+  void Pause();
+  void Unpause();
+
+  static void IncrementTimer(HeadsUpDisplay* instance);
+  static Uint32 TimerInterval(Uint32 interval, void* params);
 
   private:
   unsigned int _score;
@@ -30,6 +37,7 @@ class HeadsUpDisplay {
   Ref<CoffeeMaker::Widgets::Text> time;
   std::unique_ptr<CoffeeMaker::Widgets::View> hudView;
   CoffeeMaker::Timer _timer;
+  SDL_TimerID _timerId;
 };
 
 #endif

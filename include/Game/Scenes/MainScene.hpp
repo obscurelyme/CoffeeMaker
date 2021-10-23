@@ -16,6 +16,8 @@ class MainScene : public Scene {
   virtual void Update(float deltaTime);
   virtual void Init();
   virtual void Destroy();
+  virtual void Pause();
+  virtual void Unpause();
 
   private:
   static const unsigned int MAX_ENEMIES = 5;

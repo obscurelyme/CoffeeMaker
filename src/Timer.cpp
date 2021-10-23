@@ -59,7 +59,7 @@ std::string Timer::toString() {
   float totalMinutes = totalSeconds / 60;
   int integerMinutes = (int)totalMinutes;
   float remainingSeconds = totalMinutes - integerMinutes;
-  int integerSeconds = (int)remainingSeconds * 60;
+  int integerSeconds = (int)(remainingSeconds * 60);
 
   return std::string(std::to_string(integerMinutes) + ":" + std::to_string(integerSeconds));
 }
