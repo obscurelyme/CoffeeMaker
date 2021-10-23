@@ -2,8 +2,6 @@
 
 #include <SDL2/SDL.h>
 
-#include <functional>
-
 #include "Color.hpp"
 #include "Event.hpp"
 #include "Game/PlayerEvents.hpp"
