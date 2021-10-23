@@ -10,7 +10,7 @@
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
-Player::Player() : _collider(new Collider(Collider::Type::Player, true)), _active(true), _lives(3) {
+Player::Player() : _isImmune(false), _collider(new Collider(Collider::Type::Player, true)), _active(true), _lives(3) {
   _firing = false;
   SDL_Rect vp;
   SDL_RenderGetViewport(CoffeeMaker::Renderer::Instance(), &vp);
@@ -33,7 +33,7 @@ Player::~Player() {
 }
 
 void Player::OnHit(Collider* collider) {
-  if (collider->GetType() == Collider::Type::Enemy) {
+  if (collider->GetType() == Collider::Type::Enemy && !_isImmune) {
     _collider->active = false;
     _active = false;
     if (_lives == 0) {
@@ -48,12 +48,26 @@ void Player::OnHit(Collider* collider) {
 
 void Player::Init() {}
 
+void Player::UpdateRespawnImmunity() {
+  if (_active && _isImmune) {
+    _respawnTimer = std::chrono::steady_clock::now() - _respawnTimerStart;
+    if (_respawnTimer.count() >= 3000) {
+      _isImmune = false;
+    }
+  }
+}
+
 void Player::Update() {
+  UpdateRespawnImmunity();
+
   if (!_active) {
     _respawnTimer = std::chrono::steady_clock::now() - _respawnTimerStart;
     if (_respawnTimer.count() >= 3000) {
       _active = true;
       _collider->active = true;
+      // NOTE: start the immunity timer of the respawn sequence
+      _respawnTimerStart = std::chrono::steady_clock::now();
+      _isImmune = true;
     }
   }
 
