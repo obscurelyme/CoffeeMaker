@@ -32,6 +32,10 @@ void Enemy::Render() {
   _collider->Render();
 }
 
+void Enemy::Pause() {}
+
+void Enemy::Unpause() {}
+
 void Enemy::Update(float deltaTime) {
   if (_active) {
     _ticks = SDL_GetTicks();

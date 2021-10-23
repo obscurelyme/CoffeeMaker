@@ -7,6 +7,7 @@
 #include "Game/Entity.hpp"
 #include "Projectile.hpp"
 #include "Texture.hpp"
+#include "Timer.hpp"
 
 class Player : public Entity {
   public:
@@ -16,6 +17,9 @@ class Player : public Entity {
   void Init();
   void Update(float deltaTime);
   void Render();
+  void Pause();
+  void Unpause();
+
   void Fire();
   void Reload();
   void OnHit(Collider* collider);
@@ -36,7 +40,9 @@ class Player : public Entity {
   bool _firing;
   Collider* _collider;
   bool _active;
-  std::chrono::steady_clock::time_point _respawnTimerStart;
-  std::chrono::duration<float, std::milli> _respawnTimer;
+  // std::chrono::steady_clock::time_point _respawnTimerStart;
+  // std::chrono::duration<float, std::milli> _respawnTimer;
+  CoffeeMaker::Timer _immunityTimer;
+  CoffeeMaker::Timer _respawnTimer;
   unsigned int _lives;
 };

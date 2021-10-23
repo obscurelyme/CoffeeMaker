@@ -3,6 +3,7 @@
   "C_Cpp.clang_format_path": "${workspaceDirectory}/.clang-format",
   "C_Cpp.formatting": "clangFormat",
   "files.associations": {
+    "*.cpp": "cpp",
     "*.tsx": "typescriptreact",
     "filesystem": "cpp",
     "algorithm": "cpp",
@@ -99,7 +100,8 @@
     "numeric": "cpp",
     "numbers": "cpp",
     "semaphore": "cpp",
-    "cinttypes": "cpp"
+    "cinttypes": "cpp",
+    "any": "cpp"
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"

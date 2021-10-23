@@ -98,10 +98,16 @@ int main(int, char**) {
       if (event.type == SDL_USEREVENT) {
         if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
           paused = true;
+          SceneManager::PauseScene();
         }
         if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE ||
             event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_LOAD) {
           paused = false;
+          SceneManager::UnpauseScene();
+        }
+        if (event.user.code == 1245) {
+          void (*p)(void*) = reinterpret_cast<void (*)(void*)>(event.user.data1);
+          p(event.user.data2);
         }
       }
 
@@ -135,8 +141,6 @@ int main(int, char**) {
     CoffeeMaker::InputManager::ClearAllPresses();
     CoffeeMaker::Button::ProcessEvents();
     Collider::ProcessCollisions();
-    // Cap framerate
-    // SDL_Delay(16);
   }
 
   SceneManager::DestroyAllScenes();

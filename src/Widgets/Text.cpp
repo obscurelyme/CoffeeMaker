@@ -80,17 +80,23 @@ void Text::SetText(const std::string &textContent) {
 
 void Text::SetTextContentTexture() {
   if (_font != nullptr && _textContent != "") {
-    if (_texture != nullptr) {
-      SDL_DestroyTexture(_texture);
-      _texture = nullptr;
-    }
-    SDL_Surface *surface;
+    SDL_Texture *oldTexture = _texture;
+    SDL_Texture *newTexture = nullptr;
+    SDL_Surface *surface = nullptr;
     surface = TTF_RenderText_Blended_Wrapped(_font, _textContent.c_str(), color, GetWrapLength());
     if (surface == nullptr) {
       MessageBox::ShowMessageBoxAndQuit(
           "Text Surface Error", "Could not create a text surface for the given string: \"" + _textContent + "\"");
     }
-    _texture = SDL_CreateTextureFromSurface(renderer, surface);
+    newTexture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (newTexture == nullptr) {
+      MessageBox::ShowMessageBoxAndQuit(
+          "Text Surface Error", "Could not create a text texture for the given string: \"" + _textContent + "\"");
+    }
+    _texture = newTexture;
+    if (oldTexture != nullptr) {
+      SDL_DestroyTexture(oldTexture);
+    }
     clientRect.w = surface->w;
     clientRect.h = surface->h;
     SDL_FreeSurface(surface);
@@ -129,4 +135,13 @@ Uint32 Text::GetWrapLength() const {
   }
 
   return viewport.w;
+}
+
+SDL_Surface *Text::CreateSurfaceFromText(const std::string &str) {
+  if (str.size() > 0) {
+    SDL_Surface *surface =
+        TTF_RenderText_Blended(FontManager::UseFont("Roboto/Roboto-Regular"), str.c_str(), CoffeeMaker::Colors::Yellow);
+    return surface;
+  }
+  return nullptr;
 }

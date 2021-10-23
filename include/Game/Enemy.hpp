@@ -16,6 +16,9 @@ class Enemy : public Entity {
   void Init();
   void Update(float deltaTime);
   void Render();
+  void Pause();
+  void Unpause();
+
   void Spawn();
   bool IsActive() const;
   void OnCollision(Collider* collider);

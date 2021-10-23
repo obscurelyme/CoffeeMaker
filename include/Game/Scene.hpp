@@ -13,6 +13,8 @@ class Scene {
   virtual void Update(float deltaTime) = 0;
   virtual void Init() = 0;
   virtual void Destroy() = 0;
+  virtual void Pause() = 0;
+  virtual void Unpause() = 0;
 
   private:
   std::string _id;
@@ -22,6 +24,8 @@ class Scene {
 
 class SceneManager {
   public:
+  static void PauseScene();
+  static void UnpauseScene();
   static void UpdateCurrentScene(float deltaTime);
   static void RenderCurrentScene();
   static void LoadScene();

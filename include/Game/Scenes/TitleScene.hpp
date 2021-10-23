@@ -12,6 +12,8 @@ class TitleScene : public Scene {
   virtual void Update(float deltaTime);
   virtual void Init();
   virtual void Destroy();
+  virtual void Pause();
+  virtual void Unpause();
 
   void Play();
   void Quit();

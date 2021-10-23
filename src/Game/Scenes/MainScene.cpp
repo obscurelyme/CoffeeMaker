@@ -20,6 +20,20 @@ void MainScene::Render() {
   _menu->Render();
 }
 
+void MainScene::Pause() {
+  _hud->Pause();
+  for (auto& entity : _entities) {
+    entity->Pause();
+  }
+}
+
+void MainScene::Unpause() {
+  _hud->Unpause();
+  for (auto& entity : _entities) {
+    entity->Unpause();
+  }
+}
+
 void MainScene::Update(float deltaTime) {
   if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_ESCAPE)) {
     if (_menu->IsShown()) {

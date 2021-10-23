@@ -42,7 +42,8 @@ void Player::OnHit(Collider* collider) {
     }
     _lives--;
     decLife->Emit();
-    _respawnTimerStart = std::chrono::steady_clock::now();
+    _respawnTimer.Start();
+    // _respawnTimerStart = std::chrono::steady_clock::now();
   }
 }
 
@@ -50,23 +51,32 @@ void Player::Init() {}
 
 void Player::UpdateRespawnImmunity() {
   if (_active && _isImmune) {
-    _respawnTimer = std::chrono::steady_clock::now() - _respawnTimerStart;
-    if (_respawnTimer.count() >= 3000) {
+    if (_immunityTimer.GetTicks() >= 3000) {
       _isImmune = false;
+      _immunityTimer.Stop();
     }
   }
+}
+
+void Player::Pause() {
+  _respawnTimer.Pause();
+  _immunityTimer.Pause();
+}
+
+void Player::Unpause() {
+  _immunityTimer.Unpause();
+  _respawnTimer.Unpause();
 }
 
 void Player::Update(float deltaTime) {
   UpdateRespawnImmunity();
 
   if (!_active) {
-    _respawnTimer = std::chrono::steady_clock::now() - _respawnTimerStart;
-    if (_respawnTimer.count() >= 3000) {
+    if (_respawnTimer.GetTicks() >= 3000) {
       _active = true;
       _collider->active = true;
-      // NOTE: start the immunity timer of the respawn sequence
-      _respawnTimerStart = std::chrono::steady_clock::now();
+      _respawnTimer.Stop();
+      _immunityTimer.Start();
       _isImmune = true;
     }
   }
