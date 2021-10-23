@@ -18,6 +18,7 @@
 
 #include "Color.hpp"
 #include "Cursor.hpp"
+#include "Event.hpp"
 #include "FPS.hpp"
 #include "FontManager.hpp"
 #include "Game/Collider.hpp"
@@ -34,6 +35,7 @@
 #include "Widgets/Text.hpp"
 #include "Window.hpp"
 
+bool paused = false;
 bool quit = false;
 SDL_Event event;
 
@@ -73,7 +75,7 @@ int main(int, char**) {
   auto end = std::chrono::steady_clock::now();
   std::chrono::duration<float> elapsedSeconds = end - start;
 
-  CoffeeMaker::Timer timer;
+  CoffeeMaker::Timer globalTimer;
   CoffeeMaker::FPS fpsCounter;
 
   CM_LOGGER_INFO("Initialization time took: {}", elapsedSeconds.count());
@@ -93,6 +95,16 @@ int main(int, char**) {
         quit = true;
       }
 
+      if (event.type == SDL_USEREVENT) {
+        if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
+          paused = true;
+        }
+        if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE ||
+            event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_LOAD) {
+          paused = false;
+        }
+      }
+
       CoffeeMaker::Button::PollEvents(&event);
 
       if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
@@ -100,29 +112,31 @@ int main(int, char**) {
       }
     }
 
-    // CoffeeMaker::Inputloop->run();
+    float timeStep = globalTimer.GetTicks() / 1000.0f;
 
     // physics step
     Collider::PhysicsUpdate();
 
     // run logic
-    // fpsCounter.Update();
-    SceneManager::UpdateCurrentScene();
+    fpsCounter.Update();
+    SceneManager::UpdateCurrentScene(!paused ? timeStep : 0.0f);
+
+    // Reset Timer
+    globalTimer.Start();
 
     // render
     renderer.BeginRender();
 
     SceneManager::RenderCurrentScene();
-    // fpsCounter.Render();
+    fpsCounter.Render();
 
     renderer.EndRender();
 
     CoffeeMaker::InputManager::ClearAllPresses();
-
     CoffeeMaker::Button::ProcessEvents();
     Collider::ProcessCollisions();
     // Cap framerate
-    SDL_Delay(16);
+    // SDL_Delay(16);
   }
 
   SceneManager::DestroyAllScenes();

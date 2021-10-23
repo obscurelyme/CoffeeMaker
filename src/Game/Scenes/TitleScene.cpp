@@ -26,7 +26,7 @@ void TitleScene::Render() {
   }
 }
 
-void TitleScene::Update() {}
+void TitleScene::Update(float) {}
 
 void TitleScene::Init() {
   _backgroundColor = Color(0, 0, 0, 255);  // Black

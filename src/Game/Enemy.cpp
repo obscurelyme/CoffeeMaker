@@ -32,7 +32,7 @@ void Enemy::Render() {
   _collider->Render();
 }
 
-void Enemy::Update() {
+void Enemy::Update(float deltaTime) {
   if (_active) {
     _ticks = SDL_GetTicks();
     if (_ticks > _priorTicks + 750) {
@@ -46,8 +46,8 @@ void Enemy::Update() {
       _priorTicks = _ticks;
     }
 
-    _clientRect.x += _movement.x;
-    _clientRect.y += _movement.y;
+    _clientRect.x += _movement.x * 60 * deltaTime;
+    _clientRect.y += _movement.y * 60 * deltaTime;
     _collider->Update(_clientRect);
 
     if (!_enteredScreen && !IsOffScreen()) {

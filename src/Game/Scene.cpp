@@ -1,5 +1,6 @@
 #include "Game/Scene.hpp"
 
+#include "Event.hpp"
 #include "Game/Enemy.hpp"
 #include "Game/Player.hpp"
 
@@ -7,7 +8,7 @@ int SceneManager::_currentSceneIndex = -1;
 std::vector<Scene*> SceneManager::scenes = {};
 Scene* SceneManager::_currentScene = nullptr;
 
-void SceneManager::UpdateCurrentScene() { _currentScene->Update(); }
+void SceneManager::UpdateCurrentScene(float deltaTime) { _currentScene->Update(deltaTime); }
 
 void SceneManager::RenderCurrentScene() { _currentScene->Render(); }
 
@@ -18,6 +19,7 @@ void SceneManager::LoadScene() {
   if (_currentSceneIndex == -1) {
     _currentScene = scenes[++_currentSceneIndex];
     _currentScene->Init();
+    CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_LOAD);
     return;
   }
   // NOTE: If not the first scene, clean up and then move to next scene
@@ -30,6 +32,7 @@ void SceneManager::LoadScene() {
     _currentScene = scenes[_currentSceneIndex];
   }
   _currentScene->Init();
+  CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_LOAD);
 }
 
 void SceneManager::LoadScene(unsigned long index) {
@@ -38,6 +41,7 @@ void SceneManager::LoadScene(unsigned long index) {
     _currentSceneIndex = index;
     _currentScene = scenes[_currentSceneIndex];
     _currentScene->Init();
+    CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_LOAD);
   }
 }
 

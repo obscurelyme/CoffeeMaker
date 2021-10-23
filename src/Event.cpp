@@ -1,5 +1,7 @@
 #include "Event.hpp"
 
+#include <SDL2/SDL.h>
+
 #include <algorithm>
 #include <iostream>
 
@@ -8,6 +10,14 @@
 using namespace CoffeeMaker;
 
 int Delegate::_uid = 0;
+
+void CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents appEvent) {
+  SDL_UserEvent userevent{.type = SDL_USEREVENT, .code = appEvent, .data1 = nullptr, .data2 = nullptr};
+  SDL_Event event;
+  event.type = SDL_USEREVENT;
+  event.user = userevent;
+  SDL_PushEvent(&event);
+}
 
 Delegate::Delegate(std::function<void(const Event& event)> cb) {
   _function = cb;

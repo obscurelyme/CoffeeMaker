@@ -57,9 +57,9 @@ bool Timer::IsStarted() { return _started; }
 std::string Timer::toString() {
   float totalSeconds = GetTicks() / 1000.0f;
   float totalMinutes = totalSeconds / 60;
-  int integerMinutes = totalMinutes;
+  int integerMinutes = (int)totalMinutes;
   float remainingSeconds = totalMinutes - integerMinutes;
-  int integerSeconds = remainingSeconds * 60;
+  int integerSeconds = (int)remainingSeconds * 60;
 
   return std::string(std::to_string(integerMinutes) + ":" + std::to_string(integerSeconds));
 }

@@ -9,6 +9,22 @@
 namespace CoffeeMaker {
   class Event;
 
+  /**
+   * Generic Application level events
+   */
+  enum ApplicationEvents {
+    COFFEEMAKER_GAME_PAUSE,
+    COFFEEMAKER_GAME_UNPAUSE,
+    COFFEEMAKER_SCENE_LOAD,
+    COFFEEMAKER_SCENE_UNLOAD
+  };
+
+  /**
+   * Constructs an SDL_USEREVENT based on the enum and pushes it
+   * into the SDL_Event queue.
+   */
+  void PushCoffeeMakerEvent(ApplicationEvents appEvent);
+
   class Delegate {
     public:
     explicit Delegate(std::function<void(const Event& event)> fn);

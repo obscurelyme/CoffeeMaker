@@ -10,7 +10,7 @@ class Scene {
   virtual ~Scene();
 
   virtual void Render() = 0;
-  virtual void Update() = 0;
+  virtual void Update(float deltaTime) = 0;
   virtual void Init() = 0;
   virtual void Destroy() = 0;
 
@@ -22,7 +22,7 @@ class Scene {
 
 class SceneManager {
   public:
-  static void UpdateCurrentScene();
+  static void UpdateCurrentScene(float deltaTime);
   static void RenderCurrentScene();
   static void LoadScene();
   static void LoadScene(unsigned long index);
