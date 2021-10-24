@@ -38,7 +38,7 @@ void TitleScene::Init() {
   std::shared_ptr<View> _view(new View(400, 200, HorizontalAlignment::Centered, VerticalAlignment::Centered));
   std::shared_ptr<Text> _title(new Text());
   _title->SetFont(FontManager::UseFont("Roboto/Roboto-Regular"));
-  _title->SetText("Cheap Asteriods");
+  _title->SetText("Ultra Cosmo Invaders");
   _title->SetColor(Color(255, 255, 255, 255));
   _title->SetHorizontalAlignment(HorizontalAlignment::Centered);
   _title->SetVerticalAlignment(VerticalAlignment::Top);
