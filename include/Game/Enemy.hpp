@@ -37,7 +37,7 @@ class Enemy : public Entity {
 
   static unsigned int _uid;
 
-  EnemyAnimationState _state{EnemyAnimationState::Idle};
+  // EnemyAnimationState _state{EnemyAnimationState::Idle};
   unsigned int _ticks;
   unsigned int _priorTicks;
   // unsigned int _speed{1};

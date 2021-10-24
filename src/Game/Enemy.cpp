@@ -55,6 +55,7 @@ void Enemy::Update(float deltaTime) {
 
     if (IsOffScreen() && _enteredScreen) {
       // Enemy went off screen
+      CM_LOGGER_INFO("Enemy off screen, will respawn");
       Spawn();
     }
   }
@@ -62,6 +63,7 @@ void Enemy::Update(float deltaTime) {
 
 void Enemy::Spawn() {
   // Pick a random location around the player
+  _enteredScreen = false;
   _collider->active = false;
 
   double randomAngle = glm::radians(distribution(engine));

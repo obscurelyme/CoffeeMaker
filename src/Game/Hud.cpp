@@ -2,6 +2,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <functional>
+
 #include "Color.hpp"
 #include "Event.hpp"
 #include "Game/PlayerEvents.hpp"
@@ -23,6 +25,9 @@ class IntervalFunction {
 
   SDL_TimerCallback callback;
 };
+
+// NOTE: figure this out later...
+void (*globalCb)(void*) = [](void*) { CM_LOGGER_INFO("Called here..."); };
 
 HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
   score = std::make_shared<Text>("Score: 0");
@@ -64,7 +69,11 @@ Uint32 HeadsUpDisplay::TimerInterval(Uint32 interval, void* hudInstance) {
 
   userEvent.type = SDL_USEREVENT;
   userEvent.code = 1245;
-  userEvent.data1 = &HeadsUpDisplay::IncrementTimer;
+
+  // userEvent.data1 = reinterpret_cast<void*>(globalCb);
+  // userEvent.data2 = static_cast<void*>(surface);
+
+  userEvent.data1 = reinterpret_cast<void*>(&HeadsUpDisplay::IncrementTimer);
   userEvent.data2 = hudInstance;
   event.type = SDL_USEREVENT;
   event.user = userEvent;

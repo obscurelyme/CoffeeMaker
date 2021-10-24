@@ -106,8 +106,13 @@ int main(int, char**) {
           SceneManager::UnpauseScene();
         }
         if (event.user.code == 1245) {
-          void (*p)(void*) = reinterpret_cast<void (*)(void*)>(event.user.data1);
-          p(event.user.data2);
+          if (event.user.data2 != nullptr) {
+            void (*p)(void*) = reinterpret_cast<void (*)(void*)>(event.user.data1);
+            p(event.user.data2);
+          } else {
+            void (*p)() = reinterpret_cast<void (*)()>(event.user.data1);
+            p();
+          }
           break;
         }
       }
