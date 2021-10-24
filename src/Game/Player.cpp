@@ -102,7 +102,7 @@ void Player::Update(float deltaTime) {
 void Player::Render() {
   if (_active) {
     _texture.Render(_clipRect, _clientRect, _rotation + 90);
-    _collider->Render();
+    // _collider->Render();
   }
 
   // NOTE: projectiles that have already been fired are still fine to be rendered

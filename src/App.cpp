@@ -108,6 +108,7 @@ int main(int, char**) {
         if (event.user.code == 1245) {
           void (*p)(void*) = reinterpret_cast<void (*)(void*)>(event.user.data1);
           p(event.user.data2);
+          break;
         }
       }
 

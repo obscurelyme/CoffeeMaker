@@ -36,7 +36,7 @@ void Projectile::Render() {
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), Projectile::_texture->Handle(), NULL, &_clientRect,
                       _rotation + 90, NULL, flip);
-    collider->Render();
+    // collider->Render();
   }
 }
 

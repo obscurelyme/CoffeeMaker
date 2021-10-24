@@ -1,5 +1,6 @@
 #include "Game/Enemy.hpp"
 
+#include <cmath>
 #include <glm/glm.hpp>
 #include <glm/gtc/random.hpp>
 #include <iostream>
@@ -28,8 +29,14 @@ void Enemy::Init() {}
 
 void Enemy::Render() {
   SDL_RendererFlip flip = SDL_FLIP_NONE;
-  SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), &_clipRect, &_clientRect, 90, NULL, flip);
-  _collider->Render();
+
+  float xx = (400 - _clientRect.x);
+  float yy = (300 - _clientRect.y);
+
+  float _rotation = glm::degrees(glm::atan(yy, xx));
+  SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), &_clipRect, &_clientRect, _rotation + 90,
+                    NULL, flip);
+  // _collider->Render();
 }
 
 void Enemy::Pause() {}
@@ -38,18 +45,6 @@ void Enemy::Unpause() {}
 
 void Enemy::Update(float deltaTime) {
   if (_active) {
-    _ticks = SDL_GetTicks();
-    if (_ticks > _priorTicks + 750) {
-      if (_state == EnemyAnimationState::Idle) {
-        _state = EnemyAnimationState::Moving;
-        _clipRect.y = 32;
-      } else {
-        _state = EnemyAnimationState::Idle;
-        _clipRect.y = 0;
-      }
-      _priorTicks = _ticks;
-    }
-
     _clientRect.x += _movement.x * 60 * deltaTime;
     _clientRect.y += _movement.y * 60 * deltaTime;
     _collider->Update(_clientRect);
