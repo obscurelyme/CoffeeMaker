@@ -18,12 +18,15 @@ class Tiles {
   Tiles(const std::string& filePath, int viewportWidth, int viewportHeight);
   ~Tiles() = default;
 
+  void Update(float deltaTime);
   void Render();
 
   private:
   CoffeeMaker::Texture _texture;
   int _viewportWidth;
   int _viewportHeight;
+  int _scrollSpeed;
+  float _movement;
 };
 
 #endif

@@ -21,6 +21,7 @@ void MainScene::Render() {
 }
 
 void MainScene::Pause() {
+  SDL_ShowCursor(SDL_ENABLE);
   _hud->Pause();
   for (auto& entity : _entities) {
     entity->Pause();
@@ -28,6 +29,7 @@ void MainScene::Pause() {
 }
 
 void MainScene::Unpause() {
+  SDL_ShowCursor(SDL_DISABLE);
   _hud->Unpause();
   for (auto& entity : _entities) {
     entity->Unpause();
@@ -45,6 +47,8 @@ void MainScene::Update(float deltaTime) {
     }
   }
 
+  _backgroundTiles->Update(deltaTime);
+
   for (auto enemy : _enemies) {
     if (!enemy->IsActive()) {
       enemy->Spawn();
@@ -60,6 +64,7 @@ void MainScene::Update(float deltaTime) {
 }
 
 void MainScene::Init() {
+  SDL_ShowCursor(SDL_DISABLE);
   _hud = new HeadsUpDisplay();
   _menu = new Menu();
   _menu->Init();

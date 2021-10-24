@@ -15,8 +15,8 @@ Projectile::Projectile() : _fired(false), _rotation(0) {
   _clientRect.w = 16;
   _clientRect.h = 16;
   collider = new Collider(Collider::Type::Projectile, false);
-  collider->clientRect.w = 32;
-  collider->clientRect.h = 32;
+  collider->clientRect.w = 16;
+  collider->clientRect.h = 16;
   collider->clientRect.x = _clientRect.x;
   collider->clientRect.y = _clientRect.y;
   collider->OnCollide(std::bind(&Projectile::OnHit, this, std::placeholders::_1));

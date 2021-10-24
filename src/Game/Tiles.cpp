@@ -2,17 +2,29 @@
 
 #include "Renderer.hpp"
 
-Tiles::Tiles() {}
+Tiles::Tiles() : _scrollSpeed(75), _movement(0) {}
 
 Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight) :
-    _viewportWidth(viewportWidth), _viewportHeight(viewportHeight) {
+    _viewportWidth(viewportWidth), _viewportHeight(viewportHeight), _scrollSpeed(75), _movement(0) {
   _texture.LoadFromFile(filePath);
 }
 
+void Tiles::Update(float deltaTime) { _movement += deltaTime * _scrollSpeed; }
+
 void Tiles::Render() {
-  for (int i = 0; i <= _viewportWidth; i += _texture.Width()) {
-    for (int j = 0; j <= _viewportHeight; j += _texture.Height()) {
-      _texture.Render(j, i);
+  const int widthCount = _viewportWidth / _texture.Width();
+  const int heightCount = (_viewportHeight / _texture.Height()) + 1;
+
+  for (int i = 0; i <= widthCount; i++) {
+    for (int j = 0; j <= heightCount; j++) {
+      float yPos = (j * _texture.Height()) - _texture.Height() + _movement;
+      float xPos = (float)i * _texture.Width();
+
+      if (j == 0 && yPos >= 0) {
+        _movement = 0;  // NOTE: reset the position for infinite loop effect
+      }
+
+      _texture.Render(yPos, xPos);
     }
   }
 }

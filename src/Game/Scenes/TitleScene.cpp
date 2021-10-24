@@ -33,6 +33,7 @@ void TitleScene::Pause() {}
 void TitleScene::Unpause() {}
 
 void TitleScene::Init() {
+  SDL_ShowCursor(SDL_ENABLE);
   _backgroundColor = Color(0, 0, 0, 255);  // Black
   std::shared_ptr<View> _view(new View(400, 200, HorizontalAlignment::Centered, VerticalAlignment::Centered));
   std::shared_ptr<Text> _title(new Text());

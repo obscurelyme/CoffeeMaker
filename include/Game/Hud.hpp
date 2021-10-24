@@ -11,6 +11,13 @@
 #include "Widgets/Text.hpp"
 #include "Widgets/View.hpp"
 
+class HeadsUpDisplayEvent {
+  public:
+  static void Emit();
+  static void AddListener();
+  static void RemoveListener();
+};
+
 class HeadsUpDisplay {
   public:
   HeadsUpDisplay();
