@@ -55,7 +55,6 @@ void Enemy::Update(float deltaTime) {
 
     if (IsOffScreen() && _enteredScreen) {
       // Enemy went off screen
-      CM_LOGGER_INFO("Enemy off screen, will respawn");
       Spawn();
     }
   }
