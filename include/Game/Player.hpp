@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 
 #include <chrono>
+#include <glm/glm.hpp>
 #include <vector>
 
 #include "Game/Collider.hpp"
@@ -45,4 +46,6 @@ class Player : public Entity {
   CoffeeMaker::Timer _immunityTimer;
   CoffeeMaker::Timer _respawnTimer;
   unsigned int _lives;
+  glm::vec2 _direction{1.0f, 0.0f};
+  int _speed = 150;
 };

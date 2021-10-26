@@ -10,13 +10,13 @@
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
-Player::Player() : _isImmune(false), _collider(new Collider(Collider::Type::Player, true)), _active(true), _lives(3) {
+Player::Player() : _isImmune(true), _collider(new Collider(Collider::Type::Player, true)), _active(true), _lives(3) {
   _firing = false;
   SDL_Rect vp;
   SDL_RenderGetViewport(CoffeeMaker::Renderer::Instance(), &vp);
   // NOTE: center the player sprite in the viewport
   _clientRect.x = (vp.w - _clientRect.w) / 2;
-  _clientRect.y = (vp.h - _clientRect.h) / 2;
+  _clientRect.y = (vp.h - _clientRect.h) - 50;
   for (int i = 0; i < 25; i++) {
     _projectiles.emplace_back(new Projectile());
   }
@@ -82,15 +82,27 @@ void Player::Update(float deltaTime) {
   }
 
   if (_active) {
+    _rotation = -90;
+
     if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_F)) {
       Fire();
     }
 
-    SDL_GetMouseState(&_mouseX, &_mouseY);
-    float xx = (_mouseX - _clientRect.x) * deltaTime;
-    float yy = (_mouseY - _clientRect.y) * deltaTime;
+    if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_LEFT)) {
+      // strafe left
+      _clientRect.x -= deltaTime * _speed;
+      _rotation -= 8;
+    }
 
-    _rotation = glm::degrees(glm::atan(yy, xx));
+    if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_RIGHT)) {
+      // strafe right
+      _clientRect.x += deltaTime * _speed;
+      _rotation += 8;
+    }
+
+    // SDL_GetMouseState(&_mouseX, &_mouseY);
+    // float xx = (_mouseX - _clientRect.x) * deltaTime;
+    // float yy = (_mouseY - _clientRect.y) * deltaTime;
   }
 
   // NOTE: projectiles that have already been fired are still fine to be updated
