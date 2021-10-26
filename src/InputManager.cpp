@@ -7,17 +7,13 @@ using namespace CoffeeMaker;
 std::array<KeyboardInputEvent, SDL_NUM_SCANCODES> InputManager::_keys = {};
 
 void InputManager::Init() {
-  KeyboardInputEvent e = {.IsHeld = false, .IsPressed = false};
+  KeyboardInputEvent e = {.IsHeld = false, .IsPressed = false, .IsDown = false};
   _keys.fill(e);
 }
 
-void InputManager::KeyPressed(SDL_KeyboardEvent* event) {
-  _keys[event->keysym.scancode].IsPressed = true;
-}
+void InputManager::KeyPressed(SDL_KeyboardEvent* event) { _keys[event->keysym.scancode].IsPressed = true; }
 
-void InputManager::KeyReleased(SDL_KeyboardEvent* event) {
-  _keys[event->keysym.scancode].IsPressed = false;
-}
+void InputManager::KeyReleased(SDL_KeyboardEvent* event) { _keys[event->keysym.scancode].IsPressed = false; }
 
 void InputManager::ClearAllPresses() {
   for (auto& key : _keys) {
@@ -34,26 +30,20 @@ void InputManager::HandleKeyBoardEvent(SDL_KeyboardEvent* event) {
       _keys[event->keysym.scancode].IsPressed = false;
       _keys[event->keysym.scancode].IsHeld = true;
     }
+    _keys[event->keysym.scancode].IsDown = true;
   }
 
   if (event->state == SDL_RELEASED) {
     _keys[event->keysym.scancode].IsPressed = false;
     _keys[event->keysym.scancode].IsHeld = false;
+    _keys[event->keysym.scancode].IsDown = false;
   }
 }
 
-bool InputManager::IsKeyDown(SDL_Scancode scanCode) {
-  return _keys[scanCode].IsPressed;
-}
+bool InputManager::IsKeyDown(SDL_Scancode scanCode) { return _keys[scanCode].IsDown; }
 
-bool InputManager::IsKeyUp(SDL_Scancode scanCode) {
-  return !_keys[scanCode].IsPressed;
-}
+bool InputManager::IsKeyUp(SDL_Scancode scanCode) { return !_keys[scanCode].IsPressed; }
 
-bool InputManager::IsKeyPressed(SDL_Scancode scanCode) {
-  return _keys[scanCode].IsPressed;
-}
+bool InputManager::IsKeyPressed(SDL_Scancode scanCode) { return _keys[scanCode].IsPressed; }
 
-bool InputManager::IsKeyHeld(SDL_Scancode scanCode) {
-  return _keys[scanCode].IsHeld;
-}
+bool InputManager::IsKeyHeld(SDL_Scancode scanCode) { return _keys[scanCode].IsHeld; }

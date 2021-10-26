@@ -64,7 +64,7 @@ int main(int, char**) {
   CoffeeMaker::Utilities::Init(SDL_GetBasePath());
   CoffeeMaker::Texture::SetTextureDirectory();
 
-  CoffeeMaker::BasicWindow win("Hello, SDL!", 800, 600);
+  CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 800, 600);
   CoffeeMaker::Renderer renderer;
 
   // CoffeeMaker::Cursor cursor("cursor.png");
