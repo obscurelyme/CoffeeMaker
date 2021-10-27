@@ -95,3 +95,56 @@ bool Enemy::IsOffScreen() const {
   return _clientRect.x + _clientRect.w <= 0 || _clientRect.x >= 800 || _clientRect.y + _clientRect.h <= 0 ||
          _clientRect.y >= 600;
 }
+
+SpecialEnemy::SpecialEnemy() {}
+
+SpecialEnemy::~SpecialEnemy() {}
+
+void SpecialEnemy::Init() {
+  _transformVector.x = -50;
+  _transformVector.y = 650;
+  _endVector.x = 850;
+  _endVector.y = 650;
+}
+
+void SpecialEnemy::Update(float deltaTime) {
+  _currentTime += deltaTime;
+  float weight = _currentTime / _totalTime;
+  CoffeeMaker::Math::Vector2D currentPos =
+      CoffeeMaker::Math::CubicBezierCurve(_transformVector, CoffeeMaker::Math::Vector2D(0.0f, 0.0f),
+                                          CoffeeMaker::Math::Vector2D(850.0f, 0.0f), _endVector, weight);
+  _clientRect.x = currentPos.x;
+  _clientRect.y = currentPos.y;
+  _collider->Update(_clientRect);
+
+  if (!_enteredScreen && !IsOffScreen()) {
+    _enteredScreen = true;
+  }
+
+  if (IsOffScreen() && _enteredScreen) {
+    // Enemy went off screen
+    Spawn();
+  }
+}
+
+void SpecialEnemy::Render() {
+  SDL_RendererFlip flip = SDL_FLIP_NONE;
+  SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), &_clipRect, &_clientRect, 90, NULL, flip);
+}
+
+void SpecialEnemy::Pause() {}
+
+void SpecialEnemy::Unpause() {}
+
+void SpecialEnemy::Spawn() {
+  _currentTime = 0.0f;
+  _enteredScreen = false;
+  _collider->active = false;
+
+  _clientRect.x = _transformVector.x;
+  _clientRect.y = _transformVector.y;
+  _collider->Update(_clientRect);
+
+  _active = true;
+  _collider->active = true;
+}

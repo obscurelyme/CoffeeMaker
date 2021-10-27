@@ -89,8 +89,11 @@ void CoffeeMakerMath::testVector2DMagnitude() {
   CoffeeMaker::Math::Vector2D vec2{2.0f, 3.0f};
 
   float mag = vec1.Magnitude(vec2);
+  float remainder = mag - 1;
+  int who = (int)(mag - remainder);
 
-  CPPUNIT_ASSERT_EQUAL(mag, 1.0f);
+  CPPUNIT_ASSERT_EQUAL(who, 1);
+  CPPUNIT_ASSERT_EQUAL(remainder, 1.0f);
 }
 
 void CoffeeMakerMath::testVector2DAssignmentOverload() {

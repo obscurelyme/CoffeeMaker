@@ -19,6 +19,25 @@ float CoffeeMaker::Math::rad2deg(float rad) { return rad * (180 / M_PI); }
 
 float CoffeeMaker::Math::deg2rad(float deg) { return deg * (M_PI / 180); }
 
+CoffeeMaker::Math::Vector2D CoffeeMaker::Math::QuadraticBezierCurve(const CoffeeMaker::Math::Vector2D& startPos,
+                                                                    const CoffeeMaker::Math::Vector2D&,
+                                                                    const CoffeeMaker::Math::Vector2D& endPos,
+                                                                    float t) {
+  return startPos - endPos * t;
+}
+
+CoffeeMaker::Math::Vector2D CoffeeMaker::Math::CubicBezierCurve(const CoffeeMaker::Math::Vector2D& startPos,
+                                                                const CoffeeMaker::Math::Vector2D& midPointA,
+                                                                const CoffeeMaker::Math::Vector2D& midPointB,
+                                                                const CoffeeMaker::Math::Vector2D& endPos, float t) {
+  CoffeeMaker::Math::Vector2D lerpA = CoffeeMaker::Math::Lerp(startPos, midPointA, t);
+  CoffeeMaker::Math::Vector2D lerpB = CoffeeMaker::Math::Lerp(midPointA, midPointB, t);
+  CoffeeMaker::Math::Vector2D lerpC = CoffeeMaker::Math::Lerp(midPointB, endPos, t);
+  CoffeeMaker::Math::Vector2D lerpD = CoffeeMaker::Math::Lerp(lerpA, lerpB, t);
+  CoffeeMaker::Math::Vector2D lerpE = CoffeeMaker::Math::Lerp(lerpB, lerpC, t);
+  return CoffeeMaker::Math::Lerp(lerpD, lerpE, t);
+}
+
 CoffeeMaker::Math::Vector2D::Vector2D(float xx, float yy) : x(xx), y(yy) {}
 
 CoffeeMaker::Math::Vector2D::Vector2D(const CoffeeMaker::Math::Vector2D& rhs) : x(rhs.x), y(rhs.y) {}
@@ -57,8 +76,14 @@ float CoffeeMaker::Math::Vector2D::Direction(const CoffeeMaker::Math::Vector2D& 
 }
 
 float CoffeeMaker::Math::Vector2D::Magnitude(const CoffeeMaker::Math::Vector2D& rhs) {
-  return std::sqrtf(std::powf(rhs.x - x, 2) / std::powf(rhs.y - y, 2));
+  return std::sqrtf(std::powf(rhs.x - x, 2) + std::powf(rhs.y - y, 2));
 }
+
+float CoffeeMaker::Math::Vector2D::Magnitude(float endX, float endY) {
+  return std::sqrtf(std::powf(endX - x, 2) + std::powf(endY - y, 2));
+}
+
+float CoffeeMaker::Math::Vector2D::Magnitude() { return std::sqrtf(std::powf(x, 2) + std::powf(y, 2)); }
 
 CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Vector2D::Up() { return CoffeeMaker::Math::Vector2D(0, 1); }
 CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Vector2D::Down() { return CoffeeMaker::Math::Vector2D(0, -1); }

@@ -24,6 +24,7 @@ class MainScene : public Scene {
 
   Tiles* _backgroundTiles;
   Player* _player;
+  Enemy* _specialEnemy;
   std::array<Ref<Enemy>, MAX_ENEMIES> _enemies;
   std::vector<Entity*> _entities;
   Menu* _menu;

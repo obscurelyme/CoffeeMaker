@@ -16,6 +16,8 @@ void MainScene::Render() {
     enemy->Render();
   }
 
+  _specialEnemy->Render();
+
   _hud->Render();
   _menu->Render();
 }
@@ -56,6 +58,8 @@ void MainScene::Update(float deltaTime) {
     enemy->Update(deltaTime);
   }
 
+  _specialEnemy->Update(deltaTime);
+
   for (auto& entity : _entities) {
     entity->Update(deltaTime);
   }
@@ -70,6 +74,8 @@ void MainScene::Init() {
   _menu->Init();
   _backgroundTiles = new Tiles("space.png", 800, 600);
   _player = new Player();
+  _specialEnemy = new SpecialEnemy();
+  _specialEnemy->Init();
 
   for (unsigned int i = 0; i < MAX_ENEMIES; i++) {
     _enemies[i] = std::make_shared<Enemy>();
@@ -86,6 +92,7 @@ void MainScene::Destroy() {
   delete _player;
   delete _menu;
   delete _hud;
+  delete _specialEnemy;
 }
 
 MainScene::MainScene() {}

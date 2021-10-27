@@ -4,8 +4,8 @@
 namespace CoffeeMaker {
   /**
    * @brief Math functions for CoffeeMaker
-   * @see
-   * https://en.wikipedia.org/wiki/Smoothstep
+   * @see https://en.wikipedia.org/wiki/Smoothstep
+   * @see https://www.youtube.com/watch?v=aVwxzDHniEw
    * @see
    * http://codetuto.com/2017/02/7-lerping-tricks-need-know-game-developer/#:~:text=7%20Lerping%20tricks%20you%20need%20to%20know%20as,weight.%20...%207%20Lerp%20inside%20tween%20updates.%20
    */
@@ -30,9 +30,13 @@ namespace CoffeeMaker {
 
     float deg2rad(float degrees);
 
+    Vector2D QuadraticBezierCurve(const Vector2D& startPos, const Vector2D&, const Vector2D& endPos, float t);
+    Vector2D CubicBezierCurve(const Vector2D& startPos, const Vector2D&, const Vector2D&, const Vector2D& endPos,
+                              float t);
+
     class Vector2D {
       public:
-      Vector2D(float xx, float yy);
+      Vector2D(float xx = 0.0f, float yy = 0.0f);
       Vector2D(const Vector2D& rhs);
 
       float x;
@@ -48,12 +52,20 @@ namespace CoffeeMaker {
       float Direction(const Vector2D& rhs);
 
       /**
-       * @brief Returns the magnitude of 2 Vector2Ds
+       * @brief Returns the magnitude between 2 Vectors
        *
        * @param rhs
        * @return float value of the magnitude
        */
       float Magnitude(const Vector2D& rhs);
+      /**
+       * @brief Returns the magnitude of the Vector using the given end coordinates
+       */
+      float Magnitude(float endX, float endY);
+      /**
+       * @brief Returns the magnitude of the Vector from origin (0,0)
+       */
+      float Magnitude();
 
       Vector2D& operator+=(const Vector2D& rh);
       friend Vector2D operator+(Vector2D lhs, const Vector2D& rhs) { return Vector2D(lhs.x + rhs.x, lhs.y + rhs.y); }
