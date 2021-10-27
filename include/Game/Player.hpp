@@ -34,8 +34,6 @@ class Player : public Entity {
 
   bool _isImmune;
   double _rotation;
-  int _mouseX;
-  int _mouseY;
   std::vector<Projectile*> _projectiles;
   int _currentProjectile;
   bool _firing;
