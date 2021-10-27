@@ -12,6 +12,7 @@ class CoffeeMakerMath : public CppUnit::TestFixture {
   CPPUNIT_TEST(testFloatingPointLerp);
   CPPUNIT_TEST(testVector2DLerp);
   CPPUNIT_TEST(testVector2D);
+  CPPUNIT_TEST(testVector2DAssignmentOverload);
   CPPUNIT_TEST(testVector2DUp);
   CPPUNIT_TEST(testVector2DDown);
   CPPUNIT_TEST(testVector2DLeft);
@@ -27,6 +28,7 @@ class CoffeeMakerMath : public CppUnit::TestFixture {
   void testFloatingPointLerp();
   void testVector2DLerp();
   void testVector2D();
+  void testVector2DAssignmentOverload();
   void testVector2DUp();
   void testVector2DDown();
   void testVector2DLeft();

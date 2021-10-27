@@ -26,8 +26,8 @@ void CoffeeMakerMath::testVector2DLerp() {
   CoffeeMaker::Math::Vector2D vec =
       CoffeeMaker::Math::Lerp(CoffeeMaker::Math::Vector2D::Up(), CoffeeMaker::Math::Vector2D::Right(), 0.75f);
 
-  CPPUNIT_ASSERT_EQUAL(vec.x, 0.25f);
-  CPPUNIT_ASSERT_EQUAL(vec.y, 0.75f);
+  CPPUNIT_ASSERT_EQUAL(vec.x, 0.75f);
+  CPPUNIT_ASSERT_EQUAL(vec.y, 0.25f);
 }
 
 void CoffeeMakerMath::testVector2D() {
@@ -91,6 +91,15 @@ void CoffeeMakerMath::testVector2DMagnitude() {
   float mag = vec1.Magnitude(vec2);
 
   CPPUNIT_ASSERT_EQUAL(mag, 1.0f);
+}
+
+void CoffeeMakerMath::testVector2DAssignmentOverload() {
+  CoffeeMaker::Math::Vector2D vec1{5.0f, 10.0f};
+  CoffeeMaker::Math::Vector2D vec2 = vec1;
+
+  CPPUNIT_ASSERT_EQUAL(&vec1 == &vec2, false);
+  CPPUNIT_ASSERT_EQUAL(vec2.x, vec1.x);
+  CPPUNIT_ASSERT_EQUAL(vec2.y, vec1.y);
 }
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoffeeMakerMath);
