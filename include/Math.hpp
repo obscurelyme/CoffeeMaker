@@ -24,6 +24,8 @@ namespace CoffeeMaker {
     float Lerp(float f1, float f2, float t);
     Vector2D Lerp(const Vector2D& v1, const Vector2D& v2, float t);
 
+    Vector2D Normalize(const Vector2D& v1);
+
     float rad2deg(float rad);
 
     float deg2rad(float degrees);
@@ -31,6 +33,7 @@ namespace CoffeeMaker {
     class Vector2D {
       public:
       Vector2D(float xx, float yy);
+      Vector2D(const Vector2D& rhs);
 
       float x;
       float y;
@@ -53,26 +56,14 @@ namespace CoffeeMaker {
       float Magnitude(const Vector2D& rhs);
 
       Vector2D& operator+=(const Vector2D& rh);
-      friend Vector2D operator+(Vector2D lhs, const Vector2D& rh) {
-        lhs.x += rh.x;
-        lhs.y += rh.y;
-
-        return lhs;
-      }
+      friend Vector2D operator+(Vector2D lhs, const Vector2D& rhs) { return Vector2D(lhs.x + rhs.x, lhs.y + rhs.y); }
       Vector2D& operator-=(const Vector2D& rh);
-      friend Vector2D operator-(Vector2D lhs, const Vector2D& rh) {
-        lhs.x -= rh.x;
-        lhs.y -= rh.y;
-
-        return lhs;
-      }
+      friend Vector2D operator-(Vector2D lhs, const Vector2D& rhs) { return Vector2D(lhs.x - rhs.x, lhs.y - rhs.y); }
       Vector2D& operator*=(float scalar);
-      friend Vector2D operator*(Vector2D lhs, float scalar) {
-        lhs.x *= scalar;
-        lhs.y *= scalar;
+      friend Vector2D operator*(Vector2D lhs, float scalar) { return Vector2D(lhs.x * scalar, lhs.y * scalar); }
 
-        return lhs;
-      }
+      Vector2D& operator=(const Vector2D& vector);
+      bool operator==(const Vector2D& rhs);
 
       /**
        * @brief Directional vector pointing up the y axis

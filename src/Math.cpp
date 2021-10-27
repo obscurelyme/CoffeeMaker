@@ -21,6 +21,8 @@ float CoffeeMaker::Math::deg2rad(float deg) { return deg * (M_PI / 180); }
 
 CoffeeMaker::Math::Vector2D::Vector2D(float xx, float yy) : x(xx), y(yy) {}
 
+CoffeeMaker::Math::Vector2D::Vector2D(const CoffeeMaker::Math::Vector2D& rhs) : x(rhs.x), y(rhs.y) {}
+
 CoffeeMaker::Math::Vector2D& CoffeeMaker::Math::Vector2D::operator+=(const CoffeeMaker::Math::Vector2D& rhs) {
   x += rhs.x;
   y += rhs.y;
@@ -36,6 +38,17 @@ CoffeeMaker::Math::Vector2D& CoffeeMaker::Math::Vector2D::operator-=(const Coffe
 CoffeeMaker::Math::Vector2D& CoffeeMaker::Math::Vector2D::operator*=(float scalar) {
   x *= scalar;
   y *= scalar;
+  return *this;
+}
+
+bool CoffeeMaker::Math::Vector2D::operator==(const Vector2D& rhs) {
+  if (this == &rhs) return true;
+  return x == rhs.x && y == rhs.y;
+}
+
+CoffeeMaker::Math::Vector2D& CoffeeMaker::Math::Vector2D::operator=(const Vector2D& rhs) {
+  x = rhs.x;
+  y = rhs.y;
   return *this;
 }
 
