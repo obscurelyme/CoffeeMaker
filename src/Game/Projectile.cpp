@@ -42,8 +42,8 @@ void Projectile::Render() {
 
 void Projectile::Update(float deltaTime) {
   if (_fired) {
-    _clientRect.x += _movement.x * 150 * deltaTime;
-    _clientRect.y += _movement.y * 150 * deltaTime;
+    _clientRect.x += _movement.x * 300 * deltaTime;
+    _clientRect.y += _movement.y * 300 * deltaTime;
 
     // NOTE: probably want this separated out
     collider->Update(_clientRect);

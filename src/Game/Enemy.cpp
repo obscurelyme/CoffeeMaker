@@ -20,6 +20,8 @@ Enemy::Enemy() : _collider(nullptr), _enteredScreen(false), _active(false) {
   _ticks = _priorTicks;
   _id = "Enemy-" + std::to_string(++_uid);
   _collider = std::make_shared<Collider>(Collider::Type::Enemy, _active);
+  _collider->clientRect.h = _clientRect.h;
+  _collider->clientRect.w = _clientRect.w;
   _collider->OnCollide(std::bind(&Enemy::OnCollision, this, std::placeholders::_1));
 }
 
@@ -45,8 +47,8 @@ void Enemy::Unpause() {}
 
 void Enemy::Update(float deltaTime) {
   if (_active) {
-    _clientRect.x += _movement.x * 60 * deltaTime;
-    _clientRect.y += _movement.y * 60 * deltaTime;
+    _clientRect.x += _movement.x * _speed * deltaTime;
+    _clientRect.y += _movement.y * _speed * deltaTime;
     _collider->Update(_clientRect);
 
     if (!_enteredScreen && !IsOffScreen()) {

@@ -30,7 +30,7 @@ class Player : public Entity {
 
   CoffeeMaker::Texture _texture{"PlayerV1.png", true};
   SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};
-  SDL_FRect _clientRect{.x = 400, .y = 300, .w = 32, .h = 32};
+  SDL_FRect _clientRect{.x = 0, .y = 0, .w = 48, .h = 48};
 
   bool _isImmune;
   double _rotation;
@@ -45,5 +45,5 @@ class Player : public Entity {
   CoffeeMaker::Timer _respawnTimer;
   unsigned int _lives;
   glm::vec2 _direction{1.0f, 0.0f};
-  int _speed = 150;
+  int _speed = 225;
 };

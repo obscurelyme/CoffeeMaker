@@ -27,7 +27,7 @@ class Enemy : public Entity {
   private:
   CoffeeMaker::Texture _texture{"EnemyV1.png", true};
   SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};
-  SDL_FRect _clientRect{.x = 0, .y = 0, .w = 32, .h = 32};
+  SDL_FRect _clientRect{.x = 0, .y = 0, .w = 48, .h = 48};
   glm::vec2 _movement;
   Ref<Collider> _collider;
 
@@ -40,5 +40,5 @@ class Enemy : public Entity {
   // EnemyAnimationState _state{EnemyAnimationState::Idle};
   unsigned int _ticks;
   unsigned int _priorTicks;
-  // unsigned int _speed{1};
+  unsigned int _speed{150};
 };
