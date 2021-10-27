@@ -22,11 +22,47 @@ void CoffeeMakerMath::testFloatingPointLerp() {
   CPPUNIT_ASSERT_EQUAL(CoffeeMaker::Math::Lerp(f1, f2, t), 0.5f);
 }
 
+void CoffeeMakerMath::testVector2DLerp() {
+  CoffeeMaker::Math::Vector2D vec =
+      CoffeeMaker::Math::Lerp(CoffeeMaker::Math::Vector2D::Up(), CoffeeMaker::Math::Vector2D::Right(), 0.75f);
+
+  CPPUNIT_ASSERT_EQUAL(vec.x, 0.25f);
+  CPPUNIT_ASSERT_EQUAL(vec.y, 0.75f);
+}
+
 void CoffeeMakerMath::testVector2D() {
   CoffeeMaker::Math::Vector2D vec2{1.0f, 2.0f};
 
   CPPUNIT_ASSERT_EQUAL(vec2.x, 1.0f);
   CPPUNIT_ASSERT_EQUAL(vec2.y, 2.0f);
+}
+
+void CoffeeMakerMath::testVector2DUp() {
+  CoffeeMaker::Math::Vector2D vec2 = CoffeeMaker::Math::Vector2D::Up();
+
+  CPPUNIT_ASSERT_EQUAL(vec2.x, 0.0f);
+  CPPUNIT_ASSERT_EQUAL(vec2.y, 1.0f);
+}
+
+void CoffeeMakerMath::testVector2DDown() {
+  CoffeeMaker::Math::Vector2D vec2 = CoffeeMaker::Math::Vector2D::Down();
+
+  CPPUNIT_ASSERT_EQUAL(vec2.x, 0.0f);
+  CPPUNIT_ASSERT_EQUAL(vec2.y, -1.0f);
+}
+
+void CoffeeMakerMath::testVector2DLeft() {
+  CoffeeMaker::Math::Vector2D vec2 = CoffeeMaker::Math::Vector2D::Left();
+
+  CPPUNIT_ASSERT_EQUAL(vec2.x, -1.0f);
+  CPPUNIT_ASSERT_EQUAL(vec2.y, 0.0f);
+}
+
+void CoffeeMakerMath::testVector2DRight() {
+  CoffeeMaker::Math::Vector2D vec2 = CoffeeMaker::Math::Vector2D::Right();
+
+  CPPUNIT_ASSERT_EQUAL(vec2.x, 1.0f);
+  CPPUNIT_ASSERT_EQUAL(vec2.y, 0.0f);
 }
 
 void CoffeeMakerMath::testVector2DAdd() {
