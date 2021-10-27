@@ -3,8 +3,8 @@
   "C_Cpp.clang_format_path": "${workspaceDirectory}/.clang-format",
   "C_Cpp.formatting": "clangFormat",
   "files.associations": {
-    "*.cpp": "cpp",
     "*.tsx": "typescriptreact",
+    "*.cpp": "cpp",
     "filesystem": "cpp",
     "algorithm": "cpp",
     "array": "cpp",
@@ -101,7 +101,16 @@
     "numbers": "cpp",
     "semaphore": "cpp",
     "cinttypes": "cpp",
-    "any": "cpp"
+    "any": "cpp",
+    "__bit_reference": "cpp",
+    "__debug": "cpp",
+    "__errc": "cpp",
+    "__functional_base": "cpp",
+    "__hash_table": "cpp",
+    "__locale": "cpp",
+    "__mutex_base": "cpp",
+    "__threading_support": "cpp",
+    "__tuple": "cpp"
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"

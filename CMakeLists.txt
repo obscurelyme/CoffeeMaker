@@ -47,7 +47,8 @@ set(COFFEEMAKER_ROOT_SOURCES
   src/MessageBox.cpp
   src/Transform.cpp
   src/InputManager.cpp
-  src/Event.cpp)
+  src/Event.cpp
+  src/Math.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cpp)
 set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/UIComponent.cpp src/Widgets/View.cpp src/Widgets/Text.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES})
@@ -99,16 +100,18 @@ endif()
 set(COFFEEMAKER_TEST_MAIN tests/main.cpp)
 set(COFFEEMAKER_DEMO_TEST_SOURCES tests/ComplexNumber.cpp tests/Complex.cpp tests/TestWithMocking.cpp)
 set(COFFEEMAKER_TEST_SOURCES
-  tests/TestBed.cpp
-  tests/CoffeeMakerShapesRect.cpp
-  tests/CoffeeMakerTextureTest.cpp
-  tests/CoffeeMakerUtilities.cpp
-  tests/CoffeeMakerWidgetButton.cpp
-  tests/CoffeeMakerEvents.cpp
-  tests/CoffeeMakerWidgetView.cpp
-  tests/CoffeeMakerComponent.cpp
-  tests/CoffeeMakerWidgetText.cpp
-  tests/CheapAsteroidsEnemy.cpp)
+  # tests/TestBed.cpp
+  tests/CoffeeMakerMath.cpp
+  # tests/CoffeeMakerShapesRect.cpp
+  # tests/CoffeeMakerTextureTest.cpp
+  # tests/CoffeeMakerUtilities.cpp
+  # tests/CoffeeMakerWidgetButton.cpp
+  # tests/CoffeeMakerEvents.cpp
+  # tests/CoffeeMakerWidgetView.cpp
+  # tests/CoffeeMakerComponent.cpp
+  # tests/CoffeeMakerWidgetText.cpp
+  # tests/CheapAsteroidsEnemy.cpp
+  )
 set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES} ${COFFEEMAKER_TEST_SOURCES})
 
 find_package(CppUnit CONFIG REQUIRED)

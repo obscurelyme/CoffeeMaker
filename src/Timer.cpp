@@ -61,5 +61,7 @@ std::string Timer::toString() {
   float remainingSeconds = totalMinutes - integerMinutes;
   int integerSeconds = (int)(remainingSeconds * 60);
 
-  return std::string(std::to_string(integerMinutes) + ":" + std::to_string(integerSeconds));
+  std::string secondTime =
+      (integerSeconds >= 10 ? std::to_string(integerSeconds) : "0" + std::to_string(integerSeconds));
+  return std::string(std::to_string(integerMinutes) + ":" + secondTime);
 }

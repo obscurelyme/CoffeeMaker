@@ -39,4 +39,9 @@ void Logger::Info(std::string msg) { _logger->_spdlog->info(msg); }
 void Logger::Error(std::string msg) { _logger->_spdlog->error(msg); }
 void Logger::Critical(std::string msg) { _logger->_spdlog->critical(msg); }
 
-spdlog::logger *Logger::Instance() { return _logger->_spdlog; }
+spdlog::logger *Logger::Instance() {
+  if (_logger == nullptr) {
+    return nullptr;
+  }
+  return _logger->_spdlog;
+}

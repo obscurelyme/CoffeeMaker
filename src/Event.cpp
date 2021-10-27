@@ -33,7 +33,8 @@ void Event::Emit() {
 
 Event::~Event() {
   RemoveAllListeners();
-  CM_LOGGER_INFO("Event was deleted");
+  // TODO: fix logger
+  // CM_LOGGER_INFO("Event was deleted");
 }
 
 void Event::AddListener(EventListener listener) {
