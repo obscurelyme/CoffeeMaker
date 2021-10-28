@@ -24,6 +24,13 @@ namespace CoffeeMaker {
     float Lerp(float f1, float f2, float t);
     Vector2D Lerp(const Vector2D& v1, const Vector2D& v2, float t);
 
+    float InverseLerp(float f1, float f2, float value);
+    Vector2D InverseLerp(Vector2D f1, Vector2D f2, Vector2D value);
+
+    float Remap(float inputMin, float inputMax, float outputMin, float outputMax, float value);
+    Vector2D Remap(const Vector2D& inputMin, const Vector2D& inputMax, const Vector2D& outputMin,
+                   const Vector2D& outputMax, const Vector2D& value);
+
     Vector2D Normalize(const Vector2D& v1);
 
     float rad2deg(float rad);
@@ -42,6 +49,12 @@ namespace CoffeeMaker {
       float x;
       float y;
 
+      float Dot(const Vector2D& rhs) const;
+
+      float AngleBetween(const Vector2D& rhs) const;
+
+      Vector2D Rotate(float degrees) const;
+
       /**
        * @brief Returns the angle, in radians, of the direction the
        * lhs vector is facing rhs vector.
@@ -57,21 +70,22 @@ namespace CoffeeMaker {
        * @param rhs
        * @return float value of the magnitude
        */
-      float Magnitude(const Vector2D& rhs);
+      float Magnitude(const Vector2D& rhs) const;
       /**
        * @brief Returns the magnitude of the Vector using the given end coordinates
        */
-      float Magnitude(float endX, float endY);
+      float Magnitude(float endX, float endY) const;
       /**
        * @brief Returns the magnitude of the Vector from origin (0,0)
        */
-      float Magnitude();
+      float Magnitude(void) const;
 
       Vector2D& operator+=(const Vector2D& rh);
       friend Vector2D operator+(Vector2D lhs, const Vector2D& rhs) { return Vector2D(lhs.x + rhs.x, lhs.y + rhs.y); }
       Vector2D& operator-=(const Vector2D& rh);
       friend Vector2D operator-(Vector2D lhs, const Vector2D& rhs) { return Vector2D(lhs.x - rhs.x, lhs.y - rhs.y); }
       Vector2D& operator*=(float scalar);
+      friend Vector2D operator*(Vector2D lhs, const Vector2D& rhs) { return Vector2D(lhs.x * rhs.x, lhs.y * rhs.y); }
       friend Vector2D operator*(Vector2D lhs, float scalar) { return Vector2D(lhs.x * scalar, lhs.y * scalar); }
 
       Vector2D& operator=(const Vector2D& vector);

@@ -16,7 +16,7 @@ void MainScene::Render() {
     enemy->Render();
   }
 
-  _specialEnemy->Render();
+  // _specialEnemy->Render();
 
   _hud->Render();
   _menu->Render();
@@ -51,14 +51,25 @@ void MainScene::Update(float deltaTime) {
 
   _backgroundTiles->Update(deltaTime);
 
-  for (auto enemy : _enemies) {
-    if (!enemy->IsActive()) {
-      enemy->Spawn();
+  if (_currentSpawn < MAX_ENEMIES) {
+    _currentTime += deltaTime;
+    if (_currentTime >= _totalTime) {
+      _enemies[_currentSpawn++]->Spawn();
+      _currentTime = 0;
     }
+  }
+
+  for (auto enemy : _enemies) {
+    // if (!enemy->IsActive()) {
+    //   enemy->Spawn();
+    // }
     enemy->Update(deltaTime);
   }
 
-  _specialEnemy->Update(deltaTime);
+  // if (!_specialEnemy->IsActive()) {
+  //   _specialEnemy->Spawn();
+  // }
+  // _specialEnemy->Update(deltaTime);
 
   for (auto& entity : _entities) {
     entity->Update(deltaTime);
@@ -78,10 +89,12 @@ void MainScene::Init() {
   _specialEnemy->Init();
 
   for (unsigned int i = 0; i < MAX_ENEMIES; i++) {
-    _enemies[i] = std::make_shared<Enemy>();
+    _enemies[i] = std::make_shared<SpecialEnemy>();
+    _enemies[i]->Init();
   }
 
   _entities.push_back(_player);
+  _timer.Start();
 }
 
 void MainScene::Destroy() {
@@ -93,6 +106,8 @@ void MainScene::Destroy() {
   delete _menu;
   delete _hud;
   delete _specialEnemy;
+  _currentSpawn = 0;
+  _currentTime = 0;
 }
 
 MainScene::MainScene() {}

@@ -7,6 +7,7 @@
 #include "Game/Player.hpp"
 #include "Game/Scene.hpp"
 #include "Game/Tiles.hpp"
+#include "Timer.hpp"
 #include "Utilities.hpp"
 
 class MainScene : public Scene {
@@ -29,4 +30,8 @@ class MainScene : public Scene {
   std::vector<Entity*> _entities;
   Menu* _menu;
   HeadsUpDisplay* _hud;
+  CoffeeMaker::Timer _timer;
+  float _currentTime;
+  float _totalTime{0.5f};
+  unsigned int _currentSpawn{0};
 };

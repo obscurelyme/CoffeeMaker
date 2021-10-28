@@ -101,29 +101,56 @@ SpecialEnemy::SpecialEnemy() {}
 SpecialEnemy::~SpecialEnemy() {}
 
 void SpecialEnemy::Init() {
-  _transformVector.x = -50;
-  _transformVector.y = 650;
-  _endVector.x = 850;
-  _endVector.y = 650;
+  _transformVector.x = 0;
+  _transformVector.y = 600;
+  _endVector.x = 400;
+  _endVector.y = 300;
+  _clientRect.x = _transformVector.x;
+  _clientRect.y = _transformVector.y;
 }
 
 void SpecialEnemy::Update(float deltaTime) {
-  _currentTime += deltaTime;
-  float weight = _currentTime / _totalTime;
-  CoffeeMaker::Math::Vector2D currentPos =
-      CoffeeMaker::Math::CubicBezierCurve(_transformVector, CoffeeMaker::Math::Vector2D(0.0f, 0.0f),
-                                          CoffeeMaker::Math::Vector2D(850.0f, 0.0f), _endVector, weight);
-  _clientRect.x = currentPos.x;
-  _clientRect.y = currentPos.y;
-  _collider->Update(_clientRect);
+  if (_active) {
+    _currentTime += deltaTime;
+    float weight = _currentTime / _totalTime;
 
-  if (!_enteredScreen && !IsOffScreen()) {
-    _enteredScreen = true;
-  }
+    // CoffeeMaker::Math::Vector2D currentPos = CoffeeMaker::Math::QuadraticBezierCurve(
+    //     _transformVector, CoffeeMaker::Math::Vector2D(400.0f, 300.0f), _endVector, weight);
 
-  if (IsOffScreen() && _enteredScreen) {
-    // Enemy went off screen
-    Spawn();
+    if (weight <= 1.0f) {
+      CoffeeMaker::Math::Vector2D currentPos =
+          CoffeeMaker::Math::CubicBezierCurve(_transformVector, CoffeeMaker::Math::Vector2D(800.0f, 0.0f),
+                                              CoffeeMaker::Math::Vector2D(-400.0f, 0.0f), _endVector, weight);
+      _clientRect.x = currentPos.x;
+      _clientRect.y = currentPos.y;
+      _collider->Update(_clientRect);
+    } else {
+      // NOTE: side to side motion
+      if (_moveright) {
+        // move right
+        _clientRect.x += deltaTime * _speed;
+        _collider->Update(_clientRect);
+        if (_clientRect.x >= 700) {
+          _moveright = false;
+        }
+      } else {
+        // move left
+        _clientRect.x -= deltaTime * _speed;
+        _collider->Update(_clientRect);
+        if (_clientRect.x <= 100) {
+          _moveright = true;
+        }
+      }
+    }
+
+    if (!_enteredScreen && !IsOffScreen()) {
+      _enteredScreen = true;
+    }
+
+    if (IsOffScreen() && _enteredScreen) {
+      // Enemy went off screen
+      Spawn();
+    }
   }
 }
 

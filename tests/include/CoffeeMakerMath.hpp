@@ -20,6 +20,8 @@ class CoffeeMakerMath : public CppUnit::TestFixture {
   CPPUNIT_TEST(testVector2DAdd);
   CPPUNIT_TEST(testVector2DDirection);
   CPPUNIT_TEST(testVector2DMagnitude);
+  CPPUNIT_TEST(testVector2DOppositeDirection);
+  CPPUNIT_TEST(testVector2DNormalize);
   CPPUNIT_TEST_SUITE_END();
 
   public:
@@ -36,6 +38,8 @@ class CoffeeMakerMath : public CppUnit::TestFixture {
   void testVector2DAdd();
   void testVector2DDirection();
   void testVector2DMagnitude();
+  void testVector2DOppositeDirection();
+  void testVector2DNormalize();
 };
 
 #endif

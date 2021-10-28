@@ -62,4 +62,5 @@ class SpecialEnemy : public Enemy {
   CoffeeMaker::Math::Vector2D _endVector;
   float _totalTime{3.0f};
   float _currentTime{0.0f};
+  bool _moveright{true};
 };
