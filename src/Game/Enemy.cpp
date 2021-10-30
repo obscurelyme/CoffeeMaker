@@ -6,6 +6,7 @@
 #include <iostream>
 #include <random>
 
+#include "Game/Player.hpp"
 #include "Game/PlayerEvents.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
@@ -112,15 +113,19 @@ void SpecialEnemy::Init() {
 void SpecialEnemy::Update(float deltaTime) {
   if (_active) {
     _currentTime += deltaTime;
-    float weight = _currentTime / _totalTime;
+    float weight = _currentTime / 1.5f;
 
-    // CoffeeMaker::Math::Vector2D currentPos = CoffeeMaker::Math::QuadraticBezierCurve(
-    //     _transformVector, CoffeeMaker::Math::Vector2D(400.0f, 300.0f), _endVector, weight);
-
+    float pAngle = Player::Position().Direction(CoffeeMaker::Math::Vector2D(_clientRect.x, _clientRect.y));
+    _rotation = CoffeeMaker::Math::rad2deg(pAngle);
+    if (_rotation > 0) {
+      _rotation += 90;
+    } else {
+      _rotation -= 90;
+    }
     if (weight <= 1.0f) {
-      CoffeeMaker::Math::Vector2D currentPos =
-          CoffeeMaker::Math::CubicBezierCurve(_transformVector, CoffeeMaker::Math::Vector2D(800.0f, 0.0f),
-                                              CoffeeMaker::Math::Vector2D(-400.0f, 0.0f), _endVector, weight);
+      CoffeeMaker::Math::Vector2D currentPos = CoffeeMaker::Math::CubicBezierCurve(
+          CoffeeMaker::Math::Vector2D(-200.0f, 600.0f), CoffeeMaker::Math::Vector2D(0.0f, -50.0f),
+          CoffeeMaker::Math::Vector2D(800.0f, 0.0f), CoffeeMaker::Math::Vector2D(400.0f, 150.0f), weight);
       _clientRect.x = currentPos.x;
       _clientRect.y = currentPos.y;
       _collider->Update(_clientRect);
@@ -128,14 +133,14 @@ void SpecialEnemy::Update(float deltaTime) {
       // NOTE: side to side motion
       if (_moveright) {
         // move right
-        _clientRect.x += deltaTime * _speed;
+        _clientRect.x += deltaTime * (_speed);
         _collider->Update(_clientRect);
         if (_clientRect.x >= 700) {
           _moveright = false;
         }
       } else {
         // move left
-        _clientRect.x -= deltaTime * _speed;
+        _clientRect.x -= deltaTime * (_speed);
         _collider->Update(_clientRect);
         if (_clientRect.x <= 100) {
           _moveright = true;
@@ -156,7 +161,8 @@ void SpecialEnemy::Update(float deltaTime) {
 
 void SpecialEnemy::Render() {
   SDL_RendererFlip flip = SDL_FLIP_NONE;
-  SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), &_clipRect, &_clientRect, 90, NULL, flip);
+  SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), &_clipRect, &_clientRect, _rotation, NULL,
+                    flip);
 }
 
 void SpecialEnemy::Pause() {}
@@ -167,6 +173,7 @@ void SpecialEnemy::Spawn() {
   _currentTime = 0.0f;
   _enteredScreen = false;
   _collider->active = false;
+  _moveright = false;
 
   _clientRect.x = _transformVector.x;
   _clientRect.y = _transformVector.y;

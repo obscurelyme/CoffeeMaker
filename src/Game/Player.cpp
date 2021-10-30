@@ -10,6 +10,12 @@
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
+Player* Player::_instance = nullptr;
+
+CoffeeMaker::Math::Vector2D Player::Position() {
+  return CoffeeMaker::Math::Vector2D(_instance->_clientRect.x, _instance->_clientRect.y);
+}
+
 Player::Player() : _isImmune(true), _collider(new Collider(Collider::Type::Player, true)), _active(true), _lives(3) {
   _firing = false;
   SDL_Rect vp;
@@ -25,9 +31,11 @@ Player::Player() : _isImmune(true), _collider(new Collider(Collider::Type::Playe
   _collider->clientRect.w = _clientRect.w;
   _collider->Update(_clientRect);
   _collider->OnCollide(std::bind(&Player::OnHit, this, std::placeholders::_1));
+  _instance = this;
 }
 
 Player::~Player() {
+  _instance = nullptr;
   delete _collider;
   for (auto p : _projectiles) {
     delete p;
@@ -85,6 +93,11 @@ void Player::Update(float deltaTime) {
 
   if (_active) {
     _rotation = -90;
+    if (IsOffScreenLeft()) {
+      _clientRect.x = 800;
+    } else if (IsOffScreenRight()) {
+      _clientRect.x = 0 - _clientRect.w;
+    }
 
     if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_SPACE)) {
       Fire();
@@ -146,3 +159,6 @@ void Player::Reload() {
   }
   _currentProjectile = 0;
 }
+
+bool Player::IsOffScreenLeft() { return _clientRect.x + _clientRect.w <= 0; }
+bool Player::IsOffScreenRight() { return _clientRect.x >= 800; }

@@ -6,11 +6,15 @@
 
 #include "Game/Collider.hpp"
 #include "Game/Entity.hpp"
+#include "Math.hpp"
 #include "Projectile.hpp"
 #include "Texture.hpp"
 #include "Timer.hpp"
 
 class Player : public Entity {
+  public:
+  static CoffeeMaker::Math::Vector2D Position();
+
   public:
   Player();
   virtual ~Player();
@@ -27,6 +31,8 @@ class Player : public Entity {
 
   private:
   void UpdateRespawnImmunity();
+  bool IsOffScreenLeft();
+  bool IsOffScreenRight();
 
   CoffeeMaker::Texture _texture{"PlayerV1.png", true};
   SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};
@@ -46,4 +52,5 @@ class Player : public Entity {
   unsigned int _lives;
   glm::vec2 _direction{1.0f, 0.0f};
   int _speed = 225;
+  static Player* _instance;
 };

@@ -41,7 +41,8 @@ class Enemy : public Entity {
   // EnemyAnimationState _state{EnemyAnimationState::Idle};
   unsigned int _ticks;
   unsigned int _priorTicks;
-  unsigned int _speed{150};
+  unsigned int _speed{225};
+  int _rotation{-90};
 };
 
 class SpecialEnemy : public Enemy {
