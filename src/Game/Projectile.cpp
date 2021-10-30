@@ -22,20 +22,27 @@ Projectile::Projectile() : _fired(false), _rotation(0) {
   collider->OnCollide(std::bind(&Projectile::OnHit, this, std::placeholders::_1));
 }
 
+Projectile::Projectile(Collider::Type colliderType) : Projectile() { collider->SetType(colliderType); }
+
 Projectile::~Projectile() { delete collider; }
 
 void Projectile::OnHit(Collider* c) {
-  if (c->GetType() == Collider::Type::Enemy) {
+  if (c->GetType() == Collider::Type::Enemy && collider->GetType() == Collider::Type::Projectile) {
     // this projectile will be considered "used", it can be deactivated and reloaded.
     Reload();
+    return;
+  }
+  if (c->GetType() == Collider::Type::Player && collider->GetType() == Collider::Type::EnemyProjectile) {
+    Reload();
+    return;
   }
 }
 
 void Projectile::Render() {
   if (_fired) {
     SDL_RendererFlip flip = SDL_FLIP_NONE;
-    SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), Projectile::_texture->Handle(), NULL, &_clientRect,
-                      _rotation + 90, NULL, flip);
+    SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), Projectile::_texture->Handle(), NULL, &_clientRect, _rotation,
+                      NULL, flip);
     // collider->Render();
   }
 }
@@ -60,13 +67,30 @@ void Projectile::Fire(float x, float y, double rotation) {
     _clientRect.x = x;
     _clientRect.y = y;
     collider->Update(_clientRect);
-    _rotation = rotation;
+    _rotation = rotation + 90;
 
     _endX = (float)(x + 900 * cos(glm::radians(rotation)));
     _endY = (float)(y + 900 * sin(glm::radians(rotation)));
     glm::vec2 calc;
     calc.x = _endX - x;
     calc.y = _endY - y;
+    _movement = glm::normalize(calc);
+
+    collider->active = true;
+  }
+}
+
+void Projectile::Fire2(float x, float y, float endX, float endY, double rotation) {
+  if (!_fired) {
+    _fired = true;
+    _clientRect.x = x;
+    _clientRect.y = y;
+    collider->Update(_clientRect);
+    _rotation = rotation;
+
+    glm::vec2 calc;
+    calc.x = endX - x;
+    calc.y = endY - y;
     _movement = glm::normalize(calc);
 
     collider->active = true;

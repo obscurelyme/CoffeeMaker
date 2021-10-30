@@ -16,7 +16,7 @@ CoffeeMaker::Math::Vector2D Player::Position() {
   return CoffeeMaker::Math::Vector2D(_instance->_clientRect.x, _instance->_clientRect.y);
 }
 
-Player::Player() : _isImmune(true), _collider(new Collider(Collider::Type::Player, true)), _active(true), _lives(3) {
+Player::Player() : _isImmune(false), _collider(new Collider(Collider::Type::Player, true)), _active(true), _lives(3) {
   _firing = false;
   SDL_Rect vp;
   SDL_RenderGetViewport(CoffeeMaker::Renderer::Instance(), &vp);
@@ -43,7 +43,7 @@ Player::~Player() {
 }
 
 void Player::OnHit(Collider* collider) {
-  if (collider->GetType() == Collider::Type::Enemy && !_isImmune) {
+  if (collider->GetType() == Collider::Type::EnemyProjectile && !_isImmune) {
     _collider->active = false;
     _active = false;
     if (_lives == 0) {
@@ -53,7 +53,6 @@ void Player::OnHit(Collider* collider) {
     _lives--;
     decLife->Emit();
     _respawnTimer.Start();
-    // _respawnTimerStart = std::chrono::steady_clock::now();
   }
 }
 
@@ -118,6 +117,7 @@ void Player::Update(float deltaTime) {
     // SDL_GetMouseState(&_mouseX, &_mouseY);
     // float xx = (_mouseX - _clientRect.x) * deltaTime;
     // float yy = (_mouseY - _clientRect.y) * deltaTime;
+    _collider->Update(_clientRect);
   }
 
   // NOTE: projectiles that have already been fired are still fine to be updated

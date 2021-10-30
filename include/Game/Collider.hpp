@@ -11,7 +11,7 @@
 
 class Collider {
   public:
-  enum class Type { Default, Projectile, Enemy, Player };
+  enum class Type { Default, Projectile, Enemy, Player, EnemyProjectile };
   static void PhysicsUpdate();
   static void ProcessCollisions();
   /**
@@ -35,6 +35,7 @@ class Collider {
   void SetWidth(float w);
   void SetHeight(float h);
   Type GetType() const;
+  void SetType(Collider::Type type);
 
   SDL_FRect clientRect;
   bool active;

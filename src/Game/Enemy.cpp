@@ -24,9 +24,17 @@ Enemy::Enemy() : _collider(nullptr), _enteredScreen(false), _active(false) {
   _collider->clientRect.h = _clientRect.h;
   _collider->clientRect.w = _clientRect.w;
   _collider->OnCollide(std::bind(&Enemy::OnCollision, this, std::placeholders::_1));
+  for (int i = 0; i < 50; i++) {
+    _projectiles.emplace_back(new Projectile(Collider::Type::EnemyProjectile));
+  }
+  _currentProjectile = 0;
 }
 
-Enemy::~Enemy() { std::cout << "deleted " << _id << std::endl; }
+Enemy::~Enemy() {
+  for (auto p : _projectiles) {
+    delete p;
+  }
+}
 
 void Enemy::Init() {}
 
@@ -39,6 +47,10 @@ void Enemy::Render() {
   float _rotation = glm::degrees(glm::atan(yy, xx));
   SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), &_clipRect, &_clientRect, _rotation + 90,
                     NULL, flip);
+
+  for (auto& projectile : _projectiles) {
+    projectile->Render();
+  }
   // _collider->Render();
 }
 
@@ -97,6 +109,23 @@ bool Enemy::IsOffScreen() const {
          _clientRect.y >= 600;
 }
 
+void Enemy::Fire() {
+  // NOTE: sloppy but should kinda work for now
+  if (_currentProjectile < 24) {
+    if (!_projectiles[_currentProjectile + 1]->IsFired()) {
+      _projectiles[_currentProjectile++]->Fire2(_clientRect.x, _clientRect.y, Player::Position().x,
+                                                Player::Position().y, _rotation);
+    } else {
+      _currentProjectile += 2;
+    }
+  } else if (_currentProjectile == 24) {
+    _currentProjectile = 0;
+    // NOTE: fire the next, or else projectiles are unavailable for a frame.
+    _projectiles[_currentProjectile++]->Fire2(_clientRect.x, _clientRect.y, Player::Position().x, Player::Position().y,
+                                              _rotation);
+  }
+}
+
 SpecialEnemy::SpecialEnemy() {}
 
 SpecialEnemy::~SpecialEnemy() {}
@@ -112,6 +141,7 @@ void SpecialEnemy::Init() {
 
 void SpecialEnemy::Update(float deltaTime) {
   if (_active) {
+    _to.Start();
     _currentTime += deltaTime;
     float weight = _currentTime / 1.5f;
 
@@ -146,6 +176,8 @@ void SpecialEnemy::Update(float deltaTime) {
           _moveright = true;
         }
       }
+
+      _to.Act();  // NOTE: runs the Fire function on an interval
     }
 
     if (!_enteredScreen && !IsOffScreen()) {
@@ -157,17 +189,24 @@ void SpecialEnemy::Update(float deltaTime) {
       Spawn();
     }
   }
+  // NOTE: projectiles that have already been fired are still fine to be updated
+  for (auto& projectile : _projectiles) {
+    projectile->Update(deltaTime);
+  }
 }
 
 void SpecialEnemy::Render() {
   SDL_RendererFlip flip = SDL_FLIP_NONE;
   SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), &_clipRect, &_clientRect, _rotation, NULL,
                     flip);
+  for (auto& projectile : _projectiles) {
+    projectile->Render();
+  }
 }
 
-void SpecialEnemy::Pause() {}
+void SpecialEnemy::Pause() { _to.Pause(); }
 
-void SpecialEnemy::Unpause() {}
+void SpecialEnemy::Unpause() { _to.Unpause(); }
 
 void SpecialEnemy::Spawn() {
   _currentTime = 0.0f;

@@ -1,13 +1,45 @@
 #include <SDL2/SDL.h>
 
+#include <functional>
 #include <glm/glm.hpp>
 #include <string>
+#include <vector>
 
 #include "Game/Collider.hpp"
 #include "Game/Entity.hpp"
+#include "Game/Projectile.hpp"
 #include "Math.hpp"
 #include "Texture.hpp"
+#include "Timer.hpp"
 #include "Utilities.hpp"
+
+class Timeout : public CoffeeMaker::Timer {
+  public:
+  explicit Timeout(Uint32 delay, std::function<void(void)> fn) : _delay(delay), _callback(fn), _started(false){};
+  ~Timeout() = default;
+
+  void Start() {
+    if (!_started) {
+      _started = true;
+      CoffeeMaker::Timer::Start();
+    }
+  };
+
+  bool Check() { return GetTicks() >= _delay; };
+
+  void Act() {
+    if (Check()) {
+      std::invoke(_callback);
+      CoffeeMaker::Timer::Stop();
+      _started = false;
+    }
+  };
+
+  private:
+  Uint32 _delay;
+  std::function<void(void)> _callback;
+  bool _started;
+};
 
 class Enemy : public Entity {
   public:
@@ -19,6 +51,7 @@ class Enemy : public Entity {
   virtual void Render();
   virtual void Pause();
   virtual void Unpause();
+  virtual void Fire();
 
   virtual void Spawn();
   bool IsActive() const;
@@ -43,6 +76,9 @@ class Enemy : public Entity {
   unsigned int _priorTicks;
   unsigned int _speed{225};
   int _rotation{-90};
+  std::vector<Projectile*> _projectiles;
+  int _currentProjectile = 0;
+  Timeout _to{500, std::bind(&Enemy::Fire, this)};
 };
 
 class SpecialEnemy : public Enemy {

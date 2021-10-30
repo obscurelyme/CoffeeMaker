@@ -25,6 +25,9 @@ void MainScene::Render() {
 void MainScene::Pause() {
   SDL_ShowCursor(SDL_ENABLE);
   _hud->Pause();
+  for (auto enemy : _enemies) {
+    enemy->Pause();
+  }
   for (auto& entity : _entities) {
     entity->Pause();
   }
@@ -33,6 +36,9 @@ void MainScene::Pause() {
 void MainScene::Unpause() {
   SDL_ShowCursor(SDL_DISABLE);
   _hud->Unpause();
+  for (auto enemy : _enemies) {
+    enemy->Unpause();
+  }
   for (auto& entity : _entities) {
     entity->Unpause();
   }

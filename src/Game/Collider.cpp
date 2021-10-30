@@ -107,3 +107,5 @@ void Collider::Render() {
 void Collider::OnCollide(std::function<void(Collider*)> callback) { _listeners.push_back(callback); }
 
 Collider::Type Collider::GetType() const { return _type; }
+
+void Collider::SetType(Collider::Type type) { _type = type; }

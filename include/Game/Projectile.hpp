@@ -12,9 +12,27 @@
 class Projectile {
   public:
   Projectile();
+  explicit Projectile(Collider::Type colliderType);
   ~Projectile();
 
+  /**
+   * @brief Fires the projectile at a calculated position based on the given rotation
+   *
+   * @param initialXPosition
+   * @param initialYPosition
+   * @param rotation
+   */
   void Fire(float initialXPosition, float initialYPosition, double rotation);
+  /**
+   * @brief Fire function that is explicitly passed an end position.
+   *
+   * @param initialXPosition
+   * @param initialYPosition
+   * @param endX
+   * @param endY
+   * @param rotation
+   */
+  void Fire2(float initialXPosition, float initialYPosition, float endX, float endY, double rotation);
   void Reload();
   void Update(float deltaTime);
   void Render();
