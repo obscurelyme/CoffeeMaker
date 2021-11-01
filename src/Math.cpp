@@ -141,5 +141,8 @@ CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Vector2D::Right() { return Coffee
 
 CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Normalize(const CoffeeMaker::Math::Vector2D& vector) {
   float magnitude = vector.Magnitude();
+  if (magnitude == 0) {
+    return CoffeeMaker::Math::Vector2D(0, 0);
+  }
   return CoffeeMaker::Math::Vector2D(vector.x / magnitude, vector.y / magnitude);
 }

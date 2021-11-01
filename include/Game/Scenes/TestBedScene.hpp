@@ -32,6 +32,7 @@ class TestPlayer : public Entity {
   SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};
   SDL_FRect _clientRect{.x = 0, .y = 0, .w = 48, .h = 48};
   CoffeeMaker::Math::Vector2D _position;
+  CoffeeMaker::Math::Vector2D _movement;
   CoffeeMaker::Math::Vector2D _randLookAt;
   Ref<CoffeeMaker::Widgets::Text> _text;
   Ref<CoffeeMaker::Widgets::Text> _text2;

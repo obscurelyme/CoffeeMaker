@@ -1,6 +1,8 @@
 #ifndef _coffeemaker_math_hpp
 #define _coffeemaker_math_hpp
 
+#include <fmt/core.h>
+
 #include <chrono>
 #include <random>
 
@@ -130,6 +132,8 @@ namespace CoffeeMaker {
 
       Vector2D& operator=(const Vector2D& vector);
       bool operator==(const Vector2D& rhs);
+
+      std::string ToString() const { return fmt::format(fmt::runtime("({},{})"), x, y); }
 
       /**
        * @brief Directional vector pointing up the y axis

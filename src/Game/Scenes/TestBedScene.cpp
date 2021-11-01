@@ -7,6 +7,7 @@
 #include "Color.hpp"
 #include "Event.hpp"
 #include "InputManager.hpp"
+#include "Logger.hpp"
 #include "Renderer.hpp"
 #include "Widgets/Properties.hpp"
 
@@ -39,9 +40,12 @@ void TestPlayer::Render() {
   SDL_RenderDrawLineF(CoffeeMaker::Renderer::Instance(), 0, 300, 800, 300);
 }
 
-void TestPlayer::Update(float) {
+void TestPlayer::Update(float deltaTime) {
+  _rotation = 0;
+  _movement.x = 0;
+  _movement.y = 0;
   _timeout.Start();
-  _timeout.Act();
+  // _timeout.Act();
   if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_P)) {
     if (_timeout.IsPaused()) {
       _timeout.Unpause();
@@ -51,33 +55,26 @@ void TestPlayer::Update(float) {
   }
 
   if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_LEFT)) {
-    // Rotate left
-    _rotation -= 1;
-    if (_rotation == 360 || _rotation == -360) {
-      _rotation = 0;
-    }
-
-    _text->SetText(std::to_string(_rotation));
+    _rotation += -8;
+    _movement += CoffeeMaker::Math::Vector2D::Left();
   }
 
   if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_RIGHT)) {
-    // Rotate right
-    _rotation += 1;
-    if (_rotation == 360 || _rotation == -360) {
-      _rotation = 0;
-    }
-    _text->SetText(std::to_string(_rotation));
+    _rotation += 8;
+    _movement += CoffeeMaker::Math::Vector2D::Right();
   }
 
-  if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_UP)) {
-    // flip up
-    _flip = SDL_FLIP_NONE;
+  if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_UP)) {
+    _movement += CoffeeMaker::Math::Vector2D::Down();
   }
 
-  if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_DOWN)) {
-    // flip down
-    _flip = SDL_FLIP_VERTICAL;
+  if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_DOWN)) {
+    _movement += CoffeeMaker::Math::Vector2D::Up();
   }
+  _position += CoffeeMaker::Math::Normalize(_movement) * deltaTime * 125;
+
+  _clientRect.x = _position.x;
+  _clientRect.y = _position.y;
 }
 void TestPlayer::Init() {}
 void TestPlayer::Pause() {}
