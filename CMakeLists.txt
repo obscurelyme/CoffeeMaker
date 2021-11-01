@@ -56,6 +56,7 @@ set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOUR
 set(GAME_SOURCES
   src/Game/Scenes/TitleScene.cpp
   src/Game/Scenes/MainScene.cpp
+  src/Game/Scenes/TestBedScene.cpp
   src/Game/Scene.cpp
   src/Game/Collider.cpp
   src/Game/Entity.cpp

@@ -34,6 +34,34 @@ namespace CoffeeMaker {
     bool _started;
   };
 
+  class Timeout : public CoffeeMaker::Timer {
+    public:
+    explicit Timeout(Uint32 delay, std::function<void(void)> fn) : _delay(delay), _callback(fn), _started(false){};
+    ~Timeout() = default;
+
+    void Start() {
+      if (!_started) {
+        _started = true;
+        CoffeeMaker::Timer::Start();
+      }
+    };
+
+    bool Check() { return GetTicks() >= _delay; };
+
+    void Act() {
+      if (Check()) {
+        std::invoke(_callback);
+        CoffeeMaker::Timer::Stop();
+        _started = false;
+      }
+    };
+
+    private:
+    Uint32 _delay;
+    std::function<void(void)> _callback;
+    bool _started;
+  };
+
 }  // namespace CoffeeMaker
 
 #endif

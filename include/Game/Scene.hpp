@@ -15,11 +15,14 @@ class Scene {
   virtual void Destroy() = 0;
   virtual void Pause() = 0;
   virtual void Unpause() = 0;
+  virtual bool IsLoaded();
 
   private:
   std::string _id;
-
   static int _sceneId;
+
+  protected:
+  bool _loaded;
 };
 
 class SceneManager {

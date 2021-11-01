@@ -41,6 +41,7 @@ namespace CoffeeMaker {
     void Render(const SDL_Rect &clip, const SDL_Rect &renderRect);
     void Render(const SDL_Rect &clip, const SDL_Rect &renderRect, double rotation);
     void Render(const SDL_Rect &clip, const SDL_FRect &renderRect, double rotation);
+    void Render(const SDL_Rect &clip, const SDL_FRect &renderRect, double rotation, SDL_RendererFlip flip);
     void Render(const SDL_Rect &renderRect, double rotation);
     int Height() const;
     int Width() const;

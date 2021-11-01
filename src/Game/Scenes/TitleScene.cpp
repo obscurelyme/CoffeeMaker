@@ -71,11 +71,13 @@ void TitleScene::Init() {
   _view->AppendChild(_quitButton);
 
   _entities.push_back(_view);
+  _loaded = true;
 }
 
 void TitleScene::Destroy() {
   // Clear out entities
   _entities.clear();
+  _loaded = false;
 }
 
 void TitleScene::Play() { SceneManager::LoadScene(); }

@@ -12,6 +12,12 @@ using namespace CoffeeMaker;
 int Delegate::_uid = 0;
 
 void CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents appEvent) {
+  if (appEvent == ApplicationEvents::COFFEEMAKER_GAME_QUIT) {
+    SDL_Event event;
+    event.type = SDL_QUIT;
+    SDL_PushEvent(&event);
+    return;
+  }
   SDL_UserEvent userevent{.type = SDL_USEREVENT, .code = appEvent, .data1 = nullptr, .data2 = nullptr};
   SDL_Event event;
   event.type = SDL_USEREVENT;

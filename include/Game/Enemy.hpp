@@ -13,34 +13,6 @@
 #include "Timer.hpp"
 #include "Utilities.hpp"
 
-class Timeout : public CoffeeMaker::Timer {
-  public:
-  explicit Timeout(Uint32 delay, std::function<void(void)> fn) : _delay(delay), _callback(fn), _started(false){};
-  ~Timeout() = default;
-
-  void Start() {
-    if (!_started) {
-      _started = true;
-      CoffeeMaker::Timer::Start();
-    }
-  };
-
-  bool Check() { return GetTicks() >= _delay; };
-
-  void Act() {
-    if (Check()) {
-      std::invoke(_callback);
-      CoffeeMaker::Timer::Stop();
-      _started = false;
-    }
-  };
-
-  private:
-  Uint32 _delay;
-  std::function<void(void)> _callback;
-  bool _started;
-};
-
 class Enemy : public Entity {
   public:
   Enemy();
@@ -78,7 +50,7 @@ class Enemy : public Entity {
   int _rotation{-90};
   std::vector<Projectile*> _projectiles;
   int _currentProjectile = 0;
-  Timeout _to{500, std::bind(&Enemy::Fire, this)};
+  CoffeeMaker::Timeout _to{500, std::bind(&Enemy::Fire, this)};
 };
 
 class SpecialEnemy : public Enemy {

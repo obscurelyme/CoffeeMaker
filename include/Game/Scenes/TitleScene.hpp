@@ -1,3 +1,6 @@
+#ifndef _titlescene_hpp
+#define _titlescene_hpp
+
 #include <memory>
 
 #include "Game/Scene.hpp"
@@ -29,3 +32,5 @@ class TitleScene : public Scene {
 
   std::vector<std::shared_ptr<CoffeeMaker::UIComponent>> _entities;
 };
+
+#endif

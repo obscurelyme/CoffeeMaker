@@ -1,3 +1,6 @@
+#ifndef _mainscene_hpp
+#define _mainscene_hpp
+
 #include <array>
 
 #include "Game/Enemy.hpp"
@@ -35,3 +38,5 @@ class MainScene : public Scene {
   float _totalTime{0.5f};
   unsigned int _currentSpawn{0};
 };
+
+#endif

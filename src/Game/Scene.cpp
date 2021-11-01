@@ -41,7 +41,9 @@ void SceneManager::LoadScene() {
 
 void SceneManager::LoadScene(unsigned long index) {
   if (scenes.size() >= index) {
-    _currentScene->Destroy();
+    if (_currentScene != nullptr && _currentScene->IsLoaded()) {
+      _currentScene->Destroy();
+    }
     _currentSceneIndex = index;
     _currentScene = scenes[_currentSceneIndex];
     _currentScene->Init();
@@ -60,3 +62,5 @@ int Scene::_sceneId = 0;
 Scene::Scene() { _id = "Scene-" + std::to_string(++_sceneId); }
 
 Scene::~Scene() {}
+
+bool Scene::IsLoaded() { return _loaded; }

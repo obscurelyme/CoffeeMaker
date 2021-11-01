@@ -179,6 +179,14 @@ void Texture::Render(const SDL_Rect &clip, const SDL_FRect &renderRect, double r
   SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture, &clip, &renderRect, rotation, NULL, flip);
 }
 
+void Texture::Render(const SDL_Rect &clip, const SDL_FRect &renderRect, double rotation, SDL_RendererFlip flip) {
+  if (_texture == nullptr) {
+    CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("Error rendering texture", "Cannot render texture with nullptr");
+    return;
+  }
+  SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture, &clip, &renderRect, rotation, NULL, flip);
+}
+
 void Texture::Render(const SDL_Rect &renderRect, double rotation) {
   if (_texture == nullptr) {
     CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("Error rendering texture", "Cannot render texture with nullptr");

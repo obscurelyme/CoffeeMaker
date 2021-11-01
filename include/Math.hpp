@@ -1,6 +1,12 @@
 #ifndef _coffeemaker_math_hpp
 #define _coffeemaker_math_hpp
 
+#include <chrono>
+#include <random>
+
+using RNG = std::mt19937;
+namespace Chrono = std::chrono;
+
 namespace CoffeeMaker {
   /**
    * @brief Math functions for CoffeeMaker
@@ -10,6 +16,20 @@ namespace CoffeeMaker {
    * http://codetuto.com/2017/02/7-lerping-tricks-need-know-game-developer/#:~:text=7%20Lerping%20tricks%20you%20need%20to%20know%20as,weight.%20...%207%20Lerp%20inside%20tween%20updates.%20
    */
   namespace Math {
+
+    class RandomEngine {
+      public:
+      static void Init() {
+        auto now = Chrono::system_clock::now();
+        auto msSinceEpoch = Chrono::duration_cast<Chrono::milliseconds>(now.time_since_epoch()).count();
+        engine.seed(msSinceEpoch);
+      }
+
+      static float Random(float min, float max);
+
+      static RNG engine;
+    };
+
     class Vector2D;  // forward declaration
 
     /**
@@ -63,6 +83,26 @@ namespace CoffeeMaker {
        * @return radian value of the angle
        */
       float Direction(const Vector2D& rhs);
+
+      /**
+       * @brief Leverages Polar Coordinate system to find the angle of 2 points
+       * Returns unit vector that the caller can travel per frame that
+       * would result in eventually landing at the rhs postion.
+       *
+       * @param rhs
+       * @return float
+       */
+      Vector2D HeadTowards(const Vector2D& rhs);
+
+      /**
+       * @brief Leverages Polar Coordinate system to find the angle of 2 points
+       * Returns an angle that the entity needs to be rotated by in order to
+       * be looking at the rhs vector
+       *
+       * @param rhs
+       * @return float
+       */
+      float LookAt(const Vector2D& rhs);
 
       /**
        * @brief Returns the magnitude between 2 Vectors

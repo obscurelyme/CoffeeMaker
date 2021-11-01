@@ -25,9 +25,11 @@
 #include "Game/PlayerEvents.hpp"
 #include "Game/Scene.hpp"
 #include "Game/Scenes/MainScene.hpp"
+#include "Game/Scenes/TestBedScene.hpp"
 #include "Game/Scenes/TitleScene.hpp"
 #include "InputManager.hpp"
 #include "Logger.hpp"
+#include "Math.hpp"
 #include "Renderer.hpp"
 #include "Timer.hpp"
 #include "Utilities.hpp"
@@ -45,6 +47,7 @@ SDL_Event event;
 // };
 
 int main(int, char**) {
+  CoffeeMaker::Math::RandomEngine::Init();
   // Start clock
   auto start = std::chrono::steady_clock::now();
   CM_LOGGER_INIT();
@@ -84,7 +87,8 @@ int main(int, char**) {
 
   SceneManager::AddScene(new TitleScene());
   SceneManager::AddScene(new MainScene());
-  SceneManager::LoadScene();
+  SceneManager::AddScene(new TestBedScene());
+  SceneManager::LoadScene(2);
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
 

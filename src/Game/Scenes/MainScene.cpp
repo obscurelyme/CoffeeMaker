@@ -101,6 +101,7 @@ void MainScene::Init() {
 
   _entities.push_back(_player);
   _timer.Start();
+  _loaded = true;
 }
 
 void MainScene::Destroy() {
@@ -114,6 +115,7 @@ void MainScene::Destroy() {
   delete _specialEnemy;
   _currentSpawn = 0;
   _currentTime = 0;
+  _loaded = false;
 }
 
 MainScene::MainScene() {}

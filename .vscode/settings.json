@@ -110,7 +110,10 @@
     "__locale": "cpp",
     "__mutex_base": "cpp",
     "__threading_support": "cpp",
-    "__tuple": "cpp"
+    "__tuple": "cpp",
+    "__bits": "cpp",
+    "__tree": "cpp",
+    "complex": "cpp"
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"

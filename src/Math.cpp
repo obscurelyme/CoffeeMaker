@@ -3,6 +3,13 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
+RNG CoffeeMaker::Math::RandomEngine::engine;
+
+float CoffeeMaker::Math::RandomEngine::Random(float min, float max) {
+  std::uniform_real_distribution<float> distro{min, max};
+  return distro(engine);
+}
+
 float CoffeeMaker::Math::Lerp(float f1, float f2, float t) { return (1 - t) * f1 + t * f2; }
 
 CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Lerp(const CoffeeMaker::Math::Vector2D& v1,
@@ -97,6 +104,24 @@ CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Vector2D::Rotate(float degrees) c
 
 float CoffeeMaker::Math::Vector2D::Direction(const CoffeeMaker::Math::Vector2D& rhs) {
   return std::atan((y - rhs.y) / (x - rhs.x));
+}
+
+float CoffeeMaker::Math::Vector2D::LookAt(const CoffeeMaker::Math::Vector2D& rhs) {
+  float arcTan = std::atan((y - rhs.y) / (x - rhs.x));
+
+  if (rhs.y - y < 0 && rhs.x - x < 0) {
+    arcTan += M_PI;
+  } else if (rhs.x - x < 0) {
+    arcTan += M_PI;
+  }
+
+  return arcTan;
+}
+
+CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Vector2D::HeadTowards(const CoffeeMaker::Math::Vector2D& rhs) {
+  float xx = rhs.x - x;
+  float yy = rhs.y - y;
+  return CoffeeMaker::Math::Normalize(CoffeeMaker::Math::Vector2D{xx, yy});
 }
 
 float CoffeeMaker::Math::Vector2D::Magnitude(const CoffeeMaker::Math::Vector2D& rhs) const {
