@@ -23,9 +23,18 @@ namespace CoffeeMaker {
     void EndRender();
     void Destroy();
     static bool Exists();
+    /**
+     * @brief The number of draw calls that happened so far
+     * in the current frame.
+     *
+     * @return int
+     */
+    static Uint32 DrawCalls();
+    static void IncDrawCalls();
 
     private:
     static SDL_Renderer *_renderer;
+    static Uint32 _numDrawCalls;
   };
 
   class GlobalRenderer {

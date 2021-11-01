@@ -1,7 +1,5 @@
 #include "Game/Scenes/TestBedScene.hpp"
 
-#include <SDL2/SDL.h>
-
 #include <string>
 
 #include "Color.hpp"
@@ -10,6 +8,20 @@
 #include "Logger.hpp"
 #include "Renderer.hpp"
 #include "Widgets/Properties.hpp"
+
+Sprite::Sprite(const std::string& filePath) : rotation(0), _texture(CreateScope<CoffeeMaker::Texture>(filePath)) {
+  clientRect.w = _texture->Height();
+  clientRect.h = _texture->Width();
+  // clipRect = SDL_Rect{.x = 0, .y = 0, .w = 32, .h = 32};
+}
+
+Sprite::Sprite(const std::string& filePath, float width, float height) :
+    rotation(0), _texture(CreateScope<CoffeeMaker::Texture>(filePath)) {
+  clientRect.w = width;
+  clientRect.h = height;
+}
+
+void Sprite::Render() { _texture->Render(clipRect, clientRect, rotation); }
 
 TestPlayer::TestPlayer() : _rotation(0), _rotation2(0), _flip(SDL_FLIP_NONE) {
   _position.x = 400;
@@ -46,12 +58,7 @@ void TestPlayer::Update(float deltaTime) {
   _movement.y = 0;
   _timeout.Start();
   // _timeout.Act();
-  if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_P)) {
-    if (_timeout.IsPaused()) {
-      _timeout.Unpause();
-    } else {
-      _timeout.Pause();
-    }
+  if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_LSHIFT)) {
   }
 
   if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_LEFT)) {
@@ -71,7 +78,7 @@ void TestPlayer::Update(float deltaTime) {
   if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_DOWN)) {
     _movement += CoffeeMaker::Math::Vector2D::Up();
   }
-  _position += CoffeeMaker::Math::Normalize(_movement) * deltaTime * 125;
+  _position += CoffeeMaker::Math::Normalize(_movement) * deltaTime * 200;
 
   _clientRect.x = _position.x;
   _clientRect.y = _position.y;
@@ -90,8 +97,8 @@ void TestPlayer::SetRandomPointText2(Ref<CoffeeMaker::Widgets::Text> txt) { _dif
 
 void TestPlayer::LookAtRandomPoint() {
   // Note
-  float x = CoffeeMaker::Math::RandomEngine::Random(0.0f, 800.0f);
-  float y = CoffeeMaker::Math::RandomEngine::Random(0.0f, 600.0f);
+  float x = CoffeeMaker::Math::Random(0.0f, 800.0f);
+  float y = CoffeeMaker::Math::Random(0.0f, 600.0f);
   _randLookAt.x = x;
   _randLookAt.y = y;
 

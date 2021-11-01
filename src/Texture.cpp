@@ -125,6 +125,7 @@ void Texture::Render(int top, int left) {
   }
 
   SDL_RenderCopy(CoffeeMaker::Renderer::Instance(), _texture, NULL, &renderQuad);
+  CoffeeMaker::Renderer::IncDrawCalls();
 }
 
 void Texture::Render(float top, float left) {
@@ -137,6 +138,7 @@ void Texture::Render(float top, float left) {
   }
 
   SDL_RenderCopyF(CoffeeMaker::Renderer::Instance(), _texture, NULL, &renderQuad);
+  CoffeeMaker::Renderer::IncDrawCalls();
 }
 
 void Texture::Render(int top, int left, int height, int width) {
@@ -149,6 +151,7 @@ void Texture::Render(int top, int left, int height, int width) {
   }
 
   SDL_RenderCopy(CoffeeMaker::Renderer::Instance(), _texture, NULL, &renderQuad);
+  CoffeeMaker::Renderer::IncDrawCalls();
 }
 
 void Texture::Render(const SDL_Rect &clip, const SDL_Rect &renderRect) {
@@ -159,6 +162,7 @@ void Texture::Render(const SDL_Rect &clip, const SDL_Rect &renderRect) {
   }
 
   SDL_RenderCopy(CoffeeMaker::Renderer::Instance(), _texture, &clip, &renderRect);
+  CoffeeMaker::Renderer::IncDrawCalls();
 }
 
 void Texture::Render(const SDL_Rect &clip, const SDL_Rect &renderRect, double rotation) {
@@ -168,6 +172,7 @@ void Texture::Render(const SDL_Rect &clip, const SDL_Rect &renderRect, double ro
   }
   SDL_RendererFlip flip = SDL_FLIP_NONE;
   SDL_RenderCopyEx(CoffeeMaker::Renderer::Instance(), _texture, &clip, &renderRect, rotation, NULL, flip);
+  CoffeeMaker::Renderer::IncDrawCalls();
 }
 
 void Texture::Render(const SDL_Rect &clip, const SDL_FRect &renderRect, double rotation) {
@@ -177,6 +182,7 @@ void Texture::Render(const SDL_Rect &clip, const SDL_FRect &renderRect, double r
   }
   SDL_RendererFlip flip = SDL_FLIP_NONE;
   SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture, &clip, &renderRect, rotation, NULL, flip);
+  CoffeeMaker::Renderer::IncDrawCalls();
 }
 
 void Texture::Render(const SDL_Rect &clip, const SDL_FRect &renderRect, double rotation, SDL_RendererFlip flip) {
@@ -185,6 +191,7 @@ void Texture::Render(const SDL_Rect &clip, const SDL_FRect &renderRect, double r
     return;
   }
   SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture, &clip, &renderRect, rotation, NULL, flip);
+  CoffeeMaker::Renderer::IncDrawCalls();
 }
 
 void Texture::Render(const SDL_Rect &renderRect, double rotation) {
@@ -194,6 +201,7 @@ void Texture::Render(const SDL_Rect &renderRect, double rotation) {
   }
   SDL_RendererFlip flip = SDL_FLIP_NONE;
   SDL_RenderCopyEx(CoffeeMaker::Renderer::Instance(), _texture, NULL, &renderRect, rotation, NULL, flip);
+  CoffeeMaker::Renderer::IncDrawCalls();
 }
 
 void Texture::SetAlpha(Uint8 alpha) {

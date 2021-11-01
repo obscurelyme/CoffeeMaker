@@ -144,6 +144,7 @@ void Button::Render() {
     SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), _currentColor.r, _currentColor.g, _currentColor.b,
                            _currentColor.a);
     SDL_RenderFillRect(CoffeeMaker::Renderer::Instance(), &clientRect);
+    CoffeeMaker::Renderer::IncDrawCalls();
   }
   UIComponent::Render();
 }

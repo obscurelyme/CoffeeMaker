@@ -147,6 +147,8 @@ int main(int, char**) {
     fpsCounter.Render();
 
     renderer.EndRender();
+    // NOTE: uncomment here to view draw calls
+    // CM_LOGGER_INFO("[Renderer][Draw Calls]: {}", CoffeeMaker::Renderer::DrawCalls());
 
     CoffeeMaker::InputManager::ClearAllPresses();
     CoffeeMaker::Button::ProcessEvents();

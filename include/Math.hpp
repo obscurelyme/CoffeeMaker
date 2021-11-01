@@ -27,10 +27,18 @@ namespace CoffeeMaker {
         engine.seed(msSinceEpoch);
       }
 
-      static float Random(float min, float max);
-
       static RNG engine;
     };
+
+    /**
+     * @brief Returns a random float between the given min and max values.
+     * default logic will return a number between 0 and 1.
+     *
+     * @param min
+     * @param max
+     * @return float
+     */
+    float Random(float min = 0, float max = 1);
 
     class Vector2D;  // forward declaration
 

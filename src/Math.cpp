@@ -5,9 +5,9 @@
 
 RNG CoffeeMaker::Math::RandomEngine::engine;
 
-float CoffeeMaker::Math::RandomEngine::Random(float min, float max) {
+float CoffeeMaker::Math::Random(float min, float max) {
   std::uniform_real_distribution<float> distro{min, max};
-  return distro(engine);
+  return distro(CoffeeMaker::Math::RandomEngine::engine);
 }
 
 float CoffeeMaker::Math::Lerp(float f1, float f2, float t) { return (1 - t) * f1 + t * f2; }

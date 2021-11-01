@@ -61,6 +61,7 @@ void Text::Render() {
   UIComponent::DebugRender();
   SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
   SDL_RenderCopy(renderer, _texture, NULL, &clientRect);
+  CoffeeMaker::Renderer::IncDrawCalls();
 }
 
 void Text::SetFont(const std::string &fontName) {

@@ -1,14 +1,33 @@
 #ifndef _testbedscene_hpp
 #define _testbedscene_hpp
 
+#include <SDL2/SDL.h>
+
 #include "Game/Entity.hpp"
 #include "Game/Scene.hpp"
 #include "Game/Tiles.hpp"
 #include "Math.hpp"
+#include "Texture.hpp"
 #include "Timer.hpp"
 #include "Utilities.hpp"
 #include "Widgets/Text.hpp"
 #include "Widgets/View.hpp"
+
+class Sprite {
+  public:
+  explicit Sprite(const std::string& filePath);
+  Sprite(const std::string& filePath, float width, float height);
+  ~Sprite();
+
+  void Render();
+
+  double rotation;
+  SDL_Rect clipRect;
+  SDL_FRect clientRect;
+
+  private:
+  Scope<CoffeeMaker::Texture> _texture;
+};
 
 class TestPlayer : public Entity {
   public:
@@ -43,6 +62,24 @@ class TestPlayer : public Entity {
   double _rotation2;
   SDL_RendererFlip _flip;
 };
+
+// class Enemy : public Entity {
+//   public:
+//   TestPlayer();
+//   ~TestPlayer();
+//   virtual void Init();
+//   virtual void Update(float deltaTime = 0.0f);
+//   virtual void Render();
+//   virtual void Pause();
+//   virtual void Unpause();
+
+//   private:
+//   CoffeeMaker::Texture _texture{"EnemyV1.png", true};
+//   SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};
+//   SDL_FRect _clientRect{.x = 0, .y = 0, .w = 48, .h = 48};
+//   CoffeeMaker::Math::Vector2D _position;
+//   CoffeeMaker::Math::Vector2D _movement;
+// };
 
 class TestBedScene : public Scene {
   public:
