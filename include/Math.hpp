@@ -71,6 +71,11 @@ namespace CoffeeMaker {
     Vector2D CubicBezierCurve(const Vector2D& startPos, const Vector2D&, const Vector2D&, const Vector2D& endPos,
                               float t);
 
+    struct Point2D {
+      float x;
+      float y;
+    };
+
     class Vector2D {
       public:
       Vector2D(float xx = 0.0f, float yy = 0.0f);

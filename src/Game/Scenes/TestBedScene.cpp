@@ -9,33 +9,159 @@
 #include "Renderer.hpp"
 #include "Widgets/Properties.hpp"
 
-TestPlayer::TestPlayer() : _sprite(CreateScope<CoffeeMaker::Sprite>("PlayerV1.png")), _rotation(0), _rotation2(0) {
+Spline::Spline() :
+    _spline({}),
+    _currentSlice({}),
+    _time(3.0f),
+    _offset(0),
+    _currentTime(0),
+    _finalOffset(0),
+    _complete(false),
+    _weight(0.0f) {}
+
+void Spline::AddCurve(const Vec2& start, const Vec2& control1, const Vec2& control2, const Vec2& end) {
+  _spline.emplace_back(start);
+  _spline.emplace_back(control1);
+  _spline.emplace_back(control2);
+  _spline.emplace_back(end);
+  _finalOffset = _spline.size();
+}
+
+float Spline::Weight() { return _spline.size() / 4; }
+
+void Spline::Start() {
+  _currentSlice.emplace_back(_spline.at(0));
+  _currentSlice.emplace_back(_spline.at(1));
+  _currentSlice.emplace_back(_spline.at(2));
+  _currentSlice.emplace_back(_spline.at(3));
+  _offset = 4;
+}
+
+void Spline::Update(float deltaTime) {
+  _currentTime += deltaTime;
+  _weight = _currentTime / (_time / (_spline.size() * .25));
+
+  if (_weight >= 1.0f) {
+    _currentTime = 0;
+    _offset += 4;
+    // Are we done?
+    if (_offset == _finalOffset) {
+      _complete = true;
+      return;
+    }
+    _currentSlice.clear();
+    _currentSlice.emplace_back(_spline.at(_offset));
+    _currentSlice.emplace_back(_spline.at(_offset + 1));
+    _currentSlice.emplace_back(_spline.at(_offset + 2));
+    _currentSlice.emplace_back(_spline.at(_offset + 3));
+  }
+}
+
+CoffeeMaker::Math::Vector2D Spline::CurrentPosition() {
+  if (_complete) {
+    return _spline.at(_spline.size() - 1);
+  }
+  return CoffeeMaker::Math::CubicBezierCurve(_currentSlice[0], _currentSlice[1], _currentSlice[2], _currentSlice[3],
+                                             _weight);
+}
+
+TestEnemy::TestEnemy() :
+    _sprite(CreateScope<CoffeeMaker::Sprite>("EnemyV1.png")), _rotation(0), _trail({}), _spline(CreateScope<Spline>()) {
+  using Vec2 = CoffeeMaker::Math::Vector2D;
   _position.x = 400;
-  _position.y = 300;
+  _position.y = 150;
 
   _sprite->clientRect.x = _position.x;
   _sprite->clientRect.y = _position.y;
   _sprite->clientRect.w = 48;
   _sprite->clientRect.h = 48;
+
+  _spline->AddCurve(Vec2{50, -50}, Vec2{50, 600}, Vec2{250, 600}, Vec2{250, 300});
+  _spline->AddCurve(Vec2{250, 300}, Vec2{-250, 150}, Vec2{275, 900}, Vec2{275, 150});
+  _spline->Start();
 }
 
-TestPlayer::~TestPlayer() {}
+TestEnemy::~TestEnemy() {}
+
+void TestEnemy::Init() {}
+
+void TestEnemy::Update(float deltaTime) {
+  _spline->Update(deltaTime);
+  using Vec2 = CoffeeMaker::Math::Vector2D;
+  Vec2 currentPos = _spline->CurrentPosition();
+  // snapshot Point2D
+  _trail.emplace_back(CoffeeMaker::Math::Point2D{.x = currentPos.x, .y = currentPos.y});
+  _position = currentPos;
+
+  _rotation = CoffeeMaker::Math::rad2deg(_position.LookAt(TestPlayer::Position())) + 90;
+  _sprite->rotation = _rotation;
+  _sprite->SetPosition(_position);
+}
+
+// void TestEnemy::Update(float deltaTime) {
+//   // Polar coords to get look at
+//   _currentTime += deltaTime;
+//   float weight = _currentTime / _totaltime;
+
+//   if (weight <= 1.0f) {
+//     using Vec2 = CoffeeMaker::Math::Vector2D;
+//     Vec2 currentPos =
+//         CoffeeMaker::Math::CubicBezierCurve(Vec2{50, -50}, Vec2{50, 600}, Vec2{250, 600}, Vec2{250, 150}, weight);
+//     // snapshot Point2D
+//     _trail.emplace_back(CoffeeMaker::Math::Point2D{.x = currentPos.x, .y = currentPos.y});
+//     _position = currentPos;
+//   } else {
+//     _currentTime = 0;
+//     _trail.clear();
+//   }
+
+//   _rotation = CoffeeMaker::Math::rad2deg(_position.LookAt(TestPlayer::Position())) + 90;
+//   _sprite->rotation = _rotation;
+//   _sprite->SetPosition(_position);
+// }
+
+void TestEnemy::Render() {
+  // Render enemy sprite
+  _sprite->Render();
+  SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), CoffeeMaker::Colors::Yellow.r,
+                         CoffeeMaker::Colors::Yellow.g, CoffeeMaker::Colors::Yellow.b, CoffeeMaker::Colors::Yellow.a);
+  SDL_RenderDrawLineF(CoffeeMaker::Renderer::Instance(), _position.x, _position.y, TestPlayer::Position().x,
+                      TestPlayer::Position().y);
+  // Debug Bezier Curve
+  for (auto& p : _trail) {
+    SDL_RenderDrawPointF(CoffeeMaker::Renderer::Instance(), p.x, p.y);
+  }
+}
+void TestEnemy::Pause() {}
+void TestEnemy::Unpause() {}
+
+TestPlayer* TestPlayer::_instance = nullptr;
+CoffeeMaker::Math::Vector2D& TestPlayer::Position() { return _instance->_position; }
+
+TestPlayer::TestPlayer() : _sprite(CreateScope<CoffeeMaker::Sprite>("PlayerV1.png")), _rotation(0), _rotation2(0) {
+  _position.x = 400;
+  _position.y = 500;
+
+  _sprite->clientRect.x = _position.x;
+  _sprite->clientRect.y = _position.y;
+  _sprite->clientRect.w = 48;
+  _sprite->clientRect.h = 48;
+  _instance = this;
+}
+
+TestPlayer::~TestPlayer() { _instance = nullptr; }
 
 void TestPlayer::Render() {
   _sprite->Render();
-  // _texture.Render(_clipRect, _clientRect, _rotation, _flip);
 
-  SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), CoffeeMaker::Colors::Yellow.r,
-                         CoffeeMaker::Colors::Yellow.g, CoffeeMaker::Colors::Yellow.b, CoffeeMaker::Colors::Yellow.a);
-  SDL_RenderDrawLineF(CoffeeMaker::Renderer::Instance(), _position.x, _position.y, _randLookAt.x, _randLookAt.y);
-  SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), CoffeeMaker::Colors::Blue.r, CoffeeMaker::Colors::Blue.g,
-                         CoffeeMaker::Colors::Blue.b, CoffeeMaker::Colors::Blue.a);
-
-  // SDL_RenderDrawLineF(CoffeeMaker::Renderer::Instance(), _randLookAt.x, _position.y, _randLookAt.x, _randLookAt.y);
-  // SDL_RenderDrawLineF(CoffeeMaker::Renderer::Instance(), _position.x, _position.y, _randLookAt.x, _position.y);
-
-  SDL_RenderDrawLineF(CoffeeMaker::Renderer::Instance(), 800, 300, _randLookAt.x, _randLookAt.y);
-  SDL_RenderDrawLineF(CoffeeMaker::Renderer::Instance(), _position.x, _position.y, 800, 300);
+  // SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), CoffeeMaker::Colors::Yellow.r,
+  //                        CoffeeMaker::Colors::Yellow.g, CoffeeMaker::Colors::Yellow.b,
+  //                        CoffeeMaker::Colors::Yellow.a);
+  // SDL_RenderDrawLineF(CoffeeMaker::Renderer::Instance(), _position.x, _position.y, _randLookAt.x, _randLookAt.y);
+  // SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), CoffeeMaker::Colors::Blue.r, CoffeeMaker::Colors::Blue.g,
+  //                        CoffeeMaker::Colors::Blue.b, CoffeeMaker::Colors::Blue.a);
+  // SDL_RenderDrawLineF(CoffeeMaker::Renderer::Instance(), 800, 300, _randLookAt.x, _randLookAt.y);
+  // SDL_RenderDrawLineF(CoffeeMaker::Renderer::Instance(), _position.x, _position.y, 800, 300);
   SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), CoffeeMaker::Colors::Red.r, CoffeeMaker::Colors::Red.g,
                          CoffeeMaker::Colors::Red.b, CoffeeMaker::Colors::Red.a);
   SDL_RenderDrawLineF(CoffeeMaker::Renderer::Instance(), 400, 0, 400, 600);
@@ -109,6 +235,7 @@ TestBedScene::TestBedScene() {
   _text->SetFont("Roboto/Roboto-Regular");
   _text->SetColor(CoffeeMaker::Colors::Yellow);
   _player = CreateScope<TestPlayer>();
+  _enemy = CreateScope<TestEnemy>();
   _player->SetRotationText(_text);
   _randomPointText = CreateRef<CoffeeMaker::Widgets::Text>("(0,0)");
   _randomPointText->SetFont("Roboto/Roboto-Regular");
@@ -142,12 +269,14 @@ void TestBedScene::Init() {
 void TestBedScene::Destroy() {
   _player.reset();
   _view.reset();
+  _enemy.reset();
   _loaded = false;
 }
 
 void TestBedScene::Update(float deltaTime) {
   _backgroundTiles->Update(deltaTime);
   _player->Update(deltaTime);
+  _enemy->Update(deltaTime);
 
   if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_Q)) {
     Quit();
@@ -157,6 +286,7 @@ void TestBedScene::Update(float deltaTime) {
 void TestBedScene::Render() {
   _backgroundTiles->Render();
   _player->Render();
+  _enemy->Render();
   _view->Render();
 }
 
