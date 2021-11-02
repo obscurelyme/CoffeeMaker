@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 
+#include <functional>
 #include <string>
 
 namespace CoffeeMaker {
