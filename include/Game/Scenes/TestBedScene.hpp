@@ -5,44 +5,18 @@
 
 #include <vector>
 
+#include "Game/Animations/EnemyAnimations.hpp"
 #include "Game/Entity.hpp"
 #include "Game/Scene.hpp"
 #include "Game/Tiles.hpp"
 #include "Math.hpp"
+#include "Spline.hpp"
 #include "Sprite.hpp"
 #include "Texture.hpp"
 #include "Timer.hpp"
 #include "Utilities.hpp"
 #include "Widgets/Text.hpp"
 #include "Widgets/View.hpp"
-
-class Spline {
-  using Vec2 = CoffeeMaker::Math::Vector2D;
-
-  public:
-  Spline();
-  ~Spline() = default;
-
-  /**
-   * @brief Adds a curve to the spline.
-   */
-  void AddCurve(const Vec2&, const Vec2&, const Vec2&, const Vec2&);
-  float Weight();
-  Vec2 CurrentPosition();
-
-  void Update(float deltaTime);
-  void Start();
-
-  private:
-  std::vector<CoffeeMaker::Math::Vector2D> _spline;
-  std::vector<CoffeeMaker::Math::Vector2D> _currentSlice;
-  float _time;
-  int _offset;
-  float _currentTime;
-  int _finalOffset;
-  bool _complete;
-  float _weight;
-};
 
 class TestPlayer : public Entity {
   public:
@@ -95,9 +69,8 @@ class TestEnemy : public Entity {
   CoffeeMaker::Math::Vector2D _movement;
   CoffeeMaker::Math::Vector2D _position;
   std::vector<CoffeeMaker::Math::Point2D> _trail;
-  // float _currentTime;
-  // float _totaltime;
-  Scope<Spline> _spline;
+  Scope<Animations::EnemyEntrance> _entranceSpline;
+  Scope<Animations::EnemyExit> _exitSpline;
 };
 
 class TestBedScene : public Scene {

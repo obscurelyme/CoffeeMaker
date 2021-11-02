@@ -49,7 +49,8 @@ set(COFFEEMAKER_ROOT_SOURCES
   src/InputManager.cpp
   src/Event.cpp
   src/Math.cpp
-  src/Sprite.cpp)
+  src/Sprite.cpp
+  src/Spline.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cpp)
 set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/UIComponent.cpp src/Widgets/View.cpp src/Widgets/Text.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES})
@@ -67,7 +68,8 @@ set(GAME_SOURCES
   src/Game/Projectile.cpp
   src/Game/Menus/Menu.cpp
   src/Game/Hud.cpp
-  src/Game/PlayerEvents.cpp)
+  src/Game/PlayerEvents.cpp
+  src/Game/Animations/EnemyAnimations.cpp)
 
 set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES})
 
