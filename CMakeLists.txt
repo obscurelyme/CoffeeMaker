@@ -48,7 +48,8 @@ set(COFFEEMAKER_ROOT_SOURCES
   src/Transform.cpp
   src/InputManager.cpp
   src/Event.cpp
-  src/Math.cpp)
+  src/Math.cpp
+  src/Sprite.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cpp)
 set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/UIComponent.cpp src/Widgets/View.cpp src/Widgets/Text.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES})

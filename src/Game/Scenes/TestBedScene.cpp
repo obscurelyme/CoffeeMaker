@@ -9,31 +9,21 @@
 #include "Renderer.hpp"
 #include "Widgets/Properties.hpp"
 
-Sprite::Sprite(const std::string& filePath) : rotation(0), _texture(CreateScope<CoffeeMaker::Texture>(filePath)) {
-  clientRect.w = _texture->Height();
-  clientRect.h = _texture->Width();
-  // clipRect = SDL_Rect{.x = 0, .y = 0, .w = 32, .h = 32};
-}
-
-Sprite::Sprite(const std::string& filePath, float width, float height) :
-    rotation(0), _texture(CreateScope<CoffeeMaker::Texture>(filePath)) {
-  clientRect.w = width;
-  clientRect.h = height;
-}
-
-void Sprite::Render() { _texture->Render(clipRect, clientRect, rotation); }
-
-TestPlayer::TestPlayer() : _rotation(0), _rotation2(0), _flip(SDL_FLIP_NONE) {
+TestPlayer::TestPlayer() : _sprite(CreateScope<CoffeeMaker::Sprite>("PlayerV1.png")), _rotation(0), _rotation2(0) {
   _position.x = 400;
   _position.y = 300;
-  _clientRect.x = _position.x;
-  _clientRect.y = _position.y;
+
+  _sprite->clientRect.x = _position.x;
+  _sprite->clientRect.y = _position.y;
+  _sprite->clientRect.w = 48;
+  _sprite->clientRect.h = 48;
 }
 
 TestPlayer::~TestPlayer() {}
 
 void TestPlayer::Render() {
-  _texture.Render(_clipRect, _clientRect, _rotation, _flip);
+  _sprite->Render();
+  // _texture.Render(_clipRect, _clientRect, _rotation, _flip);
 
   SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), CoffeeMaker::Colors::Yellow.r,
                          CoffeeMaker::Colors::Yellow.g, CoffeeMaker::Colors::Yellow.b, CoffeeMaker::Colors::Yellow.a);
@@ -80,8 +70,8 @@ void TestPlayer::Update(float deltaTime) {
   }
   _position += CoffeeMaker::Math::Normalize(_movement) * deltaTime * 200;
 
-  _clientRect.x = _position.x;
-  _clientRect.y = _position.y;
+  _sprite->rotation = _rotation;
+  _sprite->SetPosition(_position);
 }
 void TestPlayer::Init() {}
 void TestPlayer::Pause() {}
