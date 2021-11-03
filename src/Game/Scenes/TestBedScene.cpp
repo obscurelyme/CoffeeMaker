@@ -12,9 +12,18 @@
 TestEnemy::TestEnemy() :
     _sprite(CreateScope<CoffeeMaker::Sprite>("EnemyV1.png")),
     _rotation(0),
-    _trail({}),
     _entranceSpline(CreateScope<Animations::EnemyEntrance>()),
-    _exitSpline(CreateScope<Animations::EnemyExit>()) {
+    _exitSpline(CreateScope<Animations::EnemyExit>()),
+    _exitTimeout(CreateScope<CoffeeMaker::Timeout>(10000,
+                                                   [this]() {
+                                                     if (_state == TestEnemy::State::StrafeLeft) {
+                                                       _state = TestEnemy::State::WillExit_StrafeLeft;
+                                                     }
+                                                     if (_state == TestEnemy::State::StrafeRight) {
+                                                       _state = TestEnemy::State::WillExit_StrafeRight;
+                                                     }
+                                                   })),
+    _state(TestEnemy::State::Entering) {
   _position.x = 400;
   _position.y = 150;
 
@@ -22,6 +31,10 @@ TestEnemy::TestEnemy() :
   _sprite->clientRect.y = _position.y;
   _sprite->clientRect.w = 48;
   _sprite->clientRect.h = 48;
+  _entranceSpline->OnComplete([this](void*) {
+    _state = TestEnemy::State::StrafeLeft;
+    _exitTimeout->Start();
+  });
 }
 
 TestEnemy::~TestEnemy() {}
@@ -32,21 +45,45 @@ void TestEnemy::Update(float deltaTime) {
   using Vec2 = CoffeeMaker::Math::Vector2D;
 
   if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_R)) {
+    _state = TestEnemy::State::Entering;
     _entranceSpline->Reset();
     _exitSpline->Reset();
   }
 
-  if (!_entranceSpline->Complete()) {
-    _entranceSpline->Update(deltaTime);
-    _exitSpline->Update(deltaTime);
-    _exitSpline->Position();
+  switch (_state) {
+    case TestEnemy::State::WillExit_StrafeLeft: {
+      MoveLeft(deltaTime);
+      if (_position.x <= 400) {
+        _state = TestEnemy::State::Exiting;
+      }
+    } break;
+    case TestEnemy::State::WillExit_StrafeRight: {
+      MoveRight(deltaTime);
+      if (_position.x >= 400) {
+        _state = TestEnemy::State::Exiting;
+      }
+    } break;
+    case TestEnemy::State::StrafeLeft: {
+      MoveLeft(deltaTime);
+    } break;
+    case TestEnemy::State::StrafeRight: {
+      MoveRight(deltaTime);
+    } break;
+    case TestEnemy::State::Entering: {
+      _entranceSpline->Update(deltaTime);
 
-    Vec2 currentPos = _entranceSpline->Position();
+      Vec2 currentPos = _entranceSpline->Position();
 
-    _rotation = CoffeeMaker::Math::rad2deg(_position.LookAt(currentPos)) + 90;
-    _position = currentPos;
-  } else {
-    _rotation = 180;  // just look down
+      _rotation = CoffeeMaker::Math::rad2deg(_position.LookAt(currentPos)) + 90;
+      _position = currentPos;
+    } break;
+    case TestEnemy::State::Exiting: {
+      _exitSpline->Update(deltaTime);
+      Vec2 currentPos = _exitSpline->Position();
+
+      _rotation = CoffeeMaker::Math::rad2deg(_position.LookAt(currentPos)) + 90;
+      _position = currentPos;
+    } break;
   }
 
   _sprite->rotation = _rotation;
@@ -88,6 +125,24 @@ void TestEnemy::Render() {
 }
 void TestEnemy::Pause() {}
 void TestEnemy::Unpause() {}
+
+void TestEnemy::MoveLeft(float deltaTime) {
+  _rotation = 180;
+  if (_position.x > 100) {
+    _position += CoffeeMaker::Math::Vector2D::Left() * 200 * deltaTime;
+  } else {
+    _state = TestEnemy::State::StrafeRight;
+  }
+}
+
+void TestEnemy::MoveRight(float deltaTime) {
+  _rotation = 180;
+  if (_position.x < 700) {
+    _position += CoffeeMaker::Math::Vector2D::Right() * 200 * deltaTime;
+  } else {
+    _state = TestEnemy::State::StrafeLeft;
+  }
+}
 
 TestPlayer* TestPlayer::_instance = nullptr;
 CoffeeMaker::Math::Vector2D& TestPlayer::Position() { return _instance->_position; }

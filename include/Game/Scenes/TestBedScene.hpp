@@ -55,6 +55,16 @@ class TestPlayer : public Entity {
 
 class TestEnemy : public Entity {
   public:
+  enum class State {
+    Entering,
+    StrafeRight,
+    StrafeLeft,
+    WillExit_StrafeLeft,
+    WillExit_StrafeRight,
+    Exiting,
+  };
+
+  public:
   TestEnemy();
   ~TestEnemy();
   virtual void Init();
@@ -64,13 +74,20 @@ class TestEnemy : public Entity {
   virtual void Unpause();
 
   private:
+  void AnimateEntrance();
+  void AnimateExit();
+
+  void MoveLeft(float deltaTime = 0.0f);
+  void MoveRight(float deltaTime = 0.0f);
+
   Scope<CoffeeMaker::Sprite> _sprite;
   double _rotation;
   CoffeeMaker::Math::Vector2D _movement;
   CoffeeMaker::Math::Vector2D _position;
-  std::vector<CoffeeMaker::Math::Point2D> _trail;
   Scope<Animations::EnemyEntrance> _entranceSpline;
   Scope<Animations::EnemyExit> _exitSpline;
+  Scope<CoffeeMaker::Timeout> _exitTimeout;
+  State _state;
 };
 
 class TestBedScene : public Scene {

@@ -75,6 +75,18 @@ namespace CoffeeMaker {
       }
     }
 
+    static void PauseAllTimeouts() {
+      for (auto& to : _timeouts) {
+        to->Pause();
+      }
+    }
+
+    static void UnpauseAllTimeouts() {
+      for (auto& to : _timeouts) {
+        to->Unpause();
+      }
+    }
+
     private:
     Uint32 _delay;
     std::function<void(void)> _callback;

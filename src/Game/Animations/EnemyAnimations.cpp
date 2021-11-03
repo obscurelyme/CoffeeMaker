@@ -7,7 +7,17 @@
 Animations::BaseSplineAnimation::BaseSplineAnimation(float animationDuration) :
     _spline(CreateScope<CoffeeMaker::Spline>(animationDuration)) {}
 
-void Animations::BaseSplineAnimation::Update(float deltaTime) { _spline->Update(deltaTime); }
+Animations::BaseSplineAnimation::~BaseSplineAnimation() {
+  _startListeners.clear();
+  _completeListeners.clear();
+}
+
+void Animations::BaseSplineAnimation::Update(float deltaTime) {
+  _spline->Update(deltaTime);
+  if (_spline->IsComplete()) {
+    ProcessComplete();
+  }
+}
 
 CoffeeMaker::Math::Vector2D Animations::BaseSplineAnimation::Position() const { return _spline->CurrentPosition(); };
 
@@ -16,6 +26,22 @@ void Animations::BaseSplineAnimation::Reset() { _spline->Reset(); }
 void Animations::BaseSplineAnimation::DebugRender() const { _spline->DebugRender(); }
 
 bool Animations::BaseSplineAnimation::Complete() const { return _spline->IsComplete(); }
+
+void Animations::BaseSplineAnimation::OnStart(std::function<void(void*)> fn) { _startListeners.emplace_back(fn); }
+
+void Animations::BaseSplineAnimation::OnComplete(std::function<void(void*)> fn) { _completeListeners.emplace_back(fn); }
+
+void Animations::BaseSplineAnimation::ProcessStart() {
+  for (auto fn : _startListeners) {
+    std::invoke(fn, nullptr);
+  }
+}
+
+void Animations::BaseSplineAnimation::ProcessComplete() {
+  for (auto fn : _completeListeners) {
+    std::invoke(fn, nullptr);
+  }
+}
 
 //------------------------------------------------------------------------------------------
 //----- EnemyEntrance ----------------------------------------------------------------------

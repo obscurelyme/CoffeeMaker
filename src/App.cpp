@@ -103,11 +103,13 @@ int main(int, char**) {
         if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
           paused = true;
           SceneManager::PauseScene();
+          CoffeeMaker::Timeout::PauseAllTimeouts();
         }
         if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE ||
             event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_LOAD) {
           paused = false;
           SceneManager::UnpauseScene();
+          CoffeeMaker::Timeout::UnpauseAllTimeouts();
         }
         if (event.user.code == 1245) {
           if (event.user.data2 != nullptr) {
