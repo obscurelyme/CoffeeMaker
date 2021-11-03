@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.16.0)
 set(VCPKG_MANIFEST_MODE ON)
 
 if (WIN32)
-  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
-  # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
+  # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
 endif()
 
 if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
@@ -54,7 +54,8 @@ set(COFFEEMAKER_ROOT_SOURCES
   src/Event.cpp
   src/Math.cpp
   src/Sprite.cpp
-  src/Spline.cpp)
+  src/Spline.cpp
+  src/Audio.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cpp)
 set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/UIComponent.cpp src/Widgets/View.cpp src/Widgets/Text.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES})

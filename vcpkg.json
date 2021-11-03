@@ -7,8 +7,12 @@
     "sdl2",
     "sdl2-ttf",
     "sdl2-image",
-    "sdl2-mixer",
+    {
+      "name": "sdl2-mixer",
+      "features": ["libvorbis", "mpg123"]
+    },
     "cppunit",
     "glm"
-  ]
+  ],
+  "builtin-baseline": "843e0ba0d8f9c9c572e45564263eedfc7745e74f"
 }

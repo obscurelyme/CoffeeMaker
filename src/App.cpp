@@ -16,6 +16,7 @@
 #include <filesystem>
 #include <iostream>
 
+#include "Audio.hpp"
 #include "Color.hpp"
 #include "Cursor.hpp"
 #include "Event.hpp"
@@ -65,6 +66,9 @@ int main(int, char**) {
   // SDL_SetAssertionHandler(appHandler, nullptr);
 
   CoffeeMaker::Utilities::Init(SDL_GetBasePath());
+  CoffeeMaker::Audio::Init();
+  Mix_Music* testMusic = CoffeeMaker::Audio::LoadMusic("crazy.mp3");
+  CoffeeMaker::Audio::PlayMusic(testMusic);
   CoffeeMaker::Texture::SetTextureDirectory();
 
   CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 800, 600);
@@ -159,6 +163,9 @@ int main(int, char**) {
     Collider::ProcessCollisions();
   }
 
+  CoffeeMaker::Audio::StopMusic();
+  CoffeeMaker::Audio::FreeMusic(testMusic);
+  CoffeeMaker::Audio::Quit();
   SceneManager::DestroyAllScenes();
   CoffeeMaker::FontManager::Destroy();
   renderer.Destroy();
