@@ -128,6 +128,8 @@ int main(int, char**) {
       }
     }
 
+    CoffeeMaker::Timeout::ProcessTimeouts();
+
     float timeStep = globalTimer.GetTicks() / 1000.0f;
 
     // physics step

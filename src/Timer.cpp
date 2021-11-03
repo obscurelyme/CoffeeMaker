@@ -65,3 +65,5 @@ std::string Timer::toString() {
       (integerSeconds >= 10 ? std::to_string(integerSeconds) : "0" + std::to_string(integerSeconds));
   return std::string(std::to_string(integerMinutes) + ":" + secondTime);
 }
+
+std::vector<Timeout*> CoffeeMaker::Timeout::_timeouts{};

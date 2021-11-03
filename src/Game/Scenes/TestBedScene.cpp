@@ -101,6 +101,7 @@ TestPlayer::TestPlayer() : _sprite(CreateScope<CoffeeMaker::Sprite>("PlayerV1.pn
   _sprite->clientRect.w = 48;
   _sprite->clientRect.h = 48;
   _instance = this;
+  _timeout.Start();
 }
 
 TestPlayer::~TestPlayer() { _instance = nullptr; }
@@ -126,8 +127,6 @@ void TestPlayer::Update(float deltaTime) {
   _rotation = 0;
   _movement.x = 0;
   _movement.y = 0;
-  _timeout.Start();
-  // _timeout.Act();
   if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_LSHIFT)) {
   }
 

@@ -5,6 +5,7 @@
 
 #include <functional>
 #include <string>
+#include <vector>
 
 namespace CoffeeMaker {
 
@@ -37,8 +38,19 @@ namespace CoffeeMaker {
 
   class Timeout : public CoffeeMaker::Timer {
     public:
-    explicit Timeout(Uint32 delay, std::function<void(void)> fn) : _delay(delay), _callback(fn), _started(false){};
-    ~Timeout() = default;
+    explicit Timeout(Uint32 delay, std::function<void(void)> fn) : _delay(delay), _callback(fn), _started(false) {
+      _timeouts.emplace_back(this);
+    };
+    ~Timeout() {
+      for (auto it = _timeouts.begin(); it != _timeouts.end();) {
+        if (this == *it) {
+          it = _timeouts.erase(it);
+          break;
+        } else {
+          ++it;
+        }
+      }
+    };
 
     void Start() {
       if (!_started) {
@@ -47,7 +59,7 @@ namespace CoffeeMaker {
       }
     };
 
-    bool Check() { return GetTicks() >= _delay; };
+    bool Check() { return _started && GetTicks() >= _delay; };
 
     void Act() {
       if (Check()) {
@@ -57,10 +69,18 @@ namespace CoffeeMaker {
       }
     };
 
+    static void ProcessTimeouts() {
+      for (auto& timeout : _timeouts) {
+        timeout->Act();
+      }
+    }
+
     private:
     Uint32 _delay;
     std::function<void(void)> _callback;
     bool _started;
+
+    static std::vector<Timeout*> _timeouts;
   };
 
 }  // namespace CoffeeMaker
