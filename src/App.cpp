@@ -88,7 +88,7 @@ int main(int, char**) {
   SceneManager::AddScene(new TitleScene());
   SceneManager::AddScene(new MainScene());
   SceneManager::AddScene(new TestBedScene());
-  SceneManager::LoadScene();
+  SceneManager::LoadScene(2);
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
 

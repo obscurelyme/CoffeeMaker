@@ -14,7 +14,7 @@ TestEnemy::TestEnemy() :
     _rotation(0),
     _entranceSpline(CreateScope<Animations::EnemyEntrance>()),
     _exitSpline(CreateScope<Animations::EnemyExit>()),
-    _exitTimeout(CreateScope<CoffeeMaker::Timeout>(10000,
+    _exitTimeout(CreateScope<CoffeeMaker::Timeout>(12000,
                                                    [this]() {
                                                      if (_state == TestEnemy::State::StrafeLeft) {
                                                        _state = TestEnemy::State::WillExit_StrafeLeft;
@@ -90,28 +90,6 @@ void TestEnemy::Update(float deltaTime) {
   _sprite->SetPosition(_position);
 }
 
-// void TestEnemy::Update(float deltaTime) {
-//   // Polar coords to get look at
-//   _currentTime += deltaTime;
-//   float weight = _currentTime / _totaltime;
-
-//   if (weight <= 1.0f) {
-//     using Vec2 = CoffeeMaker::Math::Vector2D;
-//     Vec2 currentPos =
-//         CoffeeMaker::Math::CubicBezierCurve(Vec2{50, -50}, Vec2{50, 600}, Vec2{250, 600}, Vec2{250, 150}, weight);
-//     // snapshot Point2D
-//     _trail.emplace_back(CoffeeMaker::Math::Point2D{.x = currentPos.x, .y = currentPos.y});
-//     _position = currentPos;
-//   } else {
-//     _currentTime = 0;
-//     _trail.clear();
-//   }
-
-//   _rotation = CoffeeMaker::Math::rad2deg(_position.LookAt(TestPlayer::Position())) + 90;
-//   _sprite->rotation = _rotation;
-//   _sprite->SetPosition(_position);
-// }
-
 void TestEnemy::Render() {
   // Render enemy sprite
   _sprite->Render();
@@ -128,7 +106,7 @@ void TestEnemy::Unpause() {}
 
 void TestEnemy::MoveLeft(float deltaTime) {
   _rotation = 180;
-  if (_position.x > 100) {
+  if (_position.x > 100 - _sprite->clientRect.w) {
     _position += CoffeeMaker::Math::Vector2D::Left() * 200 * deltaTime;
   } else {
     _state = TestEnemy::State::StrafeRight;
