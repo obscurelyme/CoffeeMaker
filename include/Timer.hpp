@@ -62,16 +62,16 @@ namespace CoffeeMaker {
     bool Check() { return _started && GetTicks() >= _delay; };
 
     void Act() {
-      if (Check()) {
-        std::invoke(_callback);
-        CoffeeMaker::Timer::Stop();
-        _started = false;
-      }
+      CoffeeMaker::Timer::Stop();
+      _started = false;
+      std::invoke(_callback);
     };
 
     static void ProcessTimeouts() {
       for (auto& timeout : _timeouts) {
-        timeout->Act();
+        if (timeout->Check()) {
+          timeout->Act();
+        }
       }
     }
 

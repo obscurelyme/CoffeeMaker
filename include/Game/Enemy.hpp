@@ -50,7 +50,7 @@ class Enemy : public Entity {
   double _rotation{0};
   std::vector<Projectile*> _projectiles;
   int _currentProjectile = 0;
-  CoffeeMaker::Timeout _to{500, std::bind(&Enemy::Fire, this)};
+  CoffeeMaker::Timeout _to{2000, std::bind(&Enemy::Fire, this)};
 };
 
 class SpecialEnemy : public Enemy {

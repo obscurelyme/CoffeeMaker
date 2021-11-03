@@ -57,14 +57,6 @@ void MainScene::Update(float deltaTime) {
 
   _backgroundTiles->Update(deltaTime);
 
-  if (_currentSpawn < MAX_ENEMIES) {
-    _currentTime += deltaTime;
-    if (_currentTime >= _totalTime) {
-      _enemies[_currentSpawn++]->Spawn();
-      _currentTime = 0;
-    }
-  }
-
   for (auto enemy : _enemies) {
     // if (!enemy->IsActive()) {
     //   enemy->Spawn();
@@ -75,7 +67,7 @@ void MainScene::Update(float deltaTime) {
   // if (!_specialEnemy->IsActive()) {
   //   _specialEnemy->Spawn();
   // }
-  // _specialEnemy->Update(deltaTime);
+  _specialEnemy->Update(deltaTime);
 
   for (auto& entity : _entities) {
     entity->Update(deltaTime);
@@ -102,9 +94,11 @@ void MainScene::Init() {
   _entities.push_back(_player);
   _timer.Start();
   _loaded = true;
+  _enemyTimeoutSpawn->Start();
 }
 
 void MainScene::Destroy() {
+  _enemyTimeoutSpawn->Stop();
   _entities.clear();
   _enemies.fill(nullptr);
   Collider::ClearAllUnprocessedCollisions();
@@ -114,8 +108,15 @@ void MainScene::Destroy() {
   delete _hud;
   delete _specialEnemy;
   _currentSpawn = 0;
-  _currentTime = 0;
   _loaded = false;
 }
 
-MainScene::MainScene() {}
+MainScene::MainScene() :
+    _enemyTimeoutSpawn(CreateScope<CoffeeMaker::Timeout>(500, std::bind(&MainScene::SpawnEnemy, this))) {}
+
+void MainScene::SpawnEnemy() {
+  if (_currentSpawn < MAX_ENEMIES) {
+    _enemies[_currentSpawn++]->Spawn();
+    _enemyTimeoutSpawn->Start();
+  }
+}

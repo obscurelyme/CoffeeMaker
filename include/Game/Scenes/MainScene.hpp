@@ -24,6 +24,8 @@ class MainScene : public Scene {
   virtual void Unpause();
 
   private:
+  void SpawnEnemy();
+
   static const unsigned int MAX_ENEMIES = 5;
 
   Tiles* _backgroundTiles;
@@ -34,8 +36,7 @@ class MainScene : public Scene {
   Menu* _menu;
   HeadsUpDisplay* _hud;
   CoffeeMaker::Timer _timer;
-  float _currentTime;
-  float _totalTime{0.5f};
+  Scope<CoffeeMaker::Timeout> _enemyTimeoutSpawn;
   unsigned int _currentSpawn{0};
 };
 

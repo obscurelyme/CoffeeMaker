@@ -142,7 +142,6 @@ void SpecialEnemy::Init() {
 void SpecialEnemy::Update(float deltaTime) {
   using Vec2 = CoffeeMaker::Math::Vector2D;
   if (_active) {
-    _to.Start();
     _currentTime += deltaTime;
     float weight = _currentTime / 1.5f;
     Vec2 pos{_clientRect.x, _clientRect.y};
@@ -156,6 +155,7 @@ void SpecialEnemy::Update(float deltaTime) {
       _collider->Update(_clientRect);
     } else {
       // NOTE: side to side motion
+      _to.Start();
       if (_moveright) {
         // move right
         _clientRect.x += deltaTime * (_speed);
@@ -171,8 +171,6 @@ void SpecialEnemy::Update(float deltaTime) {
           _moveright = true;
         }
       }
-
-      _to.Act();  // NOTE: runs the Fire function on an interval
     }
 
     if (!_enteredScreen && !IsOffScreen()) {
