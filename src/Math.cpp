@@ -1,6 +1,5 @@
 #include "Math.hpp"
 
-#define _USE_MATH_DEFINES
 #include <cmath>
 
 RNG CoffeeMaker::Math::RandomEngine::engine;
@@ -24,9 +23,9 @@ float CoffeeMaker::Math::Remap(float inputMin, float inputMax, float outputMin, 
   return CoffeeMaker::Math::Lerp(outputMin, outputMax, weight);
 }
 
-float CoffeeMaker::Math::rad2deg(float rad) { return rad * (180 / M_PI); }
+float CoffeeMaker::Math::rad2deg(float rad) { return rad * static_cast<float>(180.0f / M_PI); }
 
-float CoffeeMaker::Math::deg2rad(float deg) { return deg * (M_PI / 180); }
+float CoffeeMaker::Math::deg2rad(float deg) { return deg * static_cast<float>(M_PI / 180.0f); }
 
 CoffeeMaker::Math::Vector2D CoffeeMaker::Math::QuadraticBezierCurve(const CoffeeMaker::Math::Vector2D& startPos,
                                                                     const CoffeeMaker::Math::Vector2D& centralPoint,
@@ -110,9 +109,9 @@ float CoffeeMaker::Math::Vector2D::LookAt(const CoffeeMaker::Math::Vector2D& rhs
   float arcTan = std::atan((y - rhs.y) / (x - rhs.x));
 
   if (rhs.y - y < 0 && rhs.x - x < 0) {
-    arcTan += M_PI;
+    arcTan += static_cast<float>(M_PI);
   } else if (rhs.x - x < 0) {
-    arcTan += M_PI;
+    arcTan += static_cast<float>(M_PI);
   }
 
   return arcTan;
@@ -125,14 +124,16 @@ CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Vector2D::HeadTowards(const Coffe
 }
 
 float CoffeeMaker::Math::Vector2D::Magnitude(const CoffeeMaker::Math::Vector2D& rhs) const {
-  return std::sqrt(std::pow(rhs.x - x, 2) + std::pow(rhs.y - y, 2));
+  return static_cast<float>(std::sqrt(std::pow(rhs.x - x, 2) + std::pow(rhs.y - y, 2)));
 }
 
 float CoffeeMaker::Math::Vector2D::Magnitude(float endX, float endY) const {
-  return std::sqrt(std::pow(endX - x, 2) + std::pow(endY - y, 2));
+  return static_cast<float>(std::sqrt(std::pow(endX - x, 2) + std::pow(endY - y, 2)));
 }
 
-float CoffeeMaker::Math::Vector2D::Magnitude(void) const { return std::sqrt(std::pow(x, 2) + std::pow(y, 2)); }
+float CoffeeMaker::Math::Vector2D::Magnitude(void) const {
+  return static_cast<float>(std::sqrt(std::pow(x, 2) + std::pow(y, 2)));
+}
 
 CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Vector2D::Up() { return CoffeeMaker::Math::Vector2D(0, 1); }
 CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Vector2D::Down() { return CoffeeMaker::Math::Vector2D(0, -1); }

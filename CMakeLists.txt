@@ -12,6 +12,8 @@ endif()
 
 project(CoffeeMaker VERSION 0.1.0)
 
+add_compile_definitions(_USE_MATH_DEFINES)
+
 set(C_STANDARD_REQUIRED TRUE)
 set(CXX_STANDARD_REQUIRED TRUE)
 set(C_STANDARD 17)

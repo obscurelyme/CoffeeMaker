@@ -47,7 +47,7 @@ class Enemy : public Entity {
   unsigned int _ticks;
   unsigned int _priorTicks;
   unsigned int _speed{225};
-  int _rotation{-90};
+  double _rotation{0};
   std::vector<Projectile*> _projectiles;
   int _currentProjectile = 0;
   CoffeeMaker::Timeout _to{500, std::bind(&Enemy::Fire, this)};

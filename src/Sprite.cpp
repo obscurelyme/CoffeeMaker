@@ -4,8 +4,8 @@ CoffeeMaker::Sprite::Sprite(const std::string& filePath) :
     rotation(0), _texture(CreateScope<CoffeeMaker::Texture>(filePath, true)) {
   clientRect.x = 0;
   clientRect.y = 0;
-  clientRect.w = _texture->Height();
-  clientRect.h = _texture->Width();
+  clientRect.w = static_cast<float>(_texture->Width());
+  clientRect.h = static_cast<float>(_texture->Height());
   clipRect.x = 0;
   clipRect.y = 0;
   clipRect.w = _texture->Width();

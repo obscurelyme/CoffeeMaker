@@ -36,10 +36,10 @@ void CoffeeMaker::Spline::AddCurve(const Vec2& start, const Vec2& control1, cons
   _spline.emplace_back(control1);
   _spline.emplace_back(control2);
   _spline.emplace_back(end);
-  _finalOffset = _spline.size();
+  _finalOffset = static_cast<unsigned int>(_spline.size());
 }
 
-float CoffeeMaker::Spline::Weight() { return _spline.size() / 4; }
+float CoffeeMaker::Spline::Weight() { return _spline.size() / 4.0f; }
 
 void CoffeeMaker::Spline::Start() {
   _currentSegment.emplace_back(_spline.at(0));
@@ -62,7 +62,7 @@ bool CoffeeMaker::Spline::IsComplete() const { return _complete; }
 
 void CoffeeMaker::Spline::Update(float deltaTime) {
   _currentTime += deltaTime;
-  _weight = _currentTime / (_time / (_spline.size() * .25));
+  _weight = _currentTime / (_time / (_spline.size() * 0.25f));
 
   if (_weight >= 1.0f && !_complete) {
     _currentTime = 0;

@@ -44,9 +44,9 @@ void Enemy::Render() {
   float xx = (400 - _clientRect.x);
   float yy = (300 - _clientRect.y);
 
-  float _rotation = glm::degrees(glm::atan(yy, xx));
-  SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), &_clipRect, &_clientRect, _rotation + 90,
-                    NULL, flip);
+  float rotation = glm::degrees(glm::atan(yy, xx));
+  SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), &_clipRect, &_clientRect, rotation + 90, NULL,
+                    flip);
 
   for (auto& projectile : _projectiles) {
     projectile->Render();
@@ -140,18 +140,13 @@ void SpecialEnemy::Init() {
 }
 
 void SpecialEnemy::Update(float deltaTime) {
+  using Vec2 = CoffeeMaker::Math::Vector2D;
   if (_active) {
     _to.Start();
     _currentTime += deltaTime;
     float weight = _currentTime / 1.5f;
-
-    float pAngle = Player::Position().Direction(CoffeeMaker::Math::Vector2D(_clientRect.x, _clientRect.y));
-    _rotation = CoffeeMaker::Math::rad2deg(pAngle);
-    if (_rotation > 0) {
-      _rotation += 90;
-    } else {
-      _rotation -= 90;
-    }
+    Vec2 pos{_clientRect.x, _clientRect.y};
+    _rotation = CoffeeMaker::Math::rad2deg(pos.LookAt(Player::Position())) + 90;
     if (weight <= 1.0f) {
       CoffeeMaker::Math::Vector2D currentPos = CoffeeMaker::Math::CubicBezierCurve(
           CoffeeMaker::Math::Vector2D(-200.0f, 600.0f), CoffeeMaker::Math::Vector2D(0.0f, -50.0f),

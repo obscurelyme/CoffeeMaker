@@ -24,7 +24,7 @@ namespace CoffeeMaker {
       static void Init() {
         auto now = Chrono::system_clock::now();
         auto msSinceEpoch = Chrono::duration_cast<Chrono::milliseconds>(now.time_since_epoch()).count();
-        engine.seed(msSinceEpoch);
+        engine.seed(static_cast<unsigned int>(msSinceEpoch));
       }
 
       static RNG engine;

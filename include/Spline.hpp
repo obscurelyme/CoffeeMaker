@@ -43,9 +43,9 @@ namespace CoffeeMaker {
     std::vector<Vec2> _spline;
     std::vector<Vec2> _currentSegment;
     float _time;
-    int _offset;
+    unsigned int _offset;
     float _currentTime;
-    int _finalOffset;
+    unsigned int _finalOffset;
     bool _complete;
     float _weight;
 
