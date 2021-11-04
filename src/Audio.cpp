@@ -70,6 +70,9 @@ CoffeeMaker::AudioElement::~AudioElement() {
 
 void CoffeeMaker::AudioElement::Play() {
   if (_chunk != nullptr) {
+    if (Mix_Playing(_channel)) {
+      Mix_PlayChannel(-1, _chunk, 0);
+    }
     _channel = Mix_PlayChannel(_channel, _chunk, 0);
   }
 }
