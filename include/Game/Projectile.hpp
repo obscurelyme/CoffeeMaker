@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 
+#include "Audio.hpp"
 #include "Game/Collider.hpp"
 #include "Texture.hpp"
 #include "Utilities.hpp"
@@ -43,6 +44,8 @@ class Projectile {
 
   private:
   static Ref<CoffeeMaker::Texture> _texture;
+  static Ref<CoffeeMaker::AudioElement> _fireSound;
+  static Ref<CoffeeMaker::AudioElement> _impactSound;
   bool _fired;
   SDL_FRect _clientRect;
   double _rotation;
