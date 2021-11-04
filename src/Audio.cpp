@@ -51,3 +51,31 @@ void CoffeeMaker::Audio::PlayMusic(Mix_Music* music) {
 }
 
 void CoffeeMaker::Audio::StopMusic() { Mix_HaltMusic(); }
+
+CoffeeMaker::AudioElement::AudioElement(const std::string& filePath) : _chunk(nullptr), _channel(-1) {
+  std::string fp =
+      fmt::format(fmt::runtime("{}/audio/{}"), CoffeeMaker::Utilities::AssetsDirectory(), filePath.c_str());
+  _chunk = Mix_LoadWAV(fp.c_str());
+  if (_chunk == nullptr) {
+    CM_LOGGER_CRITICAL("Could not load sound file for AudioElement {}", fp);
+  }
+}
+
+CoffeeMaker::AudioElement::~AudioElement() {
+  if (_chunk != nullptr) {
+    Mix_FreeChunk(_chunk);
+    _chunk = nullptr;
+  }
+}
+
+void CoffeeMaker::AudioElement::Play() {
+  if (_chunk != nullptr) {
+    _channel = Mix_PlayChannel(_channel, _chunk, 0);
+  }
+}
+
+void CoffeeMaker::AudioElement::Stop() {
+  if (_chunk != nullptr) {
+    Mix_HaltChannel(_channel);
+  }
+}

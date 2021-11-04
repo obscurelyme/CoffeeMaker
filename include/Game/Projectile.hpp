@@ -8,6 +8,7 @@
 
 #include "Game/Collider.hpp"
 #include "Texture.hpp"
+#include "Utilities.hpp"
 
 class Projectile {
   public:
@@ -41,7 +42,7 @@ class Projectile {
   bool IsFired() const;
 
   private:
-  static std::shared_ptr<CoffeeMaker::Texture> _texture;
+  static Ref<CoffeeMaker::Texture> _texture;
   bool _fired;
   SDL_FRect _clientRect;
   double _rotation;

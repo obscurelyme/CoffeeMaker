@@ -125,7 +125,11 @@ void TestEnemy::MoveRight(float deltaTime) {
 TestPlayer* TestPlayer::_instance = nullptr;
 CoffeeMaker::Math::Vector2D& TestPlayer::Position() { return _instance->_position; }
 
-TestPlayer::TestPlayer() : _sprite(CreateScope<CoffeeMaker::Sprite>("PlayerV1.png")), _rotation(0), _rotation2(0) {
+TestPlayer::TestPlayer() :
+    _sprite(CreateScope<CoffeeMaker::Sprite>("PlayerV1.png")),
+    _rotation(0),
+    _rotation2(0),
+    _sound(CreateScope<CoffeeMaker::AudioElement>("effects/laserLarge_004.ogg")) {
   _position.x = 400;
   _position.y = 500;
 
@@ -160,7 +164,8 @@ void TestPlayer::Update(float deltaTime) {
   _rotation = 0;
   _movement.x = 0;
   _movement.y = 0;
-  if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_LSHIFT)) {
+  if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_SPACE)) {
+    _sound->Play();
   }
 
   if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_LEFT)) {

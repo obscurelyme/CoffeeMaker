@@ -5,6 +5,8 @@
 
 #include <string>
 
+// #include "Utilities.hpp"
+
 namespace CoffeeMaker {
 
   class Audio {
@@ -15,6 +17,18 @@ namespace CoffeeMaker {
     static void FreeMusic(Mix_Music* music);
     static void PlayMusic(Mix_Music* music);
     static void StopMusic();
+  };
+
+  class AudioElement {
+    public:
+    explicit AudioElement(const std::string& filePath);
+    ~AudioElement();
+
+    void Play();
+    void Stop();
+
+    Mix_Chunk* _chunk;
+    int _channel;
   };
 
 }  // namespace CoffeeMaker
