@@ -35,3 +35,11 @@ docker start -i [CONTAINER_NAME]
 ```
 
 I recommend that you have the [Docker extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) installed if working with VS Code.
+
+# Linux with SDL2-Mixer
+
+To leverage SDL2-Mixer
+
+```sh
+sudo apt install libmpg123-dev
+```
