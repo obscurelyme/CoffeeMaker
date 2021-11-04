@@ -67,7 +67,7 @@ int main(int, char**) {
 
   CoffeeMaker::Utilities::Init(SDL_GetBasePath());
   CoffeeMaker::Audio::Init();
-  Mix_Music* testMusic = CoffeeMaker::Audio::LoadMusic("crazy.mp3");
+  Mix_Music* testMusic = CoffeeMaker::Audio::LoadMusic("crazy.ogg");
   CoffeeMaker::Audio::PlayMusic(testMusic);
   CoffeeMaker::Texture::SetTextureDirectory();
 
