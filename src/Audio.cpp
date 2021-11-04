@@ -15,13 +15,13 @@ void CoffeeMaker::Audio::Init() {
     return;
   }
 
-  int flags = MIX_INIT_MP3;
-  int initializedFlags = Mix_Init(flags);
-  if ((initializedFlags & flags) != flags) {
-    std::string msg = fmt::format(fmt::runtime("Could not initialize SDL Mixer {}"), Mix_GetError());
-    CM_LOGGER_CRITICAL(msg);
-    CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("CoffeeMaker::Audio Error", msg);
-  }
+  // int flags = MIX_INIT_MP3;
+  // int initializedFlags = Mix_Init(flags);
+  // if ((initializedFlags & flags) != flags) {
+  //   std::string msg = fmt::format(fmt::runtime("Could not initialize SDL Mixer {}"), Mix_GetError());
+  //   CM_LOGGER_CRITICAL(msg);
+  //   CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("CoffeeMaker::Audio Error", msg);
+  // }
 }
 
 void CoffeeMaker::Audio::Quit() { Mix_CloseAudio(); }
