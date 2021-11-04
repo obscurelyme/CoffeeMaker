@@ -92,8 +92,8 @@ elseif(APPLE)
   find_package(mpg123 CONFIG REQUIRED)
 
   target_link_libraries(main PRIVATE Ogg::ogg)
-  target_link_libraries(main PRIVATE Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile)
   target_link_libraries(main PRIVATE SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_ttf SDL2::SDL2_image SDL2::SDL2_mixer)
+  target_link_libraries(main PRIVATE Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile)
   target_link_libraries(main PRIVATE MPG123::libmpg123 MPG123::libout123 MPG123::libsyn123)
 elseif(LINUX_PLATFORM)
   message("Linking dependencies for Linux")
@@ -101,10 +101,6 @@ elseif(LINUX_PLATFORM)
   find_package(Ogg CONFIG REQUIRED)
   find_package(Vorbis CONFIG REQUIRED)
   find_package(mpg123 CONFIG REQUIRED)
-
-  target_link_libraries(main PRIVATE Ogg::ogg)
-  target_link_libraries(main PRIVATE Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile)
-  target_link_libraries(main PRIVATE MPG123::libmpg123 MPG123::libout123 MPG123::libsyn123)
 
   # SDL2
   target_link_libraries(main PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static)
@@ -114,6 +110,10 @@ elseif(LINUX_PLATFORM)
   target_link_libraries(main PRIVATE SDL2::SDL2_ttf)
   # SDL2-mixer
   target_link_libraries(main PRIVATE SDL2::SDL2_mixer)
+  # SDL2-mixer dependencies
+  target_link_libraries(main PRIVATE Ogg::ogg)
+  target_link_libraries(main PRIVATE Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile)
+  target_link_libraries(main PRIVATE MPG123::libmpg123 MPG123::libout123 MPG123::libsyn123)
 endif()
 
 ## DPI Awareness

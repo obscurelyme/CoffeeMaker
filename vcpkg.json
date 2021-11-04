@@ -10,12 +10,12 @@
     {
       "name": "sdl2-mixer",
       "features": ["libvorbis", "mpg123"],
-      "platform": "osx"
+      "platform": "osx | linux"
     },
     {
       "name": "sdl2-mixer",
       "features": ["dynamic-load", "libvorbis", "mpg123"],
-      "platform": "windows | linux"
+      "platform": "windows"
     },
     {
       "name": "libogg",
