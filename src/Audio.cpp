@@ -24,10 +24,7 @@ void CoffeeMaker::Audio::Init() {
   }
 }
 
-void CoffeeMaker::Audio::Quit() {
-  Mix_Quit();
-  Mix_CloseAudio();
-}
+void CoffeeMaker::Audio::Quit() { Mix_CloseAudio(); }
 
 Mix_Music* CoffeeMaker::Audio::LoadMusic(const std::string& filename) {
   std::string fullFilePath =

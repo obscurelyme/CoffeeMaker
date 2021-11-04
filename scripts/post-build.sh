@@ -1,3 +1,9 @@
 #!/bin/sh
 
-cp -r assets build/assets
+Directory="build/assets"
+
+if [ -d "$Directory" ]; then
+  rm -rf "$Directory" && cp -r assets "$Directory"
+else
+  cp -r assets "$Directory"
+fi

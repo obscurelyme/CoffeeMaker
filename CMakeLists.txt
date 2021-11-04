@@ -87,9 +87,24 @@ if (WIN32)
   target_link_libraries(main PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_ttf SDL2::SDL2_image SDL2::SDL2_mixer)
 elseif(APPLE)
   message("Building for OSX")
+  find_package(Ogg CONFIG REQUIRED)
+  find_package(Vorbis CONFIG REQUIRED)
+  find_package(mpg123 CONFIG REQUIRED)
+
+  target_link_libraries(main PRIVATE Ogg::ogg)
+  target_link_libraries(main PRIVATE Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile)
   target_link_libraries(main PRIVATE SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_ttf SDL2::SDL2_image SDL2::SDL2_mixer)
+  target_link_libraries(main PRIVATE MPG123::libmpg123 MPG123::libout123 MPG123::libsyn123)
 elseif(LINUX_PLATFORM)
   message("Linking dependencies for Linux")
+  find_package(Ogg CONFIG REQUIRED)
+  find_package(Vorbis CONFIG REQUIRED)
+  find_package(mpg123 CONFIG REQUIRED)
+
+  target_link_libraries(main PRIVATE Ogg::ogg)
+  target_link_libraries(main PRIVATE Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile)
+  target_link_libraries(main PRIVATE MPG123::libmpg123 MPG123::libout123 MPG123::libsyn123)
+
   # SDL2
   target_link_libraries(main PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static)
   # SDL2-image
@@ -148,7 +163,7 @@ endif()
 
 if (APPLE OR LINUX_PLATFORM)
   message("Please run ${PROJECT_SOURCE_DIR}/scripts/post-build.sh if this is your first time configuring this project")
-  # execute_process(COMMAND sh "${PROJECT_SOURCE_DIR}/post-build.sh")
+  execute_process(COMMAND sh "${PROJECT_SOURCE_DIR}/scripts/post-build.sh")
 elseif (WIN32)
   message("Please run ${PROJECT_SOURCE_DIR}/scripts/post-build.bat if this is your first time configuring this project")
   # execute_process(COMMAND "${PROJECT_SOURCE_DIR}/scripts/post-build.bat")
