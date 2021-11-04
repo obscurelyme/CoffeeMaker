@@ -6,11 +6,19 @@
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
-std::shared_ptr<CoffeeMaker::Texture> Projectile::_texture = nullptr;
+Ref<CoffeeMaker::Texture> Projectile::_texture = nullptr;
+Ref<CoffeeMaker::AudioElement> Projectile::_fireSound = nullptr;
+Ref<CoffeeMaker::AudioElement> Projectile::_impactSound = nullptr;
 
 Projectile::Projectile() : _fired(false), _rotation(0) {
   if (Projectile::_texture == nullptr) {
-    _texture = std::make_shared<CoffeeMaker::Texture>("missile.png", true);
+    _texture = CreateRef<CoffeeMaker::Texture>("missile.png", true);
+  }
+  if (Projectile::_fireSound == nullptr) {
+    _fireSound = CreateRef<CoffeeMaker::AudioElement>("effects/laserLarge_004.ogg");
+  }
+  if (Projectile::_impactSound == nullptr) {
+    _impactSound = CreateRef<CoffeeMaker::AudioElement>("effects/explosionCrunch_000.ogg");
   }
   _clientRect.w = 16;
   _clientRect.h = 16;
@@ -29,10 +37,12 @@ Projectile::~Projectile() { delete collider; }
 void Projectile::OnHit(Collider* c) {
   if (c->GetType() == Collider::Type::Enemy && collider->GetType() == Collider::Type::Projectile) {
     // this projectile will be considered "used", it can be deactivated and reloaded.
+    _impactSound->Play();
     Reload();
     return;
   }
   if (c->GetType() == Collider::Type::Player && collider->GetType() == Collider::Type::EnemyProjectile) {
+    _impactSound->Play();
     Reload();
     return;
   }
@@ -63,6 +73,7 @@ void Projectile::Update(float deltaTime) {
 
 void Projectile::Fire(float x, float y, double rotation) {
   if (!_fired) {
+    _fireSound->Play();
     _fired = true;
     _clientRect.x = x;
     _clientRect.y = y;
@@ -82,6 +93,7 @@ void Projectile::Fire(float x, float y, double rotation) {
 
 void Projectile::Fire2(float x, float y, float endX, float endY, double rotation) {
   if (!_fired) {
+    _fireSound->Play();
     _fired = true;
     _clientRect.x = x;
     _clientRect.y = y;

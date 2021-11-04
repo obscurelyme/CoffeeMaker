@@ -5,6 +5,7 @@
 
 #include <vector>
 
+#include "Audio.hpp"
 #include "Game/Animations/EnemyAnimations.hpp"
 #include "Game/Entity.hpp"
 #include "Game/Scene.hpp"
@@ -49,6 +50,7 @@ class TestPlayer : public Entity {
   CoffeeMaker::Timeout _timeout{5000, std::bind(&TestPlayer::LookAtRandomPoint, this)};
   double _rotation;
   double _rotation2;
+  Scope<CoffeeMaker::AudioElement> _sound;
 
   static TestPlayer* _instance;
 };
