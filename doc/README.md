@@ -43,3 +43,8 @@ To leverage SDL2-Mixer
 ```sh
 sudo apt install libmpg123-dev
 ```
+
+# Assets
+
+Assets can be copy overed from [Google Drive](https://drive.google.com/drive/folders/1p6DR6DBM-Piak81ub66MXonAL9pEK6e4?usp=sharing)
+They should not be commited to version control.
