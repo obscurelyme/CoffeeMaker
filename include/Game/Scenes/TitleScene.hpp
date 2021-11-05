@@ -3,7 +3,9 @@
 
 #include <memory>
 
+#include "Audio.hpp"
 #include "Game/Scene.hpp"
+#include "Utilities.hpp"
 #include "Widgets/Button.hpp"
 #include "Widgets/Text.hpp"
 #include "Widgets/UIComponent.hpp"
@@ -23,14 +25,8 @@ class TitleScene : public Scene {
 
   private:
   SDL_Color _backgroundColor;
-  // std::unique_ptr<CoffeeMaker::Widgets::View> _view;
-
-  // CoffeeMaker::Widgets::View* _view;
-  // CoffeeMaker::Widgets::Text* _title;
-  // CoffeeMaker::Button* _playButton;
-  // CoffeeMaker::Button* _quitButton;
-
-  std::vector<std::shared_ptr<CoffeeMaker::UIComponent>> _entities;
+  std::vector<Ref<CoffeeMaker::UIComponent>> _entities;
+  CoffeeMaker::MusicTrack* _music;
 };
 
 #endif

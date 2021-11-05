@@ -67,17 +67,15 @@ int main(int, char**) {
 
   CoffeeMaker::Utilities::Init(SDL_GetBasePath());
   CoffeeMaker::Audio::Init();
-  Mix_Music* testMusic = CoffeeMaker::Audio::LoadMusic("crazy.ogg");
-  CoffeeMaker::Audio::PlayMusic(testMusic);
   CoffeeMaker::Texture::SetTextureDirectory();
 
   CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 800, 600);
   CoffeeMaker::Renderer renderer;
 
-  // CoffeeMaker::Cursor cursor("cursor.png");
+  CoffeeMaker::Cursor cursor("cursor.png");
   CoffeeMaker::FontManager::Init();
-  CoffeeMaker::FontManager::LoadFont("Roboto/Roboto-Regular");
-  CoffeeMaker::FontManager::LoadFont("Roboto/Roboto-Black");
+  CoffeeMaker::FontManager::LoadFont("Sarpanch/Sarpanch-Regular");
+  CoffeeMaker::FontManager::LoadFont("Sarpanch/Sarpanch-Bold");
 
   auto end = std::chrono::steady_clock::now();
   std::chrono::duration<float> elapsedSeconds = end - start;
@@ -164,7 +162,6 @@ int main(int, char**) {
   }
 
   CoffeeMaker::Audio::StopMusic();
-  CoffeeMaker::Audio::FreeMusic(testMusic);
   CoffeeMaker::Audio::Quit();
   SceneManager::DestroyAllScenes();
   CoffeeMaker::FontManager::Destroy();

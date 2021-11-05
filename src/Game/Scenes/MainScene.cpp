@@ -77,6 +77,8 @@ void MainScene::Update(float deltaTime) {
 }
 
 void MainScene::Init() {
+  _music = CoffeeMaker::Audio::LoadMusic("music/AsTheWorldTurns.ogg");
+  CoffeeMaker::Audio::PlayMusic(_music);
   SDL_ShowCursor(SDL_DISABLE);
   _hud = new HeadsUpDisplay();
   _menu = new Menu();
@@ -98,6 +100,8 @@ void MainScene::Init() {
 }
 
 void MainScene::Destroy() {
+  CoffeeMaker::Audio::StopMusic();
+  CoffeeMaker::Audio::FreeMusic(_music);
   _enemyTimeoutSpawn->Stop();
   _entities.clear();
   _enemies.fill(nullptr);

@@ -12,7 +12,7 @@ FPS::FPS() : _text(std::make_shared<Text>("00")) {
   _priorTime = SDL_GetTicks();
   _currentTime = _priorTime;
 
-  _text->SetFont(FontManager::UseFont("Roboto/Roboto-Regular"));
+  _text->SetFont(FontManager::UseFont("Sarpanch/Sarpanch-Regular"));
   _text->SetColor(Color(255, 255, 0, 255));  // Yellow
   _text->SetHorizontalAlignment(HorizontalAlignment::Centered);
   _text->SetVerticalAlignment(VerticalAlignment::Centered);

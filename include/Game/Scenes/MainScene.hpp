@@ -3,6 +3,7 @@
 
 #include <array>
 
+#include "Audio.hpp"
 #include "Game/Enemy.hpp"
 #include "Game/Entity.hpp"
 #include "Game/Hud.hpp"
@@ -38,6 +39,7 @@ class MainScene : public Scene {
   CoffeeMaker::Timer _timer;
   Scope<CoffeeMaker::Timeout> _enemyTimeoutSpawn;
   unsigned int _currentSpawn{0};
+  CoffeeMaker::MusicTrack* _music;
 };
 
 #endif

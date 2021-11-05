@@ -33,9 +33,9 @@ HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
   score = std::make_shared<Text>("Score: 0");
   time = std::make_shared<Text>("Time: 0");
   playerHealth = std::make_shared<Text>("Lives: " + std::to_string(_life));
-  score->SetFont("Roboto/Roboto-Regular");
-  time->SetFont("Roboto/Roboto-Regular");
-  playerHealth->SetFont("Roboto/Roboto-Regular");
+  score->SetFont("Sarpanch/Sarpanch-Regular");
+  time->SetFont("Sarpanch/Sarpanch-Regular");
+  playerHealth->SetFont("Sarpanch/Sarpanch-Regular");
   hudView = std::make_unique<View>(800, 50);
   score->SetColor(CoffeeMaker::Colors::Yellow);
   time->SetColor(CoffeeMaker::Colors::Yellow);
