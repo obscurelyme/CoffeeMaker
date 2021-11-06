@@ -123,7 +123,7 @@ void MainScene::Destroy() {
 
 MainScene::MainScene() :
     _enemySpawnTask(CreateScope<CoffeeMaker::Async::IntervalTask>(
-        [this] {
+        [] {
           CoffeeMaker::GameEvents::PushEvent("ENEMY_SPAWN", 0);
           // CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_EVENT);
         },

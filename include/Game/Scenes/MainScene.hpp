@@ -20,12 +20,12 @@
 class MainScene : public Scene {
   public:
   MainScene();
-  virtual void Render();
-  virtual void Update(float deltaTime);
-  virtual void Init();
-  virtual void Destroy();
-  virtual void Pause();
-  virtual void Unpause();
+  virtual void Render() override;
+  virtual void Update(float deltaTime) override;
+  virtual void Init() override;
+  virtual void Destroy() override;
+  virtual void Pause() override;
+  virtual void Unpause() override;
   virtual void OnEvent(Sint32 type, void* data1 = nullptr, void* data2 = nullptr) override;
 
   private:
