@@ -19,6 +19,7 @@ class TitleScene : public Scene {
   virtual void Destroy();
   virtual void Pause();
   virtual void Unpause();
+  virtual void OnEvent(Sint32 type, void* data1 = nullptr, void* data2 = nullptr) override;
 
   void Play();
   void Quit();

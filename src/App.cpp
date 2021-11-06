@@ -94,6 +94,9 @@ int main(int, char**) {
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
 
+  CoffeeMaker::GameEvents::AddEvent("ENEMY_SPAWN");
+  CoffeeMaker::GameEvents::AddEvent("ENEMY_TRAVEL_TOGETHER");
+
   while (!quit) {
     // get input
     while (SDL_PollEvent(&event)) {
@@ -102,6 +105,10 @@ int main(int, char**) {
       }
 
       if (event.type == SDL_USEREVENT) {
+        if (event.user.code == CoffeeMaker::GameEvents::Events["ENEMY_SPAWN"]) {
+          SceneManager::HandleSceneEvent(event.user.code, event.user.data1, event.user.data2);
+        }
+
         if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
           paused = true;
           SceneManager::PauseScene();
@@ -112,6 +119,9 @@ int main(int, char**) {
           paused = false;
           SceneManager::UnpauseScene();
           CoffeeMaker::Timeout::UnpauseAllTimeouts();
+        }
+        if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_EVENT) {
+          SceneManager::HandleSceneEvent(event.user.code, event.user.data1, event.user.data2);
         }
         if (event.user.code == 1245) {
           if (event.user.data2 != nullptr) {

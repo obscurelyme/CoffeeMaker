@@ -57,6 +57,10 @@ void SceneManager::DestroyAllScenes() {
   }
 }
 
+void SceneManager::HandleSceneEvent(Sint32 type, void* data1, void* data2) {
+  _currentScene->OnEvent(type, data1, data2);
+}
+
 int Scene::_sceneId = 0;
 
 Scene::Scene() { _id = "Scene-" + std::to_string(++_sceneId); }

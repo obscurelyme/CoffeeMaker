@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 
+#include <future>
 #include <vector>
 
 #include "Audio.hpp"
@@ -18,6 +19,17 @@
 #include "Utilities.hpp"
 #include "Widgets/Text.hpp"
 #include "Widgets/View.hpp"
+
+template <typename T>
+using Future = std::future<T>;
+
+template <typename T, typename... Args>
+using Function = std::function<T(Args... args)>;
+
+template <typename T, typename F, typename... Args>
+Future<T> makeFuture(F fn, Args&&... args) {
+  return std::async(std::launch::async, fn, std::forward<Args&&>(args)...);
+}
 
 class TestPlayer : public Entity {
   public:
@@ -38,6 +50,8 @@ class TestPlayer : public Entity {
   void SetRandomPointText2(Ref<CoffeeMaker::Widgets::Text> txt);
   void LookAtRandomPoint();
 
+  static void TestFuture();
+
   private:
   Scope<CoffeeMaker::Sprite> _sprite;
   CoffeeMaker::Math::Vector2D _position;
@@ -51,6 +65,7 @@ class TestPlayer : public Entity {
   double _rotation;
   double _rotation2;
   Scope<CoffeeMaker::AudioElement> _sound;
+  Future<void> _future;
 
   static TestPlayer* _instance;
 };
@@ -103,6 +118,7 @@ class TestBedScene : public Scene {
   virtual void Destroy() override;
   virtual void Pause() override;
   virtual void Unpause() override;
+  virtual void OnEvent(Sint32 type, void* data1 = nullptr, void* data2 = nullptr) override;
 
   private:
   void Quit();

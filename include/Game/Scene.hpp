@@ -1,6 +1,8 @@
 #ifndef _scene_hpp
 #define _scene_hpp
 
+#include <SDL2/SDL.h>
+
 #include <string>
 #include <vector>
 
@@ -16,6 +18,7 @@ class Scene {
   virtual void Pause() = 0;
   virtual void Unpause() = 0;
   virtual bool IsLoaded();
+  virtual void OnEvent(Sint32 type, void* data1 = nullptr, void* data2 = nullptr) = 0;
 
   private:
   std::string _id;
@@ -35,6 +38,7 @@ class SceneManager {
   static void LoadScene(unsigned long index);
   static void AddScene(Scene* scene);
   static void DestroyAllScenes();
+  static void HandleSceneEvent(Sint32 type, void* data1, void* data2);
   static std::vector<Scene*> scenes;
 
   private:

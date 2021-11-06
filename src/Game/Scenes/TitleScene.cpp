@@ -92,3 +92,5 @@ void TitleScene::Quit() {
   quit.type = SDL_QUIT;
   SDL_PushEvent(&quit);
 }
+
+void TitleScene::OnEvent(Sint32, void*, void*) {}
