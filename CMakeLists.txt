@@ -36,6 +36,8 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
+set(APP_RESOURCES resources.rc)
+
 set(COFFEEMAKER_MAIN src/App.cpp)
 set(COFFEEMAKER_ROOT_SOURCES
   src/Renderer.cpp
@@ -58,7 +60,7 @@ set(COFFEEMAKER_ROOT_SOURCES
   src/Audio.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cpp)
 set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/UIComponent.cpp src/Widgets/View.cpp src/Widgets/Text.cpp)
-set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES})
+set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES} ${APP_RESOURCES})
 
 set(GAME_SOURCES
   src/Game/Scenes/TitleScene.cpp
