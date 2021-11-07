@@ -2,4 +2,4 @@
 
 [About](about.md)
 
-[Post](blogs/post.md)
+[Post](_posts/post.md)
