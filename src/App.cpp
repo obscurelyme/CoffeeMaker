@@ -105,34 +105,36 @@ int main(int, char**) {
       }
 
       if (event.type == SDL_USEREVENT) {
-        if (event.user.code == CoffeeMaker::GameEvents::Events["ENEMY_SPAWN"]) {
-          SceneManager::HandleSceneEvent(event.user.code, event.user.data1, event.user.data2);
-        }
+        CoffeeMaker::GameEvents::ProcessEvent(event.user);
 
-        if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
-          paused = true;
-          SceneManager::PauseScene();
-          CoffeeMaker::Timeout::PauseAllTimeouts();
-        }
-        if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE ||
-            event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_LOAD) {
-          paused = false;
-          SceneManager::UnpauseScene();
-          CoffeeMaker::Timeout::UnpauseAllTimeouts();
-        }
-        if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_EVENT) {
-          SceneManager::HandleSceneEvent(event.user.code, event.user.data1, event.user.data2);
-        }
-        if (event.user.code == 1245) {
-          if (event.user.data2 != nullptr) {
-            void (*p)(void*) = reinterpret_cast<void (*)(void*)>(event.user.data1);
-            p(event.user.data2);
-          } else {
-            void (*p)() = reinterpret_cast<void (*)()>(event.user.data1);
-            p();
-          }
-          break;
-        }
+        // if (event.user.code == CoffeeMaker::GameEvents::Events["ENEMY_SPAWN"]) {
+        //   SceneManager::HandleSceneEvent(event.user.code, event.user.data1, event.user.data2);
+        // }
+
+        // if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
+        //   paused = true;
+        //   SceneManager::PauseScene();
+        //   CoffeeMaker::Timeout::PauseAllTimeouts();
+        // }
+        // if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE ||
+        //     event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_LOAD) {
+        //   paused = false;
+        //   SceneManager::UnpauseScene();
+        //   CoffeeMaker::Timeout::UnpauseAllTimeouts();
+        // }
+        // if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_EVENT) {
+        //   SceneManager::HandleSceneEvent(event.user.code, event.user.data1, event.user.data2);
+        // }
+        // if (event.user.code == 1245) {
+        //   if (event.user.data2 != nullptr) {
+        //     void (*p)(void*) = reinterpret_cast<void (*)(void*)>(event.user.data1);
+        //     p(event.user.data2);
+        //   } else {
+        //     void (*p)() = reinterpret_cast<void (*)()>(event.user.data1);
+        //     p();
+        //   }
+        //   break;
+        // }
       }
 
       CoffeeMaker::Button::PollEvents(&event);

@@ -11,9 +11,11 @@
 using namespace CoffeeMaker;
 
 int Delegate::_uid = 0;
+int Delegate2::_uid = 0;
 
 Sint32 CoffeeMaker::GameEvents::Marker = 1'000'000;
 std::map<std::string, Sint32> CoffeeMaker::GameEvents::Events = {};
+std::map<Sint32, GameEvent*> CoffeeMaker::GameEvents::Events2 = {};
 
 void CoffeeMaker::GameEvents::AddEvent(const std::string& event) { Events[event] = CoffeeMaker::GameEvents::Marker++; };
 
@@ -25,6 +27,41 @@ void CoffeeMaker::GameEvents::PushEvent(const std::string& name, Sint32, void* d
     event.user = userevent;
     SDL_PushEvent(&event);
   }
+}
+
+void CoffeeMaker::GameEvents::ProcessEvent(const SDL_UserEvent& event) {
+  if (CoffeeMaker::GameEvents::Events2.contains(event.code)) {
+    CoffeeMaker::GameEvents::Events2[event.code]->Emit();
+  }
+
+  // if (event.code == CoffeeMaker::GameEvents::Events["ENEMY_SPAWN"]) {
+  //   SceneManager::HandleSceneEvent(event.code, event.data1, event.data2);
+  // }
+
+  // if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
+  //   paused = true;
+  //   SceneManager::PauseScene();
+  //   CoffeeMaker::Timeout::PauseAllTimeouts();
+  // }
+  // if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE ||
+  //     event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_LOAD) {
+  //   paused = false;
+  //   SceneManager::UnpauseScene();
+  //   CoffeeMaker::Timeout::UnpauseAllTimeouts();
+  // }
+  // if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_EVENT) {
+  //   SceneManager::HandleSceneEvent(event.code, event.data1, event.data2);
+  // }
+  // if (event.code == 1245) {
+  //   if (event.data2 != nullptr) {
+  //     void (*p)(void*) = reinterpret_cast<void (*)(void*)>(event.data1);
+  //     p(event.data2);
+  //   } else {
+  //     void (*p)() = reinterpret_cast<void (*)()>(event.data1);
+  //     p();
+  //   }
+  //   break;
+  // }
 }
 
 void CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents appEvent) {
