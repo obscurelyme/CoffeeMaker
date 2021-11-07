@@ -1,1 +1,4 @@
 theme: jekyll-theme-merlot
+
+production_url: https://obscurelyme.github.io/CoffeeMaker
+BASE_PATH: https://obscurelyme.github.io/CoffeeMaker
