@@ -1,1 +1,3 @@
 # CoffeeMaker
+
+[About](/about)
