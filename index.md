@@ -1,5 +1,5 @@
 # CoffeeMaker
 
-[About](/CoffeeMaker/about)
+[About](about.md)
 
-[Post](/CoffeeMaker/blogs/post)
+[Post](blogs/post.md)
