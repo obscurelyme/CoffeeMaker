@@ -2,9 +2,14 @@
 
 #include <SDL2/SDL.h>
 
+#include <iostream>
+#include <thread>
+
 #include "Event.hpp"
 #include "Game/Collider.hpp"
 #include "InputManager.hpp"
+
+std::mutex MainScene::_enemyMutex;
 
 void MainScene::Render() {
   _backgroundTiles->Render();
@@ -23,6 +28,7 @@ void MainScene::Render() {
 }
 
 void MainScene::Pause() {
+  _enemySpawnTask->Pause();
   SDL_ShowCursor(SDL_ENABLE);
   _hud->Pause();
   for (auto enemy : _enemies) {
@@ -34,6 +40,7 @@ void MainScene::Pause() {
 }
 
 void MainScene::Unpause() {
+  _enemySpawnTask->Unpause();
   SDL_ShowCursor(SDL_DISABLE);
   _hud->Unpause();
   for (auto enemy : _enemies) {
@@ -77,6 +84,8 @@ void MainScene::Update(float deltaTime) {
 }
 
 void MainScene::Init() {
+  _music = CoffeeMaker::Audio::LoadMusic("music/AsTheWorldTurns.ogg");
+  CoffeeMaker::Audio::PlayMusic(_music);
   SDL_ShowCursor(SDL_DISABLE);
   _hud = new HeadsUpDisplay();
   _menu = new Menu();
@@ -92,13 +101,15 @@ void MainScene::Init() {
   }
 
   _entities.push_back(_player);
-  _timer.Start();
   _loaded = true;
-  _enemyTimeoutSpawn->Start();
+  _enemySpawnTask->Start();
 }
 
 void MainScene::Destroy() {
-  _enemyTimeoutSpawn->Stop();
+  _loaded = false;
+  _enemySpawnTask->Cancel();
+  CoffeeMaker::Audio::StopMusic();
+  CoffeeMaker::Audio::FreeMusic(_music);
   _entities.clear();
   _enemies.fill(nullptr);
   Collider::ClearAllUnprocessedCollisions();
@@ -108,15 +119,25 @@ void MainScene::Destroy() {
   delete _hud;
   delete _specialEnemy;
   _currentSpawn = 0;
-  _loaded = false;
 }
 
 MainScene::MainScene() :
-    _enemyTimeoutSpawn(CreateScope<CoffeeMaker::Timeout>(500, std::bind(&MainScene::SpawnEnemy, this))) {}
+    _enemySpawnTask(CreateScope<CoffeeMaker::Async::IntervalTask>(
+        [] {
+          CoffeeMaker::GameEvents::PushEvent("ENEMY_SPAWN", 0);
+          // CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_EVENT);
+        },
+        500)) {}
 
-void MainScene::SpawnEnemy() {
-  if (_currentSpawn < MAX_ENEMIES) {
-    _enemies[_currentSpawn++]->Spawn();
-    _enemyTimeoutSpawn->Start();
+void MainScene::OnEvent(Sint32 type, void*, void*) {
+  if (_loaded) {
+    switch (type) {
+      case 1'000'000: {
+        _enemies[_currentSpawn++]->Spawn();
+        if (_currentSpawn == MAX_ENEMIES) {
+          _enemySpawnTask->Cancel();
+        }
+      } break;
+    }
   }
 }

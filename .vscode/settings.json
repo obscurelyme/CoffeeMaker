@@ -3,8 +3,8 @@
   "C_Cpp.clang_format_path": "${workspaceDirectory}/.clang-format",
   "C_Cpp.formatting": "clangFormat",
   "files.associations": {
-    "*.tsx": "typescriptreact",
     "*.cpp": "cpp",
+    "*.tsx": "typescriptreact",
     "filesystem": "cpp",
     "algorithm": "cpp",
     "array": "cpp",
@@ -113,7 +113,8 @@
     "__tuple": "cpp",
     "__bits": "cpp",
     "__tree": "cpp",
-    "complex": "cpp"
+    "complex": "cpp",
+    "future": "cpp"
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"

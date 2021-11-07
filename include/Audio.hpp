@@ -9,6 +9,9 @@
 
 namespace CoffeeMaker {
 
+  using MusicTrack = Mix_Music;
+  using SoundTrack = Mix_Chunk;
+
   class Audio {
     public:
     static void Init();

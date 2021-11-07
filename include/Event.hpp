@@ -1,8 +1,11 @@
 #ifndef _coffeemaker_event_hpp
 #define _coffeemaker_event_hpp
 
+#include <SDL2/SDL.h>
+
 #include <functional>
 #include <list>
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -18,6 +21,15 @@ namespace CoffeeMaker {
     COFFEEMAKER_GAME_QUIT,
     COFFEEMAKER_SCENE_LOAD,
     COFFEEMAKER_SCENE_UNLOAD,
+    COFFEEMAKER_SCENE_EVENT
+  };
+
+  class GameEvents {
+    public:
+    static std::map<std::string, int> Events;
+    static void AddEvent(const std::string& name);
+    static void PushEvent(const std::string& name, Sint32 code = 0, void* data1 = nullptr, void* data2 = nullptr);
+    static Sint32 Marker;
   };
 
   /**

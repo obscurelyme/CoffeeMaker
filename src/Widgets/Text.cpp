@@ -58,7 +58,7 @@ void Text::Render() {
     exit(1);
   }
 
-  UIComponent::DebugRender();
+  // UIComponent::DebugRender(); NOTE: no debug rendering
   SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
   SDL_RenderCopy(renderer, _texture, NULL, &clientRect);
   CoffeeMaker::Renderer::IncDrawCalls();
@@ -140,8 +140,8 @@ Uint32 Text::GetWrapLength() const {
 
 SDL_Surface *Text::CreateSurfaceFromText(const std::string &str) {
   if (str.size() > 0) {
-    SDL_Surface *surface =
-        TTF_RenderText_Blended(FontManager::UseFont("Roboto/Roboto-Regular"), str.c_str(), CoffeeMaker::Colors::Yellow);
+    SDL_Surface *surface = TTF_RenderText_Blended(FontManager::UseFont("Sarpanch/Sarpanch-Regular"), str.c_str(),
+                                                  CoffeeMaker::Colors::Yellow);
     return surface;
   }
   return nullptr;

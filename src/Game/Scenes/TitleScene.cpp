@@ -33,35 +33,37 @@ void TitleScene::Pause() {}
 void TitleScene::Unpause() {}
 
 void TitleScene::Init() {
+  _music = CoffeeMaker::Audio::LoadMusic("music/CoolTrace.ogg");
+  CoffeeMaker::Audio::PlayMusic(_music);
   SDL_ShowCursor(SDL_ENABLE);
-  _backgroundColor = Color(0, 0, 0, 255);  // Black
-  std::shared_ptr<View> _view(new View(400, 200, HorizontalAlignment::Centered, VerticalAlignment::Centered));
-  std::shared_ptr<Text> _title(new Text());
-  _title->SetFont(FontManager::UseFont("Roboto/Roboto-Regular"));
+  _backgroundColor = Color(0, 0, 0, 255);
+  Ref<View> _view(new View(400, 200, HorizontalAlignment::Centered, VerticalAlignment::Centered));
+  Ref<Text> _title(new Text());
+  _title->SetFont(FontManager::UseFont("Sarpanch/Sarpanch-Bold"));
   _title->SetText("Ultra Cosmo Invaders");
   _title->SetColor(Color(255, 255, 255, 255));
   _title->SetHorizontalAlignment(HorizontalAlignment::Centered);
   _title->SetVerticalAlignment(VerticalAlignment::Top);
   _view->AppendChild(_title);
 
-  std::shared_ptr<Button> _playButton(new Button("test-button-background.png", "test-button-background-hovered.png"));
+  Ref<Button> _playButton(new Button("button.png", "button.png"));
   _playButton->SetVerticalAlignment(VerticalAlignment::Bottom);
-  std::shared_ptr<Text> _playButtonText(new Text());
+  Ref<Text> _playButtonText(new Text());
   _playButtonText->SetHorizontalAlignment(HorizontalAlignment::Centered);
   _playButtonText->SetVerticalAlignment(VerticalAlignment::Centered);
-  _playButtonText->SetFont(FontManager::UseFont("Roboto/Roboto-Regular"));
+  _playButtonText->SetFont(FontManager::UseFont("Sarpanch/Sarpanch-Regular"));
   _playButtonText->SetColor(Color(255, 255, 255, 255));
   _playButtonText->SetText("Play");
   _playButton->AppendChild(_playButtonText);
   _playButton->On(Button::ButtonEventType::OnClick, Delegate{std::bind(&TitleScene::Play, this)});
 
-  std::shared_ptr<Button> _quitButton(new Button("test-button-background.png", "test-button-background-hovered.png"));
+  Ref<Button> _quitButton(new Button("button.png", "button.png"));
   _quitButton->SetHorizontalAlignment(HorizontalAlignment::Right);
   _quitButton->SetVerticalAlignment(VerticalAlignment::Bottom);
-  std::shared_ptr<Text> _quitButtonText(new Text());
+  Ref<Text> _quitButtonText(new Text());
   _quitButtonText->SetHorizontalAlignment(HorizontalAlignment::Centered);
   _quitButtonText->SetVerticalAlignment(VerticalAlignment::Centered);
-  _quitButtonText->SetFont(FontManager::UseFont("Roboto/Roboto-Regular"));
+  _quitButtonText->SetFont(FontManager::UseFont("Sarpanch/Sarpanch-Regular"));
   _quitButtonText->SetColor(Color(255, 255, 255, 255));
   _quitButtonText->SetText("Quit");
   _quitButton->AppendChild(_quitButtonText);
@@ -76,6 +78,8 @@ void TitleScene::Init() {
 
 void TitleScene::Destroy() {
   // Clear out entities
+  CoffeeMaker::Audio::StopMusic();
+  CoffeeMaker::Audio::FreeMusic(_music);
   _entities.clear();
   _loaded = false;
 }
@@ -88,3 +92,5 @@ void TitleScene::Quit() {
   quit.type = SDL_QUIT;
   SDL_PushEvent(&quit);
 }
+
+void TitleScene::OnEvent(Sint32, void*, void*) {}

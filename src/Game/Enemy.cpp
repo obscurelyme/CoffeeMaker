@@ -97,7 +97,7 @@ void Enemy::Spawn() {
 bool Enemy::IsActive() const { return _active; }
 
 void Enemy::OnCollision(Collider* collider) {
-  if (collider->GetType() == Collider::Type::Projectile) {
+  if (collider->GetType() == Collider::Type::Projectile && _collider->active) {
     incScore->Emit();
     Spawn();
   }

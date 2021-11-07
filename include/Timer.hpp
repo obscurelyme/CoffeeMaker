@@ -3,11 +3,35 @@
 
 #include <SDL2/SDL.h>
 
+#include <chrono>
 #include <functional>
+#include <iostream>
 #include <string>
+#include <thread>
 #include <vector>
 
+#include "Logger.hpp"
+
 namespace CoffeeMaker {
+
+  class Performance {
+    public:
+    explicit Performance(const std::string& name) : _start(std::chrono::high_resolution_clock::now()), _name(name) {}
+    ~Performance() {
+      using namespace std::chrono;
+
+      auto end = high_resolution_clock::now();
+      auto startTime = time_point_cast<microseconds>(_start).time_since_epoch();
+      auto endTime = time_point_cast<microseconds>(end).time_since_epoch();
+
+      auto us = endTime.count() - startTime.count();
+      CM_LOGGER_INFO("Performance Timer [{}]: {} us, {} ms", _name, us, us * 0.001f);
+    }
+
+    private:
+    std::chrono::time_point<std::chrono::high_resolution_clock> _start;
+    std::string _name;
+  };
 
   class Timer {
     public:
@@ -34,6 +58,39 @@ namespace CoffeeMaker {
 
     bool _paused;
     bool _started;
+  };
+
+  class StopWatch {
+    public:
+    explicit StopWatch(int interval) : _interval(interval) {}
+
+    bool Expired() { return _timer.GetTicks() >= _interval; }
+
+    void Start() { _timer.Start(); }
+
+    void Reset() {
+      _timer.Stop();
+      _timer.Start();
+    }
+
+    void Pause() { _timer.Pause(); }
+
+    void Unpause() { _timer.Unpause(); }
+
+    private:
+    CoffeeMaker::Timer _timer;
+    Uint32 _interval;
+  };
+
+  class SDLTimer {
+    public:
+    SDLTimer(Uint32 delay, SDL_TimerCallback callback, void* params) : _id(SDL_AddTimer(delay, callback, params)) {}
+    ~SDLTimer() { Stop(); }
+
+    void Stop() { SDL_RemoveTimer(_id); }
+
+    private:
+    SDL_TimerID _id;
   };
 
   class Timeout : public CoffeeMaker::Timer {

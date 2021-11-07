@@ -39,7 +39,7 @@ void FontManager::LoadFont(const std::string& fontName) {
   std::string fontFilePath = fmt::format(fmt::runtime("{}{}"), CoffeeMaker::Utilities::AssetsDirectory(),
                                          fmt::format(fmt::runtime("/fonts/{}.ttf"), fontName));
   // TODO recognize DPI Scaling
-  TTF_Font* font = TTF_OpenFont(fontFilePath.c_str(), 1 * 16);
+  TTF_Font* font = TTF_OpenFont(fontFilePath.c_str(), 1 * 18);
   if (font == nullptr) {
     CM_LOGGER_CRITICAL("Could not load font from given filepath: {}", fontFilePath);
     std::string message =

@@ -67,17 +67,15 @@ int main(int, char**) {
 
   CoffeeMaker::Utilities::Init(SDL_GetBasePath());
   CoffeeMaker::Audio::Init();
-  Mix_Music* testMusic = CoffeeMaker::Audio::LoadMusic("crazy.ogg");
-  CoffeeMaker::Audio::PlayMusic(testMusic);
   CoffeeMaker::Texture::SetTextureDirectory();
 
   CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 800, 600);
   CoffeeMaker::Renderer renderer;
 
-  // CoffeeMaker::Cursor cursor("cursor.png");
+  CoffeeMaker::Cursor cursor("cursor.png");
   CoffeeMaker::FontManager::Init();
-  CoffeeMaker::FontManager::LoadFont("Roboto/Roboto-Regular");
-  CoffeeMaker::FontManager::LoadFont("Roboto/Roboto-Black");
+  CoffeeMaker::FontManager::LoadFont("Sarpanch/Sarpanch-Regular");
+  CoffeeMaker::FontManager::LoadFont("Sarpanch/Sarpanch-Bold");
 
   auto end = std::chrono::steady_clock::now();
   std::chrono::duration<float> elapsedSeconds = end - start;
@@ -96,6 +94,9 @@ int main(int, char**) {
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
 
+  CoffeeMaker::GameEvents::AddEvent("ENEMY_SPAWN");
+  CoffeeMaker::GameEvents::AddEvent("ENEMY_TRAVEL_TOGETHER");
+
   while (!quit) {
     // get input
     while (SDL_PollEvent(&event)) {
@@ -104,6 +105,10 @@ int main(int, char**) {
       }
 
       if (event.type == SDL_USEREVENT) {
+        if (event.user.code == CoffeeMaker::GameEvents::Events["ENEMY_SPAWN"]) {
+          SceneManager::HandleSceneEvent(event.user.code, event.user.data1, event.user.data2);
+        }
+
         if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
           paused = true;
           SceneManager::PauseScene();
@@ -114,6 +119,9 @@ int main(int, char**) {
           paused = false;
           SceneManager::UnpauseScene();
           CoffeeMaker::Timeout::UnpauseAllTimeouts();
+        }
+        if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_EVENT) {
+          SceneManager::HandleSceneEvent(event.user.code, event.user.data1, event.user.data2);
         }
         if (event.user.code == 1245) {
           if (event.user.data2 != nullptr) {
@@ -164,7 +172,6 @@ int main(int, char**) {
   }
 
   CoffeeMaker::Audio::StopMusic();
-  CoffeeMaker::Audio::FreeMusic(testMusic);
   CoffeeMaker::Audio::Quit();
   SceneManager::DestroyAllScenes();
   CoffeeMaker::FontManager::Destroy();

@@ -125,6 +125,8 @@ void TestEnemy::MoveRight(float deltaTime) {
 TestPlayer* TestPlayer::_instance = nullptr;
 CoffeeMaker::Math::Vector2D& TestPlayer::Position() { return _instance->_position; }
 
+void TestPlayer::TestFuture() { CM_LOGGER_INFO("Successfully tested the future"); }
+
 TestPlayer::TestPlayer() :
     _sprite(CreateScope<CoffeeMaker::Sprite>("PlayerV1.png")),
     _rotation(0),
@@ -139,6 +141,7 @@ TestPlayer::TestPlayer() :
   _sprite->clientRect.h = 48;
   _instance = this;
   _timeout.Start();
+  _future = makeFuture<void, Function<void>>(&TestPlayer::TestFuture);
 }
 
 TestPlayer::~TestPlayer() { _instance = nullptr; }
@@ -223,31 +226,31 @@ TestBedScene::TestBedScene() {
   _view = CreateScope<CoffeeMaker::Widgets::View>(400, 150, CoffeeMaker::UIProperties::HorizontalAlignment::Centered,
                                                   CoffeeMaker::UIProperties::VerticalAlignment::Top);
   _text = CreateRef<CoffeeMaker::Widgets::Text>("0");
-  _text->SetFont("Roboto/Roboto-Regular");
+  _text->SetFont("Sarpanch/Sarpanch-Regular");
   _text->SetColor(CoffeeMaker::Colors::Yellow);
   _player = CreateScope<TestPlayer>();
   _enemy = CreateScope<TestEnemy>();
   _player->SetRotationText(_text);
   _randomPointText = CreateRef<CoffeeMaker::Widgets::Text>("(0,0)");
-  _randomPointText->SetFont("Roboto/Roboto-Regular");
+  _randomPointText->SetFont("Sarpanch/Sarpanch-Regular");
   _randomPointText->SetColor(CoffeeMaker::Colors::Yellow);
   _randomPointText->SetHorizontalAlignment(CoffeeMaker::UIProperties::HorizontalAlignment::Right);
   _view->AppendChild(_randomPointText);
   _player->SetRandomPointText(_randomPointText);
   _text2 = CreateRef<CoffeeMaker::Widgets::Text>("0");
-  _text2->SetFont("Roboto/Roboto-Regular");
+  _text2->SetFont("Sarpanch/Sarpanch-Regular");
   _text2->SetColor(CoffeeMaker::Colors::Yellow);
   _player->SetRotationText2(_text2);
   _text2->SetVerticalAlignment(CoffeeMaker::UIProperties::VerticalAlignment::Bottom);
   _view->AppendChild(_text2);
 
   _diffPointText = CreateRef<CoffeeMaker::Widgets::Text>("(0,0)");
-  _text2->SetFont("Roboto/Roboto-Regular");
+  _text2->SetFont("Sarpanch/Sarpanch-Regular");
   _text2->SetColor(CoffeeMaker::Colors::Yellow);
   _player->SetRandomPointText2(_diffPointText);
   _diffPointText->SetVerticalAlignment(CoffeeMaker::UIProperties::VerticalAlignment::Bottom);
   _diffPointText->SetHorizontalAlignment(CoffeeMaker::UIProperties::HorizontalAlignment::Right);
-  _diffPointText->SetFont("Roboto/Roboto-Regular");
+  _diffPointText->SetFont("Sarpanch/Sarpanch-Regular");
   _diffPointText->SetColor(CoffeeMaker::Colors::Yellow);
   _view->AppendChild(_diffPointText);
 }
@@ -286,3 +289,5 @@ void TestBedScene::Pause() {}
 void TestBedScene::Unpause() {}
 
 void TestBedScene::Quit() { CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_QUIT); }
+
+void TestBedScene::OnEvent(Sint32, void*, void*) {}

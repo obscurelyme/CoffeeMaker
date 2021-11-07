@@ -43,16 +43,18 @@ Player::~Player() {
 }
 
 void Player::OnHit(Collider* collider) {
-  if (collider->GetType() == Collider::Type::EnemyProjectile && !_isImmune) {
-    _collider->active = false;
-    _active = false;
-    if (_lives == 0) {
-      SceneManager::LoadScene(0);
-      return;
+  if (_collider->active) {
+    if (collider->GetType() == Collider::Type::EnemyProjectile && !_isImmune) {
+      _collider->active = false;
+      _active = false;
+      if (_lives == 0) {
+        SceneManager::LoadScene(0);
+        return;
+      }
+      _lives--;
+      decLife->Emit();
+      _respawnTimer.Start();
     }
-    _lives--;
-    decLife->Emit();
-    _respawnTimer.Start();
   }
 }
 

@@ -12,13 +12,13 @@ Ref<CoffeeMaker::AudioElement> Projectile::_impactSound = nullptr;
 
 Projectile::Projectile() : _fired(false), _rotation(0) {
   if (Projectile::_texture == nullptr) {
-    _texture = CreateRef<CoffeeMaker::Texture>("missile.png", true);
+    _texture = CreateRef<CoffeeMaker::Texture>("StandardMissile.png");
   }
   if (Projectile::_fireSound == nullptr) {
-    _fireSound = CreateRef<CoffeeMaker::AudioElement>("effects/laserLarge_004.ogg");
+    _fireSound = CreateRef<CoffeeMaker::AudioElement>("effects/StandardMissileFire.ogg");
   }
   if (Projectile::_impactSound == nullptr) {
-    _impactSound = CreateRef<CoffeeMaker::AudioElement>("effects/explosionCrunch_000.ogg");
+    _impactSound = CreateRef<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg");
   }
   _clientRect.w = 16;
   _clientRect.h = 16;

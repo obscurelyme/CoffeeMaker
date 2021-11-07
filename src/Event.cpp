@@ -4,12 +4,28 @@
 
 #include <algorithm>
 #include <iostream>
+#include <string>
 
 #include "Logger.hpp"
 
 using namespace CoffeeMaker;
 
 int Delegate::_uid = 0;
+
+Sint32 CoffeeMaker::GameEvents::Marker = 1'000'000;
+std::map<std::string, Sint32> CoffeeMaker::GameEvents::Events = {};
+
+void CoffeeMaker::GameEvents::AddEvent(const std::string& event) { Events[event] = CoffeeMaker::GameEvents::Marker++; };
+
+void CoffeeMaker::GameEvents::PushEvent(const std::string& name, Sint32, void* data1, void* data2) {
+  if (CoffeeMaker::GameEvents::Events.contains(name)) {
+    SDL_Event event;
+    SDL_UserEvent userevent{.type = SDL_USEREVENT, .code = GameEvents::Events[name], .data1 = data1, .data2 = data2};
+    event.type = SDL_USEREVENT;
+    event.user = userevent;
+    SDL_PushEvent(&event);
+  }
+}
 
 void CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents appEvent) {
   if (appEvent == ApplicationEvents::COFFEEMAKER_GAME_QUIT) {
