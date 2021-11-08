@@ -35,7 +35,7 @@ namespace Animations {
     std::vector<SDL_Rect> _frames;
     int _durationPerFrame;
     Scope<CoffeeMaker::StopWatch> _stopwatch;
-    int _currentFrame;
+    unsigned int _currentFrame;
     int _id;
 
     static std::vector<SpriteAnimation*> _animations;

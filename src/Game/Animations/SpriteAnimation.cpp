@@ -35,9 +35,15 @@ void Animations::SpriteAnimation::Update() {
   if (_started) {
     if (_stopwatch->Expired()) {
       if (_currentFrame == _frames.size() - 1) {
-        // final frame
-        // we either loop or we are done...
-        _currentFrame = 0;
+        if (_loops == -1) {
+          _currentFrame = 0;
+        } else if (_loops > 0) {
+          _loops--;
+          _currentFrame = 0;
+        } else {
+          _stopwatch->Stop();
+          _started = false;
+        }
       } else {
         _currentFrame++;
       }

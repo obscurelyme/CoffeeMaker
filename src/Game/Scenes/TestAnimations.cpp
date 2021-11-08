@@ -13,7 +13,7 @@ TestAnimations::TestAnimations() : _backgroundColor(CoffeeMaker::Colors::Black),
   _sprite->clientRect.y = 300;
   _sprite->clipRect.w = 32;
   _sprite->clipRect.h = 32;
-  _explosiveAnimation = CreateRef<Animations::SpriteAnimation>(_sprite, 750, 0);
+  _explosiveAnimation = CreateRef<Animations::SpriteAnimation>(_sprite, 750, 5);
 }
 
 void TestAnimations::Render() {
