@@ -22,10 +22,12 @@
 #include "Event.hpp"
 #include "FPS.hpp"
 #include "FontManager.hpp"
+#include "Game/Animations/SpriteAnimation.hpp"
 #include "Game/Collider.hpp"
 #include "Game/PlayerEvents.hpp"
 #include "Game/Scene.hpp"
 #include "Game/Scenes/MainScene.hpp"
+#include "Game/Scenes/TestAnimations.hpp"
 #include "Game/Scenes/TestBedScene.hpp"
 #include "Game/Scenes/TitleScene.hpp"
 #include "InputManager.hpp"
@@ -90,7 +92,8 @@ int main(int, char**) {
   SceneManager::AddScene(new TitleScene());
   SceneManager::AddScene(new MainScene());
   SceneManager::AddScene(new TestBedScene());
-  SceneManager::LoadScene();
+  SceneManager::AddScene(new TestAnimations());
+  SceneManager::LoadScene(3);
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
 
@@ -143,6 +146,7 @@ int main(int, char**) {
     }
 
     CoffeeMaker::Timeout::ProcessTimeouts();
+    Animations::SpriteAnimation::ProcessSpriteAnimations();
 
     float timeStep = globalTimer.GetTicks() / 1000.0f;
 

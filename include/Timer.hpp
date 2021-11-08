@@ -77,6 +77,8 @@ namespace CoffeeMaker {
 
     void Unpause() { _timer.Unpause(); }
 
+    void Stop() { _timer.Stop(); }
+
     private:
     CoffeeMaker::Timer _timer;
     Uint32 _interval;
