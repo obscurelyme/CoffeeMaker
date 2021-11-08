@@ -125,8 +125,6 @@ void TestEnemy::MoveRight(float deltaTime) {
 TestPlayer* TestPlayer::_instance = nullptr;
 CoffeeMaker::Math::Vector2D& TestPlayer::Position() { return _instance->_position; }
 
-void TestPlayer::TestFuture() { CM_LOGGER_INFO("Successfully tested the future"); }
-
 TestPlayer::TestPlayer() :
     _sprite(CreateScope<CoffeeMaker::Sprite>("PlayerV1.png")),
     _rotation(0),
@@ -141,7 +139,6 @@ TestPlayer::TestPlayer() :
   _sprite->clientRect.h = 48;
   _instance = this;
   _timeout.Start();
-  _future = makeFuture<void, Function<void>>(&TestPlayer::TestFuture);
 }
 
 TestPlayer::~TestPlayer() { _instance = nullptr; }

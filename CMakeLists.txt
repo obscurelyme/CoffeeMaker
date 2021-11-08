@@ -66,6 +66,7 @@ set(GAME_SOURCES
   src/Game/Scenes/TitleScene.cpp
   src/Game/Scenes/MainScene.cpp
   src/Game/Scenes/TestBedScene.cpp
+  src/Game/Scenes/TestAnimations.cpp
   src/Game/Scene.cpp
   src/Game/Collider.cpp
   src/Game/Entity.cpp
@@ -77,6 +78,7 @@ set(GAME_SOURCES
   src/Game/Hud.cpp
   src/Game/PlayerEvents.cpp
   src/Game/Animations/EnemyAnimations.cpp
+  src/Game/Animations/SpriteAnimation.cpp
   src/Game/PowerUps.cpp)
 
 set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES})
