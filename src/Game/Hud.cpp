@@ -6,7 +6,7 @@
 
 #include "Color.hpp"
 #include "Event.hpp"
-#include "Game/PlayerEvents.hpp"
+#include "Game/Events.hpp"
 #include "Logger.hpp"
 #include "Widgets/Properties.hpp"
 
@@ -90,15 +90,15 @@ void HeadsUpDisplay::DecrementLife() {
 void HeadsUpDisplay::IncrementTimer() { time->SetText(_timer.toString()); }
 
 void HeadsUpDisplay::OnSDLUserEvent(const SDL_UserEvent& event) {
-  if (event.code == GameEvents::HEADS_UP_DISPLAY_INCREMENT_TIMER) {
+  if (event.code == UCI::Events::HEADS_UP_DISPLAY_INCREMENT_TIMER) {
     IncrementTimer();
   }
 
-  if (event.code == GameEvents::PLAYER_INCREMENT_SCORE) {
+  if (event.code == UCI::Events::PLAYER_INCREMENT_SCORE) {
     IncrementScore();
   }
 
-  if (event.code == GameEvents::PLAYER_LOST_LIFE) {
+  if (event.code == UCI::Events::PLAYER_LOST_LIFE) {
     DecrementLife();
   }
 }

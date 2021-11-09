@@ -7,8 +7,8 @@
 #include <random>
 
 #include "Event.hpp"
+#include "Game/Events.hpp"
 #include "Game/Player.hpp"
-#include "Game/PlayerEvents.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
@@ -99,7 +99,7 @@ bool Enemy::IsActive() const { return _active; }
 
 void Enemy::OnCollision(Collider* collider) {
   if (collider->GetType() == Collider::Type::Projectile && _collider->active) {
-    CoffeeMaker::PushEvent(GameEvents::PLAYER_INCREMENT_SCORE);
+    CoffeeMaker::PushEvent(UCI::Events::PLAYER_INCREMENT_SCORE);
     Spawn();
   }
 }

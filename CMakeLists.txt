@@ -76,7 +76,6 @@ set(GAME_SOURCES
   src/Game/Projectile.cpp
   src/Game/Menus/Menu.cpp
   src/Game/Hud.cpp
-  src/Game/PlayerEvents.cpp
   src/Game/Animations/EnemyAnimations.cpp
   src/Game/Animations/SpriteAnimation.cpp
   src/Game/PowerUps.cpp)

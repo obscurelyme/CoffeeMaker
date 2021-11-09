@@ -7,7 +7,7 @@
 
 #include "Event.hpp"
 #include "Game/Collider.hpp"
-#include "Game/PlayerEvents.hpp"
+#include "Game/Events.hpp"
 #include "InputManager.hpp"
 
 void MainScene::Render() {
@@ -122,12 +122,12 @@ void MainScene::Destroy() {
 
 MainScene::MainScene() :
     _enemySpawnTask(CreateScope<CoffeeMaker::Async::IntervalTask>(
-        [] { CoffeeMaker::PushEvent(GameEvents::ENEMY_INITIAL_INTERVAL_SPAWN); }, 500)) {}
+        [] { CoffeeMaker::PushEvent(UCI::Events::ENEMY_INITIAL_INTERVAL_SPAWN); }, 500)) {}
 
 void MainScene::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (_loaded) {
     switch (event.code) {
-      case GameEvents::ENEMY_INITIAL_INTERVAL_SPAWN: {
+      case UCI::Events::ENEMY_INITIAL_INTERVAL_SPAWN: {
         _enemies[_currentSpawn++]->Spawn();
         if (_currentSpawn == MAX_ENEMIES) {
           _enemySpawnTask->Cancel();
