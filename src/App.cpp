@@ -24,7 +24,7 @@
 #include "FontManager.hpp"
 #include "Game/Animations/SpriteAnimation.hpp"
 #include "Game/Collider.hpp"
-#include "Game/GameEvents.hpp"
+#include "Game/Events.hpp"
 #include "Game/Scene.hpp"
 #include "Game/Scenes/MainScene.hpp"
 #include "Game/Scenes/TestAnimations.hpp"
