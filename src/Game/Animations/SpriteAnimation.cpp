@@ -17,6 +17,7 @@ Animations::SpriteAnimation::SpriteAnimation(Ref<CoffeeMaker::Sprite> sprite, in
     _durationPerFrame(0),
     _currentFrame(0),
     _id(0) {
+  _id = ++_uid;
   _animations.push_back(this);
 }
 

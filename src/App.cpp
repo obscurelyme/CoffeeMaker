@@ -79,13 +79,9 @@ int main(int, char**) {
   CoffeeMaker::FontManager::LoadFont("Sarpanch/Sarpanch-Regular");
   CoffeeMaker::FontManager::LoadFont("Sarpanch/Sarpanch-Bold");
 
-  auto end = std::chrono::steady_clock::now();
-  std::chrono::duration<float> elapsedSeconds = end - start;
-
   CoffeeMaker::Timer globalTimer;
   CoffeeMaker::FPS fpsCounter;
 
-  CM_LOGGER_INFO("Initialization time took: {}", elapsedSeconds.count());
   CM_LOGGER_INFO("Display count: {}", win.DisplayCount());
   CM_LOGGER_INFO("Current Window DPI {}", win.GetScreenDPI().toString());
 
@@ -96,6 +92,10 @@ int main(int, char**) {
   SceneManager::LoadScene();
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
+
+  auto end = std::chrono::steady_clock::now();
+  std::chrono::duration<float> elapsedSeconds = end - start;
+  CM_LOGGER_INFO("Initialization time took: {}", elapsedSeconds.count());
 
   while (!quit) {
     // get input
