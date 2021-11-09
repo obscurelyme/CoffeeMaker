@@ -4,6 +4,7 @@
 #include <functional>
 #include <glm/glm.hpp>
 
+#include "Event.hpp"
 #include "Game/PlayerEvents.hpp"
 #include "Game/Scene.hpp"
 #include "InputManager.hpp"
@@ -52,7 +53,7 @@ void Player::OnHit(Collider* collider) {
         return;
       }
       _lives--;
-      decLife->Emit();
+      CoffeeMaker::PushEvent(GameEvents::PLAYER_LOST_LIFE);
       _respawnTimer.Start();
     }
   }

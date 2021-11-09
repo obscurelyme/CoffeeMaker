@@ -129,9 +129,9 @@ MainScene::MainScene() :
         },
         500)) {}
 
-void MainScene::OnEvent(Sint32 type, void*, void*) {
+void MainScene::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (_loaded) {
-    switch (type) {
+    switch (event.code) {
       case 1'000'000: {
         _enemies[_currentSpawn++]->Spawn();
         if (_currentSpawn == MAX_ENEMIES) {

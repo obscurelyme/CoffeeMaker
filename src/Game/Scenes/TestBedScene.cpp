@@ -286,5 +286,3 @@ void TestBedScene::Pause() {}
 void TestBedScene::Unpause() {}
 
 void TestBedScene::Quit() { CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_QUIT); }
-
-void TestBedScene::OnEvent(Sint32, void*, void*) {}

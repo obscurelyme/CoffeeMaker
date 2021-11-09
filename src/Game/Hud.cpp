@@ -52,10 +52,7 @@ HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
   hudView->AppendChild(time);
   hudView->AppendChild(playerHealth);
 
-  incScore->AddListener(_incScoreDelegate);
-  decLife->AddListener(_decLifeDelegate);
   _timer.Start();
-
   _timerId = SDL_AddTimer(1000, &HeadsUpDisplay::TimerInterval, this);
 }
 
@@ -63,30 +60,14 @@ void HeadsUpDisplay::Pause() { _timer.Pause(); }
 
 void HeadsUpDisplay::Unpause() { _timer.Unpause(); }
 
-Uint32 HeadsUpDisplay::TimerInterval(Uint32 interval, void* hudInstance) {
-  SDL_Event event;
-  SDL_UserEvent userEvent;
-
-  userEvent.type = SDL_USEREVENT;
-  userEvent.code = 1245;
-
-  // userEvent.data1 = reinterpret_cast<void*>(globalCb);
-  // userEvent.data2 = static_cast<void*>(surface);
-
-  userEvent.data1 = reinterpret_cast<void*>(&HeadsUpDisplay::IncrementTimer);
-  userEvent.data2 = hudInstance;
-  event.type = SDL_USEREVENT;
-  event.user = userEvent;
-  SDL_PushEvent(&event);
-
+Uint32 HeadsUpDisplay::TimerInterval(Uint32 interval, void*) {
+  CoffeeMaker::PushEvent(1234);
   return interval;
 }
 
 HeadsUpDisplay::~HeadsUpDisplay() {
   SDL_RemoveTimer(_timerId);
   _timer.Stop();
-  incScore->RemoveListener(_incScoreDelegate);
-  decLife->RemoveListener(_decLifeDelegate);
 }
 
 void HeadsUpDisplay::Update() {
@@ -106,4 +87,18 @@ void HeadsUpDisplay::DecrementLife() {
   playerHealth->SetText("Life: " + std::to_string(_life));
 }
 
-void HeadsUpDisplay::IncrementTimer(HeadsUpDisplay* instance) { instance->time->SetText(instance->_timer.toString()); }
+void HeadsUpDisplay::IncrementTimer() { time->SetText(_timer.toString()); }
+
+void HeadsUpDisplay::OnSDLUserEvent(const SDL_UserEvent& event) {
+  if (event.code == GameEvents::HEADS_UP_DISPLAY_INCREMENT_TIMER) {
+    IncrementTimer();
+  }
+
+  if (event.code == GameEvents::PLAYER_INCREMENT_SCORE) {
+    IncrementScore();
+  }
+
+  if (event.code == GameEvents::PLAYER_LOST_LIFE) {
+    DecrementLife();
+  }
+}
