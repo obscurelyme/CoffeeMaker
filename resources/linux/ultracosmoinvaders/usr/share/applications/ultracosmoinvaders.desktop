@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Ultra Cosmo Invaders
+Version=1.0.0
+Exec=/usr/share/ultracosmoinvaders/ultracosmoinvaders
+Icon=/usr/share/ultracosmoinvaders/icon.png
+GenericName=Arcade Game
+Categories=Games;

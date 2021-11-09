@@ -1,0 +1,8 @@
+Package: ultracosmoinvaders
+Version: 1.0
+Section: custom
+Priority: optional
+Architecture: all
+Installed-Size: 1024
+Maintainer: Obscurely Me
+Description: Ultra Cosmo Invaders arcade game

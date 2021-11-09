@@ -3,3 +3,7 @@ logs
 vcpkg_installed
 static
 assets
+
+resources/linux/ultracosmoinvaders/usr/share/ultracosmoinvaders/assets
+resources/linux/ultracosmoinvaders/usr/share/ultracosmoinvaders/ultracosmoinvaders
+resources/**/*.deb
