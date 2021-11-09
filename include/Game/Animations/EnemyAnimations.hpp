@@ -45,6 +45,7 @@ namespace Animations {
     EnemyExit();
     ~EnemyExit() = default;
   };
+
 }  // namespace Animations
 
 #endif

@@ -78,6 +78,7 @@ set(GAME_SOURCES
   src/Game/Hud.cpp
   src/Game/Animations/EnemyAnimations.cpp
   src/Game/Animations/SpriteAnimation.cpp
+  src/Game/Animations/Explode.cpp
   src/Game/PowerUps.cpp)
 
 set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES})
