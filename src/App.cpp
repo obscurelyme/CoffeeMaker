@@ -24,7 +24,7 @@
 #include "FontManager.hpp"
 #include "Game/Animations/SpriteAnimation.hpp"
 #include "Game/Collider.hpp"
-#include "Game/PlayerEvents.hpp"
+#include "Game/GameEvents.hpp"
 #include "Game/Scene.hpp"
 #include "Game/Scenes/MainScene.hpp"
 #include "Game/Scenes/TestAnimations.hpp"
@@ -162,10 +162,6 @@ int main(int, char**) {
   CoffeeMaker::FontManager::Destroy();
   renderer.Destroy();
   SDL_Quit();
-
-  // TODO: clean this up
-  incScore.reset();
-  decLife.reset();
 
   CM_LOGGER_DESTROY();
 

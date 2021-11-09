@@ -7,8 +7,8 @@
 #include <random>
 
 #include "Event.hpp"
+#include "Game/GameEvents.hpp"
 #include "Game/Player.hpp"
-#include "Game/PlayerEvents.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
 

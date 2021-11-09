@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "Event.hpp"
-#include "Game/PlayerEvents.hpp"
+#include "Game/GameEvents.hpp"
 #include "Game/Scene.hpp"
 #include "InputManager.hpp"
 #include "Logger.hpp"

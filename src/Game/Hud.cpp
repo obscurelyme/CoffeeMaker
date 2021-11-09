@@ -6,7 +6,7 @@
 
 #include "Color.hpp"
 #include "Event.hpp"
-#include "Game/PlayerEvents.hpp"
+#include "Game/GameEvents.hpp"
 #include "Logger.hpp"
 #include "Widgets/Properties.hpp"
 

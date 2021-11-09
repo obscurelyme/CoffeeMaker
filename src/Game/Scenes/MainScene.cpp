@@ -7,7 +7,7 @@
 
 #include "Event.hpp"
 #include "Game/Collider.hpp"
-#include "Game/PlayerEvents.hpp"
+#include "Game/GameEvents.hpp"
 #include "InputManager.hpp"
 
 void MainScene::Render() {
