@@ -18,7 +18,7 @@ class HeadsUpDisplayEvent {
   static void RemoveListener();
 };
 
-class HeadsUpDisplay {
+class HeadsUpDisplay : public CoffeeMaker::IUserEventListener {
   public:
   HeadsUpDisplay();
   ~HeadsUpDisplay();
@@ -30,14 +30,14 @@ class HeadsUpDisplay {
   void Pause();
   void Unpause();
 
-  static void IncrementTimer(HeadsUpDisplay* instance);
+  void OnSDLUserEvent(const SDL_UserEvent& event);
+
+  void IncrementTimer();
   static Uint32 TimerInterval(Uint32 interval, void* params);
 
   private:
   unsigned int _score;
   unsigned int _life;
-  CoffeeMaker::Delegate _incScoreDelegate{std::bind(&HeadsUpDisplay::IncrementScore, this)};
-  CoffeeMaker::Delegate _decLifeDelegate{std::bind(&HeadsUpDisplay::DecrementLife, this)};
 
   Ref<CoffeeMaker::Widgets::Text> score;
   Ref<CoffeeMaker::Widgets::Text> playerHealth;

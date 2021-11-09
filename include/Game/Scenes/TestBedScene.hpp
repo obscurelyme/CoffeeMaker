@@ -103,7 +103,6 @@ class TestBedScene : public Scene {
   virtual void Destroy() override;
   virtual void Pause() override;
   virtual void Unpause() override;
-  virtual void OnEvent(Sint32 type, void* data1 = nullptr, void* data2 = nullptr) override;
 
   private:
   void Quit();

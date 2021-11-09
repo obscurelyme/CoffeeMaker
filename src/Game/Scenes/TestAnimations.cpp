@@ -3,6 +3,7 @@
 #include "Color.hpp"
 #include "Event.hpp"
 #include "InputManager.hpp"
+#include "Logger.hpp"
 #include "Renderer.hpp"
 
 TestAnimations::TestAnimations() : _backgroundColor(CoffeeMaker::Colors::Black), _paused(false) {
@@ -53,4 +54,13 @@ void TestAnimations::Pause() { _explosiveAnimation->Pause(); }
 
 void TestAnimations::Unpause() { _explosiveAnimation->Unpause(); }
 
-void TestAnimations::OnEvent(Sint32, void*, void*) {}
+void TestAnimations::OnSDLUserEvent(const SDL_UserEvent& event) {
+  using Event = CoffeeMaker::ApplicationEvents;
+  if (event.code == Event::COFFEEMAKER_GAME_PAUSE) {
+    CM_LOGGER_INFO("Game paused");
+  }
+
+  if (event.code == Event::COFFEEMAKER_GAME_UNPAUSE) {
+    CM_LOGGER_INFO("Game resumed");
+  }
+}

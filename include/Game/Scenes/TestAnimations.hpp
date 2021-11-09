@@ -16,7 +16,8 @@ class TestAnimations : public Scene {
   virtual void Destroy();
   virtual void Pause();
   virtual void Unpause();
-  virtual void OnEvent(Sint32 type, void* data1 = nullptr, void* data2 = nullptr);
+
+  virtual void OnSDLUserEvent(const SDL_UserEvent& event);
 
   private:
   SDL_Color _backgroundColor;

@@ -6,7 +6,9 @@
 #include <string>
 #include <vector>
 
-class Scene {
+#include "Event.hpp"
+
+class Scene : public CoffeeMaker::IUserEventListener {
   public:
   Scene();
   virtual ~Scene();
@@ -18,7 +20,13 @@ class Scene {
   virtual void Pause() = 0;
   virtual void Unpause() = 0;
   virtual bool IsLoaded();
-  virtual void OnEvent(Sint32 type, void* data1 = nullptr, void* data2 = nullptr) = 0;
+
+  /**
+   * @brief Handler function for any SDL_UserEvent
+   * pushed into SDL's loop.
+   * @param event
+   */
+  virtual void OnSDLUserEvent(const SDL_UserEvent&){};
 
   private:
   std::string _id;
@@ -38,7 +46,6 @@ class SceneManager {
   static void LoadScene(unsigned long index);
   static void AddScene(Scene* scene);
   static void DestroyAllScenes();
-  static void HandleSceneEvent(Sint32 type, void* data1, void* data2);
   static std::vector<Scene*> scenes;
 
   private:

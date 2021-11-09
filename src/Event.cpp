@@ -10,22 +10,28 @@
 
 using namespace CoffeeMaker;
 
-int Delegate::_uid = 0;
-
-Sint32 CoffeeMaker::GameEvents::Marker = 1'000'000;
-std::map<std::string, Sint32> CoffeeMaker::GameEvents::Events = {};
-
-void CoffeeMaker::GameEvents::AddEvent(const std::string& event) { Events[event] = CoffeeMaker::GameEvents::Marker++; };
-
-void CoffeeMaker::GameEvents::PushEvent(const std::string& name, Sint32, void* data1, void* data2) {
-  if (CoffeeMaker::GameEvents::Events.contains(name)) {
-    SDL_Event event;
-    SDL_UserEvent userevent{.type = SDL_USEREVENT, .code = GameEvents::Events[name], .data1 = data1, .data2 = data2};
-    event.type = SDL_USEREVENT;
-    event.user = userevent;
-    SDL_PushEvent(&event);
+unsigned int CoffeeMaker::IUserEventListener::_uid = 0;
+std::vector<CoffeeMaker::IUserEventListener*> CoffeeMaker::IUserEventListener::_listeners = {};
+void CoffeeMaker::IUserEventListener::ProcessUserEvent(const SDL_UserEvent& event) {
+  for (auto& listener : _listeners) {
+    listener->OnSDLUserEvent(event);
   }
 }
+
+CoffeeMaker::IUserEventListener::~IUserEventListener() {
+  for (auto it = _listeners.begin(); it != _listeners.end();) {
+    if (_id == (*it)->_id) {
+      it = _listeners.erase(it);
+      break;
+    } else {
+      ++it;
+    }
+  }
+}
+
+CoffeeMaker::IUserEventListener::IUserEventListener() : _id(++_uid) { _listeners.push_back(this); }
+
+int Delegate::_uid = 0;
 
 void CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents appEvent) {
   if (appEvent == ApplicationEvents::COFFEEMAKER_GAME_QUIT) {
@@ -35,6 +41,14 @@ void CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents appEvent) 
     return;
   }
   SDL_UserEvent userevent{.type = SDL_USEREVENT, .code = appEvent, .data1 = nullptr, .data2 = nullptr};
+  SDL_Event event;
+  event.type = SDL_USEREVENT;
+  event.user = userevent;
+  SDL_PushEvent(&event);
+}
+
+void CoffeeMaker::PushEvent(Sint32 eventCode, void* data1, void* data2) {
+  SDL_UserEvent userevent{.type = SDL_USEREVENT, .code = eventCode, .data1 = data1, .data2 = data2};
   SDL_Event event;
   event.type = SDL_USEREVENT;
   event.user = userevent;

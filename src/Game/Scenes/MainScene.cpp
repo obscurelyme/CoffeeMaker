@@ -7,9 +7,8 @@
 
 #include "Event.hpp"
 #include "Game/Collider.hpp"
+#include "Game/PlayerEvents.hpp"
 #include "InputManager.hpp"
-
-std::mutex MainScene::_enemyMutex;
 
 void MainScene::Render() {
   _backgroundTiles->Render();
@@ -123,16 +122,12 @@ void MainScene::Destroy() {
 
 MainScene::MainScene() :
     _enemySpawnTask(CreateScope<CoffeeMaker::Async::IntervalTask>(
-        [] {
-          CoffeeMaker::GameEvents::PushEvent("ENEMY_SPAWN", 0);
-          // CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_EVENT);
-        },
-        500)) {}
+        [] { CoffeeMaker::PushEvent(GameEvents::ENEMY_INITIAL_INTERVAL_SPAWN); }, 500)) {}
 
-void MainScene::OnEvent(Sint32 type, void*, void*) {
+void MainScene::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (_loaded) {
-    switch (type) {
-      case 1'000'000: {
+    switch (event.code) {
+      case GameEvents::ENEMY_INITIAL_INTERVAL_SPAWN: {
         _enemies[_currentSpawn++]->Spawn();
         if (_currentSpawn == MAX_ENEMIES) {
           _enemySpawnTask->Cancel();
