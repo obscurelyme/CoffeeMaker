@@ -97,9 +97,6 @@ int main(int, char**) {
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
 
-  CoffeeMaker::GameEvents::AddEvent("ENEMY_SPAWN");
-  CoffeeMaker::GameEvents::AddEvent("ENEMY_TRAVEL_TOGETHER");
-
   while (!quit) {
     // get input
     while (SDL_PollEvent(&event)) {

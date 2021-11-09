@@ -57,14 +57,6 @@ namespace CoffeeMaker {
     COFFEEMAKER_SCENE_EVENT
   };
 
-  class GameEvents {
-    public:
-    static std::map<std::string, int> Events;
-    static void AddEvent(const std::string& name);
-    static void PushEvent(const std::string& name, Sint32 code = 0, void* data1 = nullptr, void* data2 = nullptr);
-    static Sint32 Marker;
-  };
-
   /**
    * Constructs an SDL_USEREVENT based on the enum and pushes it
    * into the SDL_Event queue.
