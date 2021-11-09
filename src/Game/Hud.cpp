@@ -31,7 +31,7 @@ void (*globalCb)(void*) = [](void*) { CM_LOGGER_INFO("Called here..."); };
 
 HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
   score = std::make_shared<Text>("Score: 0");
-  time = std::make_shared<Text>("Time: 0");
+  time = std::make_shared<Text>("Time: 0:00");
   playerHealth = std::make_shared<Text>("Lives: " + std::to_string(_life));
   score->SetFont("Sarpanch/Sarpanch-Regular");
   time->SetFont("Sarpanch/Sarpanch-Regular");
@@ -61,7 +61,7 @@ void HeadsUpDisplay::Pause() { _timer.Pause(); }
 void HeadsUpDisplay::Unpause() { _timer.Unpause(); }
 
 Uint32 HeadsUpDisplay::TimerInterval(Uint32 interval, void*) {
-  CoffeeMaker::PushEvent(1234);
+  CoffeeMaker::PushEvent(UCI::Events::HEADS_UP_DISPLAY_INCREMENT_TIMER);
   return interval;
 }
 
@@ -87,7 +87,7 @@ void HeadsUpDisplay::DecrementLife() {
   playerHealth->SetText("Life: " + std::to_string(_life));
 }
 
-void HeadsUpDisplay::IncrementTimer() { time->SetText(_timer.toString()); }
+void HeadsUpDisplay::IncrementTimer() { time->SetText("Time: " + _timer.toString()); }
 
 void HeadsUpDisplay::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (event.code == UCI::Events::HEADS_UP_DISPLAY_INCREMENT_TIMER) {
