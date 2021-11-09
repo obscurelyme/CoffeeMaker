@@ -26,9 +26,6 @@ class IntervalFunction {
   SDL_TimerCallback callback;
 };
 
-// NOTE: figure this out later...
-void (*globalCb)(void*) = [](void*) { CM_LOGGER_INFO("Called here..."); };
-
 HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
   score = std::make_shared<Text>("Score: 0");
   time = std::make_shared<Text>("Time: 0:00");
