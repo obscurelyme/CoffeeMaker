@@ -43,9 +43,9 @@ namespace CoffeeMaker {
 
       void Start() {
         if (!_running) {
+          _running = true;
           _future = std::async(std::launch::async, [this] {
             _canceled = false;
-            _running = true;
             _timer->Start();
             while (!_canceled) {
               if (_timer->Expired()) {
@@ -81,17 +81,19 @@ namespace CoffeeMaker {
       ~IntervalTask() { Cancel(); }
 
       void Start() {
-        _future = std::async(std::launch::async, [this] {
-          _canceled = false;
+        if (!_running) {
           _running = true;
-          _timer->Start();
-          while (!_canceled) {
-            if (_timer->Expired()) {
-              _callback();
-              _timer->Reset();
+          _future = std::async(std::launch::async, [this] {
+            _canceled = false;
+            _timer->Start();
+            while (!_canceled) {
+              if (_timer->Expired()) {
+                _callback();
+                _timer->Reset();
+              }
             }
-          }
-        });
+          });
+        }
       }
 
       void Cancel() {
