@@ -1,6 +1,8 @@
 #ifndef _sprite_animation_hpp
 #define _sprite_animation_hpp
 
+#include <functional>
+
 #include "Sprite.hpp"
 #include "Timer.hpp"
 #include "Utilities.hpp"
@@ -22,6 +24,7 @@ namespace Animations {
     void Render();
     void Pause();
     void Unpause();
+    void OnComplete(std::function<void(void)> callback);
 
     static void ProcessSpriteAnimations();
 
@@ -37,6 +40,7 @@ namespace Animations {
     Scope<CoffeeMaker::StopWatch> _stopwatch;
     unsigned int _currentFrame;
     int _id;
+    std::function<void(void)> _onCompleteCallback;
 
     static std::vector<SpriteAnimation*> _animations;
     static int _uid;

@@ -9,6 +9,7 @@
 #include "Game/Scene.hpp"
 #include "InputManager.hpp"
 #include "Logger.hpp"
+#include "Math.hpp"
 #include "Renderer.hpp"
 
 Player* Player::_instance = nullptr;
@@ -17,11 +18,24 @@ CoffeeMaker::Math::Vector2D Player::Position() {
   return CoffeeMaker::Math::Vector2D(_instance->_clientRect.x, _instance->_clientRect.y);
 }
 
-Player::Player() : _isImmune(false), _collider(new Collider(Collider::Type::Player, true)), _active(true), _lives(3) {
+Player::Player() :
+    _isImmune(false),
+    _collider(new Collider(Collider::Type::Player, true)),
+    _active(true),
+    _destroyed(false),
+    _lives(3),
+    _destroyedAnimation(CreateScope<UCI::Animations::ExplodeSpriteAnimation>()),
+    _asyncRespawnTask(CreateScope<CoffeeMaker::Async::TimeoutTask<void>>(
+        [] {
+          CoffeeMaker::PushEvent(UCI::Events::PLAYER_POWER_UP_GAINED_IMMUNITY);
+          CoffeeMaker::PushEvent(UCI::Events::PLAYER_COMPLETE_SPAWN);
+        },
+        3000)),
+    _asyncImmunityTask(CreateScope<CoffeeMaker::Async::TimeoutTask<void>>(
+        [] { CoffeeMaker::PushEvent(UCI::Events::PLAYER_POWER_UP_LOST_IMMUNITY); }, 3000)) {
   _firing = false;
   SDL_Rect vp;
   SDL_RenderGetViewport(CoffeeMaker::Renderer::Instance(), &vp);
-  // NOTE: center the player sprite in the viewport
   _clientRect.x = (vp.w - _clientRect.w) / 2;
   _clientRect.y = (vp.h - _clientRect.h) - 50;
   for (int i = 0; i < 25; i++) {
@@ -33,9 +47,11 @@ Player::Player() : _isImmune(false), _collider(new Collider(Collider::Type::Play
   _collider->Update(_clientRect);
   _collider->OnCollide(std::bind(&Player::OnHit, this, std::placeholders::_1));
   _instance = this;
+  _destroyedAnimation->OnComplete([] { CoffeeMaker::PushEvent(UCI::Events::PLAYER_BEGIN_SPAWN); });
 }
 
 Player::~Player() {
+  _destroyedAnimation->Stop();
   _instance = nullptr;
   delete _collider;
   for (auto p : _projectiles) {
@@ -44,55 +60,37 @@ Player::~Player() {
 }
 
 void Player::OnHit(Collider* collider) {
+  using Vec2 = CoffeeMaker::Math::Vector2D;
   if (_collider->active) {
     if (collider->GetType() == Collider::Type::EnemyProjectile && !_isImmune) {
       _collider->active = false;
       _active = false;
-      if (_lives == 0) {
+      if (_lives - 1 == 0) {
         SceneManager::LoadScene(0);
         return;
       }
       _lives--;
       CoffeeMaker::PushEvent(UCI::Events::PLAYER_LOST_LIFE);
-      _respawnTimer.Start();
+      _destroyed = true;
+      _destroyedAnimation->SetPosition(Vec2{_clientRect.x, _clientRect.y});
+      _destroyedAnimation->Start();
     }
   }
 }
 
 void Player::Init() {}
 
-void Player::UpdateRespawnImmunity() {
-  if (_active && _isImmune) {
-    if (_immunityTimer.GetTicks() >= 3000) {
-      _isImmune = false;
-      _immunityTimer.Stop();
-    }
-  }
-}
-
 void Player::Pause() {
-  _respawnTimer.Pause();
-  _immunityTimer.Pause();
+  // _respawnTimer.Pause();
+  // _immunityTimer.Pause();
 }
 
 void Player::Unpause() {
-  _immunityTimer.Unpause();
-  _respawnTimer.Unpause();
+  // _immunityTimer.Unpause();
+  // _respawnTimer.Unpause();
 }
 
 void Player::Update(float deltaTime) {
-  UpdateRespawnImmunity();
-
-  if (!_active) {
-    if (_respawnTimer.GetTicks() >= 3000) {
-      _active = true;
-      _collider->active = true;
-      _respawnTimer.Stop();
-      _immunityTimer.Start();
-      _isImmune = true;
-    }
-  }
-
   if (_active) {
     _rotation = -90;
     if (IsOffScreenLeft()) {
@@ -117,9 +115,6 @@ void Player::Update(float deltaTime) {
       _rotation += 8;
     }
 
-    // SDL_GetMouseState(&_mouseX, &_mouseY);
-    // float xx = (_mouseX - _clientRect.x) * deltaTime;
-    // float yy = (_mouseY - _clientRect.y) * deltaTime;
     _collider->Update(_clientRect);
   }
 
@@ -130,6 +125,10 @@ void Player::Update(float deltaTime) {
 }
 
 void Player::Render() {
+  if (_destroyed) {
+    _destroyedAnimation->Render();
+  }
+
   if (_active) {
     _texture.Render(_clipRect, _clientRect, _rotation + 90);
     // _collider->Render();
@@ -165,3 +164,40 @@ void Player::Reload() {
 
 bool Player::IsOffScreenLeft() { return _clientRect.x + _clientRect.w <= 0; }
 bool Player::IsOffScreenRight() { return _clientRect.x >= 800; }
+
+void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
+  if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
+    _asyncRespawnTask->Pause();
+    _asyncImmunityTask->Pause();
+    return;
+  }
+
+  if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE) {
+    _asyncRespawnTask->Unpause();
+    _asyncImmunityTask->Unpause();
+    return;
+  }
+
+  if (event.code == UCI::Events::PLAYER_BEGIN_SPAWN) {
+    _destroyed = false;
+    _asyncRespawnTask->Start();
+    return;
+  }
+
+  if (event.code == UCI::Events::PLAYER_POWER_UP_GAINED_IMMUNITY) {
+    _isImmune = true;
+    _asyncImmunityTask->Start();
+    return;
+  }
+
+  if (event.code == UCI::Events::PLAYER_POWER_UP_LOST_IMMUNITY) {
+    _isImmune = false;
+    return;
+  }
+
+  if (event.code == UCI::Events::PLAYER_COMPLETE_SPAWN) {
+    _active = true;
+    _collider->active = true;
+    return;
+  }
+}

@@ -4,14 +4,17 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+#include "Async.hpp"
+#include "Game/Animations/Explode.hpp"
 #include "Game/Collider.hpp"
 #include "Game/Entity.hpp"
 #include "Math.hpp"
 #include "Projectile.hpp"
 #include "Texture.hpp"
 #include "Timer.hpp"
+#include "Utilities.hpp"
 
-class Player : public Entity {
+class Player : public Entity, public CoffeeMaker::IUserEventListener {
   public:
   static CoffeeMaker::Math::Vector2D Position();
 
@@ -29,6 +32,8 @@ class Player : public Entity {
   void Reload();
   void OnHit(Collider* collider);
 
+  void OnSDLUserEvent(const SDL_UserEvent& event);
+
   private:
   void UpdateRespawnImmunity();
   bool IsOffScreenLeft();
@@ -45,12 +50,12 @@ class Player : public Entity {
   bool _firing;
   Collider* _collider;
   bool _active;
-  // std::chrono::steady_clock::time_point _respawnTimerStart;
-  // std::chrono::duration<float, std::milli> _respawnTimer;
-  CoffeeMaker::Timer _immunityTimer;
-  CoffeeMaker::Timer _respawnTimer;
+  bool _destroyed;
   unsigned int _lives;
   glm::vec2 _direction{1.0f, 0.0f};
   int _speed = 225;
   static Player* _instance;
+  Scope<UCI::Animations::ExplodeSpriteAnimation> _destroyedAnimation;
+  Scope<CoffeeMaker::Async::TimeoutTask<void>> _asyncRespawnTask;
+  Scope<CoffeeMaker::Async::TimeoutTask<void>> _asyncImmunityTask;
 };

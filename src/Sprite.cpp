@@ -28,6 +28,8 @@ CoffeeMaker::Sprite::~Sprite() {}
 
 void CoffeeMaker::Sprite::Render() { _texture->Render(clipRect, clientRect, rotation); }
 
+void CoffeeMaker::Sprite::Render(SDL_Rect clip) { _texture->Render(clip, clientRect, rotation); }
+
 void CoffeeMaker::Sprite::SetPosition(const CoffeeMaker::Math::Vector2D& pos) {
   clientRect.x = pos.x;
   clientRect.y = pos.y;

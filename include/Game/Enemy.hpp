@@ -5,6 +5,9 @@
 #include <string>
 #include <vector>
 
+#include "Async.hpp"
+#include "Event.hpp"
+#include "Game/Animations/Explode.hpp"
 #include "Game/Collider.hpp"
 #include "Game/Entity.hpp"
 #include "Game/Projectile.hpp"
@@ -13,7 +16,7 @@
 #include "Timer.hpp"
 #include "Utilities.hpp"
 
-class Enemy : public Entity {
+class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
   public:
   Enemy();
   virtual ~Enemy();
@@ -30,6 +33,8 @@ class Enemy : public Entity {
   virtual void OnCollision(Collider* collider);
   bool IsOffScreen() const;
 
+  virtual void OnSDLUserEvent(const SDL_UserEvent& event);
+
   protected:
   CoffeeMaker::Texture _texture{"EnemyV1.png", true};
   SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};
@@ -43,14 +48,15 @@ class Enemy : public Entity {
 
   static unsigned int _uid;
 
-  // EnemyAnimationState _state{EnemyAnimationState::Idle};
   unsigned int _ticks;
   unsigned int _priorTicks;
   unsigned int _speed{225};
   double _rotation{0};
   std::vector<Projectile*> _projectiles;
   int _currentProjectile = 0;
-  CoffeeMaker::Timeout _to{2000, std::bind(&Enemy::Fire, this)};
+  Scope<CoffeeMaker::Async::IntervalTask> _fireMissileTask;
+  Scope<UCI::Animations::ExplodeSpriteAnimation> _destroyedAnimation;
+  bool _destroyed;
 };
 
 class SpecialEnemy : public Enemy {

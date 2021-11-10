@@ -18,11 +18,13 @@ namespace UCI {
       void Start();
       void Stop();
       void SetPosition(const Vec2& pos);
+      void OnComplete(std::function<void(void)> callback);
       virtual void OnSDLUserEvent(const SDL_UserEvent& event);
 
       private:
       static Ref<CoffeeMaker::Sprite> _sprite;
       Scope<::Animations::SpriteAnimation> _animation;
+      Vec2 _position;
     };
   };  // namespace Animations
 }  // namespace UCI
