@@ -69,8 +69,14 @@ namespace CoffeeMaker {
     void Start() { _timer.Start(); }
 
     void Reset() {
-      _timer.Stop();
-      _timer.Start();
+      if (_timer.IsPaused()) {
+        _timer.Stop();
+        _timer.Start();
+        _timer.Pause();
+      } else {
+        _timer.Stop();
+        _timer.Start();
+      }
     }
 
     void Pause() { _timer.Pause(); }

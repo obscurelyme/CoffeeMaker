@@ -64,13 +64,13 @@ class SpecialEnemy : public Enemy {
   SpecialEnemy();
   virtual ~SpecialEnemy();
 
-  virtual void Init() override;
-  virtual void Update(float deltaTime) override;
-  virtual void Render() override;
-  virtual void Pause() override;
-  virtual void Unpause() override;
+  virtual void Init();
+  virtual void Update(float deltaTime);
+  virtual void Render();
+  virtual void Pause();
+  virtual void Unpause();
 
-  virtual void Spawn() override;
+  virtual void Spawn();
 
   protected:
   CoffeeMaker::Math::Vector2D _transformVector;
