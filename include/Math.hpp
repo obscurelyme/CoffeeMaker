@@ -76,6 +76,13 @@ namespace CoffeeMaker {
       float y;
     };
 
+    class PolarRotate {
+      public:
+      static float QUARTER;
+      static float PI;
+      static float TAU;
+    };
+
     class Vector2D {
       public:
       Vector2D(float xx = 0.0f, float yy = 0.0f);

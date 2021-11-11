@@ -35,12 +35,30 @@ namespace Animations {
     std::vector<std::function<void(void*)>> _completeListeners;
   };
 
+  /**
+   * @brief Enemies do a double loop traveling down the screen towards the player.
+   * Enemies will collide with the player if possible.
+   */
   class EnemyEntrance : public BaseSplineAnimation {
     public:
     EnemyEntrance();
     ~EnemyEntrance() = default;
   };
 
+  /**
+   * @brief Enemies travel along the north side of the screen, never
+   * interfering with the player's path.
+   */
+  class EnemyBriefEntrance : public BaseSplineAnimation {
+    public:
+    EnemyBriefEntrance();
+    ~EnemyBriefEntrance() = default;
+  };
+
+  /**
+   * @brief Enemies exit towards the bottom of the screen. They will collide with
+   * the player if on a collision path.
+   */
   class EnemyExit : public BaseSplineAnimation {
     public:
     EnemyExit();

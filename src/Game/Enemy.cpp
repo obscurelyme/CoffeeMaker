@@ -194,7 +194,8 @@ bool Enemy::IsOffScreen() const {
 
 void Enemy::Fire() {
   // NOTE: sloppy but should kinda work for now
-  float rot = CoffeeMaker::Math::rad2deg(_position.LookAt(Player::Position())) + 90;
+  float rot =
+      CoffeeMaker::Math::rad2deg(_position.LookAt(Player::Position())) + CoffeeMaker::Math::PolarRotate::QUARTER;
   if (_currentProjectile < 24) {
     if (!_projectiles[_currentProjectile + 1]->IsFired()) {
       _projectiles[_currentProjectile++]->Fire2(_position.x, _position.y, Player::Position().x, Player::Position().y,

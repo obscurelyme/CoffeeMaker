@@ -4,6 +4,10 @@
 
 RNG CoffeeMaker::Math::RandomEngine::engine;
 
+float CoffeeMaker::Math::PolarRotate::QUARTER = 90.0f;
+float CoffeeMaker::Math::PolarRotate::PI = 180.0f;
+float CoffeeMaker::Math::PolarRotate::TAU = 0.0f;
+
 float CoffeeMaker::Math::Random(float min, float max) {
   std::uniform_real_distribution<float> distro{min, max};
   return distro(CoffeeMaker::Math::RandomEngine::engine);
