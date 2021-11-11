@@ -37,23 +37,31 @@ namespace CoffeeMaker {
     class TimeoutTask {
       public:
       TimeoutTask(std::function<T(void)> cb, int duration) :
-          _callback(cb), _canceled(false), _running(false), _timer(CreateScope<CoffeeMaker::StopWatch>(duration)) {
-        _future = std::async(std::launch::async, [this] {
-          _canceled = false;
-          _running = true;
-          _timer->Start();
-          while (!_canceled) {
-            if (_timer->Expired()) {
-              _running = false;
-              return _callback();
-            }
-          }
-        });
-      }
+          _callback(cb), _canceled(false), _running(false), _timer(CreateScope<CoffeeMaker::StopWatch>(duration)) {}
 
       ~TimeoutTask() { Cancel(); }
 
+      void Start() {
+        if (!_running) {
+          _running = true;
+          _future = std::async(std::launch::async, [this] {
+            _canceled = false;
+            _timer->Start();
+            while (!_canceled) {
+              if (_timer->Expired()) {
+                _running = false;
+                return _callback();
+              }
+            }
+          });
+        }
+      }
+
       void Cancel() { _canceled = true; }
+
+      void Pause() { _timer->Pause(); }
+
+      void Unpause() { _timer->Unpause(); }
 
       T Get() { return _future.get(); }
 
@@ -73,17 +81,19 @@ namespace CoffeeMaker {
       ~IntervalTask() { Cancel(); }
 
       void Start() {
-        _future = std::async(std::launch::async, [this] {
-          _canceled = false;
+        if (!_running) {
           _running = true;
-          _timer->Start();
-          while (!_canceled) {
-            if (_timer->Expired()) {
-              _callback();
-              _timer->Reset();
+          _future = std::async(std::launch::async, [this] {
+            _canceled = false;
+            _timer->Start();
+            while (!_canceled) {
+              if (_timer->Expired()) {
+                _callback();
+                _timer->Reset();
+              }
             }
-          }
-        });
+          });
+        }
       }
 
       void Cancel() {

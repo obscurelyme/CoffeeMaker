@@ -17,7 +17,13 @@ std::random_device device;
 std::default_random_engine engine(device());
 std::uniform_real_distribution<double> distribution(0, 360);
 
-Enemy::Enemy() : _collider(nullptr), _enteredScreen(false), _active(false) {
+Enemy::Enemy() :
+    _collider(nullptr),
+    _enteredScreen(false),
+    _active(false),
+    _fireMissileTask(nullptr),
+    _destroyedAnimation(CreateScope<UCI::Animations::ExplodeSpriteAnimation>()),
+    _destroyed(false) {
   _priorTicks = SDL_GetTicks();
   _ticks = _priorTicks;
   _id = "Enemy-" + std::to_string(++_uid);
@@ -29,9 +35,13 @@ Enemy::Enemy() : _collider(nullptr), _enteredScreen(false), _active(false) {
     _projectiles.emplace_back(new Projectile(Collider::Type::EnemyProjectile));
   }
   _currentProjectile = 0;
+  _destroyedAnimation->OnComplete([this] { CoffeeMaker::PushEvent(UCI::ENEMY_SPAWNED, this); });
+  _fireMissileTask = CreateScope<CoffeeMaker::Async::IntervalTask>(
+      [this] { CoffeeMaker::PushEvent(UCI::Events::ENEMY_FIRE_MISSILE, this); }, 3000);
 }
 
 Enemy::~Enemy() {
+  _fireMissileTask->Cancel();
   for (auto p : _projectiles) {
     delete p;
   }
@@ -99,8 +109,8 @@ bool Enemy::IsActive() const { return _active; }
 
 void Enemy::OnCollision(Collider* collider) {
   if (collider->GetType() == Collider::Type::Projectile && _collider->active) {
+    CoffeeMaker::PushEvent(UCI::Events::ENEMY_DESTROYED, this);
     CoffeeMaker::PushEvent(UCI::Events::PLAYER_INCREMENT_SCORE);
-    Spawn();
   }
 }
 
@@ -124,6 +134,29 @@ void Enemy::Fire() {
     // NOTE: fire the next, or else projectiles are unavailable for a frame.
     _projectiles[_currentProjectile++]->Fire2(_clientRect.x, _clientRect.y, Player::Position().x, Player::Position().y,
                                               _rotation);
+  }
+}
+
+void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
+  if (event.code == UCI::Events::ENEMY_DESTROYED && event.data1 == this) {
+    using Vec2 = CoffeeMaker::Math::Vector2D;
+    _fireMissileTask->Cancel();
+    _destroyed = true;
+    _active = false;
+    _collider->active = false;
+    _destroyedAnimation->SetPosition(Vec2{_clientRect.x, _clientRect.y});
+    _destroyedAnimation->Start();
+    return;
+  }
+  if (event.code == UCI::Events::ENEMY_SPAWNED && event.data1 == this) {
+    _fireMissileTask->Start();
+    _destroyed = false;
+    Spawn();
+    return;
+  }
+  if (event.code == UCI::Events::ENEMY_FIRE_MISSILE && event.data1 == this) {
+    Fire();
+    return;
   }
 }
 
@@ -156,7 +189,6 @@ void SpecialEnemy::Update(float deltaTime) {
       _collider->Update(_clientRect);
     } else {
       // NOTE: side to side motion
-      _to.Start();
       if (_moveright) {
         // move right
         _clientRect.x += deltaTime * (_speed);
@@ -190,17 +222,22 @@ void SpecialEnemy::Update(float deltaTime) {
 }
 
 void SpecialEnemy::Render() {
-  SDL_RendererFlip flip = SDL_FLIP_NONE;
-  SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), &_clipRect, &_clientRect, _rotation, NULL,
-                    flip);
+  if (_destroyed) {
+    _destroyedAnimation->Render();
+  } else {
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
+    SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), &_clipRect, &_clientRect, _rotation, NULL,
+                      flip);
+  }
+
   for (auto& projectile : _projectiles) {
     projectile->Render();
   }
 }
 
-void SpecialEnemy::Pause() { _to.Pause(); }
+void SpecialEnemy::Pause() { _fireMissileTask->Pause(); }
 
-void SpecialEnemy::Unpause() { _to.Unpause(); }
+void SpecialEnemy::Unpause() { _fireMissileTask->Unpause(); }
 
 void SpecialEnemy::Spawn() {
   _currentTime = 0.0f;

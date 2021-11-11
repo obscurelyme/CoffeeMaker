@@ -20,8 +20,6 @@ void MainScene::Render() {
     enemy->Render();
   }
 
-  // _specialEnemy->Render();
-
   _hud->Render();
   _menu->Render();
 }
@@ -64,16 +62,8 @@ void MainScene::Update(float deltaTime) {
   _backgroundTiles->Update(deltaTime);
 
   for (auto enemy : _enemies) {
-    // if (!enemy->IsActive()) {
-    //   enemy->Spawn();
-    // }
     enemy->Update(deltaTime);
   }
-
-  // if (!_specialEnemy->IsActive()) {
-  //   _specialEnemy->Spawn();
-  // }
-  _specialEnemy->Update(deltaTime);
 
   for (auto& entity : _entities) {
     entity->Update(deltaTime);
@@ -91,11 +81,9 @@ void MainScene::Init() {
   _menu->Init();
   _backgroundTiles = new Tiles("space.png", 800, 600);
   _player = new Player();
-  _specialEnemy = new SpecialEnemy();
-  _specialEnemy->Init();
 
   for (unsigned int i = 0; i < MAX_ENEMIES; i++) {
-    _enemies[i] = std::make_shared<SpecialEnemy>();
+    _enemies[i] = new SpecialEnemy();
     _enemies[i]->Init();
   }
 
@@ -110,13 +98,15 @@ void MainScene::Destroy() {
   CoffeeMaker::Audio::StopMusic();
   CoffeeMaker::Audio::FreeMusic(_music);
   _entities.clear();
+  for (Enemy* e : _enemies) {
+    delete e;
+  }
   _enemies.fill(nullptr);
   Collider::ClearAllUnprocessedCollisions();
   delete _backgroundTiles;
   delete _player;
   delete _menu;
   delete _hud;
-  delete _specialEnemy;
   _currentSpawn = 0;
 }
 
@@ -128,7 +118,8 @@ void MainScene::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (_loaded) {
     switch (event.code) {
       case UCI::Events::ENEMY_INITIAL_INTERVAL_SPAWN: {
-        _enemies[_currentSpawn++]->Spawn();
+        CoffeeMaker::PushEvent(UCI::Events::ENEMY_SPAWNED, _enemies[_currentSpawn++]);
+        // _enemies[_currentSpawn++]->Spawn();
         if (_currentSpawn == MAX_ENEMIES) {
           _enemySpawnTask->Cancel();
         }

@@ -44,14 +44,13 @@ void Animations::SpriteAnimation::Update() {
         } else {
           _stopwatch->Stop();
           _started = false;
+          _onCompleteCallback();
         }
       } else {
         _currentFrame++;
       }
       _stopwatch->Reset();
     }
-
-    _sprite->clipRect = _frames[_currentFrame];
   }
 }
 
@@ -62,18 +61,34 @@ void Animations::SpriteAnimation::AddFrame(SDL_Rect frame) {
   }
 }
 
-void Animations::SpriteAnimation::Render() { _sprite->Render(); }
+void Animations::SpriteAnimation::Render() { _sprite->Render(_frames[_currentFrame]); }
 
-void Animations::SpriteAnimation::Stop() { _stopwatch->Stop(); }
-
-void Animations::SpriteAnimation::Start() {
-  if (!_started) {
-    _stopwatch = CreateScope<CoffeeMaker::StopWatch>(_durationPerFrame);
-    _stopwatch->Start();
-    _started = true;
+void Animations::SpriteAnimation::Stop() {
+  if (_stopwatch != nullptr) {
+    _stopwatch->Stop();
   }
 }
 
-void Animations::SpriteAnimation::Pause() { _stopwatch->Pause(); }
+void Animations::SpriteAnimation::Start() {
+  if (!_started) {
+    // _stopwatch.reset(); Not sure if memory leak or not....
+    _stopwatch = CreateScope<CoffeeMaker::StopWatch>(_durationPerFrame);
+    _currentFrame = 0;
+    _started = true;
+    _stopwatch->Start();
+  }
+}
 
-void Animations::SpriteAnimation::Unpause() { _stopwatch->Unpause(); }
+void Animations::SpriteAnimation::Pause() {
+  if (_stopwatch != nullptr) {
+    _stopwatch->Pause();
+  }
+}
+
+void Animations::SpriteAnimation::Unpause() {
+  if (_stopwatch != nullptr) {
+    _stopwatch->Unpause();
+  }
+}
+
+void Animations::SpriteAnimation::OnComplete(std::function<void(void)> callback) { _onCompleteCallback = callback; }

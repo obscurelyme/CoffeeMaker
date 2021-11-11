@@ -15,6 +15,7 @@ namespace CoffeeMaker {
     ~Sprite();
 
     void Render();
+    void Render(SDL_Rect clip);
     void SetPosition(const CoffeeMaker::Math::Vector2D& pos);
 
     double rotation;
