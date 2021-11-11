@@ -15,7 +15,7 @@ void CoffeeMaker::Audio::Init() {
     return;
   }
 
-  int flags = MIX_INIT_MP3;
+  int flags = MIX_INIT_MP3 | MIX_INIT_OGG;
   int initializedFlags = Mix_Init(flags);
   if ((initializedFlags & flags) != flags) {
     std::string msg = fmt::format(fmt::runtime("Could not initialize SDL Mixer {}"), Mix_GetError());

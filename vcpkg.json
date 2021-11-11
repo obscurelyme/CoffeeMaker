@@ -14,7 +14,7 @@
     },
     {
       "name": "sdl2-mixer",
-      "features": ["dynamic-load", "libvorbis", "mpg123"],
+      "features": ["libvorbis", "mpg123"],
       "platform": "windows"
     },
     {

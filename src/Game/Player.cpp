@@ -51,6 +51,8 @@ Player::Player() :
 }
 
 Player::~Player() {
+  _asyncRespawnTask->Cancel();
+  _asyncImmunityTask->Cancel();
   _destroyedAnimation->Stop();
   _instance = nullptr;
   delete _collider;
