@@ -18,6 +18,7 @@ namespace Animations {
 
     void Update(float deltaTime);
     Vec2 Position() const;
+    void Start();
     void Reset();
     void DebugRender() const;
     bool Complete() const;

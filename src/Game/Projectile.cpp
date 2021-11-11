@@ -36,7 +36,6 @@ Projectile::~Projectile() { delete collider; }
 
 void Projectile::OnHit(Collider* c) {
   if (c->GetType() == Collider::Type::Enemy && collider->GetType() == Collider::Type::Projectile) {
-    // this projectile will be considered "used", it can be deactivated and reloaded.
     _impactSound->Play();
     Reload();
     return;

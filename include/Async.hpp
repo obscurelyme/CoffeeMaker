@@ -53,6 +53,7 @@ namespace CoffeeMaker {
                 return _callback();
               }
             }
+            _running = false;
           });
         }
       }
@@ -92,14 +93,12 @@ namespace CoffeeMaker {
                 _timer->Reset();
               }
             }
+            _running = false;
           });
         }
       }
 
-      void Cancel() {
-        _canceled = true;
-        _running = false;
-      }
+      void Cancel() { _canceled = true; }
 
       void Pause() { _timer->Pause(); }
 

@@ -21,6 +21,8 @@ void Animations::BaseSplineAnimation::Update(float deltaTime) {
 
 CoffeeMaker::Math::Vector2D Animations::BaseSplineAnimation::Position() const { return _spline->CurrentPosition(); };
 
+void Animations::BaseSplineAnimation::Start() { _spline->Start(); }
+
 void Animations::BaseSplineAnimation::Reset() { _spline->Reset(); }
 
 void Animations::BaseSplineAnimation::DebugRender() const { _spline->DebugRender(); }
@@ -52,6 +54,7 @@ Animations::EnemyEntrance::EnemyEntrance() : Animations::BaseSplineAnimation(1.5
 
   _spline->AddCurve(Vec2{50, -50}, Vec2{50, 600}, Vec2{250, 600}, Vec2{250, 300});
   _spline->AddCurve(Vec2{250, 300}, Vec2{50, -150}, Vec2{50, 750}, Vec2{275, 150});
+
   _spline->Start();
 }
 

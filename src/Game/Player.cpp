@@ -33,7 +33,8 @@ Player::Player() :
         },
         3000)),
     _asyncImmunityTask(CreateScope<CoffeeMaker::Async::TimeoutTask<void>>(
-        [] { CoffeeMaker::PushEvent(UCI::Events::PLAYER_POWER_UP_LOST_IMMUNITY); }, 3000)) {
+        [] { CoffeeMaker::PushEvent(UCI::Events::PLAYER_POWER_UP_LOST_IMMUNITY); }, 3000)),
+    _impactSound(CreateScope<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg")) {
   _firing = false;
   SDL_Rect vp;
   SDL_RenderGetViewport(CoffeeMaker::Renderer::Instance(), &vp);
@@ -63,22 +64,33 @@ Player::~Player() {
 }
 
 void Player::OnHit(Collider* collider) {
-  using Vec2 = CoffeeMaker::Math::Vector2D;
   if (_collider->active) {
     if (collider->GetType() == Collider::Type::EnemyProjectile && !_isImmune) {
-      _collider->active = false;
-      _active = false;
-      if (_lives - 1 == 0) {
-        SceneManager::LoadScene(0);
-        return;
-      }
-      _lives--;
-      CoffeeMaker::PushEvent(UCI::Events::PLAYER_LOST_LIFE);
-      _destroyed = true;
-      _destroyedAnimation->SetPosition(Vec2{_clientRect.x, _clientRect.y});
-      _destroyedAnimation->Start();
+      HandleDestroy();
+      return;
+    }
+
+    if (collider->GetType() == Collider::Type::Enemy && !_isImmune) {
+      _impactSound->Play();
+      HandleDestroy();
     }
   }
+}
+
+void Player::HandleDestroy() {
+  using Vec2 = CoffeeMaker::Math::Vector2D;
+  _collider->active = false;
+  _active = false;
+  if (_lives - 1 == 0) {
+    // TODO: timeout here and then boot to main menu
+    SceneManager::LoadScene(0);
+    return;
+  }
+  _lives--;
+  CoffeeMaker::PushEvent(UCI::Events::PLAYER_LOST_LIFE);
+  _destroyed = true;
+  _destroyedAnimation->SetPosition(Vec2{_clientRect.x, _clientRect.y});
+  _destroyedAnimation->Start();
 }
 
 void Player::Init() {}

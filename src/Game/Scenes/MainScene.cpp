@@ -83,7 +83,7 @@ void MainScene::Init() {
   _player = new Player();
 
   for (unsigned int i = 0; i < MAX_ENEMIES; i++) {
-    _enemies[i] = new SpecialEnemy();
+    _enemies[i] = new Enemy();
     _enemies[i]->Init();
   }
 

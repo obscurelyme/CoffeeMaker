@@ -6,17 +6,20 @@
 #include <vector>
 
 #include "Async.hpp"
+#include "Audio.hpp"
 #include "Event.hpp"
+#include "Game/Animations/EnemyAnimations.hpp"
 #include "Game/Animations/Explode.hpp"
 #include "Game/Collider.hpp"
 #include "Game/Entity.hpp"
 #include "Game/Projectile.hpp"
 #include "Math.hpp"
 #include "Texture.hpp"
-#include "Timer.hpp"
 #include "Utilities.hpp"
 
 class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
+  enum State { Idle, Entering, Exiting, Destroyed, StrafingRight, StrafingLeft, WillExit };
+
   public:
   Enemy();
   virtual ~Enemy();
@@ -36,46 +39,46 @@ class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
   virtual void OnSDLUserEvent(const SDL_UserEvent& event);
 
   protected:
-  CoffeeMaker::Texture _texture{"EnemyV1.png", true};
-  SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};
-  SDL_FRect _clientRect{.x = 0, .y = 0, .w = 48, .h = 48};
-  glm::vec2 _movement;
-  Ref<Collider> _collider;
-
-  bool _enteredScreen;
-  bool _active;
-  std::string _id;
-
   static unsigned int _uid;
 
-  unsigned int _ticks;
-  unsigned int _priorTicks;
-  unsigned int _speed{225};
-  double _rotation{0};
+  bool _active;
+  double _rotation;
+  float _speed;
+  int _currentProjectile;
+  Ref<Collider> _collider;
+  std::string _id;
   std::vector<Projectile*> _projectiles;
-  int _currentProjectile = 0;
+  Scope<CoffeeMaker::Sprite> _sprite;
+  CoffeeMaker::Math::Vector2D _position;
+  Scope<Animations::EnemyEntrance> _entranceSpline;
+  Scope<Animations::EnemyExit> _exitSpline;
   Scope<CoffeeMaker::Async::IntervalTask> _fireMissileTask;
+  Scope<CoffeeMaker::Async::TimeoutTask<void>> _exitTimeoutTask;
+  Scope<CoffeeMaker::Async::TimeoutTask<void>> _respawnTimeoutTask;
   Scope<UCI::Animations::ExplodeSpriteAnimation> _destroyedAnimation;
-  bool _destroyed;
+  Scope<CoffeeMaker::AudioElement> _impactSound;
+  State _state;
 };
 
-class SpecialEnemy : public Enemy {
-  public:
-  SpecialEnemy();
-  virtual ~SpecialEnemy();
+class Drone : public Enemy {};
 
-  virtual void Init();
-  virtual void Update(float deltaTime);
-  virtual void Render();
-  virtual void Pause();
-  virtual void Unpause();
+// class SpecialEnemy : public Enemy {
+//   public:
+//   SpecialEnemy();
+//   virtual ~SpecialEnemy();
 
-  virtual void Spawn();
+//   virtual void Init();
+//   virtual void Update(float deltaTime);
+//   virtual void Render();
+//   virtual void Pause();
+//   virtual void Unpause();
 
-  protected:
-  CoffeeMaker::Math::Vector2D _transformVector;
-  CoffeeMaker::Math::Vector2D _endVector;
-  float _totalTime{3.0f};
-  float _currentTime{0.0f};
-  bool _moveright{true};
-};
+//   virtual void Spawn();
+
+//   protected:
+//   CoffeeMaker::Math::Vector2D _transformVector;
+//   CoffeeMaker::Math::Vector2D _endVector;
+//   float _totalTime{3.0f};
+//   float _currentTime{0.0f};
+//   bool _moveright{true};
+// };
