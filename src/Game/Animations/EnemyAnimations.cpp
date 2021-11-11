@@ -21,8 +21,6 @@ void Animations::BaseSplineAnimation::Update(float deltaTime) {
 
 CoffeeMaker::Math::Vector2D Animations::BaseSplineAnimation::Position() const { return _spline->CurrentPosition(); };
 
-void Animations::BaseSplineAnimation::Start() { _spline->Start(); }
-
 void Animations::BaseSplineAnimation::Reset() { _spline->Reset(); }
 
 void Animations::BaseSplineAnimation::DebugRender() const { _spline->DebugRender(); }
