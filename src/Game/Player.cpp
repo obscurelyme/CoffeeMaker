@@ -1,5 +1,6 @@
 #include "Game/Player.hpp"
 
+#include <algorithm>
 #include <chrono>
 #include <functional>
 #include <glm/glm.hpp>
@@ -82,24 +83,13 @@ void Player::OnHit(Collider* collider) {
 
 void Player::Init() {}
 
-void Player::Pause() {
-  // _respawnTimer.Pause();
-  // _immunityTimer.Pause();
-}
+void Player::Pause() {}
 
-void Player::Unpause() {
-  // _immunityTimer.Unpause();
-  // _respawnTimer.Unpause();
-}
+void Player::Unpause() {}
 
 void Player::Update(float deltaTime) {
   if (_active) {
     _rotation = -90;
-    if (IsOffScreenLeft()) {
-      _clientRect.x = 800;
-    } else if (IsOffScreenRight()) {
-      _clientRect.x = 0 - _clientRect.w;
-    }
 
     if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_SPACE)) {
       Fire();
@@ -107,13 +97,13 @@ void Player::Update(float deltaTime) {
 
     if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_LEFT)) {
       // strafe left
-      _clientRect.x -= deltaTime * _speed;
+      _clientRect.x = std::max(_clientRect.x - deltaTime * _speed, 50.0f);
       _rotation -= 8;
     }
 
     if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_RIGHT)) {
       // strafe right
-      _clientRect.x += deltaTime * _speed;
+      _clientRect.x = std::min(_clientRect.x + deltaTime * _speed, 702.0f);
       _rotation += 8;
     }
 
