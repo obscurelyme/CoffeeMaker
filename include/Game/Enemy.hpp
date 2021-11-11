@@ -18,6 +18,7 @@
 #include "Utilities.hpp"
 
 class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
+  public:
   enum State { Idle, Entering, Exiting, Destroyed, StrafingRight, StrafingLeft, WillExit };
 
   public:
@@ -50,7 +51,7 @@ class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
   std::vector<Projectile*> _projectiles;
   Scope<CoffeeMaker::Sprite> _sprite;
   CoffeeMaker::Math::Vector2D _position;
-  Scope<Animations::EnemyEntrance> _entranceSpline;
+  Scope<Animations::BaseSplineAnimation> _entranceSpline;
   Scope<Animations::EnemyExit> _exitSpline;
   Scope<CoffeeMaker::Async::IntervalTask> _fireMissileTask;
   Scope<CoffeeMaker::Async::TimeoutTask<void>> _exitTimeoutTask;
@@ -60,7 +61,11 @@ class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
   State _state;
 };
 
-class Drone : public Enemy {};
+class Drone : public Enemy {
+  public:
+  Drone();
+  virtual ~Drone();
+};
 
 // class SpecialEnemy : public Enemy {
 //   public:

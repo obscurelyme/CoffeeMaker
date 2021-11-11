@@ -59,7 +59,7 @@ Animations::EnemyEntrance::EnemyEntrance() : Animations::BaseSplineAnimation(1.2
 Animations::EnemyBriefEntrance::EnemyBriefEntrance() : Animations::BaseSplineAnimation(1.0f) {
   using Vec2 = CoffeeMaker::Math::Vector2D;
 
-  _spline->AddCurve(Vec2{-200.0f, 600.0f}, Vec2{0.0f, -50.0f}, Vec2{800.0f, 0.0f}, Vec2{400.0f, 150.0f});
+  _spline->AddCurve(Vec2{-200.0f, 600.0f}, Vec2{0.0f, -50.0f}, Vec2{800.0f, 0.0f}, Vec2{400.0f, 100.0f});
   _spline->Start();
 }
 

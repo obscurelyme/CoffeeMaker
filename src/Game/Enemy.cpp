@@ -246,6 +246,18 @@ void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
   }
 }
 
+Drone::Drone() {
+  // NOTE: override the parent _entranceSpline
+  _entranceSpline = CreateScope<::Animations::EnemyBriefEntrance>();
+  _entranceSpline->OnComplete([this](void*) {
+    _state = Enemy::State::StrafingLeft;
+    _fireMissileTask->Start();
+    _exitTimeoutTask->Start();
+  });
+}
+
+Drone::~Drone() {}
+
 // SpecialEnemy::SpecialEnemy() {}
 
 // SpecialEnemy::~SpecialEnemy() {}

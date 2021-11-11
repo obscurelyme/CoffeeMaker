@@ -83,7 +83,12 @@ void MainScene::Init() {
   _player = new Player();
 
   for (unsigned int i = 0; i < MAX_ENEMIES; i++) {
-    _enemies[i] = new Enemy();
+    if (i < MAX_ENEMIES / 2) {
+      _enemies[i] = new Enemy();
+    } else {
+      _enemies[i] = new Drone();
+    }
+
     _enemies[i]->Init();
   }
 
