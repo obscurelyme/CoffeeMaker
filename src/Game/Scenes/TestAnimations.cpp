@@ -54,13 +54,4 @@ void TestAnimations::Pause() { _explosiveAnimation->Pause(); }
 
 void TestAnimations::Unpause() { _explosiveAnimation->Unpause(); }
 
-void TestAnimations::OnSDLUserEvent(const SDL_UserEvent& event) {
-  using Event = CoffeeMaker::ApplicationEvents;
-  if (event.code == Event::COFFEEMAKER_GAME_PAUSE) {
-    CM_LOGGER_INFO("Game paused");
-  }
-
-  if (event.code == Event::COFFEEMAKER_GAME_UNPAUSE) {
-    CM_LOGGER_INFO("Game resumed");
-  }
-}
+void TestAnimations::OnSDLUserEvent(const SDL_UserEvent&) {}

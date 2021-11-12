@@ -29,6 +29,7 @@ Player::Player() :
     _asyncRespawnTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[PLAYER][RESPAWN-TASK]",
         [] {
+          CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_WILL_SPAWN");
           CoffeeMaker::PushEvent(UCI::Events::PLAYER_POWER_UP_GAINED_IMMUNITY);
           CoffeeMaker::PushEvent(UCI::Events::PLAYER_COMPLETE_SPAWN);
         },
@@ -93,6 +94,7 @@ void Player::HandleDestroy() {
   _destroyed = true;
   _destroyedAnimation->SetPosition(Vec2{_clientRect.x, _clientRect.y});
   _destroyedAnimation->Start();
+  CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_DSTROYED");
 }
 
 void Player::Init() {}
@@ -175,16 +177,16 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
     // CM_LOGGER_INFO("[PLAYER_EVENT] - COFFEEMAKER_GAME_PAUSE");
 
-    // _asyncRespawnTask->Pause();
-    // _asyncImmunityTask->Pause();
+    _asyncRespawnTask->Pause();
+    _asyncImmunityTask->Pause();
     return;
   }
 
   if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE) {
     // CM_LOGGER_INFO("[PLAYER_EVENT] - COFFEEMAKER_GAME_UNPAUSE");
 
-    // _asyncRespawnTask->Unpause();
-    // _asyncImmunityTask->Unpause();
+    _asyncRespawnTask->Unpause();
+    _asyncImmunityTask->Unpause();
     return;
   }
 
@@ -209,7 +211,7 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
   }
 
   if (event.code == UCI::Events::PLAYER_COMPLETE_SPAWN) {
-    // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_COMPLETE_SPAWN");
+    CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_COMPLETE_SPAWN");
     _active = true;
     _collider->active = true;
     return;

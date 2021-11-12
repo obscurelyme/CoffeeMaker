@@ -1,6 +1,8 @@
 #ifndef _coffeemaker_async_hpp
 #define _coffeemaker_async_hpp
 
+#include <SDL2/SDL.h>
+
 #include <functional>
 #include <future>
 #include <mutex>
@@ -57,20 +59,21 @@ namespace CoffeeMaker {
           _canceled = false;
           _future = std::async(std::launch::async, [this] {
             _timer->Start();
-            CM_LOGGER_INFO("{} Started on thread", _name);
+            // CM_LOGGER_INFO("{} Started on thread", _name);
             while (!_canceled) {
+              SDL_Delay(16);
               std::lock_guard<std::mutex> lk(*_timeoutMutex);
               if (_timer->Expired()) {
                 _running = false;
-                CM_LOGGER_INFO("{} Completed, {} Ticks compared to {} duration", _name, _timer->GetTicks(),
-                               _timer->GetInterval());
+                // CM_LOGGER_INFO("{} Completed, {} Ticks compared to {} duration", _name, _timer->GetTicks(),
+                //                _timer->GetInterval());
                 _callback();
                 return;
               }
               // CM_LOGGER_INFO("{} Keep going", _name);
             }
             _running = false;
-            CM_LOGGER_INFO("{} Canceled thread", _name);
+            // CM_LOGGER_INFO("{} Canceled thread", _name);
             return;
           });
         }
@@ -89,13 +92,13 @@ namespace CoffeeMaker {
       void Pause() {
         std::lock_guard<std::mutex> lk(*_timeoutMutex);
         _timer->Pause();
-        CM_LOGGER_INFO("{} Paused at {}", _name, _timer->GetTicks());
+        // CM_LOGGER_INFO("{} Paused at {}", _name, _timer->GetTicks());
       }
 
       void Unpause() {
         std::lock_guard<std::mutex> lk(*_timeoutMutex);
         _timer->Unpause();
-        CM_LOGGER_INFO("{} Resumed at {}", _name, _timer->GetTicks());
+        // CM_LOGGER_INFO("{} Resumed at {}", _name, _timer->GetTicks());
       }
 
       private:
@@ -126,6 +129,7 @@ namespace CoffeeMaker {
             _canceled = false;
             _timer->Start();
             while (!_canceled) {
+              SDL_Delay(16);
               std::lock_guard<std::mutex> lk(*_mutex);
               if (_timer->Expired()) {
                 _callback();

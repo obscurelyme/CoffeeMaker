@@ -34,7 +34,7 @@ Enemy::Enemy() :
     _exitTimeoutTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[ENEMY][EXIT-TIMEOUT-TASK] - " + _id,
         [this] {
-          CM_LOGGER_INFO("[ENEMY_EVENT] _exitTimeoutTask completed Enemy ID: {}", _id);
+          // CM_LOGGER_INFO("[ENEMY_EVENT] _exitTimeoutTask completed Enemy ID: {}", _id);
           CoffeeMaker::PushEvent(UCI::Events::ENEMY_BEGIN_EXIT, this);
         },
         12000)),
@@ -55,14 +55,14 @@ Enemy::Enemy() :
     _state = Enemy::State::StrafingLeft;
     _fireMissileTask->Start();
     // __debugbreak();
-    CM_LOGGER_INFO("[ENEMY_EVENT] Entrance Animation Complete Enemy ID: {}", _id);
+    // CM_LOGGER_INFO("[ENEMY_EVENT] Entrance Animation Complete Enemy ID: {}", _id);
     _exitTimeoutTask->Start();
   });
   _exitSpline->OnComplete([this](void*) {
     // CM_LOGGER_INFO("[ENEMY_EVENT] _exitSpline Complete Enemy ID: {}", _id);
     _active = false;
     _state = Enemy::State::Idle;
-    CM_LOGGER_INFO("[ENEMY_EVENT] Exit Animation Complete Enemy ID: {}", _id);
+    // CM_LOGGER_INFO("[ENEMY_EVENT] Exit Animation Complete Enemy ID: {}", _id);
     _respawnTimeoutTask->Start();
   });
 
@@ -244,9 +244,7 @@ void Enemy::Fire() {
 void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (event.code == UCI::Events::ENEMY_DESTROYED && event.data1 == this) {
     // CM_LOGGER_INFO("[ENEMY_EVENT] - ENEMY_DESTROYED: Enemy ID: {}", _id);
-
     using Vec2 = CoffeeMaker::Math::Vector2D;
-    // _respawnTimeoutTask->Cancel();
     _fireMissileTask->Cancel();
     _exitTimeoutTask->Cancel();
     _active = false;
@@ -258,7 +256,6 @@ void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
   }
   if (event.code == UCI::Events::ENEMY_SPAWNED && event.data1 == this) {
     // CM_LOGGER_INFO("[ENEMY_EVENT] - ENEMY_SPAWNED: Enemy ID: {}", _id);
-    // _exitTimeoutTask->Reset();
     _entranceSpline->Reset();
     _exitSpline->Reset();
     Spawn();
@@ -289,8 +286,8 @@ Drone::Drone() {
   _entranceSpline = CreateScope<::Animations::EnemyBriefEntrance>();
   _entranceSpline->OnComplete([this](void*) {
     _state = Enemy::State::StrafingLeft;
-    // _fireMissileTask->Start();
-    // _exitTimeoutTask->Start();
+    _fireMissileTask->Start();
+    _exitTimeoutTask->Start();
   });
 }
 

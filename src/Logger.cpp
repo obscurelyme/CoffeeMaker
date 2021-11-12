@@ -26,7 +26,7 @@ Logger::Logger() {
   _errSink = std::make_shared<spdlog::sinks::stderr_color_sink_mt>();
   _errSink->set_level(spdlog::level::critical);
 
-  _spdlog = new spdlog::logger("etc", {_fileSink, _consoleSink, _errSink});
+  _spdlog = new spdlog::logger("etc", {_consoleSink, _errSink});
 }
 
 Logger::~Logger() { delete _spdlog; }
