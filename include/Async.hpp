@@ -53,7 +53,9 @@ namespace CoffeeMaker {
 
       ~TimeoutTask() {
         Cancel();
-        _future.get();
+        if (_future.valid()) {
+          _future.get();
+        }
       }
 
       void Start() {
@@ -125,7 +127,9 @@ namespace CoffeeMaker {
 
       ~IntervalTask() {
         Cancel();
-        _future.get();
+        if (_future.valid()) {
+          _future.get();
+        }
       }
 
       void Start() {
