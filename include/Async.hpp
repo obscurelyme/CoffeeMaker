@@ -51,7 +51,10 @@ namespace CoffeeMaker {
         _timeoutMutex = new std::mutex();
       }
 
-      ~TimeoutTask() { Cancel(); }
+      ~TimeoutTask() {
+        Cancel();
+        _future.get();
+      }
 
       void Start() {
         if (!_running) {
@@ -120,7 +123,10 @@ namespace CoffeeMaker {
           _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
           _mutex(new std::mutex()) {}
 
-      ~IntervalTask() { Cancel(); }
+      ~IntervalTask() {
+        Cancel();
+        _future.get();
+      }
 
       void Start() {
         if (!_running) {

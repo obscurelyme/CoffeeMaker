@@ -42,12 +42,12 @@ class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
   protected:
   static unsigned int _uid;
 
+  std::string _id;
   bool _active;
   double _rotation;
   float _speed;
   int _currentProjectile;
   Ref<Collider> _collider;
-  std::string _id;
   std::vector<Projectile*> _projectiles;
   Scope<CoffeeMaker::Sprite> _sprite;
   CoffeeMaker::Math::Vector2D _position;

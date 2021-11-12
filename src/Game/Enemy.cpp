@@ -25,12 +25,11 @@ Enemy::Enemy() :
     _rotation(0),
     _speed(250.0f),
     _currentProjectile(0),
-    _fireMissileTask(nullptr),
-    _destroyedAnimation(CreateScope<UCI::Animations::ExplodeSpriteAnimation>()),
     _collider(nullptr),
     _sprite(CreateScope<CoffeeMaker::Sprite>("EnemyV1.png")),
     _entranceSpline(CreateScope<Animations::EnemyEntrance>()),
     _exitSpline(CreateScope<Animations::EnemyExit>()),
+    _fireMissileTask(nullptr),
     _exitTimeoutTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[ENEMY][EXIT-TIMEOUT-TASK] - " + _id,
         [this] {
@@ -41,6 +40,7 @@ Enemy::Enemy() :
     _respawnTimeoutTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[ENEMY][RESPAWN-TIMEOUT-TASK] - " + _id,
         [this] { CoffeeMaker::PushEvent(UCI::Events::ENEMY_COMPLETE_EXIT, this); }, 3000)),
+    _destroyedAnimation(CreateScope<UCI::Animations::ExplodeSpriteAnimation>()),
     _impactSound(CreateScope<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg")),
     _state(Enemy::State::Idle) {
   _position.x = 400;
@@ -178,6 +178,9 @@ void Enemy::Update(float deltaTime) {
 
       _rotation = CoffeeMaker::Math::rad2deg(_position.LookAt(currentPos)) + 90;
       _position = currentPos;
+    } break;
+    default: {
+      // NOTE: do nothing for now...
     } break;
   }
 
