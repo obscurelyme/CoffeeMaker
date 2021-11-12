@@ -26,13 +26,15 @@ Player::Player() :
     _destroyed(false),
     _lives(3),
     _destroyedAnimation(CreateScope<UCI::Animations::ExplodeSpriteAnimation>()),
-    _asyncRespawnTask(CreateScope<CoffeeMaker::Async::TimeoutTask<void>>(
+    _asyncRespawnTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
+        "[PLAYER][RESPAWN-TASK]",
         [] {
           CoffeeMaker::PushEvent(UCI::Events::PLAYER_POWER_UP_GAINED_IMMUNITY);
           CoffeeMaker::PushEvent(UCI::Events::PLAYER_COMPLETE_SPAWN);
         },
         3000)),
-    _asyncImmunityTask(CreateScope<CoffeeMaker::Async::TimeoutTask<void>>(
+    _asyncImmunityTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
+        "[PLAYER][IMMUNITY-POWER-UP-DURATION]",
         [] { CoffeeMaker::PushEvent(UCI::Events::PLAYER_POWER_UP_LOST_IMMUNITY); }, 3000)),
     _impactSound(CreateScope<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg")) {
   _firing = false;
@@ -171,35 +173,43 @@ bool Player::IsOffScreenRight() { return _clientRect.x >= 800; }
 
 void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
-    _asyncRespawnTask->Pause();
-    _asyncImmunityTask->Pause();
+    // CM_LOGGER_INFO("[PLAYER_EVENT] - COFFEEMAKER_GAME_PAUSE");
+
+    // _asyncRespawnTask->Pause();
+    // _asyncImmunityTask->Pause();
     return;
   }
 
   if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE) {
-    _asyncRespawnTask->Unpause();
-    _asyncImmunityTask->Unpause();
+    // CM_LOGGER_INFO("[PLAYER_EVENT] - COFFEEMAKER_GAME_UNPAUSE");
+
+    // _asyncRespawnTask->Unpause();
+    // _asyncImmunityTask->Unpause();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_BEGIN_SPAWN) {
+    // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_BEGIN_SPAWN");
     _destroyed = false;
     _asyncRespawnTask->Start();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_POWER_UP_GAINED_IMMUNITY) {
+    // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_POWER_UP_GAINED_IMMUNITY");
     _isImmune = true;
     _asyncImmunityTask->Start();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_POWER_UP_LOST_IMMUNITY) {
+    // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_POWER_UP_LOST_IMMUNITY");
     _isImmune = false;
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_COMPLETE_SPAWN) {
+    // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_COMPLETE_SPAWN");
     _active = true;
     _collider->active = true;
     return;

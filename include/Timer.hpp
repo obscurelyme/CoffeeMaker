@@ -66,6 +66,8 @@ namespace CoffeeMaker {
 
     bool Expired() { return _timer.GetTicks() >= _interval; }
 
+    Uint32 GetTicks() { return _timer.GetTicks(); }
+
     void Start() { _timer.Start(); }
 
     void Reset() {
@@ -85,9 +87,11 @@ namespace CoffeeMaker {
 
     void Stop() { _timer.Stop(); }
 
+    Uint32 GetInterval() { return _interval; }
+
     private:
     CoffeeMaker::Timer _timer;
-    Uint32 _interval;
+    Uint32 _interval{0};
   };
 
   class SDLTimer {

@@ -10,9 +10,15 @@ Scene* SceneManager::_currentScene = nullptr;
 
 void SceneManager::UpdateCurrentScene(float deltaTime) { _currentScene->Update(deltaTime); }
 
-void SceneManager::PauseScene() { _currentScene->Pause(); }
+void SceneManager::PauseScene() {
+  _currentScene->Pause();
+  _currentScene->_paused = true;
+}
 
-void SceneManager::UnpauseScene() { _currentScene->Unpause(); }
+void SceneManager::UnpauseScene() {
+  _currentScene->Unpause();
+  _currentScene->_paused = false;
+}
 
 void SceneManager::RenderCurrentScene() { _currentScene->Render(); }
 
@@ -57,6 +63,8 @@ void SceneManager::DestroyAllScenes() {
   }
 }
 
+bool SceneManager::CurrentScenePaused() { return _currentScene->IsPaused(); }
+
 int Scene::_sceneId = 0;
 
 Scene::Scene() { _id = "Scene-" + std::to_string(++_sceneId); }
@@ -64,3 +72,5 @@ Scene::Scene() { _id = "Scene-" + std::to_string(++_sceneId); }
 Scene::~Scene() {}
 
 bool Scene::IsLoaded() { return _loaded; }
+
+bool Scene::IsPaused() { return _paused; }

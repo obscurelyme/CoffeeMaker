@@ -98,6 +98,7 @@ CoffeeMaker::Math::Vector2D CoffeeMaker::Spline::CurrentPosition() {
   }
   Vec2 p = CoffeeMaker::Math::CubicBezierCurve(_currentSegment[0], _currentSegment[1], _currentSegment[2],
                                                _currentSegment[3], _weight);
-  _trail.emplace_back(p);
+  // NOTE: nice for debugging, but when the game is paused this could lead to a soft memory leak.
+  // _trail.emplace_back(p);
   return p;
 }

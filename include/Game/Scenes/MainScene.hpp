@@ -32,7 +32,7 @@ class MainScene : public Scene {
   private:
   static void AsyncSpawnEnemy(MainScene* scene);
 
-  static const unsigned int MAX_ENEMIES = 10;
+  static const unsigned int MAX_ENEMIES = 5;
   static std::mutex _enemyMutex;
 
   Tiles* _backgroundTiles;

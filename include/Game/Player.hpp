@@ -58,7 +58,7 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   int _speed = 225;
   static Player* _instance;
   Scope<UCI::Animations::ExplodeSpriteAnimation> _destroyedAnimation;
-  Scope<CoffeeMaker::Async::TimeoutTask<void>> _asyncRespawnTask;
-  Scope<CoffeeMaker::Async::TimeoutTask<void>> _asyncImmunityTask;
+  Scope<CoffeeMaker::Async::TimeoutTask> _asyncRespawnTask;
+  Scope<CoffeeMaker::Async::TimeoutTask> _asyncImmunityTask;
   Scope<CoffeeMaker::AudioElement> _impactSound;
 };

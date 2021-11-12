@@ -54,8 +54,8 @@ class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
   Scope<Animations::BaseSplineAnimation> _entranceSpline;
   Scope<Animations::EnemyExit> _exitSpline;
   Scope<CoffeeMaker::Async::IntervalTask> _fireMissileTask;
-  Scope<CoffeeMaker::Async::TimeoutTask<void>> _exitTimeoutTask;
-  Scope<CoffeeMaker::Async::TimeoutTask<void>> _respawnTimeoutTask;
+  Scope<CoffeeMaker::Async::TimeoutTask> _exitTimeoutTask;
+  Scope<CoffeeMaker::Async::TimeoutTask> _respawnTimeoutTask;
   Scope<UCI::Animations::ExplodeSpriteAnimation> _destroyedAnimation;
   Scope<CoffeeMaker::AudioElement> _impactSound;
   State _state;

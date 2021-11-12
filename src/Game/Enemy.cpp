@@ -9,6 +9,7 @@
 #include "Event.hpp"
 #include "Game/Events.hpp"
 #include "Game/Player.hpp"
+#include "Game/Scene.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
 #include "Utilities.hpp"
@@ -19,6 +20,7 @@ std::default_random_engine engine(device());
 std::uniform_real_distribution<double> distribution(0, 360);
 
 Enemy::Enemy() :
+    _id("Enemy-" + std::to_string(++_uid)),
     _active(false),
     _rotation(0),
     _speed(250.0f),
@@ -29,14 +31,18 @@ Enemy::Enemy() :
     _sprite(CreateScope<CoffeeMaker::Sprite>("EnemyV1.png")),
     _entranceSpline(CreateScope<Animations::EnemyEntrance>()),
     _exitSpline(CreateScope<Animations::EnemyExit>()),
-    _exitTimeoutTask(CreateScope<CoffeeMaker::Async::TimeoutTask<void>>(
-        [this] { CoffeeMaker::PushEvent(UCI::Events::ENEMY_BEGIN_EXIT, this); }, 12000)),
-    _respawnTimeoutTask(CreateScope<CoffeeMaker::Async::TimeoutTask<void>>(
+    _exitTimeoutTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
+        "[ENEMY][EXIT-TIMEOUT-TASK] - " + _id,
+        [this] {
+          CM_LOGGER_INFO("[ENEMY_EVENT] _exitTimeoutTask completed Enemy ID: {}", _id);
+          CoffeeMaker::PushEvent(UCI::Events::ENEMY_BEGIN_EXIT, this);
+        },
+        12000)),
+    _respawnTimeoutTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
+        "[ENEMY][RESPAWN-TIMEOUT-TASK] - " + _id,
         [this] { CoffeeMaker::PushEvent(UCI::Events::ENEMY_COMPLETE_EXIT, this); }, 3000)),
     _impactSound(CreateScope<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg")),
     _state(Enemy::State::Idle) {
-  _id = "Enemy-" + std::to_string(++_uid);
-
   _position.x = 400;
   _position.y = 150;
 
@@ -45,14 +51,18 @@ Enemy::Enemy() :
   _sprite->clientRect.w = 48;
   _sprite->clientRect.h = 48;
   _entranceSpline->OnComplete([this](void*) {
+    // CM_LOGGER_INFO("[ENEMY_EVENT] _entranceSpline Complete Enemy ID: {}", _id);
     _state = Enemy::State::StrafingLeft;
     _fireMissileTask->Start();
     // __debugbreak();
+    CM_LOGGER_INFO("[ENEMY_EVENT] Entrance Animation Complete Enemy ID: {}", _id);
     _exitTimeoutTask->Start();
   });
   _exitSpline->OnComplete([this](void*) {
+    // CM_LOGGER_INFO("[ENEMY_EVENT] _exitSpline Complete Enemy ID: {}", _id);
     _active = false;
     _state = Enemy::State::Idle;
+    CM_LOGGER_INFO("[ENEMY_EVENT] Exit Animation Complete Enemy ID: {}", _id);
     _respawnTimeoutTask->Start();
   });
 
@@ -67,11 +77,16 @@ Enemy::Enemy() :
   _currentProjectile = 0;
 
   _destroyedAnimation->OnComplete([this] {
+    // CM_LOGGER_INFO("[ENEMY_EVENT] Destroyed Animation Complete - Enemy ID: {}", _id);
     _state = Enemy::State::Idle;
     _respawnTimeoutTask->Start();
   });
   _fireMissileTask = CreateScope<CoffeeMaker::Async::IntervalTask>(
-      [this] { CoffeeMaker::PushEvent(UCI::Events::ENEMY_FIRE_MISSILE, this); }, 3000);
+      [this] {
+        // CM_LOGGER_INFO("[ENEMY_EVENT] _fireMissileTask Complete Enemy ID: {}", _id);
+        CoffeeMaker::PushEvent(UCI::Events::ENEMY_FIRE_MISSILE, this);
+      },
+      3000);
 }
 
 Enemy::~Enemy() {
@@ -100,9 +115,17 @@ void Enemy::Render() {
   }
 }
 
-void Enemy::Pause() { _fireMissileTask->Pause(); }
+void Enemy::Pause() {
+  _fireMissileTask->Pause();
+  _exitTimeoutTask->Pause();
+  _respawnTimeoutTask->Pause();
+}
 
-void Enemy::Unpause() { _fireMissileTask->Unpause(); }
+void Enemy::Unpause() {
+  _fireMissileTask->Unpause();
+  _exitTimeoutTask->Unpause();
+  _respawnTimeoutTask->Unpause();
+}
 
 void Enemy::Update(float deltaTime) {
   using Vec2 = CoffeeMaker::Math::Vector2D;
@@ -137,7 +160,9 @@ void Enemy::Update(float deltaTime) {
       }
     } break;
     case Enemy::State::Entering: {
-      _entranceSpline->Update(deltaTime);
+      if (!SceneManager::CurrentScenePaused()) {
+        _entranceSpline->Update(deltaTime);
+      }
 
       Vec2 currentPos = _entranceSpline->Position();
 
@@ -145,7 +170,10 @@ void Enemy::Update(float deltaTime) {
       _position = currentPos;
     } break;
     case Enemy::State::Exiting: {
-      _exitSpline->Update(deltaTime);
+      if (!SceneManager::CurrentScenePaused()) {
+        _exitSpline->Update(deltaTime);
+      }
+
       Vec2 currentPos = _exitSpline->Position();
 
       _rotation = CoffeeMaker::Math::rad2deg(_position.LookAt(currentPos)) + 90;
@@ -173,16 +201,18 @@ void Enemy::Spawn() {
 bool Enemy::IsActive() const { return _active; }
 
 void Enemy::OnCollision(Collider* collider) {
-  if (collider->GetType() == Collider::Type::Projectile && _collider->active) {
-    CoffeeMaker::PushEvent(UCI::Events::ENEMY_DESTROYED, this);
-    CoffeeMaker::PushEvent(UCI::Events::PLAYER_INCREMENT_SCORE);
-    return;
-  }
+  if (_collider->active) {
+    if (collider->GetType() == Collider::Type::Projectile && _collider->active) {
+      CoffeeMaker::PushEvent(UCI::Events::ENEMY_DESTROYED, this);
+      CoffeeMaker::PushEvent(UCI::Events::PLAYER_INCREMENT_SCORE);
+      return;
+    }
 
-  if (collider->GetType() == Collider::Type::Player && _collider->active) {
-    _impactSound->Play();
-    CoffeeMaker::PushEvent(UCI::Events::ENEMY_DESTROYED, this);
-    return;
+    if (collider->GetType() == Collider::Type::Player && _collider->active) {
+      _impactSound->Play();
+      CoffeeMaker::PushEvent(UCI::Events::ENEMY_DESTROYED, this);
+      return;
+    }
   }
 }
 
@@ -213,8 +243,10 @@ void Enemy::Fire() {
 
 void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (event.code == UCI::Events::ENEMY_DESTROYED && event.data1 == this) {
+    // CM_LOGGER_INFO("[ENEMY_EVENT] - ENEMY_DESTROYED: Enemy ID: {}", _id);
+
     using Vec2 = CoffeeMaker::Math::Vector2D;
-    _respawnTimeoutTask->Cancel();
+    // _respawnTimeoutTask->Cancel();
     _fireMissileTask->Cancel();
     _exitTimeoutTask->Cancel();
     _active = false;
@@ -225,21 +257,27 @@ void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
     return;
   }
   if (event.code == UCI::Events::ENEMY_SPAWNED && event.data1 == this) {
+    // CM_LOGGER_INFO("[ENEMY_EVENT] - ENEMY_SPAWNED: Enemy ID: {}", _id);
+    // _exitTimeoutTask->Reset();
     _entranceSpline->Reset();
     _exitSpline->Reset();
     Spawn();
     return;
   }
   if (event.code == UCI::Events::ENEMY_FIRE_MISSILE && event.data1 == this) {
+    // CM_LOGGER_INFO("[ENEMY_EVENT] - ENEMY_FIRE_MISSILE: Enemy ID: {}", _id);
     Fire();
     return;
   }
   if (event.code == UCI::Events::ENEMY_BEGIN_EXIT && event.data1 == this) {
+    // CM_LOGGER_INFO("[ENEMY_EVENT] - ENEMY_BEGIN_EXIT: Enemy ID: {}", _id);
     _state = State::Exiting;
+    _fireMissileTask->Cancel();
     return;
   }
   if (event.code == UCI::Events::ENEMY_COMPLETE_EXIT && event.data1 == this) {
     // NOTE: Does the same thing as Spawned right now
+    // CM_LOGGER_INFO("[ENEMY_EVENT] - ENEMY_COMPLETE_EXIT: Enemy ID: {}", _id);
     _entranceSpline->Reset();
     _exitSpline->Reset();
     Spawn();
@@ -251,8 +289,8 @@ Drone::Drone() {
   _entranceSpline = CreateScope<::Animations::EnemyBriefEntrance>();
   _entranceSpline->OnComplete([this](void*) {
     _state = Enemy::State::StrafingLeft;
-    _fireMissileTask->Start();
-    _exitTimeoutTask->Start();
+    // _fireMissileTask->Start();
+    // _exitTimeoutTask->Start();
   });
 }
 

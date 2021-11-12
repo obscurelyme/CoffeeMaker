@@ -110,6 +110,11 @@ float CoffeeMaker::Math::Vector2D::Direction(const CoffeeMaker::Math::Vector2D& 
 }
 
 float CoffeeMaker::Math::Vector2D::LookAt(const CoffeeMaker::Math::Vector2D& rhs) {
+  if (x - rhs.x == 0) {
+    // NOTE: we would be dividing by 0, which NOT be a good thing.
+    return static_cast<float>(M_PI);
+  }
+
   float arcTan = std::atan((y - rhs.y) / (x - rhs.x));
 
   if (rhs.y - y < 0 && rhs.x - x < 0) {
