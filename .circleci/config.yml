@@ -1,0 +1,25 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: obscurelyme/coffeemaker:latest
+        auth:
+          username: obscurelyme
+          password: $DOCKERHUB_PASSWORD
+    steps:
+      - checkout
+
+      - run: bash ./scripts/configure.sh
+      - run: bash ./scripts/build.sh
+      - run: mkdir release
+      - run: cp ./build/main ./release/ultra-cosmo-invaders
+      - run: tar vcfz /tmp/ultra-cosmo-invaders.tar.gz ./release
+
+      - store_artifacts:
+          path: /tmp/ultra-cosmo-invaders.tar.gz
+
+workflows:
+  version: 2
+  coffeemaker_ci:
+    jobs:
+      - build
