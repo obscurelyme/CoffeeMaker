@@ -180,6 +180,24 @@ namespace CoffeeMaker {
        */
       static Vector2D Right();
     };
+
+    class Oscillate {
+      public:
+      explicit Oscillate(float min, float max, float speed);
+      ~Oscillate() = default;
+
+      float Update();
+      void Stop();
+      void Start();
+
+      private:
+      float _min;
+      float _max;
+      float _speed;
+      float _current;
+      bool _stopping;
+      bool _end;
+    };
   }  // namespace Math
 }  // namespace CoffeeMaker
 

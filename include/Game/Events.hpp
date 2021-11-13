@@ -11,6 +11,7 @@ namespace UCI {
     PLAYER_COMPLETE_SPAWN,
     PLAYER_POWER_UP_GAINED_IMMUNITY,
     PLAYER_POWER_UP_LOST_IMMUNITY,
+    PLAYER_DESTROYED,
     // Enemy Events ////////////////////////////////////////////////////////////
     ENEMY_INITIAL_INTERVAL_SPAWN,
     ENEMY_DESTROYED,

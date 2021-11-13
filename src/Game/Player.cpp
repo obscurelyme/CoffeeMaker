@@ -37,7 +37,8 @@ Player::Player() :
     _asyncImmunityTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[PLAYER][IMMUNITY-POWER-UP-DURATION]",
         [] { CoffeeMaker::PushEvent(UCI::Events::PLAYER_POWER_UP_LOST_IMMUNITY); }, 3000)),
-    _impactSound(CreateScope<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg")) {
+    _impactSound(CreateScope<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg")),
+    _oscillation(CreateScope<CoffeeMaker::Math::Oscillate>(128.0f, 255.0f, 0.025f)) {
   _firing = false;
   SDL_Rect vp;
   SDL_RenderGetViewport(CoffeeMaker::Renderer::Instance(), &vp);
@@ -91,6 +92,7 @@ void Player::HandleDestroy() {
   }
   _lives--;
   CoffeeMaker::PushEvent(UCI::Events::PLAYER_LOST_LIFE);
+  CoffeeMaker::PushEvent(UCI::Events::PLAYER_DESTROYED);
   _destroyed = true;
   _destroyedAnimation->SetPosition(Vec2{_clientRect.x, _clientRect.y});
   _destroyedAnimation->Start();
@@ -129,6 +131,10 @@ void Player::Update(float deltaTime) {
   // NOTE: projectiles that have already been fired are still fine to be updated
   for (auto& projectile : _projectiles) {
     projectile->Update(deltaTime);
+  }
+
+  if (_isImmune) {
+    _texture.SetAlpha(static_cast<Uint8>(_oscillation->Update()));
   }
 }
 
@@ -201,17 +207,18 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
     // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_POWER_UP_GAINED_IMMUNITY");
     _isImmune = true;
     _asyncImmunityTask->Start();
+    _oscillation->Start();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_POWER_UP_LOST_IMMUNITY) {
     // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_POWER_UP_LOST_IMMUNITY");
     _isImmune = false;
+    _oscillation->Stop();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_COMPLETE_SPAWN) {
-    CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_COMPLETE_SPAWN");
     _active = true;
     _collider->active = true;
     return;

@@ -61,4 +61,5 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   Scope<CoffeeMaker::Async::TimeoutTask> _asyncRespawnTask;
   Scope<CoffeeMaker::Async::TimeoutTask> _asyncImmunityTask;
   Scope<CoffeeMaker::AudioElement> _impactSound;
+  Scope<CoffeeMaker::Math::Oscillate> _oscillation;
 };

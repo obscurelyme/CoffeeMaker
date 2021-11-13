@@ -42,7 +42,8 @@ Enemy::Enemy() :
         [this] { CoffeeMaker::PushEvent(UCI::Events::ENEMY_COMPLETE_EXIT, this); }, 3000)),
     _destroyedAnimation(CreateScope<UCI::Animations::ExplodeSpriteAnimation>()),
     _impactSound(CreateScope<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg")),
-    _state(Enemy::State::Idle) {
+    _state(Enemy::State::Idle),
+    _aggression(Enemy::AggressionState::Active) {
   _position.x = 400;
   _position.y = 150;
 
@@ -266,7 +267,9 @@ void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
   }
   if (event.code == UCI::Events::ENEMY_FIRE_MISSILE && event.data1 == this) {
     // CM_LOGGER_INFO("[ENEMY_EVENT] - ENEMY_FIRE_MISSILE: Enemy ID: {}", _id);
-    Fire();
+    if (_aggression == Enemy::AggressionState::Active) {
+      Fire();
+    }
     return;
   }
   if (event.code == UCI::Events::ENEMY_BEGIN_EXIT && event.data1 == this) {
@@ -281,6 +284,12 @@ void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
     _entranceSpline->Reset();
     _exitSpline->Reset();
     Spawn();
+  }
+  if (event.code == UCI::Events::PLAYER_DESTROYED) {
+    _aggression = Enemy::AggressionState::Passive;
+  }
+  if (event.code == UCI::Events::PLAYER_COMPLETE_SPAWN) {
+    _aggression = Enemy::AggressionState::Active;
   }
 }
 

@@ -2,11 +2,19 @@
 
 #include "Color.hpp"
 #include "Event.hpp"
+#include "FontManager.hpp"
 #include "InputManager.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
-TestAnimations::TestAnimations() : _backgroundColor(CoffeeMaker::Colors::Black), _paused(false) {
+TestAnimations::TestAnimations() :
+    _backgroundColor(CoffeeMaker::Colors::Black),
+    _paused(false),
+    _osc(CreateScope<CoffeeMaker::Math::Oscillate>(128.0f, 255.0f, 0.025f)),
+    _oscText(CreateScope<CoffeeMaker::Widgets::Text>("0")),
+    _task(CreateScope<CoffeeMaker::Async::IntervalTask>([this] {}, 100)) {
+  _oscText->SetFont(CoffeeMaker::FontManager::UseFont("Sarpanch/Sarpanch-Regular"));
+  _oscText->SetColor(CoffeeMaker::Colors::Yellow);
   _sprite = CreateRef<CoffeeMaker::Sprite>("Explode.png");
   _sprite->clientRect.w = 48;
   _sprite->clientRect.h = 48;
@@ -15,6 +23,9 @@ TestAnimations::TestAnimations() : _backgroundColor(CoffeeMaker::Colors::Black),
   _sprite->clipRect.w = 32;
   _sprite->clipRect.h = 32;
   _explosiveAnimation = CreateRef<Animations::SpriteAnimation>(_sprite, 750, 5);
+  _explosiveAnimation->OnComplete([] {
+    // Do nothing
+  });
 }
 
 void TestAnimations::Render() {
@@ -23,6 +34,8 @@ void TestAnimations::Render() {
                          _backgroundColor.a);
   SDL_RenderClear(Renderer::Instance());
   _explosiveAnimation->Render();
+
+  _oscText->Render();
 }
 
 void TestAnimations::Update(float) {
@@ -35,6 +48,12 @@ void TestAnimations::Update(float) {
       _paused = true;
     }
   }
+
+  if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_S)) {
+    _osc->Stop();
+  }
+
+  _sprite->SetAlpha(static_cast<Uint8>(_osc->Update()));
 }
 
 void TestAnimations::Init() {
@@ -45,7 +64,7 @@ void TestAnimations::Init() {
   _explosiveAnimation->AddFrame(SDL_Rect{.x = 32, .y = 32, .w = 32, .h = 32});
   _explosiveAnimation->AddFrame(SDL_Rect{.x = 0, .y = 64, .w = 32, .h = 32});
   _explosiveAnimation->AddFrame(SDL_Rect{.x = 32, .y = 64, .w = 32, .h = 32});
-  _explosiveAnimation->Start();
+  // _explosiveAnimation->Start();
 }
 
 void TestAnimations::Destroy() { _explosiveAnimation->Stop(); }

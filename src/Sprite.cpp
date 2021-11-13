@@ -34,3 +34,5 @@ void CoffeeMaker::Sprite::SetPosition(const CoffeeMaker::Math::Vector2D& pos) {
   clientRect.x = pos.x;
   clientRect.y = pos.y;
 }
+
+void CoffeeMaker::Sprite::SetAlpha(Uint8 alpha) { _texture->SetAlpha(alpha); }

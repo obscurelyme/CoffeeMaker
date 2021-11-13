@@ -20,6 +20,7 @@
 class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
   public:
   enum State { Idle, Entering, Exiting, Destroyed, StrafingRight, StrafingLeft, WillExit };
+  enum AggressionState { Active, Passive };
 
   public:
   Enemy();
@@ -59,6 +60,7 @@ class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
   Scope<UCI::Animations::ExplodeSpriteAnimation> _destroyedAnimation;
   Scope<CoffeeMaker::AudioElement> _impactSound;
   State _state;
+  AggressionState _aggression;
 };
 
 class Drone : public Enemy {
