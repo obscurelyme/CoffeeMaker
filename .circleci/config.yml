@@ -8,13 +8,11 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
-      - run:
-          name: "Building Executable from Source"
-          command: |
-            bash ./scripts/configure.sh;
-            bash ./scripts/build.sh;
-            mkdir release;
-            cp ./build/main ./release/ultra-cosmo-invaders;
+
+      - run: bash ./scripts/configure.sh
+      - run: bash ./scripts/build.sh
+      - run: mkdir release
+      - run: cp ./build/main ./release/ultra-cosmo-invaders
       - run: tar vcfz /tmp/ultra-cosmo-invaders.tar.gz ./release
 
       - store_artifacts:
