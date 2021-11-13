@@ -8,3 +8,4 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - run: echo "Hello, Circle CI!"
+      - run: ls -la
