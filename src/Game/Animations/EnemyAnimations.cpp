@@ -19,7 +19,7 @@ void Animations::BaseSplineAnimation::Update(float deltaTime) {
   }
 }
 
-CoffeeMaker::Math::Vector2D Animations::BaseSplineAnimation::Position() const { return _spline->CurrentPosition(); };
+CoffeeMaker::Math::Vector2D Animations::BaseSplineAnimation::Position() const { return _spline->CurrentPosition(); }
 
 void Animations::BaseSplineAnimation::Reset() { _spline->Reset(); }
 
