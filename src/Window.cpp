@@ -22,6 +22,8 @@ void GlobalWindow::Set(IWindow *win) {
 
 void GlobalWindow::Unset() { _instance = nullptr; }
 
+Uint32 GlobalWindow::ID() { return _instance->GetID(); }
+
 std::string ScreenDPI::toString() {
   return fmt::format(fmt::runtime("Diagonal {}, Horizontal {}, Vertical {}"), diagonal, horizontal, vertical);
 }
@@ -86,3 +88,5 @@ SDL_Rect BasicWindow::DisplayUsableBounds() const {
 SDL_Window *BasicWindow::Handle() const { return _window; }
 
 void BasicWindow::ShowWindow() const { SDL_ShowWindow(_window); }
+
+Uint32 BasicWindow::GetID() const { return SDL_GetWindowID(_window); }

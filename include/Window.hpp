@@ -34,6 +34,7 @@ namespace CoffeeMaker {
     virtual SDL_Rect DisplayBounds() const = 0;
     virtual SDL_Rect DisplayUsableBounds() const = 0;
     virtual SDL_Window *Handle() const = 0;
+    virtual Uint32 GetID() const = 0;
 
     private:
     virtual ScreenDPI SetScreenDPI() = 0;
@@ -55,6 +56,7 @@ namespace CoffeeMaker {
     SDL_Rect DisplayUsableBounds() const;
     SDL_Window *Handle() const;
     void ShowWindow() const;
+    Uint32 GetID() const;
 
     private:
     ScreenDPI SetScreenDPI();
@@ -71,6 +73,7 @@ namespace CoffeeMaker {
     static IWindow *Instance();
     static void Set(IWindow *win);
     static void Unset();
+    static Uint32 ID();
 
     private:
     GlobalWindow();

@@ -7,6 +7,7 @@
 #include <string>
 
 #include "Logger.hpp"
+#include "Window.hpp"
 
 using namespace CoffeeMaker;
 
@@ -40,7 +41,12 @@ void CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents appEvent) 
     SDL_PushEvent(&event);
     return;
   }
-  SDL_UserEvent userevent{.type = SDL_USEREVENT, .code = appEvent, .data1 = nullptr, .data2 = nullptr};
+  SDL_UserEvent userevent{.type = SDL_USEREVENT,
+                          .code = appEvent,
+                          .data1 = nullptr,
+                          .data2 = nullptr,
+                          .timestamp = SDL_GetTicks(),
+                          .windowID = CoffeeMaker::GlobalWindow::ID()};
   SDL_Event event;
   event.type = SDL_USEREVENT;
   event.user = userevent;
