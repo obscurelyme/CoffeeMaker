@@ -26,7 +26,7 @@ namespace UCI {
       Scope<::Animations::SpriteAnimation> _animation;
       Vec2 _position;
     };
-  };  // namespace Animations
+  }  // namespace Animations
 }  // namespace UCI
 
 #endif

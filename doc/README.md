@@ -17,9 +17,9 @@ I created a [docker image](https://hub.docker.com/r/obscurelyme/coffeemaker) tha
 ```bash
 docker pull obscurelyme/coffeemaker
 
-docker run -i -t obscurelyme/coffeemkaer /bin/bash
+docker run -i -t obscurelyme/coffeemaker /bin/bash
 
-git checkout https://github.com/obscurelyme/CoffeeMaker.git
+git clone https://github.com/obscurelyme/CoffeeMaker.git
 ```
 
 Once you've done this once, you can rename the container to whatever you wish on your local docker installation.

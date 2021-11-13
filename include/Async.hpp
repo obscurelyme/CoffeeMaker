@@ -174,7 +174,7 @@ namespace CoffeeMaker {
       Scope<CoffeeMaker::StopWatch> _timer;
       std::mutex* _mutex;
     };
-  };  // namespace Async
+  }  // namespace Async
 }  // namespace CoffeeMaker
 
 #endif
