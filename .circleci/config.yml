@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - run: gcc -v
-      - run: vcpkg
+      - run: whoami
 
 workflows:
   version: 2
