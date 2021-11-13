@@ -7,7 +7,9 @@ jobs:
           username: obscurelyme
           password: $DOCKERHUB_PASSWORD
     steps:
-      - run: pwd
+      - checkout
+      - run: bash ./scripts/configure.sh
+      - run: bash ./scripts/build.sh
 
 workflows:
   version: 2
