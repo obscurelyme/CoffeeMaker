@@ -9,7 +9,6 @@
 #include "Game/Animations/SpriteAnimation.hpp"
 #include "Game/Scene.hpp"
 #include "Logger.hpp"
-#include "Math.hpp"
 #include "Utilities.hpp"
 #include "Widgets/Text.hpp"
 
@@ -29,13 +28,10 @@ class TestAnimations : public Scene {
   SDL_Color _backgroundColor;
   Ref<CoffeeMaker::Sprite> _sprite;
   Ref<Animations::SpriteAnimation> _explosiveAnimation;
-  Scope<CoffeeMaker::Math::Oscillate> _osc;
+  bool _paused;
   Scope<CoffeeMaker::Widgets::Text> _oscText;
   Scope<CoffeeMaker::Async::IntervalTask> _task;
-  bool _paused;
-  float _delta{0.0f};
   std::string _ttt{"0"};
-  Uint8 _cVal{255};
 };
 
 #endif
