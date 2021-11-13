@@ -7,8 +7,7 @@ jobs:
           username: obscurelyme
           password: $DOCKERHUB_PASSWORD
     steps:
-      - run: cd ..
-      - run: ls -la
+      - run: pwd
 
 workflows:
   version: 2
