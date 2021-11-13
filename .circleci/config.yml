@@ -16,7 +16,7 @@ jobs:
       - run: tar vcfz /tmp/ultra-cosmo-invaders.tar.gz ./release
 
       - store_artifacts:
-        path: /tmp/ultra-cosmo-invaders.tar.gz
+          path: /tmp/ultra-cosmo-invaders.tar.gz
 
 workflows:
   version: 2
