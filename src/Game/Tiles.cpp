@@ -2,7 +2,7 @@
 
 #include "Renderer.hpp"
 
-Tiles::Tiles() : _scrollSpeed(100), _movement(0) {}
+Tiles::Tiles() : _scrollSpeed(150), _movement(0) {}
 
 Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight) :
     _viewportWidth(viewportWidth), _viewportHeight(viewportHeight), _scrollSpeed(100), _movement(0) {

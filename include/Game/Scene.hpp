@@ -8,6 +8,8 @@
 
 #include "Event.hpp"
 
+class SceneManager;
+
 class Scene : public CoffeeMaker::IUserEventListener {
   public:
   Scene();
@@ -20,6 +22,9 @@ class Scene : public CoffeeMaker::IUserEventListener {
   virtual void Pause() = 0;
   virtual void Unpause() = 0;
   virtual bool IsLoaded();
+  bool IsPaused();
+
+  friend class SceneManager;
 
   /**
    * @brief Handler function for any SDL_UserEvent
@@ -34,6 +39,7 @@ class Scene : public CoffeeMaker::IUserEventListener {
 
   protected:
   bool _loaded;
+  bool _paused;
 };
 
 class SceneManager {
@@ -46,6 +52,7 @@ class SceneManager {
   static void LoadScene(unsigned long index);
   static void AddScene(Scene* scene);
   static void DestroyAllScenes();
+  static bool CurrentScenePaused();
   static std::vector<Scene*> scenes;
 
   private:

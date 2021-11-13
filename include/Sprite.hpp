@@ -1,6 +1,8 @@
 #ifndef _coffeemaker_sprite_hpp
 #define _coffeemaker_sprite_hpp
 
+#include <SDL2/SDL.h>
+
 #include <string>
 
 #include "Math.hpp"
@@ -17,6 +19,7 @@ namespace CoffeeMaker {
     void Render();
     void Render(SDL_Rect clip);
     void SetPosition(const CoffeeMaker::Math::Vector2D& pos);
+    void SetAlpha(Uint8 alpha);
 
     double rotation;
     SDL_Rect clipRect;

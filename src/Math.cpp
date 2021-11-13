@@ -1,8 +1,14 @@
 #include "Math.hpp"
 
+#include <SDL2/SDL.h>
+
 #include <cmath>
 
 RNG CoffeeMaker::Math::RandomEngine::engine;
+
+float CoffeeMaker::Math::PolarRotate::QUARTER = 90.0f;
+float CoffeeMaker::Math::PolarRotate::PI = 180.0f;
+float CoffeeMaker::Math::PolarRotate::TAU = 0.0f;
 
 float CoffeeMaker::Math::Random(float min, float max) {
   std::uniform_real_distribution<float> distro{min, max};
@@ -16,7 +22,7 @@ CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Lerp(const CoffeeMaker::Math::Vec
   return CoffeeMaker::Math::Vector2D(CoffeeMaker::Math::Lerp(v1.x, v2.x, t), CoffeeMaker::Math::Lerp(v1.y, v2.y, t));
 }
 
-float CoffeeMaker::Math::InverseLerp(float f1, float f2, float value) { return (value - f1) / (f2 - value); }
+float CoffeeMaker::Math::InverseLerp(float f1, float f2, float value) { return (value - f1) / (f2 - f1); }
 
 float CoffeeMaker::Math::Remap(float inputMin, float inputMax, float outputMin, float outputMax, float value) {
   float weight = CoffeeMaker::Math::InverseLerp(inputMin, inputMax, value);
@@ -106,6 +112,11 @@ float CoffeeMaker::Math::Vector2D::Direction(const CoffeeMaker::Math::Vector2D& 
 }
 
 float CoffeeMaker::Math::Vector2D::LookAt(const CoffeeMaker::Math::Vector2D& rhs) {
+  if (x - rhs.x == 0) {
+    // NOTE: we would be dividing by 0, which NOT be a good thing.
+    return static_cast<float>(M_PI);
+  }
+
   float arcTan = std::atan((y - rhs.y) / (x - rhs.x));
 
   if (rhs.y - y < 0 && rhs.x - x < 0) {
@@ -146,4 +157,29 @@ CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Normalize(const CoffeeMaker::Math
     return CoffeeMaker::Math::Vector2D(0, 0);
   }
   return CoffeeMaker::Math::Vector2D(vector.x / magnitude, vector.y / magnitude);
+}
+
+CoffeeMaker::Math::Oscillate::Oscillate(float min, float max, float speed) :
+    _min(min), _max(max), _speed(speed), _current(min / max), _stopping(false), _end(false) {}
+
+float CoffeeMaker::Math::Oscillate::Update() {
+  if (_end) {
+    return _max;
+  }
+
+  float o = static_cast<float>(std::sin(SDL_GetTicks() * _speed));
+  _current = CoffeeMaker::Math::Remap(-1.0f, 1.0f, _min, _max, o);
+
+  if (_stopping && _current / _max >= 0.99) {
+    _end = true;
+  }
+
+  return _current;
+}
+
+void CoffeeMaker::Math::Oscillate::Stop() { _stopping = true; }
+
+void CoffeeMaker::Math::Oscillate::Start() {
+  _stopping = false;
+  _end = false;
 }

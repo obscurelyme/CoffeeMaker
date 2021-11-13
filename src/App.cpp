@@ -1,5 +1,5 @@
 // clang-format off
-#ifdef _DEBUG
+#ifdef _DEBUG_D
 #ifdef _WINDOWS
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -89,7 +89,7 @@ int main(int, char**) {
   SceneManager::AddScene(new MainScene());
   SceneManager::AddScene(new TestBedScene());
   SceneManager::AddScene(new TestAnimations());
-  SceneManager::LoadScene();
+  SceneManager::LoadScene(1);
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
 
@@ -165,7 +165,7 @@ int main(int, char**) {
 
   CM_LOGGER_DESTROY();
 
-#ifdef _DEBUG
+#ifdef _DEBUG_D
 #ifdef _WINDOWS
   _CrtDumpMemoryLeaks();
 #endif

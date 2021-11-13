@@ -26,14 +26,19 @@ Player::Player() :
     _destroyed(false),
     _lives(3),
     _destroyedAnimation(CreateScope<UCI::Animations::ExplodeSpriteAnimation>()),
-    _asyncRespawnTask(CreateScope<CoffeeMaker::Async::TimeoutTask<void>>(
+    _asyncRespawnTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
+        "[PLAYER][RESPAWN-TASK]",
         [] {
+          CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_WILL_SPAWN");
           CoffeeMaker::PushEvent(UCI::Events::PLAYER_POWER_UP_GAINED_IMMUNITY);
           CoffeeMaker::PushEvent(UCI::Events::PLAYER_COMPLETE_SPAWN);
         },
         3000)),
-    _asyncImmunityTask(CreateScope<CoffeeMaker::Async::TimeoutTask<void>>(
-        [] { CoffeeMaker::PushEvent(UCI::Events::PLAYER_POWER_UP_LOST_IMMUNITY); }, 3000)) {
+    _asyncImmunityTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
+        "[PLAYER][IMMUNITY-POWER-UP-DURATION]",
+        [] { CoffeeMaker::PushEvent(UCI::Events::PLAYER_POWER_UP_LOST_IMMUNITY); }, 3000)),
+    _impactSound(CreateScope<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg")),
+    _oscillation(CreateScope<CoffeeMaker::Math::Oscillate>(128.0f, 255.0f, 0.025f)) {
   _firing = false;
   SDL_Rect vp;
   SDL_RenderGetViewport(CoffeeMaker::Renderer::Instance(), &vp);
@@ -63,22 +68,35 @@ Player::~Player() {
 }
 
 void Player::OnHit(Collider* collider) {
-  using Vec2 = CoffeeMaker::Math::Vector2D;
   if (_collider->active) {
     if (collider->GetType() == Collider::Type::EnemyProjectile && !_isImmune) {
-      _collider->active = false;
-      _active = false;
-      if (_lives - 1 == 0) {
-        SceneManager::LoadScene(0);
-        return;
-      }
-      _lives--;
-      CoffeeMaker::PushEvent(UCI::Events::PLAYER_LOST_LIFE);
-      _destroyed = true;
-      _destroyedAnimation->SetPosition(Vec2{_clientRect.x, _clientRect.y});
-      _destroyedAnimation->Start();
+      HandleDestroy();
+      return;
+    }
+
+    if (collider->GetType() == Collider::Type::Enemy && !_isImmune) {
+      _impactSound->Play();
+      HandleDestroy();
     }
   }
+}
+
+void Player::HandleDestroy() {
+  using Vec2 = CoffeeMaker::Math::Vector2D;
+  _collider->active = false;
+  _active = false;
+  if (_lives - 1 == 0) {
+    // TODO: timeout here and then boot to main menu
+    SceneManager::LoadScene(0);
+    return;
+  }
+  _lives--;
+  CoffeeMaker::PushEvent(UCI::Events::PLAYER_LOST_LIFE);
+  CoffeeMaker::PushEvent(UCI::Events::PLAYER_DESTROYED);
+  _destroyed = true;
+  _destroyedAnimation->SetPosition(Vec2{_clientRect.x, _clientRect.y});
+  _destroyedAnimation->Start();
+  CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_DSTROYED");
 }
 
 void Player::Init() {}
@@ -113,6 +131,10 @@ void Player::Update(float deltaTime) {
   // NOTE: projectiles that have already been fired are still fine to be updated
   for (auto& projectile : _projectiles) {
     projectile->Update(deltaTime);
+  }
+
+  if (_isImmune) {
+    _texture.SetAlpha(static_cast<Uint8>(_oscillation->Update()));
   }
 }
 
@@ -159,31 +181,40 @@ bool Player::IsOffScreenRight() { return _clientRect.x >= 800; }
 
 void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
+    // CM_LOGGER_INFO("[PLAYER_EVENT] - COFFEEMAKER_GAME_PAUSE");
+
     _asyncRespawnTask->Pause();
     _asyncImmunityTask->Pause();
     return;
   }
 
   if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE) {
+    // CM_LOGGER_INFO("[PLAYER_EVENT] - COFFEEMAKER_GAME_UNPAUSE");
+
     _asyncRespawnTask->Unpause();
     _asyncImmunityTask->Unpause();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_BEGIN_SPAWN) {
+    // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_BEGIN_SPAWN");
     _destroyed = false;
     _asyncRespawnTask->Start();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_POWER_UP_GAINED_IMMUNITY) {
+    // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_POWER_UP_GAINED_IMMUNITY");
     _isImmune = true;
     _asyncImmunityTask->Start();
+    _oscillation->Start();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_POWER_UP_LOST_IMMUNITY) {
+    // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_POWER_UP_LOST_IMMUNITY");
     _isImmune = false;
+    _oscillation->Stop();
     return;
   }
 

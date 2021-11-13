@@ -76,6 +76,13 @@ namespace CoffeeMaker {
       float y;
     };
 
+    class PolarRotate {
+      public:
+      static float QUARTER;
+      static float PI;
+      static float TAU;
+    };
+
     class Vector2D {
       public:
       Vector2D(float xx = 0.0f, float yy = 0.0f);
@@ -172,6 +179,24 @@ namespace CoffeeMaker {
        * @return Vector2D (1.0f, 0.0f)
        */
       static Vector2D Right();
+    };
+
+    class Oscillate {
+      public:
+      explicit Oscillate(float min, float max, float speed);
+      ~Oscillate() = default;
+
+      float Update();
+      void Stop();
+      void Start();
+
+      private:
+      float _min;
+      float _max;
+      float _speed;
+      float _current;
+      bool _stopping;
+      bool _end;
     };
   }  // namespace Math
 }  // namespace CoffeeMaker
