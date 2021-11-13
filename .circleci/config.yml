@@ -1,5 +1,10 @@
 version: 2
 jobs:
   build:
+    docker:
+      - image: obscurelyme/coffeemaker:latest
+        auth:
+          username: obscurelyme
+          password: $DOCKERHUB_PASSWORD
     steps:
       - run: echo "Hello, Circle CI!"
