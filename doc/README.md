@@ -36,6 +36,12 @@ docker start -i [CONTAINER_NAME]
 
 I recommend that you have the [Docker extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) installed if working with VS Code.
 
+To push any updates
+
+```
+docker push obscurelyme/coffeemaker:latest
+```
+
 # Linux with SDL2-Mixer
 
 To leverage SDL2-Mixer
