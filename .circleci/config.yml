@@ -7,5 +7,12 @@ jobs:
           username: obscurelyme
           password: $DOCKERHUB_PASSWORD
     steps:
-      - run: echo "Hello, Circle CI!"
-      - run: ls -la
+      - checkout
+      - run: gcc -v
+      - run: vcpkg
+
+workflows:
+  version: 2
+  coffeemaker_ci:
+    jobs:
+      - build
