@@ -8,8 +8,8 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
-      - run: bash ./scripts/configure.sh
-      - run: bash ./scripts/build.sh
+      - run: ./scripts/configure.sh
+      - run: ./scripts/build.sh
 
 workflows:
   version: 2
