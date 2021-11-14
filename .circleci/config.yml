@@ -27,6 +27,14 @@ jobs:
       name: win/default
       shell: powershell.exe
     steps:
+      - restore_cache:
+          keys:
+            - vcpkg-cache
+      - save_cache:
+          key: vcpkg-cache
+          paths:
+            - C:\Users\circleci\AppData\Local\vcpkg
+            - vcpkg_installed
       - run:
           name: Install Cmake
           command: |
