@@ -16,6 +16,8 @@
 #include "Utilities.hpp"
 
 class Player : public Entity, public CoffeeMaker::IUserEventListener {
+  enum FireMissileState { Locked, Unlocked };
+
   public:
   static CoffeeMaker::Math::Vector2D Position();
 
@@ -62,4 +64,6 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   Scope<CoffeeMaker::Async::TimeoutTask> _asyncImmunityTask;
   Scope<CoffeeMaker::AudioElement> _impactSound;
   Scope<CoffeeMaker::Math::Oscillate> _oscillation;
+  Scope<CoffeeMaker::Async::TimeoutTask> _fireDelay;
+  Player::FireMissileState _fireMissileState;
 };

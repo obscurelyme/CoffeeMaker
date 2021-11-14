@@ -38,7 +38,10 @@ Player::Player() :
         "[PLAYER][IMMUNITY-POWER-UP-DURATION]",
         [] { CoffeeMaker::PushEvent(UCI::Events::PLAYER_POWER_UP_LOST_IMMUNITY); }, 3000)),
     _impactSound(CreateScope<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg")),
-    _oscillation(CreateScope<CoffeeMaker::Math::Oscillate>(128.0f, 255.0f, 0.025f)) {
+    _oscillation(CreateScope<CoffeeMaker::Math::Oscillate>(128.0f, 255.0f, 0.025f)),
+    _fireDelay(CreateScope<CoffeeMaker::Async::TimeoutTask>(
+        "[PLAYER][FIRE-MISSILE-DELAY]", [] { CoffeeMaker::PushEvent(UCI::Events::PLAYER_FIRE_DELAY_END); }, 500)),
+    _fireMissileState(Player::FireMissileState::Unlocked) {
   _firing = false;
   SDL_Rect vp;
   SDL_RenderGetViewport(CoffeeMaker::Renderer::Instance(), &vp);
@@ -60,6 +63,7 @@ Player::~Player() {
   _asyncRespawnTask->Cancel();
   _asyncImmunityTask->Cancel();
   _destroyedAnimation->Stop();
+  _fireDelay->Cancel();
   _instance = nullptr;
   delete _collider;
   for (auto p : _projectiles) {
@@ -110,7 +114,10 @@ void Player::Update(float deltaTime) {
     _rotation = -90;
 
     if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_SPACE)) {
-      Fire();
+      if (_fireMissileState == Player::FireMissileState::Unlocked) {
+        Fire();
+        _fireDelay->Start();
+      }
     }
 
     if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_LEFT)) {
@@ -167,6 +174,7 @@ void Player::Fire() {
     // NOTE: fire the next, or else projectiles are unavailable for a frame.
     _projectiles[_currentProjectile++]->Fire((float)_clientRect.x, (float)_clientRect.y, _rotation);
   }
+  _fireMissileState = Player::FireMissileState::Locked;
 }
 
 void Player::Reload() {
@@ -185,6 +193,7 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
 
     _asyncRespawnTask->Pause();
     _asyncImmunityTask->Pause();
+    _fireDelay->Pause();
     return;
   }
 
@@ -193,6 +202,7 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
 
     _asyncRespawnTask->Unpause();
     _asyncImmunityTask->Unpause();
+    _fireDelay->Unpause();
     return;
   }
 
@@ -222,5 +232,9 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
     _active = true;
     _collider->active = true;
     return;
+  }
+
+  if (event.code == UCI::Events::PLAYER_FIRE_DELAY_END) {
+    _fireMissileState = Player::FireMissileState::Unlocked;
   }
 }
