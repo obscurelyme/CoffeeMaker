@@ -33,22 +33,22 @@ jobs:
             choco install cmake -y
             $env:Path+=";$Env:ProgramFiles\CMake\bin"
             cmake --version
-      - run:
-          name: Install Ninja
-          command: |
-            choco install ninja -y
-      - run:
-          name: Check ninja
-          command: |
-            ninja --version
-      - run:
-          name: Install LLVM
-          command: |
-            choco install llvm -y
-      - run:
-          name: Check LLVM
-          command: |
-            clang -v
+      # - run:
+      #     name: Install Ninja
+      #     command: |
+      #       choco install ninja -y
+      # - run:
+      #     name: Check ninja
+      #     command: |
+      #       ninja --version
+      # - run:
+      #     name: Install LLVM
+      #     command: |
+      #       choco install llvm -y
+      # - run:
+      #     name: Check LLVM
+      #     command: |
+      #       clang -v
       - run:
           name: Install vcpkg
           command: |
