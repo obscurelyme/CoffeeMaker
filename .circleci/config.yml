@@ -36,13 +36,21 @@ jobs:
       - run:
           name: Install vcpkg
           command: |
+            $env:Path+=";$Env:ProgramFiles\CMake\bin"
             git clone https://github.com/Microsoft/vcpkg.git ../vcpkg
             ..\vcpkg\bootstrap-vcpkg.bat
             ..\vcpkg\vcpkg.exe integrate install
       - checkout
-      - run: ./scripts/configure.bat
-      - run: ./scripts/build.bat
-
+      - run:
+          name: Cmake Configure
+          command: |
+            $env:Path+=";$Env:ProgramFiles\CMake\bin"
+            ./scripts/configure.bat
+      - run:
+          name: Cmake Build
+          command: |
+            $env:Path+=";$Env:ProgramFiles\CMake\bin"
+            ./scripts/build.bat
       - run:
           name: Zipping Build
           command: |
