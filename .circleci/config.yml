@@ -29,7 +29,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - vcpkg-cache
+            - vcpkg-cache-{{ checksum "vcpkg.json" }}
       - run:
           name: Install Cmake
           command: |
@@ -66,7 +66,7 @@ jobs:
             $env:Path+=";$Env:ProgramFiles\CMake\bin"
             ./scripts/configure.bat
       - save_cache:
-          key: vcpkg-cache
+          key: vcpkg-cache-{{ checksum "vcpkg.json" }}
           paths:
             - C:\Users\circleci\AppData\Local\vcpkg
             - vcpkg_installed
