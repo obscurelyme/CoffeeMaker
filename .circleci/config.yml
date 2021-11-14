@@ -34,6 +34,14 @@ jobs:
             $env:Path+=";$Env:ProgramFiles\CMake\bin"
             cmake --version
       - run:
+          name: Install Ninja
+          command: |
+            choco install ninja -y
+      - run:
+          name: Check ninja
+          command: |
+            ninja -v
+      - run:
           name: Install vcpkg
           command: |
             $env:Path+=";$Env:ProgramFiles\CMake\bin"
@@ -41,25 +49,25 @@ jobs:
             ..\vcpkg\bootstrap-vcpkg.bat
             ..\vcpkg\vcpkg.exe integrate install
       - checkout
-      - run:
-          name: Cmake Configure
-          command: |
-            $env:Path+=";$Env:ProgramFiles\CMake\bin"
-            ./scripts/configure.bat
-      - run:
-          name: Cmake Build
-          command: |
-            $env:Path+=";$Env:ProgramFiles\CMake\bin"
-            ./scripts/build.bat
-      - run:
-          name: Zipping Build
-          command: |
-            mkdir release
-            robocopy build/Debug release /E
-            ./scripts/zip.bat
+      # - run:
+      #     name: Cmake Configure
+      #     command: |
+      #       $env:Path+=";$Env:ProgramFiles\CMake\bin"
+      #       ./scripts/configure.bat
+      # - run:
+      #     name: Cmake Build
+      #     command: |
+      #       $env:Path+=";$Env:ProgramFiles\CMake\bin"
+      #       ./scripts/build.bat
+      # - run:
+      #     name: Zipping Build
+      #     command: |
+      #       mkdir release
+      #       robocopy build/Debug release /E
+      #       ./scripts/zip.bat
 
-      - store_artifacts:
-          path: ./win-release.zip
+      # - store_artifacts:
+      #     path: ./win-release.zip
 
 workflows:
   version: 2
