@@ -27,9 +27,6 @@ jobs:
       name: win/default
       shell: powershell.exe
     steps:
-      - restore_cache:
-          keys:
-            - vcpkg-cache-{{ checksum "vcpkg.json" }}
       - run:
           name: Install Cmake
           command: |
@@ -60,6 +57,9 @@ jobs:
             ..\vcpkg\bootstrap-vcpkg.bat
             ..\vcpkg\vcpkg.exe integrate install
       - checkout
+      - restore_cache:
+          keys:
+            - vcpkg-cache-{{ checksum "vcpkg.json" }}
       - run:
           name: Cmake Configure
           command: |
