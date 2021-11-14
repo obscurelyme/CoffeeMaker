@@ -23,9 +23,9 @@ jobs:
   #         path: /tmp/ultra-cosmo-invaders.tar.gz
 
   build:
-    machine:
-      image: windows-default
-    resource-class: windows.medium
+    executor:
+      name: win/default
+      shell: powershell.exe
     steps:
       - checkout
       - run: ./scripts/configure.bat
