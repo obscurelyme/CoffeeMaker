@@ -30,11 +30,6 @@ jobs:
       - restore_cache:
           keys:
             - vcpkg-cache
-      - save_cache:
-          key: vcpkg-cache
-          paths:
-            - C:\Users\circleci\AppData\Local\vcpkg
-            - vcpkg_installed
       - run:
           name: Install Cmake
           command: |
@@ -70,6 +65,11 @@ jobs:
           command: |
             $env:Path+=";$Env:ProgramFiles\CMake\bin"
             ./scripts/configure.bat
+      - save_cache:
+          key: vcpkg-cache
+          paths:
+            - C:\Users\circleci\AppData\Local\vcpkg
+            - vcpkg_installed
       - run:
           name: Cmake Build
           command: |
