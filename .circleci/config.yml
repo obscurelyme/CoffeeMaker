@@ -40,7 +40,15 @@ jobs:
       - run:
           name: Check ninja
           command: |
-            ninja -v
+            ninja --version
+      - run:
+          name: Install LLVM
+          command: |
+            choco install llvm -y
+      - run:
+          name: Check LLVM
+          command: |
+            clang -v
       - run:
           name: Install vcpkg
           command: |
