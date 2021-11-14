@@ -1,4 +1,8 @@
-version: 2
+version: 2.1
+
+orbs:
+  windows: circleci/windows@2.4.0
+
 jobs:
   # build:
   #   docker:
@@ -20,7 +24,7 @@ jobs:
 
   build:
     machine:
-      image: windows/default
+      image: windows-default
     resource-class: windows.medium
     steps:
       - checkout
