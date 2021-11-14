@@ -1,1 +1,1 @@
-cmake --build build --config Debug --target main
+cmake --build build --config Debug --target HelloWin
