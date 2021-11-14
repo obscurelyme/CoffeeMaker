@@ -32,6 +32,7 @@ jobs:
           command: |
             choco install cmake -y
             $env:Path+=";$Env:ProgramFiles\CMake\bin"
+            cmake --version
       - run:
           name: Install vcpkg
           command: |
