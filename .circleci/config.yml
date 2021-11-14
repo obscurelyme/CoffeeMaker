@@ -28,19 +28,26 @@ jobs:
       shell: powershell.exe
     steps:
       - run:
-          name: Download Cmake
+          name: Install Cmake
           command: |
-            $ProgressPreference = "SilentlyContinue"
-            Invoke-WebRequest https://github.com/Kitware/CMake/releases/download/v3.20.6/cmake-3.20.6-windows-x86_64.zip -OutFile $Env:HOMEPATH\cmake-3.16.4-win64-x64.zip
-            Expand-Archive $Env:HOMEPATH\cmake-3.20.6-windows-x86-84.zip -DestinationPath "$Env:ProgramFiles"
-            Rename-Item "$Env:ProgramFiles\cmake-3.20.6-windows-x86-64" -NewName CMake
+            choco install cmake -y
+            $env:Path+=";$Env:ProgramFiles\CMake\bin"
+      - run:
+          name: Install vcpkg
+          command: |
+            git clone https://github.com/Microsoft/vcpkg.git ../vcpkg
+            ..\vcpkg\bootstrap-vcpkg.bat
+            ..\vcpkg\vcpkg.exe integrate install
       - checkout
-      - run: echo "Hello, World!"
-      # - run: ./scripts/configure.bat
-      # - run: ./scripts/build.bat
-      # - run: mkdir release
-      # - run: robocopy build/Debug release /E
-      # - run: ./scripts/zip.bat
+      - run: ./scripts/configure.bat
+      - run: ./scripts/build.bat
+
+      - run:
+          name: Zipping Build
+          command: |
+            mkdir release
+            robocopy build/Debug release /E
+            ./scripts/zip.bat
 
       - store_artifacts:
           path: ./win-release.zip
