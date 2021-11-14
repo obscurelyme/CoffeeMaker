@@ -37,4 +37,4 @@ workflows:
   version: 2
   coffeemaker_ci:
     jobs:
-      - build
+      - winBuild
