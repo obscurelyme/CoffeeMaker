@@ -24,7 +24,7 @@ jobs:
 
   build:
     executor:
-      name: win/default
+      name: windows/default
       shell: powershell.exe
     steps:
       - checkout
