@@ -38,6 +38,29 @@ find_package(fmt CONFIG REQUIRED)
 
 set(APP_RESOURCES resources.rc)
 
+# Needed for OSX
+set(RESOURCE_FILES
+  assets/audio/effects/DroneLaser.ogg
+  assets/audio/effects/PowerMissileFire.ogg
+  assets/audio/effects/ProjectileImpact.ogg
+  assets/audio/effects/ShieldActivate.ogg
+  assets/audio/effects/ShieldDeactivate.ogg
+  assets/audio/effects/StandardMissileFire.ogg
+  assets/audio/effects/Warp.ogg
+  assets/audio/music/AsTheWorldTurns.ogg
+  assets/audio/music/CoolTrace.ogg
+  assets/fonts/Sarpanch/OFL.txt
+  assets/fonts/Sarpanch/Sarpanch-Bold.ttf
+  assets/fonts/Sarpanch/Sarpanch-Regular.ttf
+  assets/images/button.png
+  assets/images/Explode.png
+  assets/images/PlayerV1.png
+  assets/images/EnemyV1.png
+  assets/images/space.png
+  assets/images/StandardMissile.png
+  assets/ui/cursor.png
+  uci.icns)
+
 set(COFFEEMAKER_MAIN src/App.cpp)
 set(COFFEEMAKER_ROOT_SOURCES
   src/Renderer.cpp
@@ -83,7 +106,20 @@ set(GAME_SOURCES
 
 set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES})
 
-add_executable(main ${COFFEEMAKER_EXE_SOURCES})
+if (WIN32 OR LINUX_PLATFORM)
+  add_executable(main ${COFFEEMAKER_EXE_SOURCES})
+elseif (APPLE)
+  add_executable(main MACOSX_BUNDLE ${COFFEEMAKER_EXE_SOURCES} ${RESOURCE_FILES})
+  set_target_properties(main PROPERTIES
+    BUNDLE TRUE
+    MACOSX_BUNDLE_GUI_IDENTIFIER obscurelyme.ultra-cosmo-invaders
+    MACOSX_BUNDLE_BUNDLE_NAME Ultra Cosmo Invaders
+    MACOSX_BUNDLE_BUNDLE_VERSION 0.0.0
+    MACOSX_BUNDLE_BUNDLE_SHORT_VERSION_STRING "0.0.0"
+    MACOSX_BUNDLE_ICON_FILE uci.icns
+  )
+endif()
+
 target_include_directories(main PRIVATE include)
 target_link_libraries(main PRIVATE fmt::fmt spdlog::spdlog spdlog::spdlog_header_only glm::glm)
 if (WIN32)
@@ -187,7 +223,7 @@ endif()
 
 if (APPLE OR LINUX_PLATFORM)
   message("Please run ${PROJECT_SOURCE_DIR}/scripts/post-build.sh if this is your first time configuring this project")
-  execute_process(COMMAND sh "${PROJECT_SOURCE_DIR}/scripts/post-build.sh")
+  # execute_process(COMMAND sh "${PROJECT_SOURCE_DIR}/scripts/post-build.sh")
 elseif (WIN32)
   message("Please run ${PROJECT_SOURCE_DIR}/scripts/post-build.bat if this is your first time configuring this project")
   # execute_process(COMMAND "${PROJECT_SOURCE_DIR}/scripts/post-build.bat")
