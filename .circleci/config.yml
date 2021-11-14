@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  windows: circleci/windows@2.4.0
+  win: circleci/windows@2.4.0
 
 jobs:
   # build:
@@ -22,23 +22,31 @@ jobs:
   #     - store_artifacts:
   #         path: /tmp/ultra-cosmo-invaders.tar.gz
 
-  build:
+  windows-build:
     executor:
-      name: windows/default
+      name: win/default
       shell: powershell.exe
     steps:
+      - run:
+          name: Download Cmake
+          command: |
+            $ProgressPreference = "$SilentContinue"
+            Invoke-WebRequest https://github.com/Kitware/CMake/releases/download/v3.20.6/cmake-3.20.6-windows-x86_64.zip -OutFile $Env:HOMEPATH\cmake-3.16.4-win64-x64.zip
+            Expand-Archive $Env:HOMEPATH\cmake-3.20.6-windows-x86-84.zip -DestinationPath "$Env:ProgramFiles"
+            Rename-Item "$Env:ProgramFiles\cmake-3.20.6-windows-x86-64" -NewName CMake
       - checkout
-      - run: ./scripts/configure.bat
-      - run: ./scripts/build.bat
-      - run: mkdir release
-      - run: robocopy build/Debug release /E
-      - run: ./scripts/zip.bat
+      - run: echo "Hello, World!"
+      # - run: ./scripts/configure.bat
+      # - run: ./scripts/build.bat
+      # - run: mkdir release
+      # - run: robocopy build/Debug release /E
+      # - run: ./scripts/zip.bat
 
       - store_artifacts:
           path: ./win-release.zip
-# workflows:
-#   version: 2
-#   coffeemaker_ci:
 
-#     jobs:
-#       - winBuild
+workflows:
+  version: 2
+  coffeemaker_ci:
+    jobs:
+      - windows-build
