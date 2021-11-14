@@ -18,6 +18,21 @@ jobs:
       - store_artifacts:
           path: /tmp/ultra-cosmo-invaders.tar.gz
 
+  winBuild:
+    machine:
+      image: windows-default
+    resource-class: windows.medium
+    steps:
+      - checkout
+      - run: ./scripts/configure.bat
+      - run: ./scripts/build.bat
+      - run: mkdir release
+      - run: robocopy build/Debug release /E
+      - run: ./scripts/zip.bat
+
+      - store_artifacts:
+          path: ./win-release.zip
+
 workflows:
   version: 2
   coffeemaker_ci:
