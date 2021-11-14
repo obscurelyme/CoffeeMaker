@@ -30,7 +30,7 @@ jobs:
       - run:
           name: Download Cmake
           command: |
-            $ProgressPreference = "$SilentlyContinue"
+            $ProgressPreference = "SilentlyContinue"
             Invoke-WebRequest https://github.com/Kitware/CMake/releases/download/v3.20.6/cmake-3.20.6-windows-x86_64.zip -OutFile $Env:HOMEPATH\cmake-3.16.4-win64-x64.zip
             Expand-Archive $Env:HOMEPATH\cmake-3.20.6-windows-x86-84.zip -DestinationPath "$Env:ProgramFiles"
             Rename-Item "$Env:ProgramFiles\cmake-3.20.6-windows-x86-64" -NewName CMake
