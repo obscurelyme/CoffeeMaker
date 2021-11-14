@@ -75,6 +75,7 @@ jobs:
           command: |
             $env:Path+=";$Env:ProgramFiles\CMake\bin"
             ./scripts/build.bat
+            ./scripts/build.bat
       - run:
           name: Zipping Build
           command: |
