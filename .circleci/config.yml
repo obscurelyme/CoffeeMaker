@@ -82,21 +82,21 @@ workflows:
   coffeemaker_ci:
     jobs:
       - windows-build
-          filter:
+          filters:
             branches:
               only:
                 - /feature\/.*/
                 - /bugfix\/.*/
                 - master
       - linux-build
-          filter:
+          filters:
             branches:
               only:
                 - /feature\/.*/
                 - /bugfix\/.*/
                 - master
       - deploy
-          filter:
+          filters:
             branches:
               only:
                 - master
