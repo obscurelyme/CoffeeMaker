@@ -78,7 +78,7 @@ int main(int, char**) {
   CoffeeMaker::FontManager::Init();
   CoffeeMaker::FontManager::LoadFont("Sarpanch/Sarpanch-Regular");
   CoffeeMaker::FontManager::LoadFont("Sarpanch/Sarpanch-Bold");
-
+  // SDL_SetWindowIcon(win);
   CoffeeMaker::Timer globalTimer;
   CoffeeMaker::FPS fpsCounter;
 
@@ -89,7 +89,7 @@ int main(int, char**) {
   SceneManager::AddScene(new MainScene());
   SceneManager::AddScene(new TestBedScene());
   SceneManager::AddScene(new TestAnimations());
-  SceneManager::LoadScene(1);
+  SceneManager::LoadScene();
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
 
