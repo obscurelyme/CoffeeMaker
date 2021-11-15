@@ -89,33 +89,33 @@ workflows:
   version: 2
   coffeemaker_ci:
     jobs:
-      - macos-build:
+      # - macos-build:
+      #     filters:
+      #       branches:
+      #         only:
+      #           - /feature\/.*/
+      #           - /bugfix\/.*/
+      #           - master
+      - windows-build:
           filters:
             branches:
               only:
                 - /feature\/.*/
                 - /bugfix\/.*/
                 - master
-      # - windows-build:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - /feature\/.*/
-      #           - /bugfix\/.*/
-      #           - master
-      # - linux-build:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - /feature\/.*/
-      #           - /bugfix\/.*/
-      #           - master
+      - linux-build:
+          filters:
+            branches:
+              only:
+                - /feature\/.*/
+                - /bugfix\/.*/
+                - master
       - deploy:
           filters:
             branches:
               only:
                 - master
           requires:
-            # - windows-build
-            # - linux-build
-            - macos-build
+            - windows-build
+            - linux-build
+            # - macos-build
