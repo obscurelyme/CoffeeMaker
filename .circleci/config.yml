@@ -103,18 +103,19 @@ workflows:
       #           - /feature\/.*/
       #           - /bugfix\/.*/
       #           - master
-      - linux-build:
-          filters:
-            branches:
-              only:
-                - /feature\/.*/
-                - /bugfix\/.*/
-                - master
+      # - linux-build:
+      #     filters:
+      #       branches:
+      #         only:
+      #           - /feature\/.*/
+      #           - /bugfix\/.*/
+      #           - master
       - deploy:
           filters:
             branches:
               only:
                 - master
           requires:
-            - windows-build
-            - linux-build
+            # - windows-build
+            # - linux-build
+            - macos-build
