@@ -1,6 +1,10 @@
-version: 2
+version: 2.1
+
+orbs:
+  win: circleci/windows@2.4.0
+
 jobs:
-  build:
+  linux-build:
     docker:
       - image: obscurelyme/coffeemaker:latest
         auth:
@@ -18,8 +22,57 @@ jobs:
       - store_artifacts:
           path: /tmp/ultra-cosmo-invaders.tar.gz
 
+  windows-build:
+    executor:
+      name: win/default
+      shell: powershell.exe
+    steps:
+      - run:
+          name: Install Cmake
+          command: |
+            choco install cmake -y
+            $env:Path+=";$Env:ProgramFiles\CMake\bin"
+            cmake --version
+      - run:
+          name: Install vcpkg
+          command: |
+            $env:Path+=";$Env:ProgramFiles\CMake\bin"
+            git clone https://github.com/Microsoft/vcpkg.git ../vcpkg
+            ..\vcpkg\bootstrap-vcpkg.bat
+            ..\vcpkg\vcpkg.exe integrate install
+      - checkout
+      - restore_cache:
+          keys:
+            - vcpkg-cache-{{ checksum "vcpkg.json" }}
+      - run:
+          name: Cmake Configure
+          command: |
+            $env:Path+=";$Env:ProgramFiles\CMake\bin"
+            ./scripts/configure.bat
+      - save_cache:
+          key: vcpkg-cache-{{ checksum "vcpkg.json" }}
+          paths:
+            - C:\Users\circleci\AppData\Local\vcpkg
+            - vcpkg_installed
+      - run:
+          name: Cmake Build
+          command: |
+            $env:Path+=";$Env:ProgramFiles\CMake\bin"
+            ./scripts/build.bat
+            ./scripts/build.bat
+      - run:
+          name: Zipping Build
+          command: |
+            mkdir release
+            robocopy build/Debug release /E
+            ./scripts/zip.bat
+
+      - store_artifacts:
+          path: ./win-release.zip
+
 workflows:
   version: 2
   coffeemaker_ci:
     jobs:
-      - build
+      - windows-build
+      - linux-build
