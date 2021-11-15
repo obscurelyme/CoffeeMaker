@@ -71,7 +71,8 @@ jobs:
           path: ./win-release.zip
 
   macos-build:
-    xcode: 11.3.0
+    macos:
+      xcode: 11.3.0
 
     steps:
       - run: xcodebuild --version
