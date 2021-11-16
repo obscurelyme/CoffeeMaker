@@ -11,6 +11,7 @@ on:
       - "github/**"
 jobs:
   macos-build:
+    timeout-minutes: 15
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -30,6 +31,7 @@ jobs:
         run: bash .github/scripts/osx/build.sh
 
   windows-build:
+    timeout-minutes: 15
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -45,6 +47,7 @@ jobs:
         run: .github/scripts/win/build.bat
 
   linux-build:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
