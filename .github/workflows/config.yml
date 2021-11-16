@@ -23,7 +23,9 @@ jobs:
       - name: Configure
         run: |
           brew install make
+          brew install ninja
           make -v
+          ninja -v
           bash .github/scripts/osx/configure.sh
       # - name: Build
       #   run: bash .github/scripts/osx/build.sh
