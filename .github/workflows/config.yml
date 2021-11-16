@@ -1,4 +1,4 @@
-name: hello-git-actions
+name: coffeemaker-ci
 on:
   push:
     paths-ignore:
