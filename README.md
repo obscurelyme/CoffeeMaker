@@ -4,8 +4,7 @@ CoffeeMaker is a 2D game engine
 
 [![CodeFactor](https://www.codefactor.io/repository/github/obscurelyme/coffeemaker/badge)](https://www.codefactor.io/repository/github/obscurelyme/coffeemaker)
 
-[![CircleCI](https://circleci.com/gh/obscurelyme/CoffeeMaker/tree/master.svg?style=svg)](https://circleci.com/gh/obscurelyme/CoffeeMaker/tree/master)
-
+[![coffeemaker-ci](https://github.com/obscurelyme/CoffeeMaker/actions/workflows/config.yml/badge.svg?branch=master)](https://github.com/obscurelyme/CoffeeMaker/actions/workflows/config.yml)
 
 #### Follow the development of CoffeeMaker
 
