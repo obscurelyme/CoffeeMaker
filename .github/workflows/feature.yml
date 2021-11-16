@@ -1,0 +1,30 @@
+name: coffeemaker-feature-ci
+on:
+  push:
+    paths-ignore:
+      - "docs/**"
+      - "graphs/**"
+      - "scripts/**"
+    branches:
+      - "feature/**"
+      - "bugfix/**"
+jobs:
+
+  linux-build:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: /home/runner/.cache/vcpkg
+          key: vcpkg-archives-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+      - name: Configure
+        run: |
+          sudo apt-get install make
+          sudo apt-get install yasm
+          bash .github/scripts/linux/configure.sh
+      - name: Build
+        run: bash .github/scripts/linux/build.sh

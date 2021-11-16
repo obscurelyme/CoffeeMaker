@@ -1,5 +1,13 @@
 name: coffeemaker-ci
 on:
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "graphs/**"
+      - "scripts/**"
+    branches:
+      - main
+      - master
   push:
     paths-ignore:
       - "docs/**"
@@ -8,7 +16,7 @@ on:
     branches:
       - main
       - master
-      - "github/**"
+      - "hotfix/**"
 jobs:
   macos-build:
     timeout-minutes: 15
