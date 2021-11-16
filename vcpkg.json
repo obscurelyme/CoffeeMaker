@@ -31,6 +31,5 @@
     },
     "cppunit",
     "glm"
-  ],
-  "builtin-baseline": "843e0ba0d8f9c9c572e45564263eedfc7745e74f"
+  ]
 }
