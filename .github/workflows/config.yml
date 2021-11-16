@@ -1,0 +1,71 @@
+name: hello-git-actions
+on:
+  push:
+    paths-ignore:
+      - "docs/**"
+      - "graphs/**"
+      - "scripts/**"
+    paths:
+      - "src/**"
+      - "include/**"
+      - "tests/**"
+      - vcpkg.json
+    branches:
+      - main
+      - master
+      - "github/**"
+jobs:
+  macos-build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: /Users/runner/.cache/vcpkg
+          key: vcpkg-archives-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+      - name: Configure
+        run: bash .github/scripts/osx/configure.sh
+      - name: Build
+        run: bash .github/scripts/osx/build.sh
+
+  windows-build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: C:\Users\runneradmin\AppData\Local\vcpkg
+          key: vcpkg-archives-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+      - name: Configure
+        run: .github/scripts/win/configure.bat
+      - name: Build
+        run: .github/scripts/win/build.bat
+
+  linux-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: /home/runner/.cache/vcpkg
+          key: vcpkg-archives-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+      - name: Configure
+        run: bash .github/scripts/linux/configure.sh
+      - name: Build
+        run: bash .github/scripts/linux/build.sh
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [linux-build, macos-build, windows-build]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Butler
+        run: |
+          bash ./.github/scripts/install-butler.sh
