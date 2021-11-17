@@ -45,7 +45,6 @@ namespace CoffeeMaker {
           _name(name),
           _running(false),
           _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
-          _throttle(throttle),
           _thread(nullptr) {
         _timeoutMutex = new std::mutex();
       }
@@ -54,7 +53,6 @@ namespace CoffeeMaker {
           _name(name),
           _running(false),
           _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
-          _throttle(true),
           _thread(nullptr) {
         _timeoutMutex = new std::mutex();
       }
@@ -63,7 +61,6 @@ namespace CoffeeMaker {
           _name("UNKNOWN_TIMEOUT_TASK"),
           _running(false),
           _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
-          _throttle(true),
           _thread(nullptr) {
         _timeoutMutex = new std::mutex();
       }
@@ -157,7 +154,6 @@ namespace CoffeeMaker {
       std::future<void> _future;
       Scope<CoffeeMaker::StopWatch> _timer;
       std::mutex* _timeoutMutex;
-      bool _throttle;
       std::thread* _thread;
     };
 
