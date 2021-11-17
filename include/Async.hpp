@@ -40,14 +40,6 @@ namespace CoffeeMaker {
 
     class TimeoutTask {
       public:
-      TimeoutTask(const std::string& name, std::function<void(void)> cb, int duration, bool throttle) :
-          _callback(cb),
-          _name(name),
-          _running(false),
-          _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
-          _thread(nullptr) {
-        _timeoutMutex = new std::mutex();
-      }
       TimeoutTask(const std::string& name, std::function<void(void)> cb, int duration) :
           _callback(cb),
           _name(name),

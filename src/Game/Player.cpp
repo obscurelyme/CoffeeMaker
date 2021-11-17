@@ -45,7 +45,7 @@ Player::Player() :
           CM_LOGGER_INFO("[PLAYER_EVENT] - FIRE-MISSILE-DELAY event was pushed");
           CoffeeMaker::PushEvent(UCI::Events::PLAYER_FIRE_DELAY_END);
         },
-        250, false)),
+        250)),
     _fireMissileState(Player::FireMissileState::Unlocked),
     _fireSDLDelay(CreateScope<CoffeeMaker::SDLTimer>(
         250,
