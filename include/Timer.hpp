@@ -98,7 +98,7 @@ namespace CoffeeMaker {
   class SDLTimer {
     public:
     SDLTimer(Uint32 delay, SDL_TimerCallback callback, void* params) :
-        _id(-1), _delay(delay), _callback(callback), paused(SDL_CreateMutex()) {
+        paused(SDL_CreateMutex()), _id(-1), _delay(delay), _callback(callback) {
       _pair.first = this;
       _pair.second = params;
     }
