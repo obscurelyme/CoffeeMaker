@@ -245,6 +245,8 @@ void Enemy::Fire() {
   }
 }
 
+void Enemy::SetAggressionState(AggressionState state) { _aggression = state; }
+
 void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (event.code == UCI::Events::ENEMY_DESTROYED && event.data1 == this) {
     // CM_LOGGER_INFO("[ENEMY_EVENT] - ENEMY_DESTROYED: Enemy ID: {}", _id);

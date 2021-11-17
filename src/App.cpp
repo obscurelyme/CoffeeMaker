@@ -26,10 +26,7 @@
 #include "Game/Collider.hpp"
 #include "Game/Events.hpp"
 #include "Game/Scene.hpp"
-#include "Game/Scenes/MainScene.hpp"
-#include "Game/Scenes/TestAnimations.hpp"
-#include "Game/Scenes/TestBedScene.hpp"
-#include "Game/Scenes/TitleScene.hpp"
+#include "Game/Scenes/All.hpp"
 #include "InputManager.hpp"
 #include "Logger.hpp"
 #include "Math.hpp"
@@ -89,7 +86,8 @@ int main(int, char**) {
   SceneManager::AddScene(new MainScene());
   SceneManager::AddScene(new TestBedScene());
   SceneManager::AddScene(new TestAnimations());
-  SceneManager::LoadScene();
+  SceneManager::AddScene(new TestEchelonScene());
+  SceneManager::LoadScene(4);
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
 

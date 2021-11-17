@@ -1,3 +1,6 @@
+#ifndef _game_enemy_hpp
+#define _game_enemy_hpp
+
 #include <SDL2/SDL.h>
 
 #include <functional>
@@ -37,6 +40,7 @@ class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
   bool IsActive() const;
   virtual void OnCollision(Collider* collider);
   bool IsOffScreen() const;
+  void SetAggressionState(AggressionState state);
 
   virtual void OnSDLUserEvent(const SDL_UserEvent& event);
 
@@ -89,3 +93,5 @@ class Drone : public Enemy {
 //   float _currentTime{0.0f};
 //   bool _moveright{true};
 // };
+
+#endif
