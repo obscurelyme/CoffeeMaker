@@ -57,7 +57,7 @@ void Echelon::Add(IEchelonItem* enemy) {
 }
 
 void Echelon::RemoveAtIndex(unsigned int index) {
-  if (index >= 0 && index <= ECHELON_SIZE - 1) {
+  if (index <= ECHELON_SIZE - 1) {
     _enemies[index] = nullptr;
   }
 }
