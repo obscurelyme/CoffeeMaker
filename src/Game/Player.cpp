@@ -43,9 +43,7 @@ Player::Player() :
         "[PLAYER][FIRE-MISSILE-DELAY]",
         [this] {
           CM_LOGGER_INFO("[PLAYER_EVENT] - FIRE-MISSILE-DELAY event was pushed");
-          // CoffeeMaker::PushEvent(UCI::Events::PLAYER_FIRE_DELAY_END);
-
-          _fireMissileState = Player::FireMissileState::Unlocked;
+          CoffeeMaker::PushEvent(UCI::Events::PLAYER_FIRE_DELAY_END);
         },
         250, false)),
     _fireMissileState(Player::FireMissileState::Unlocked),
@@ -136,7 +134,7 @@ void Player::Update(float deltaTime) {
     if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_SPACE)) {
       if (_fireMissileState == Player::FireMissileState::Unlocked) {
         Fire();
-        _fireDelay->Start();
+        _fireDelay->Start2();
         //_fireSDLDelay->Start();
       }
     }
@@ -233,14 +231,14 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (event.code == UCI::Events::PLAYER_BEGIN_SPAWN) {
     // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_BEGIN_SPAWN");
     _destroyed = false;
-    _asyncRespawnTask->Start();
+    _asyncRespawnTask->Start2();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_POWER_UP_GAINED_IMMUNITY) {
     // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_POWER_UP_GAINED_IMMUNITY");
     _isImmune = true;
-    _asyncImmunityTask->Start();
+    _asyncImmunityTask->Start2();
     _oscillation->Start();
     return;
   }

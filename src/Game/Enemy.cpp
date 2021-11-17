@@ -62,17 +62,17 @@ Enemy::Enemy() :
   _entranceSpline->OnComplete([this](void*) {
     // CM_LOGGER_INFO("[ENEMY_EVENT] _entranceSpline Complete Enemy ID: {}", _id);
     _state = Enemy::State::StrafingLeft;
-    _fireMissileTask->Start();
+    _fireMissileTask->Start2();
     // __debugbreak();
     // CM_LOGGER_INFO("[ENEMY_EVENT] Entrance Animation Complete Enemy ID: {}", _id);
-    _exitTimeoutTask->Start();
+    _exitTimeoutTask->Start2();
   });
   _exitSpline->OnComplete([this](void*) {
     // CM_LOGGER_INFO("[ENEMY_EVENT] _exitSpline Complete Enemy ID: {}", _id);
     _active = false;
     _state = Enemy::State::Idle;
     // CM_LOGGER_INFO("[ENEMY_EVENT] Exit Animation Complete Enemy ID: {}", _id);
-    _respawnTimeoutTask->Start();
+    _respawnTimeoutTask->Start2();
   });
 
   _collider = CreateScope<Collider>(Collider::Type::Enemy, false);
@@ -88,7 +88,7 @@ Enemy::Enemy() :
   _destroyedAnimation->OnComplete([this] {
     // CM_LOGGER_INFO("[ENEMY_EVENT] Destroyed Animation Complete - Enemy ID: {}", _id);
     _state = Enemy::State::Idle;
-    _respawnTimeoutTask->Start();
+    _respawnTimeoutTask->Start2();
   });
 }
 
@@ -302,8 +302,8 @@ Drone::Drone() {
   _entranceSpline = CreateScope<::Animations::EnemyBriefEntrance>();
   _entranceSpline->OnComplete([this](void*) {
     _state = Enemy::State::StrafingLeft;
-    _fireMissileTask->Start();
-    _exitTimeoutTask->Start();
+    _fireMissileTask->Start2();
+    _exitTimeoutTask->Start2();
   });
 }
 

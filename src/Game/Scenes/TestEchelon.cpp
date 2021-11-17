@@ -1,5 +1,7 @@
 #include "Game/Scenes/TestEchelon.hpp"
 
+#include <thread>
+
 #include "Game/Events.hpp"
 #include "InputManager.hpp"
 
@@ -13,6 +15,14 @@ TestEchelonScene::TestEchelonScene() :
     _currentSpawnIndex(0) {
   _echelon2->SetPosition(CoffeeMaker::Math::Vector2D{0.0f, 150.0f});
   _echelon3->SetPosition(CoffeeMaker::Math::Vector2D{0.0f, 100.0f});
+  // _clearTimeouts = CreateScope<CoffeeMaker::Async::TimeoutTask>([this] { _loadsOfTimeouts.clear(); }, 2000);
+  // for (int i = 0; i < 5000; i++) {
+  //   auto s = CreateRef<CoffeeMaker::Async::TimeoutTask>([i] { CM_LOGGER_INFO("Done...Task - {}", i); }, 1000);
+  //   _loadsOfTimeouts.push_back(s);
+  //   s->Start();
+  // }
+  // _clearTimeouts->Start();
+  CM_LOGGER_INFO("Num Threads {}", std::thread::hardware_concurrency());
 }
 
 TestEchelonScene::~TestEchelonScene() {}

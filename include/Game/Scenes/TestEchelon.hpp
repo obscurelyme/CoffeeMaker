@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "Async.hpp"
 #include "Game/Echelon.hpp"
 #include "Game/Enemy.hpp"
 #include "Game/Events.hpp"
@@ -88,6 +89,8 @@ class TestEchelonScene : public Scene {
   std::vector<EchelonEnemy*> _enemies;
   Scope<Player> _player;
   unsigned int _currentSpawnIndex;
+  std::vector<Ref<CoffeeMaker::Async::TimeoutTask>> _loadsOfTimeouts;
+  Scope<CoffeeMaker::Async::TimeoutTask> _clearTimeouts;
 };
 
 #endif

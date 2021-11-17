@@ -6,6 +6,7 @@
 #include <functional>
 #include <future>
 #include <mutex>
+#include <thread>
 
 #include "Logger.hpp"
 #include "Timer.hpp"
@@ -44,7 +45,8 @@ namespace CoffeeMaker {
           _name(name),
           _running(false),
           _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
-          _throttle(throttle) {
+          _throttle(throttle),
+          _thread(nullptr) {
         _timeoutMutex = new std::mutex();
       }
       TimeoutTask(const std::string& name, std::function<void(void)> cb, int duration) :
@@ -52,7 +54,8 @@ namespace CoffeeMaker {
           _name(name),
           _running(false),
           _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
-          _throttle(true) {
+          _throttle(true),
+          _thread(nullptr) {
         _timeoutMutex = new std::mutex();
       }
       TimeoutTask(std::function<void(void)> cb, int duration) :
@@ -60,7 +63,8 @@ namespace CoffeeMaker {
           _name("UNKNOWN_TIMEOUT_TASK"),
           _running(false),
           _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
-          _throttle(true) {
+          _throttle(true),
+          _thread(nullptr) {
         _timeoutMutex = new std::mutex();
       }
 
@@ -68,6 +72,32 @@ namespace CoffeeMaker {
         Cancel();
         if (_future.valid()) {
           _future.get();
+        }
+        if (_thread != nullptr && _thread->joinable()) {
+          _thread->join();
+          delete _thread;
+          _thread = nullptr;
+        }
+      }
+
+      void Start2() {
+        if (!_running) {
+          _running = true;
+          _canceled = false;
+          _thread = new std::thread([this] {
+            _timer->Start();
+            while (!_canceled) {
+              std::this_thread::sleep_for(std::chrono::milliseconds(16));
+              std::lock_guard<std::mutex> lk(*_timeoutMutex);
+              if (_timer->Expired()) {
+                _callback();
+                _running = false;
+                return;
+              }
+            }
+            _running = false;
+            return;
+          });
         }
       }
 
@@ -128,6 +158,7 @@ namespace CoffeeMaker {
       Scope<CoffeeMaker::StopWatch> _timer;
       std::mutex* _timeoutMutex;
       bool _throttle;
+      std::thread* _thread;
     };
 
     class IntervalTask {
@@ -137,19 +168,48 @@ namespace CoffeeMaker {
           _canceled(false),
           _running(false),
           _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
-          _mutex(new std::mutex()) {}
+          _mutex(new std::mutex()),
+          _thread(nullptr) {}
 
       ~IntervalTask() {
         Cancel();
         if (_future.valid()) {
           _future.get();
         }
+        if (_thread != nullptr && _thread->joinable()) {
+          _thread->join();
+        }
       }
 
+      void Start2() {
+        if (!_running) {
+          _running = true;
+          _canceled = false;
+          _thread = new std::thread([this] {
+            _timer->Start();
+            while (!_canceled) {
+              std::this_thread::sleep_for(std::chrono::milliseconds(16));
+              std::lock_guard<std::mutex> lk(*_mutex);
+              if (_timer->Expired()) {
+                _callback();
+                _running = false;
+                _timer->Reset();
+              }
+            }
+            _running = false;
+            return;
+          });
+        }
+      }
+
+      /**
+       * @brief This function is deprecated, use Start2 instead to leverage std::thread directly
+       * @deprecated Do not use, leverage Start2() instead
+       */
       void Start() {
         if (!_running) {
           _running = true;
-          _future = std::async(std::launch::async, [this] {
+          _future = std::async(std::launch::async | std::launch::deferred, [this] {
             _canceled = false;
             _timer->Start();
             while (!_canceled) {
@@ -187,6 +247,7 @@ namespace CoffeeMaker {
       std::future<void> _future;
       Scope<CoffeeMaker::StopWatch> _timer;
       std::mutex* _mutex;
+      std::thread* _thread;
     };
   }  // namespace Async
 }  // namespace CoffeeMaker
