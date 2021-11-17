@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <utility>
 #include <vector>
 
 #include "Logger.hpp"
@@ -96,13 +97,26 @@ namespace CoffeeMaker {
 
   class SDLTimer {
     public:
-    SDLTimer(Uint32 delay, SDL_TimerCallback callback, void* params) : _id(SDL_AddTimer(delay, callback, params)) {}
+    SDLTimer(Uint32 delay, SDL_TimerCallback callback, void* params) :
+        paused(SDL_CreateMutex()), _id(-1), _delay(delay), _callback(callback) {
+      _pair.first = this;
+      _pair.second = params;
+    }
     ~SDLTimer() { Stop(); }
 
+    void Start() { _id = SDL_AddTimer(_delay, _callback, &_pair); }
     void Stop() { SDL_RemoveTimer(_id); }
+    void Cancel() { SDL_RemoveTimer(_id); }
+    void Pause() { SDL_LockMutex(paused); }
+    void Unpause() { SDL_UnlockMutex(paused); }
+
+    SDL_mutex* paused;
 
     private:
     SDL_TimerID _id;
+    Uint32 _delay;
+    SDL_TimerCallback _callback;
+    std::pair<SDLTimer*, void*> _pair;
   };
 
   class Timeout : public CoffeeMaker::Timer {

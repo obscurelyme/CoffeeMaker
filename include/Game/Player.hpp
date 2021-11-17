@@ -1,3 +1,6 @@
+#ifndef _game_player_hpp
+#define _game_player_hpp
+
 #include <SDL2/SDL.h>
 
 #include <chrono>
@@ -66,4 +69,7 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   Scope<CoffeeMaker::Math::Oscillate> _oscillation;
   Scope<CoffeeMaker::Async::TimeoutTask> _fireDelay;
   Player::FireMissileState _fireMissileState;
+  Scope<CoffeeMaker::SDLTimer> _fireSDLDelay;
 };
+
+#endif

@@ -24,7 +24,7 @@ Player::Player() :
     _collider(new Collider(Collider::Type::Player, true)),
     _active(true),
     _destroyed(false),
-    _lives(3),
+    _lives(999),
     _destroyedAnimation(CreateScope<UCI::Animations::ExplodeSpriteAnimation>()),
     _asyncRespawnTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[PLAYER][RESPAWN-TASK]",
@@ -40,8 +40,25 @@ Player::Player() :
     _impactSound(CreateScope<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg")),
     _oscillation(CreateScope<CoffeeMaker::Math::Oscillate>(128.0f, 255.0f, 0.025f)),
     _fireDelay(CreateScope<CoffeeMaker::Async::TimeoutTask>(
-        "[PLAYER][FIRE-MISSILE-DELAY]", [] { CoffeeMaker::PushEvent(UCI::Events::PLAYER_FIRE_DELAY_END); }, 500)),
-    _fireMissileState(Player::FireMissileState::Unlocked) {
+        "[PLAYER][FIRE-MISSILE-DELAY]",
+        [] {
+          CM_LOGGER_INFO("[PLAYER_EVENT] - FIRE-MISSILE-DELAY event was pushed");
+          CoffeeMaker::PushEvent(UCI::Events::PLAYER_FIRE_DELAY_END);
+        },
+        250)),
+    _fireMissileState(Player::FireMissileState::Unlocked),
+    _fireSDLDelay(CreateScope<CoffeeMaker::SDLTimer>(
+        250,
+        [](Uint32, void* params) {
+          std::pair<CoffeeMaker::SDLTimer*, Player*>* p =
+              reinterpret_cast<std::pair<CoffeeMaker::SDLTimer*, Player*>*>(params);
+          SDL_LockMutex(p->first->paused);
+          CM_LOGGER_INFO("[PLAYER_EVENT] - SDL Timer is up");
+          CoffeeMaker::PushEvent(UCI::Events::PLAYER_FIRE_DELAY_END);
+          SDL_UnlockMutex(p->first->paused);
+          return static_cast<Uint32>(0);
+        },
+        nullptr)) {
   _firing = false;
   SDL_Rect vp;
   SDL_RenderGetViewport(CoffeeMaker::Renderer::Instance(), &vp);
@@ -64,6 +81,7 @@ Player::~Player() {
   _asyncImmunityTask->Cancel();
   _destroyedAnimation->Stop();
   _fireDelay->Cancel();
+  _fireSDLDelay->Stop();
   _instance = nullptr;
   delete _collider;
   for (auto p : _projectiles) {
@@ -100,7 +118,7 @@ void Player::HandleDestroy() {
   _destroyed = true;
   _destroyedAnimation->SetPosition(Vec2{_clientRect.x, _clientRect.y});
   _destroyedAnimation->Start();
-  CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_DSTROYED");
+  CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_DESTROYED");
 }
 
 void Player::Init() {}
@@ -116,7 +134,8 @@ void Player::Update(float deltaTime) {
     if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_SPACE)) {
       if (_fireMissileState == Player::FireMissileState::Unlocked) {
         Fire();
-        _fireDelay->Start();
+        _fireDelay->Start2();
+        //_fireSDLDelay->Start();
       }
     }
 
@@ -174,6 +193,7 @@ void Player::Fire() {
     // NOTE: fire the next, or else projectiles are unavailable for a frame.
     _projectiles[_currentProjectile++]->Fire((float)_clientRect.x, (float)_clientRect.y, _rotation);
   }
+  CM_LOGGER_INFO("[PLAYER_EVENT] - FIRED-MISSILE");
   _fireMissileState = Player::FireMissileState::Locked;
 }
 
@@ -194,6 +214,7 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
     _asyncRespawnTask->Pause();
     _asyncImmunityTask->Pause();
     _fireDelay->Pause();
+    _fireSDLDelay->Pause();
     return;
   }
 
@@ -203,20 +224,21 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
     _asyncRespawnTask->Unpause();
     _asyncImmunityTask->Unpause();
     _fireDelay->Unpause();
+    _fireSDLDelay->Unpause();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_BEGIN_SPAWN) {
     // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_BEGIN_SPAWN");
     _destroyed = false;
-    _asyncRespawnTask->Start();
+    _asyncRespawnTask->Start2();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_POWER_UP_GAINED_IMMUNITY) {
     // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_POWER_UP_GAINED_IMMUNITY");
     _isImmune = true;
-    _asyncImmunityTask->Start();
+    _asyncImmunityTask->Start2();
     _oscillation->Start();
     return;
   }
@@ -235,6 +257,7 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
   }
 
   if (event.code == UCI::Events::PLAYER_FIRE_DELAY_END) {
+    CM_LOGGER_INFO("[PLAYER_EVENT] - FIRE-MISSILE-DELAY event was received");
     _fireMissileState = Player::FireMissileState::Unlocked;
   }
 }

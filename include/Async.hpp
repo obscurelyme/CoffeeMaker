@@ -6,6 +6,7 @@
 #include <functional>
 #include <future>
 #include <mutex>
+#include <thread>
 
 #include "Logger.hpp"
 #include "Timer.hpp"
@@ -40,14 +41,19 @@ namespace CoffeeMaker {
     class TimeoutTask {
       public:
       TimeoutTask(const std::string& name, std::function<void(void)> cb, int duration) :
-          _callback(cb), _name(name), _running(false), _timer(CreateScope<CoffeeMaker::StopWatch>(duration)) {
+          _callback(cb),
+          _name(name),
+          _running(false),
+          _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
+          _thread(nullptr) {
         _timeoutMutex = new std::mutex();
       }
       TimeoutTask(std::function<void(void)> cb, int duration) :
           _callback(cb),
           _name("UNKNOWN_TIMEOUT_TASK"),
           _running(false),
-          _timer(CreateScope<CoffeeMaker::StopWatch>(duration)) {
+          _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
+          _thread(nullptr) {
         _timeoutMutex = new std::mutex();
       }
 
@@ -55,6 +61,32 @@ namespace CoffeeMaker {
         Cancel();
         if (_future.valid()) {
           _future.get();
+        }
+        if (_thread != nullptr && _thread->joinable()) {
+          _thread->join();
+          delete _thread;
+          _thread = nullptr;
+        }
+      }
+
+      void Start2() {
+        if (!_running) {
+          _running = true;
+          _canceled = false;
+          _thread = new std::thread([this] {
+            _timer->Start();
+            while (!_canceled) {
+              std::this_thread::sleep_for(std::chrono::milliseconds(16));
+              std::lock_guard<std::mutex> lk(*_timeoutMutex);
+              if (_timer->Expired()) {
+                _callback();
+                _running = false;
+                return;
+              }
+            }
+            _running = false;
+            return;
+          });
         }
       }
 
@@ -66,13 +98,13 @@ namespace CoffeeMaker {
             _timer->Start();
             // CM_LOGGER_INFO("{} Started on thread", _name);
             while (!_canceled) {
-              SDL_Delay(16);
+              std::this_thread::sleep_for(std::chrono::milliseconds(16));
               std::lock_guard<std::mutex> lk(*_timeoutMutex);
               if (_timer->Expired()) {
-                _running = false;
                 // CM_LOGGER_INFO("{} Completed, {} Ticks compared to {} duration", _name, _timer->GetTicks(),
                 //                _timer->GetInterval());
                 _callback();
+                _running = false;
                 return;
               }
               // CM_LOGGER_INFO("{} Keep going", _name);
@@ -114,6 +146,7 @@ namespace CoffeeMaker {
       std::future<void> _future;
       Scope<CoffeeMaker::StopWatch> _timer;
       std::mutex* _timeoutMutex;
+      std::thread* _thread;
     };
 
     class IntervalTask {
@@ -123,23 +156,52 @@ namespace CoffeeMaker {
           _canceled(false),
           _running(false),
           _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
-          _mutex(new std::mutex()) {}
+          _mutex(new std::mutex()),
+          _thread(nullptr) {}
 
       ~IntervalTask() {
         Cancel();
         if (_future.valid()) {
           _future.get();
         }
+        if (_thread != nullptr && _thread->joinable()) {
+          _thread->join();
+        }
       }
 
+      void Start2() {
+        if (!_running) {
+          _running = true;
+          _canceled = false;
+          _thread = new std::thread([this] {
+            _timer->Start();
+            while (!_canceled) {
+              std::this_thread::sleep_for(std::chrono::milliseconds(16));
+              std::lock_guard<std::mutex> lk(*_mutex);
+              if (_timer->Expired()) {
+                _callback();
+                _running = false;
+                _timer->Reset();
+              }
+            }
+            _running = false;
+            return;
+          });
+        }
+      }
+
+      /**
+       * @brief This function is deprecated, use Start2 instead to leverage std::thread directly
+       * @deprecated Do not use, leverage Start2() instead
+       */
       void Start() {
         if (!_running) {
           _running = true;
-          _future = std::async(std::launch::async, [this] {
+          _future = std::async(std::launch::async | std::launch::deferred, [this] {
             _canceled = false;
             _timer->Start();
             while (!_canceled) {
-              SDL_Delay(16);
+              std::this_thread::sleep_for(std::chrono::milliseconds(16));
               std::lock_guard<std::mutex> lk(*_mutex);
               if (_timer->Expired()) {
                 _callback();
@@ -173,6 +235,7 @@ namespace CoffeeMaker {
       std::future<void> _future;
       Scope<CoffeeMaker::StopWatch> _timer;
       std::mutex* _mutex;
+      std::thread* _thread;
     };
   }  // namespace Async
 }  // namespace CoffeeMaker

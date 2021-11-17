@@ -52,6 +52,7 @@ class SceneManager {
   static void LoadScene(unsigned long index);
   static void AddScene(Scene* scene);
   static void DestroyAllScenes();
+  static void DestroyCurrentScene();
   static bool CurrentScenePaused();
   static std::vector<Scene*> scenes;
 

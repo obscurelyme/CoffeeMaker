@@ -79,7 +79,9 @@ set(GAME_SOURCES
   src/Game/Animations/EnemyAnimations.cpp
   src/Game/Animations/SpriteAnimation.cpp
   src/Game/Animations/Explode.cpp
-  src/Game/PowerUps.cpp)
+  src/Game/PowerUps.cpp
+  src/Game/Echelon.cpp
+  src/Game/Scenes/TestEchelon.cpp)
 
 set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES})
 
@@ -133,6 +135,7 @@ set(COFFEEMAKER_TEST_MAIN tests/main.cpp)
 set(COFFEEMAKER_DEMO_TEST_SOURCES tests/ComplexNumber.cpp tests/Complex.cpp tests/TestWithMocking.cpp)
 set(COFFEEMAKER_TEST_SOURCES
   # tests/TestBed.cpp
+  tests/UCIEchelon.cpp
   tests/CoffeeMakerMath.cpp
   # tests/CoffeeMakerShapesRect.cpp
   # tests/CoffeeMakerTextureTest.cpp

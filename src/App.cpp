@@ -26,10 +26,7 @@
 #include "Game/Collider.hpp"
 #include "Game/Events.hpp"
 #include "Game/Scene.hpp"
-#include "Game/Scenes/MainScene.hpp"
-#include "Game/Scenes/TestAnimations.hpp"
-#include "Game/Scenes/TestBedScene.hpp"
-#include "Game/Scenes/TitleScene.hpp"
+#include "Game/Scenes/All.hpp"
 #include "InputManager.hpp"
 #include "Logger.hpp"
 #include "Math.hpp"
@@ -89,6 +86,7 @@ int main(int, char**) {
   SceneManager::AddScene(new MainScene());
   SceneManager::AddScene(new TestBedScene());
   SceneManager::AddScene(new TestAnimations());
+  SceneManager::AddScene(new TestEchelonScene());
   SceneManager::LoadScene();
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
@@ -102,6 +100,8 @@ int main(int, char**) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
         quit = true;
+        SceneManager::DestroyCurrentScene();
+        break;
       }
 
       if (event.type == SDL_USEREVENT) {
@@ -126,34 +126,36 @@ int main(int, char**) {
       }
     }
 
-    CoffeeMaker::Timeout::ProcessTimeouts();
-    Animations::SpriteAnimation::ProcessSpriteAnimations();
+    if (!quit) {
+      CoffeeMaker::Timeout::ProcessTimeouts();
+      Animations::SpriteAnimation::ProcessSpriteAnimations();
 
-    float timeStep = globalTimer.GetTicks() / 1000.0f;
+      float timeStep = globalTimer.GetTicks() / 1000.0f;
 
-    // physics step
-    Collider::PhysicsUpdate();
+      // physics step
+      Collider::PhysicsUpdate();
 
-    // run logic
-    fpsCounter.Update();
-    SceneManager::UpdateCurrentScene(!paused ? timeStep : 0.0f);
+      // run logic
+      fpsCounter.Update();
+      SceneManager::UpdateCurrentScene(!paused ? timeStep : 0.0f);
 
-    // Reset Timer
-    globalTimer.Start();
+      // Reset Timer
+      globalTimer.Start();
 
-    // render
-    renderer.BeginRender();
+      // render
+      renderer.BeginRender();
 
-    SceneManager::RenderCurrentScene();
-    fpsCounter.Render();
+      SceneManager::RenderCurrentScene();
+      fpsCounter.Render();
 
-    renderer.EndRender();
-    // NOTE: uncomment here to view draw calls
-    // CM_LOGGER_INFO("[Renderer][Draw Calls]: {}", CoffeeMaker::Renderer::DrawCalls());
+      renderer.EndRender();
+      // NOTE: uncomment here to view draw calls
+      // CM_LOGGER_INFO("[Renderer][Draw Calls]: {}", CoffeeMaker::Renderer::DrawCalls());
 
-    CoffeeMaker::InputManager::ClearAllPresses();
-    CoffeeMaker::Button::ProcessEvents();
-    Collider::ProcessCollisions();
+      CoffeeMaker::InputManager::ClearAllPresses();
+      CoffeeMaker::Button::ProcessEvents();
+      Collider::ProcessCollisions();
+    }
   }
 
   CoffeeMaker::Audio::StopMusic();

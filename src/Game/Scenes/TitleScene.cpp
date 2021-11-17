@@ -80,6 +80,7 @@ void TitleScene::Destroy() {
   // Clear out entities
   CoffeeMaker::Audio::StopMusic();
   CoffeeMaker::Audio::FreeMusic(_music);
+  _music = nullptr;
   _entities.clear();
   _loaded = false;
 }
