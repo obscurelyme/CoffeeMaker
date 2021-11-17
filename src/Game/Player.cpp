@@ -41,7 +41,7 @@ Player::Player() :
     _oscillation(CreateScope<CoffeeMaker::Math::Oscillate>(128.0f, 255.0f, 0.025f)),
     _fireDelay(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[PLAYER][FIRE-MISSILE-DELAY]",
-        [this] {
+        [] {
           CM_LOGGER_INFO("[PLAYER_EVENT] - FIRE-MISSILE-DELAY event was pushed");
           CoffeeMaker::PushEvent(UCI::Events::PLAYER_FIRE_DELAY_END);
         },
