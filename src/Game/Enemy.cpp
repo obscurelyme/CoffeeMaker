@@ -29,7 +29,13 @@ Enemy::Enemy() :
     _sprite(CreateScope<CoffeeMaker::Sprite>("EnemyV1.png")),
     _entranceSpline(CreateScope<Animations::EnemyEntrance>()),
     _exitSpline(CreateScope<Animations::EnemyExit>()),
-    _fireMissileTask(nullptr),
+    // TIMEOUTS AND INTERVALS
+    _fireMissileTask(CreateScope<CoffeeMaker::Async::IntervalTask>(
+        [this] {
+          // CM_LOGGER_INFO("[ENEMY_EVENT] _fireMissileTask Complete Enemy ID: {}", _id);
+          CoffeeMaker::PushEvent(UCI::Events::ENEMY_FIRE_MISSILE, this);
+        },
+        3000)),
     _exitTimeoutTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[ENEMY][EXIT-TIMEOUT-TASK] - " + _id,
         [this] {
@@ -40,6 +46,8 @@ Enemy::Enemy() :
     _respawnTimeoutTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[ENEMY][RESPAWN-TIMEOUT-TASK] - " + _id,
         [this] { CoffeeMaker::PushEvent(UCI::Events::ENEMY_COMPLETE_EXIT, this); }, 3000)),
+
+    // TIMEOUTS AND INTERVALS
     _destroyedAnimation(CreateScope<UCI::Animations::ExplodeSpriteAnimation>()),
     _impactSound(CreateScope<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg")),
     _state(Enemy::State::Idle),
@@ -82,12 +90,6 @@ Enemy::Enemy() :
     _state = Enemy::State::Idle;
     _respawnTimeoutTask->Start();
   });
-  _fireMissileTask = CreateScope<CoffeeMaker::Async::IntervalTask>(
-      [this] {
-        // CM_LOGGER_INFO("[ENEMY_EVENT] _fireMissileTask Complete Enemy ID: {}", _id);
-        CoffeeMaker::PushEvent(UCI::Events::ENEMY_FIRE_MISSILE, this);
-      },
-      3000);
 }
 
 Enemy::~Enemy() {

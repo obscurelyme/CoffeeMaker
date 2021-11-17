@@ -18,6 +18,7 @@
 #include "Game/Projectile.hpp"
 #include "Math.hpp"
 #include "Texture.hpp"
+#include "Timer.hpp"
 #include "Utilities.hpp"
 
 class Enemy : public Entity, public CoffeeMaker::IUserEventListener {

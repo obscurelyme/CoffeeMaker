@@ -69,6 +69,7 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   Scope<CoffeeMaker::Math::Oscillate> _oscillation;
   Scope<CoffeeMaker::Async::TimeoutTask> _fireDelay;
   Player::FireMissileState _fireMissileState;
+  Scope<CoffeeMaker::SDLTimer> _fireSDLDelay;
 };
 
 #endif

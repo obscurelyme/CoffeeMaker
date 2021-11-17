@@ -63,6 +63,8 @@ void SceneManager::DestroyAllScenes() {
   }
 }
 
+void SceneManager::DestroyCurrentScene() { _currentScene->Destroy(); }
+
 bool SceneManager::CurrentScenePaused() { return _currentScene->IsPaused(); }
 
 int Scene::_sceneId = 0;

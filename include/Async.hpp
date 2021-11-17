@@ -39,15 +39,28 @@ namespace CoffeeMaker {
 
     class TimeoutTask {
       public:
+      TimeoutTask(const std::string& name, std::function<void(void)> cb, int duration, bool throttle) :
+          _callback(cb),
+          _name(name),
+          _running(false),
+          _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
+          _throttle(throttle) {
+        _timeoutMutex = new std::mutex();
+      }
       TimeoutTask(const std::string& name, std::function<void(void)> cb, int duration) :
-          _callback(cb), _name(name), _running(false), _timer(CreateScope<CoffeeMaker::StopWatch>(duration)) {
+          _callback(cb),
+          _name(name),
+          _running(false),
+          _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
+          _throttle(true) {
         _timeoutMutex = new std::mutex();
       }
       TimeoutTask(std::function<void(void)> cb, int duration) :
           _callback(cb),
           _name("UNKNOWN_TIMEOUT_TASK"),
           _running(false),
-          _timer(CreateScope<CoffeeMaker::StopWatch>(duration)) {
+          _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
+          _throttle(true) {
         _timeoutMutex = new std::mutex();
       }
 
@@ -66,13 +79,13 @@ namespace CoffeeMaker {
             _timer->Start();
             // CM_LOGGER_INFO("{} Started on thread", _name);
             while (!_canceled) {
-              SDL_Delay(16);
+              std::this_thread::sleep_for(std::chrono::milliseconds(16));
               std::lock_guard<std::mutex> lk(*_timeoutMutex);
               if (_timer->Expired()) {
-                _running = false;
                 // CM_LOGGER_INFO("{} Completed, {} Ticks compared to {} duration", _name, _timer->GetTicks(),
                 //                _timer->GetInterval());
                 _callback();
+                _running = false;
                 return;
               }
               // CM_LOGGER_INFO("{} Keep going", _name);
@@ -114,6 +127,7 @@ namespace CoffeeMaker {
       std::future<void> _future;
       Scope<CoffeeMaker::StopWatch> _timer;
       std::mutex* _timeoutMutex;
+      bool _throttle;
     };
 
     class IntervalTask {
@@ -139,7 +153,7 @@ namespace CoffeeMaker {
             _canceled = false;
             _timer->Start();
             while (!_canceled) {
-              SDL_Delay(16);
+              std::this_thread::sleep_for(std::chrono::milliseconds(16));
               std::lock_guard<std::mutex> lk(*_mutex);
               if (_timer->Expired()) {
                 _callback();

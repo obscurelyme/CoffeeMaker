@@ -32,6 +32,14 @@ void TestEchelonScene::Update(float deltaTime) {
     }
   }
 
+  if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_ESCAPE)) {
+    if (IsPaused()) {
+      CoffeeMaker::PushEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE);
+    } else {
+      CoffeeMaker::PushEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE);
+    }
+  }
+
   // if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_1)) {
   //   if (_enemies[0]->IsSynced()) {
   //     _enemies[0]->DesyncFromEchelon();
