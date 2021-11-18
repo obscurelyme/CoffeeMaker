@@ -12,6 +12,20 @@
 class Collider {
   public:
   enum class Type { Default, Projectile, Enemy, Player, EnemyProjectile };
+  std::string ColliderTypeString(Collider::Type type) {
+    switch (type) {
+      case Collider::Type::Projectile:
+        return "Projectile";
+      case Collider::Type::Enemy:
+        return "Enemy";
+      case Collider::Type::Player:
+        return "Player";
+      case Collider::Type::EnemyProjectile:
+        return "EnemyProjectile";
+      default:
+        return "Default";
+    }
+  }
   static void PhysicsUpdate();
   static void ProcessCollisions();
   /**
@@ -36,6 +50,8 @@ class Collider {
   void SetHeight(float h);
   Type GetType() const;
   void SetType(Collider::Type type);
+
+  std::string ToString();
 
   SDL_FRect clientRect;
   bool active;

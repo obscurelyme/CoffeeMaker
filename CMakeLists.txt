@@ -91,6 +91,8 @@ target_link_libraries(main PRIVATE fmt::fmt spdlog::spdlog spdlog::spdlog_header
 if (WIN32)
   message("Building for Win32")
   target_link_libraries(main PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_ttf SDL2::SDL2_image SDL2::SDL2_mixer)
+
+  target_compile_definitions(main PRIVATE COFFEEMAKER_LOGGER_SOURCE_LOCATION)
 elseif(APPLE)
   message("Building for OSX")
   find_package(Ogg CONFIG REQUIRED)

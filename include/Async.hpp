@@ -69,7 +69,7 @@ namespace CoffeeMaker {
         }
       }
 
-      void Start2() {
+      void Start() {
         if (!_running) {
           _running = true;
           _canceled = false;
@@ -90,32 +90,6 @@ namespace CoffeeMaker {
         }
       }
 
-      void Start() {
-        if (!_running) {
-          _running = true;
-          _canceled = false;
-          _future = std::async(std::launch::async, [this] {
-            _timer->Start();
-            // CM_LOGGER_INFO("{} Started on thread", _name);
-            while (!_canceled) {
-              std::this_thread::sleep_for(std::chrono::milliseconds(16));
-              std::lock_guard<std::mutex> lk(*_timeoutMutex);
-              if (_timer->Expired()) {
-                // CM_LOGGER_INFO("{} Completed, {} Ticks compared to {} duration", _name, _timer->GetTicks(),
-                //                _timer->GetInterval());
-                _callback();
-                _running = false;
-                return;
-              }
-              // CM_LOGGER_INFO("{} Keep going", _name);
-            }
-            _running = false;
-            // CM_LOGGER_INFO("{} Canceled thread", _name);
-            return;
-          });
-        }
-      }
-
       void Reset() {
         _canceled = false;
         _running = false;
@@ -124,18 +98,20 @@ namespace CoffeeMaker {
       void Cancel() {
         std::lock_guard<std::mutex> lk(*_timeoutMutex);
         _canceled = true;
+        CoffeeMaker::Logger::Trace(
+            fmt::format(fmt::runtime("[TIMEOUT][{}] Canceled at {}"), _name, _timer->GetTicks()));
       }
 
       void Pause() {
         std::lock_guard<std::mutex> lk(*_timeoutMutex);
         _timer->Pause();
-        // CM_LOGGER_INFO("{} Paused at {}", _name, _timer->GetTicks());
+        CoffeeMaker::Logger::Trace(fmt::format(fmt::runtime("[TIMEOUT][{}] Paused at {}"), _name, _timer->GetTicks()));
       }
 
       void Unpause() {
         std::lock_guard<std::mutex> lk(*_timeoutMutex);
         _timer->Unpause();
-        // CM_LOGGER_INFO("{} Resumed at {}", _name, _timer->GetTicks());
+        CoffeeMaker::Logger::Trace(fmt::format(fmt::runtime("[TIMEOUT][{}] Resumed at {}"), _name, _timer->GetTicks()));
       }
 
       private:
@@ -169,7 +145,7 @@ namespace CoffeeMaker {
         }
       }
 
-      void Start2() {
+      void Start() {
         if (!_running) {
           _running = true;
           _canceled = false;
@@ -190,42 +166,25 @@ namespace CoffeeMaker {
         }
       }
 
-      /**
-       * @brief This function is deprecated, use Start2 instead to leverage std::thread directly
-       * @deprecated Do not use, leverage Start2() instead
-       */
-      void Start() {
-        if (!_running) {
-          _running = true;
-          _future = std::async(std::launch::async | std::launch::deferred, [this] {
-            _canceled = false;
-            _timer->Start();
-            while (!_canceled) {
-              std::this_thread::sleep_for(std::chrono::milliseconds(16));
-              std::lock_guard<std::mutex> lk(*_mutex);
-              if (_timer->Expired()) {
-                _callback();
-                _timer->Reset();
-              }
-            }
-            _running = false;
-          });
-        }
-      }
-
       void Cancel() {
         std::lock_guard<std::mutex> lk(*_mutex);
         _canceled = true;
+        CoffeeMaker::Logger::Trace(
+            fmt::format(fmt::runtime("[INTERVAL][undefined] Resumed at {}"), _timer->GetTicks()));
       }
 
       void Pause() {
         std::lock_guard<std::mutex> lk(*_mutex);
         _timer->Pause();
+        CoffeeMaker::Logger::Trace(
+            fmt::format(fmt::runtime("[INTERVAL][undefined] Resumed at {}"), _timer->GetTicks()));
       }
 
       void Unpause() {
         std::lock_guard<std::mutex> lk(*_mutex);
         _timer->Unpause();
+        CoffeeMaker::Logger::Trace(
+            fmt::format(fmt::runtime("[INTERVAL][undefined] Resumed at {}"), _timer->GetTicks()));
       }
 
       private:

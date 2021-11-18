@@ -114,7 +114,8 @@
     "__bits": "cpp",
     "__tree": "cpp",
     "complex": "cpp",
-    "future": "cpp"
+    "future": "cpp",
+    "source_location": "cpp"
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"

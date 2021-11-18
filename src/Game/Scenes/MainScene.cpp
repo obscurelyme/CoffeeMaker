@@ -124,7 +124,6 @@ void MainScene::OnSDLUserEvent(const SDL_UserEvent& event) {
     switch (event.code) {
       case UCI::Events::ENEMY_INITIAL_INTERVAL_SPAWN: {
         CoffeeMaker::PushEvent(UCI::Events::ENEMY_SPAWNED, _enemies[_currentSpawn++]);
-        // _enemies[_currentSpawn++]->Spawn();
         if (_currentSpawn == MAX_ENEMIES) {
           _enemySpawnTask->Cancel();
         }

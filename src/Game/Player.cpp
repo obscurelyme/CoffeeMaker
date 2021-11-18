@@ -29,7 +29,7 @@ Player::Player() :
     _asyncRespawnTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[PLAYER][RESPAWN-TASK]",
         [] {
-          CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_WILL_SPAWN");
+          CoffeeMaker::Logger::Debug("[PLAYER_EVENT] - PLAYER_WILL_SPAWN");
           CoffeeMaker::PushEvent(UCI::Events::PLAYER_POWER_UP_GAINED_IMMUNITY);
           CoffeeMaker::PushEvent(UCI::Events::PLAYER_COMPLETE_SPAWN);
         },
@@ -42,23 +42,16 @@ Player::Player() :
     _fireDelay(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[PLAYER][FIRE-MISSILE-DELAY]",
         [] {
-          CM_LOGGER_INFO("[PLAYER_EVENT] - FIRE-MISSILE-DELAY event was pushed");
+          CoffeeMaker::Logger::Debug("[PLAYER_EVENT] - FIRE-MISSILE-DELAY event was pushed");
           CoffeeMaker::PushEvent(UCI::Events::PLAYER_FIRE_DELAY_END);
         },
         250)),
-    _fireMissileState(Player::FireMissileState::Unlocked),
-    _fireSDLDelay(CreateScope<CoffeeMaker::SDLTimer>(
-        250,
-        [](Uint32, void* params) {
-          std::pair<CoffeeMaker::SDLTimer*, Player*>* p =
-              reinterpret_cast<std::pair<CoffeeMaker::SDLTimer*, Player*>*>(params);
-          SDL_LockMutex(p->first->paused);
-          CM_LOGGER_INFO("[PLAYER_EVENT] - SDL Timer is up");
-          CoffeeMaker::PushEvent(UCI::Events::PLAYER_FIRE_DELAY_END);
-          SDL_UnlockMutex(p->first->paused);
-          return static_cast<Uint32>(0);
-        },
-        nullptr)) {
+    _fireMissileState(Player::FireMissileState::Unlocked) {
+  if (_instance != nullptr) {
+    // NOTE: You really messed this one up.
+    CoffeeMaker::Logger::Critical("[PLAYER_EVENT][CONSTRUCTION] - An instance of the player class already exists.");
+    CoffeeMaker::PushEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_QUIT);
+  }
   _firing = false;
   SDL_Rect vp;
   SDL_RenderGetViewport(CoffeeMaker::Renderer::Instance(), &vp);
@@ -72,8 +65,8 @@ Player::Player() :
   _collider->clientRect.w = _clientRect.w;
   _collider->Update(_clientRect);
   _collider->OnCollide(std::bind(&Player::OnHit, this, std::placeholders::_1));
-  _instance = this;
   _destroyedAnimation->OnComplete([] { CoffeeMaker::PushEvent(UCI::Events::PLAYER_BEGIN_SPAWN); });
+  _instance = this;
 }
 
 Player::~Player() {
@@ -81,30 +74,29 @@ Player::~Player() {
   _asyncImmunityTask->Cancel();
   _destroyedAnimation->Stop();
   _fireDelay->Cancel();
-  _fireSDLDelay->Stop();
   _instance = nullptr;
   delete _collider;
   for (auto p : _projectiles) {
     delete p;
   }
+  _instance = nullptr;
 }
 
 void Player::OnHit(Collider* collider) {
   if (_collider->active) {
     if (collider->GetType() == Collider::Type::EnemyProjectile && !_isImmune) {
-      HandleDestroy();
+      HandleDestroy(collider);
       return;
     }
 
     if (collider->GetType() == Collider::Type::Enemy && !_isImmune) {
       _impactSound->Play();
-      HandleDestroy();
+      HandleDestroy(collider);
     }
   }
 }
 
-void Player::HandleDestroy() {
-  using Vec2 = CoffeeMaker::Math::Vector2D;
+void Player::HandleDestroy(Collider* collider) {
   _collider->active = false;
   _active = false;
   if (_lives - 1 == 0) {
@@ -115,10 +107,7 @@ void Player::HandleDestroy() {
   _lives--;
   CoffeeMaker::PushEvent(UCI::Events::PLAYER_LOST_LIFE);
   CoffeeMaker::PushEvent(UCI::Events::PLAYER_DESTROYED);
-  _destroyed = true;
-  _destroyedAnimation->SetPosition(Vec2{_clientRect.x, _clientRect.y});
-  _destroyedAnimation->Start();
-  CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_DESTROYED");
+  CoffeeMaker::Logger::Debug(fmt::format(fmt::runtime("[PLAYER_EVENT]-PLAYER_DESTROYED {}"), collider->ToString()));
 }
 
 void Player::Init() {}
@@ -134,8 +123,7 @@ void Player::Update(float deltaTime) {
     if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_SPACE)) {
       if (_fireMissileState == Player::FireMissileState::Unlocked) {
         Fire();
-        _fireDelay->Start2();
-        //_fireSDLDelay->Start();
+        _fireDelay->Start();
       }
     }
 
@@ -193,7 +181,7 @@ void Player::Fire() {
     // NOTE: fire the next, or else projectiles are unavailable for a frame.
     _projectiles[_currentProjectile++]->Fire((float)_clientRect.x, (float)_clientRect.y, _rotation);
   }
-  CM_LOGGER_INFO("[PLAYER_EVENT] - FIRED-MISSILE");
+  CoffeeMaker::Logger::Debug("[PLAYER_EVENT] - FIRED-MISSILE");
   _fireMissileState = Player::FireMissileState::Locked;
 }
 
@@ -214,7 +202,6 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
     _asyncRespawnTask->Pause();
     _asyncImmunityTask->Pause();
     _fireDelay->Pause();
-    _fireSDLDelay->Pause();
     return;
   }
 
@@ -224,21 +211,20 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
     _asyncRespawnTask->Unpause();
     _asyncImmunityTask->Unpause();
     _fireDelay->Unpause();
-    _fireSDLDelay->Unpause();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_BEGIN_SPAWN) {
     // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_BEGIN_SPAWN");
     _destroyed = false;
-    _asyncRespawnTask->Start2();
+    _asyncRespawnTask->Start();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_POWER_UP_GAINED_IMMUNITY) {
     // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_POWER_UP_GAINED_IMMUNITY");
     _isImmune = true;
-    _asyncImmunityTask->Start2();
+    _asyncImmunityTask->Start();
     _oscillation->Start();
     return;
   }
@@ -257,7 +243,13 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
   }
 
   if (event.code == UCI::Events::PLAYER_FIRE_DELAY_END) {
-    CM_LOGGER_INFO("[PLAYER_EVENT] - FIRE-MISSILE-DELAY event was received");
+    CoffeeMaker::Logger::Debug("[PLAYER_EVENT] - FIRE-MISSILE-DELAY event was received");
     _fireMissileState = Player::FireMissileState::Unlocked;
+  }
+
+  if (event.code == UCI::Events::PLAYER_DESTROYED) {
+    _destroyed = true;
+    _destroyedAnimation->SetPosition(CoffeeMaker::Math::Vector2D{_clientRect.x, _clientRect.y});
+    _destroyedAnimation->Start();
   }
 }
