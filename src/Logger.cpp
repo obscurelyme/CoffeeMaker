@@ -21,7 +21,7 @@ Logger::Logger() {
   _fileSink->set_level(spdlog::level::trace);
 
   _consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-  _consoleSink->set_level(spdlog::level::trace);
+  _consoleSink->set_level(spdlog::level::debug);
 
   _errSink = std::make_shared<spdlog::sinks::stderr_color_sink_mt>();
   _errSink->set_level(spdlog::level::critical);
@@ -33,13 +33,20 @@ Logger::Logger() {
 
 Logger::~Logger() { delete _spdlog; }
 
-void Logger::Trace(std::string msg) { _logger->_spdlog->trace(msg); }
+void Logger::Trace(fmt::v8::format_string<> fmt) { _logger->_spdlog->trace(fmt); }
 
-void Logger::Debug(std::string msg) { _logger->_spdlog->debug(msg); }
-void Logger::Warn(std::string msg) { _logger->_spdlog->warn(msg); }
-void Logger::Info(std::string msg) { _logger->_spdlog->info(msg); }
-void Logger::Error(std::string msg) { _logger->_spdlog->error(msg); }
-void Logger::Critical(std::string msg) { _logger->_spdlog->critical(msg); }
+void Logger::Debug(fmt::v8::format_string<> fmt, const std::source_location &location) {
+  _logger->_spdlog->debug(fmt::format(fmt::runtime("{} - Source: [ file={}, line={}, function={} ]"), fmt,
+                                      location.file_name(), location.line(), location.function_name()));
+}
+
+void Logger::Warn(fmt::v8::format_string<> fmt) { _logger->_spdlog->warn(fmt); }
+
+void Logger::Info(fmt::v8::format_string<> fmt) { _logger->_spdlog->info(fmt); }
+
+void Logger::Error(fmt::v8::format_string<> fmt) { _logger->_spdlog->error(fmt); }
+
+void Logger::Critical(fmt::v8::format_string<> fmt) { _logger->_spdlog->critical(fmt); }
 
 spdlog::logger *Logger::Instance() {
   if (_logger == nullptr) {

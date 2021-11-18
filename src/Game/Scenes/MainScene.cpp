@@ -94,7 +94,7 @@ void MainScene::Init() {
 
   _entities.push_back(_player);
   _loaded = true;
-  _enemySpawnTask->Start();
+  _enemySpawnTask->Start2();
 }
 
 void MainScene::Destroy() {

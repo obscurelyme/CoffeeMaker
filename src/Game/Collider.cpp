@@ -82,7 +82,7 @@ void Collider::OnCollision(Collider* collider) {
 
 void Collider::CheckForCollision() {
   for (auto&& collider : _colliders) {
-    // NOTE: fitler out self
+    // NOTE: fitler out self, make sure the collider is active
     if (collider->_id != _id && collider->active) {
       if (_AxisAlignedBoundingBoxHit(collider)) {
         collisionQueue.push(std::bind(&Collider::OnCollision, this, collider));
@@ -111,6 +111,7 @@ Collider::Type Collider::GetType() const { return _type; }
 void Collider::SetType(Collider::Type type) { _type = type; }
 
 std::string Collider::ToString() {
-  std::string str = fmt::format(fmt::runtime("Collider:[ id={}, type={}, owner=undefined ]"), _id, _type);
+  std::string typeString = ColliderTypeString(_type);
+  std::string str = fmt::format(fmt::runtime("Collider:[ id={}, type={}, owner=undefined ]"), _id, typeString);
   return str;
 }

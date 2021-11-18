@@ -23,6 +23,8 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
 
   public:
   static CoffeeMaker::Math::Vector2D Position();
+  // NOTE: This is to keep track of stupid developers doing stupid things.
+  static Player* _instance;
 
   public:
   Player();
@@ -61,7 +63,6 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   unsigned int _lives;
   glm::vec2 _direction{1.0f, 0.0f};
   int _speed = 225;
-  static Player* _instance;
   Scope<UCI::Animations::ExplodeSpriteAnimation> _destroyedAnimation;
   Scope<CoffeeMaker::Async::TimeoutTask> _asyncRespawnTask;
   Scope<CoffeeMaker::Async::TimeoutTask> _asyncImmunityTask;
@@ -69,7 +70,6 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   Scope<CoffeeMaker::Math::Oscillate> _oscillation;
   Scope<CoffeeMaker::Async::TimeoutTask> _fireDelay;
   Player::FireMissileState _fireMissileState;
-  Scope<CoffeeMaker::SDLTimer> _fireSDLDelay;
 };
 
 #endif

@@ -103,7 +103,7 @@ namespace CoffeeMaker {
               if (_timer->Expired()) {
                 // CM_LOGGER_INFO("{} Completed, {} Ticks compared to {} duration", _name, _timer->GetTicks(),
                 //                _timer->GetInterval());
-                _callback();
+                // _callback();
                 _running = false;
                 return;
               }
@@ -204,7 +204,7 @@ namespace CoffeeMaker {
               std::this_thread::sleep_for(std::chrono::milliseconds(16));
               std::lock_guard<std::mutex> lk(*_mutex);
               if (_timer->Expired()) {
-                _callback();
+                // _callback();
                 _timer->Reset();
               }
             }
