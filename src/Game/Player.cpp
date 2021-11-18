@@ -92,18 +92,18 @@ Player::~Player() {
 void Player::OnHit(Collider* collider) {
   if (_collider->active) {
     if (collider->GetType() == Collider::Type::EnemyProjectile && !_isImmune) {
-      HandleDestroy();
+      HandleDestroy(collider);
       return;
     }
 
     if (collider->GetType() == Collider::Type::Enemy && !_isImmune) {
       _impactSound->Play();
-      HandleDestroy();
+      HandleDestroy(collider);
     }
   }
 }
 
-void Player::HandleDestroy() {
+void Player::HandleDestroy(Collider* collider) {
   using Vec2 = CoffeeMaker::Math::Vector2D;
   _collider->active = false;
   _active = false;
@@ -118,7 +118,7 @@ void Player::HandleDestroy() {
   _destroyed = true;
   _destroyedAnimation->SetPosition(Vec2{_clientRect.x, _clientRect.y});
   _destroyedAnimation->Start();
-  CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_DESTROYED");
+  CM_LOGGER_INFO("[PLAYER_EVENT]-PLAYER_DESTROYED {}", collider->ToString());
 }
 
 void Player::Init() {}

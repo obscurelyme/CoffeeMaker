@@ -44,7 +44,7 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   void UpdateRespawnImmunity();
   bool IsOffScreenLeft();
   bool IsOffScreenRight();
-  void HandleDestroy();
+  void HandleDestroy(Collider* collider);
 
   CoffeeMaker::Texture _texture{"PlayerV1.png", true};
   SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};

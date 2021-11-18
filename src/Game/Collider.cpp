@@ -109,3 +109,8 @@ void Collider::OnCollide(std::function<void(Collider*)> callback) { _listeners.p
 Collider::Type Collider::GetType() const { return _type; }
 
 void Collider::SetType(Collider::Type type) { _type = type; }
+
+std::string Collider::ToString() {
+  std::string str = fmt::format(fmt::runtime("Collider:[ id={}, type={}, owner=undefined ]"), _id, _type);
+  return str;
+}

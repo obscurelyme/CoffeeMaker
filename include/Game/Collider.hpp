@@ -37,6 +37,8 @@ class Collider {
   Type GetType() const;
   void SetType(Collider::Type type);
 
+  std::string ToString();
+
   SDL_FRect clientRect;
   bool active;
 
