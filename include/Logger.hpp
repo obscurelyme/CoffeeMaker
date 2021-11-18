@@ -6,7 +6,9 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
+#ifdef COFFEEMAKER_LOGGER_SOURCE_LOCATION
 #include <source_location>
+#endif
 
 namespace CoffeeMaker {
   class Logger {
@@ -14,8 +16,12 @@ namespace CoffeeMaker {
     static void Init();
     static spdlog::logger *Instance();
     static void Trace(fmt::v8::format_string<> fmt);
+#ifdef COFFEEMAKER_LOGGER_SOURCE_LOCATION
     static void Debug(fmt::v8::format_string<> fmt,
                       const std::source_location &location = std::source_location::current());
+#else
+    static void Debug(fmt::v8::format_string<> fmt);
+#endif
     static void Warn(fmt::v8::format_string<> fmt);
     static void Info(fmt::v8::format_string<> fmt);
     static void Error(fmt::v8::format_string<> fmt);
