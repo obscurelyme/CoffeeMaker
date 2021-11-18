@@ -64,19 +64,18 @@ Enemy::Enemy() :
   _sprite->clientRect.w = 48;
   _sprite->clientRect.h = 48;
   _entranceSpline->OnComplete([this](void*) {
-    // CM_LOGGER_INFO("[ENEMY_EVENT] _entranceSpline Complete Enemy ID: {}", _id);
+    CoffeeMaker::Logger::Trace(
+        fmt::format(fmt::runtime("[ENEMY_EVENT][ENEMY_ENTRANCE_SPLINE] Complete Enemy ID: {}"), _id));
     _state = Enemy::State::StrafingLeft;
-    _fireMissileTask->Start2();
-    // __debugbreak();
-    // CM_LOGGER_INFO("[ENEMY_EVENT] Entrance Animation Complete Enemy ID: {}", _id);
-    _exitTimeoutTask->Start2();
+    _fireMissileTask->Start();
+    _exitTimeoutTask->Start();
   });
   _exitSpline->OnComplete([this](void*) {
-    // CM_LOGGER_INFO("[ENEMY_EVENT] _exitSpline Complete Enemy ID: {}", _id);
+    CoffeeMaker::Logger::Trace(
+        fmt::format(fmt::runtime("[ENEMY_EVENT][ENEMY_EXIT_SPLINE] Complete Enemy ID: {}"), _id));
     _active = false;
     _state = Enemy::State::Idle;
-    // CM_LOGGER_INFO("[ENEMY_EVENT] Exit Animation Complete Enemy ID: {}", _id);
-    _respawnTimeoutTask->Start2();
+    _respawnTimeoutTask->Start();
   });
 
   _collider = CreateScope<Collider>(Collider::Type::Enemy, false);
@@ -90,9 +89,10 @@ Enemy::Enemy() :
   _currentProjectile = 0;
 
   _destroyedAnimation->OnComplete([this] {
-    // CM_LOGGER_INFO("[ENEMY_EVENT] Destroyed Animation Complete - Enemy ID: {}", _id);
+    CoffeeMaker::Logger::Trace(
+        fmt::format(fmt::runtime("[ENEMY_EVENT][ENEMY_DESTROYED_ANIMATION] Complete Enemy ID: {}"), _id));
     _state = Enemy::State::Idle;
-    _respawnTimeoutTask->Start2();
+    _respawnTimeoutTask->Start();
   });
 }
 
@@ -310,8 +310,8 @@ Drone::Drone() {
   _entranceSpline = CreateScope<::Animations::EnemyBriefEntrance>();
   _entranceSpline->OnComplete([this](void*) {
     _state = Enemy::State::StrafingLeft;
-    _fireMissileTask->Start2();
-    _exitTimeoutTask->Start2();
+    _fireMissileTask->Start();
+    _exitTimeoutTask->Start();
   });
 }
 

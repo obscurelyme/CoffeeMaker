@@ -97,7 +97,6 @@ void Player::OnHit(Collider* collider) {
 }
 
 void Player::HandleDestroy(Collider* collider) {
-  using Vec2 = CoffeeMaker::Math::Vector2D;
   _collider->active = false;
   _active = false;
   if (_lives - 1 == 0) {
@@ -124,7 +123,7 @@ void Player::Update(float deltaTime) {
     if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_SPACE)) {
       if (_fireMissileState == Player::FireMissileState::Unlocked) {
         Fire();
-        _fireDelay->Start2();
+        _fireDelay->Start();
       }
     }
 
@@ -160,7 +159,7 @@ void Player::Render() {
 
   if (_active) {
     _texture.Render(_clipRect, _clientRect, _rotation + 90);
-    _collider->Render();
+    // _collider->Render();
   }
 
   // NOTE: projectiles that have already been fired are still fine to be rendered
@@ -218,14 +217,14 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (event.code == UCI::Events::PLAYER_BEGIN_SPAWN) {
     // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_BEGIN_SPAWN");
     _destroyed = false;
-    _asyncRespawnTask->Start2();
+    _asyncRespawnTask->Start();
     return;
   }
 
   if (event.code == UCI::Events::PLAYER_POWER_UP_GAINED_IMMUNITY) {
     // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_POWER_UP_GAINED_IMMUNITY");
     _isImmune = true;
-    _asyncImmunityTask->Start2();
+    _asyncImmunityTask->Start();
     _oscillation->Start();
     return;
   }
