@@ -35,15 +35,6 @@ Logger::Logger() {
 
 Logger::~Logger() { delete _spdlog; }
 
-#ifdef COFFEEMAKER_LOGGER_SOURCE_LOCATION
-void Logger::Debug(fmt::v8::format_string<> fmt, const std::source_location &location) {
-  _logger->_spdlog->debug(fmt::format(fmt::runtime("{} - Source: [ file={}, line={}, function={} ]"), fmt,
-                                      location.file_name(), location.line(), location.function_name()));
-}
-#else
-// void Logger::Debug(fmt::v8::format_string<> fmt) { _logger->_spdlog->debug(fmt::format(fmt::runtime("{}"), fmt)); }
-#endif
-
 void Logger::Warn(fmt::v8::format_string<> fmt) { _logger->_spdlog->warn(fmt); }
 
 void Logger::Info(fmt::v8::format_string<> fmt) { _logger->_spdlog->info(fmt); }

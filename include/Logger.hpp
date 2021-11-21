@@ -21,8 +21,13 @@ namespace CoffeeMaker {
       _logger->_spdlog->trace(fmt::format(fmt::runtime(std::forward<S>(fmt)), std::forward<Args &&>(args)...));
     }
 #ifdef COFFEEMAKER_LOGGER_SOURCE_LOCATION
-    static void Debug(fmt::v8::format_string<> fmt,
-                      const std::source_location &location = std::source_location::current());
+    template <typename S, typename... Args>
+    static void Debug(S fmt, Args... args, const std::source_location &location = std::source_location::current()) {
+      std::string sourceFmt = fmt::format(fmt::runtime("Source: [ file={}, line={}, function={} ]"),
+                                          location.file_name(), location.line(), location.function_name());
+      _logger->_spdlog->debug(
+          fmt::format(fmt::runtime(std::forward<S>(fmt) + " - " + sourceFmt), std::forward<Args &&>(args)...));
+    }
 #else
     template <typename S, typename... Args>
     static void Debug(S fmt, Args... args) {
