@@ -5,6 +5,8 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "Spline.hpp"
+
 class CoffeeMakerBSpline : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(CoffeeMakerBSpline);
   // TODO append your unit tests here
@@ -12,6 +14,8 @@ class CoffeeMakerBSpline : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE_END();
 
   public:
+  friend CoffeeMaker::BSpline;
+
   void setUp();
   void tearDown();
 

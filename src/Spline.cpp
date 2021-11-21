@@ -5,7 +5,8 @@
 #include "Color.hpp"
 #include "Renderer.hpp"
 
-CoffeeMaker::BSpline::BSpline() : _tinysplineBSpline(CreateScope<tinyspline::BSpline>()) {}
+CoffeeMaker::BSpline::BSpline(size_t numControlPoints) :
+    _tinysplineBSpline(CreateScope<tinyspline::BSpline>(numControlPoints)) {}
 
 CoffeeMaker::BSpline::~BSpline() {}
 
