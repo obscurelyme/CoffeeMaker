@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.16.0)
 
 set(VCPKG_MANIFEST_MODE ON)
+# comment here.
 
 if (WIN32)
   # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
