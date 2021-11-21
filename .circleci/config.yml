@@ -81,13 +81,13 @@ workflows:
   version: 2
   coffeemaker_ci:
     jobs:
-      # - windows-build:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - /feature\/.*/
-      #           - /bugfix\/.*/
-      #           - master
+      - windows-build:
+          filters:
+            branches:
+              only:
+                - /feature\/.*/
+                - /bugfix\/.*/
+                - master
       - linux-build:
           filters:
             branches:
@@ -101,4 +101,5 @@ workflows:
               only:
                 - master
           requires:
+            - windows-build
             - linux-build
