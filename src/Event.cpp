@@ -11,8 +11,90 @@
 
 using namespace CoffeeMaker;
 
+unsigned int CoffeeMaker::IMouseListener::_uid = 0;
 unsigned int CoffeeMaker::IUserEventListener::_uid = 0;
+
+std::vector<CoffeeMaker::IMouseListener*> CoffeeMaker::IMouseListener::_instances = {};
+std::vector<CoffeeMaker::IMouseListener*> CoffeeMaker::IMouseListener::_listeners = {};
 std::vector<CoffeeMaker::IUserEventListener*> CoffeeMaker::IUserEventListener::_listeners = {};
+
+void CoffeeMaker::MouseEventHandler::AddNewMouseHandlers() {
+  // Add any newly created listeners
+  for (auto& instance : CoffeeMaker::IMouseListener::_instances) {
+    if (!instance->_live) {
+      CoffeeMaker::IMouseListener::_listeners.push_back(instance);
+      instance->_live = true;
+    }
+  }
+  CoffeeMaker::IMouseListener::_instances.clear();
+}
+
+void CoffeeMaker::MouseEventHandler::HandleMouseEvents(const SDL_Event& event) {
+  if (event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEBUTTONDOWN) {
+    CoffeeMaker::IMouseListener::ProcessMouseButtonEvent(event.button);
+  }
+
+  if (event.type == SDL_MOUSEMOTION) {
+    CoffeeMaker::IMouseListener::ProcessMouseMotionEvent(event.motion);
+  }
+
+  if (event.type == SDL_MOUSEWHEEL) {
+    CoffeeMaker::IMouseListener::ProcessMouseWheelEvent(event.wheel);
+  }
+}
+
+CoffeeMaker::IMouseListener::IMouseListener() : _id(++_uid), _live(false) {
+  _instances.push_back(this);
+  // _listeners.push_back(this);
+}
+
+CoffeeMaker::IMouseListener::~IMouseListener() {
+  // First, check if deleted before added to the listeners vector
+  for (auto it = _instances.begin(); it != _instances.end();) {
+    if (_id == (*it)->_id) {
+      it = _instances.erase(it);
+      break;
+    } else {
+      ++it;
+    }
+  }
+  // Second, remove from the listeners vector
+  for (auto it = _listeners.begin(); it != _listeners.end();) {
+    if (_id == (*it)->_id) {
+      it = _listeners.erase(it);
+      break;
+    } else {
+      ++it;
+    }
+  }
+}
+
+void CoffeeMaker::IMouseListener::ProcessMouseWheelEvent(const SDL_MouseWheelEvent& event) {
+  for (auto& listener : _listeners) {
+    listener->OnMouseWheel(event);
+  }
+}
+
+void CoffeeMaker::IMouseListener::ProcessMouseMotionEvent(const SDL_MouseMotionEvent& event) {
+  for (auto& listener : _listeners) {
+    listener->OnMouseMove(event);
+  }
+}
+
+void CoffeeMaker::IMouseListener::ProcessMouseButtonEvent(const SDL_MouseButtonEvent& event) {
+  if (event.type == SDL_MOUSEBUTTONDOWN) {
+    for (auto& listener : _listeners) {
+      listener->OnMouseDown(event);
+    }
+    return;
+  }
+  if (event.type == SDL_MOUSEBUTTONUP) {
+    for (auto& listener : _listeners) {
+      listener->OnMouseUp(event);
+    }
+  }
+}
+
 void CoffeeMaker::IUserEventListener::ProcessUserEvent(const SDL_UserEvent& event) {
   for (auto& listener : _listeners) {
     listener->OnSDLUserEvent(event);

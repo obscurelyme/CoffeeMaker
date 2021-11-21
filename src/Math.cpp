@@ -22,6 +22,12 @@ CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Lerp(const CoffeeMaker::Math::Vec
   return CoffeeMaker::Math::Vector2D(CoffeeMaker::Math::Lerp(v1.x, v2.x, t), CoffeeMaker::Math::Lerp(v1.y, v2.y, t));
 }
 
+CoffeeMaker::Math::Point2D CoffeeMaker::Math::Lerp(const CoffeeMaker::Math::Point2D& v1,
+                                                   const CoffeeMaker::Math::Point2D& v2, float t) {
+  return CoffeeMaker::Math::Point2D{.x = CoffeeMaker::Math::Lerp(v1.x, v2.x, t),
+                                    .y = CoffeeMaker::Math::Lerp(v1.y, v2.y, t)};
+}
+
 float CoffeeMaker::Math::InverseLerp(float f1, float f2, float value) { return (value - f1) / (f2 - f1); }
 
 float CoffeeMaker::Math::Remap(float inputMin, float inputMax, float outputMin, float outputMax, float value) {
@@ -52,6 +58,46 @@ CoffeeMaker::Math::Vector2D CoffeeMaker::Math::CubicBezierCurve(const CoffeeMake
   CoffeeMaker::Math::Vector2D lerpD = CoffeeMaker::Math::Lerp(lerpA, lerpB, t);
   CoffeeMaker::Math::Vector2D lerpE = CoffeeMaker::Math::Lerp(lerpB, lerpC, t);
   return CoffeeMaker::Math::Lerp(lerpD, lerpE, t);
+}
+
+CoffeeMaker::Math::Point2D RecCurve(const std::vector<CoffeeMaker::Math::Point2D>& vecs, float t) {
+  std::vector<CoffeeMaker::Math::Point2D> r{};
+  if (vecs.size() == 2) {
+    return CoffeeMaker::Math::Lerp(vecs[0], vecs[1], t);
+  }
+  if (vecs.size() == 1) {
+    return vecs[0];
+  }
+
+  for (unsigned int i = 0; i < vecs.size() - 1; i++) {
+    r.push_back(CoffeeMaker::Math::Lerp(vecs[i], vecs[i + 1], t));
+  }
+  return RecCurve(r, t);
+}
+
+std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::Math::SplineCurve(
+    const std::vector<CoffeeMaker::Math::Point2D>& vecs) {
+  std::vector<CoffeeMaker::Math::Point2D> spline{};
+  float w = 0.0f;
+  float max = 1000.0f;
+
+  if (vecs.size() < 2) {
+    return spline;
+  }
+
+  // Loop over the precision amount, this will be the weight value for all lerps
+  for (float t = 0.0f; t <= 1000.0f; t++) {
+    w = t / max;
+    std::vector<CoffeeMaker::Math::Point2D> lerps{};
+    // Loop over all points and lerp between them
+    for (unsigned int i = 0; i < vecs.size() - 1; i++) {
+      lerps.push_back(CoffeeMaker::Math::Lerp(vecs[i], vecs[i + 1], w * vecs[i].weight));
+    }
+    // Loop over all lerps and lerp between them.
+    spline.push_back(RecCurve(lerps, w));
+  }
+
+  return spline;
 }
 
 CoffeeMaker::Math::Vector2D::Vector2D(float xx, float yy) : x(xx), y(yy) {}

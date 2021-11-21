@@ -36,6 +36,9 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
+set(tinysplinecxx_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed/x64-osx/share/tinyspline")
+find_package(tinysplinecxx CONFIG REQUIRED)
+
 set(APP_RESOURCES resources.rc)
 
 set(COFFEEMAKER_MAIN src/App.cpp)
@@ -81,7 +84,8 @@ set(GAME_SOURCES
   src/Game/Animations/Explode.cpp
   src/Game/PowerUps.cpp
   src/Game/Echelon.cpp
-  src/Game/Scenes/TestEchelon.cpp)
+  src/Game/Scenes/TestEchelon.cpp
+  src/Game/Scenes/SplineBuilder.cpp)
 
 set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES})
 
@@ -101,6 +105,7 @@ elseif(APPLE)
   target_link_libraries(main PRIVATE SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_ttf SDL2::SDL2_image SDL2::SDL2_mixer)
   target_link_libraries(main PRIVATE Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile)
   target_link_libraries(main PRIVATE MPG123::libmpg123 MPG123::libout123 MPG123::libsyn123)
+  target_link_libraries(main PRIVATE tinysplinecxx::tinysplinecxx)
 elseif(LINUX_PLATFORM)
   message("Linking dependencies for Linux")
   add_compile_definitions(_FILE_OFFSET_BITS=64)

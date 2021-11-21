@@ -71,7 +71,7 @@ int main(int, char**) {
   CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 800, 600);
   CoffeeMaker::Renderer renderer;
 
-  CoffeeMaker::Cursor cursor("cursor.png");
+  // CoffeeMaker::Cursor cursor("cursor.png");
   CoffeeMaker::FontManager::Init();
   CoffeeMaker::FontManager::LoadFont("Sarpanch/Sarpanch-Regular");
   CoffeeMaker::FontManager::LoadFont("Sarpanch/Sarpanch-Bold");
@@ -87,7 +87,8 @@ int main(int, char**) {
   SceneManager::AddScene(new TestBedScene());
   SceneManager::AddScene(new TestAnimations());
   SceneManager::AddScene(new TestEchelonScene());
-  SceneManager::LoadScene();
+  SceneManager::AddScene(new SplineBuilder());
+  SceneManager::LoadScene(5);
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
 
@@ -103,6 +104,9 @@ int main(int, char**) {
         SceneManager::DestroyCurrentScene();
         break;
       }
+
+      CoffeeMaker::MouseEventHandler::AddNewMouseHandlers();
+      CoffeeMaker::MouseEventHandler::HandleMouseEvents(event);
 
       if (event.type == SDL_USEREVENT) {
         CoffeeMaker::UserEventHandler::HandleUserEvent(event.user);

@@ -5,6 +5,7 @@
 
 #include <chrono>
 #include <random>
+#include <vector>
 
 using RNG = std::mt19937;
 namespace Chrono = std::chrono;
@@ -41,6 +42,7 @@ namespace CoffeeMaker {
     float Random(float min = 0, float max = 1);
 
     class Vector2D;  // forward declaration
+    struct Point2D;  // forward declaration
 
     /**
      * @brief Finds the floating point value in between f1 and f2
@@ -53,6 +55,7 @@ namespace CoffeeMaker {
      */
     float Lerp(float f1, float f2, float t);
     Vector2D Lerp(const Vector2D& v1, const Vector2D& v2, float t);
+    Point2D Lerp(const Point2D& p1, const Point2D& p2, float t);
 
     float InverseLerp(float f1, float f2, float value);
     Vector2D InverseLerp(Vector2D f1, Vector2D f2, Vector2D value);
@@ -71,9 +74,12 @@ namespace CoffeeMaker {
     Vector2D CubicBezierCurve(const Vector2D& startPos, const Vector2D&, const Vector2D&, const Vector2D& endPos,
                               float t);
 
+    std::vector<Point2D> SplineCurve(const std::vector<Point2D>& vecs);
+
     struct Point2D {
       float x;
       float y;
+      float weight;
     };
 
     class PolarRotate {

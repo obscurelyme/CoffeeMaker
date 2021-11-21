@@ -30,6 +30,7 @@
       "platform": "osx | linux"
     },
     "cppunit",
-    "glm"
+    "glm",
+    "tinyspline"
   ]
 }

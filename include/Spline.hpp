@@ -38,6 +38,13 @@ namespace CoffeeMaker {
     bool IsComplete() const;
     void SetAnimationTime();
     void DebugRender() const;
+    /**
+     * @brief Calculate the spline in its entirety.
+     *
+     * @param precision How much precision to calculate, the higher the number, the more iterations
+     * and the longer this calculation will take.
+     */
+    void Run(float precision);
 
     private:
     std::vector<Vec2> _spline;

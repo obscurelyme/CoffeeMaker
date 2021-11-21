@@ -7,4 +7,7 @@
 #include "Game/Scenes/TestEchelon.hpp"
 #include "Game/Scenes/TitleScene.hpp"
 
+// Level building Scenes
+#include "Game/Scenes/SplineBuilder.hpp"
+
 #endif
