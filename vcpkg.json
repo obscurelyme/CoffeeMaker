@@ -4,7 +4,16 @@
   "dependencies": [
     "fmt",
     "spdlog",
-    "sdl2",
+    {
+      "name": "sdl2",
+      "platform": "osx | windows"
+    },
+    {
+      "name": "sdl2",
+      "default-features": false,
+      "features": ["x11"],
+      "platform": "linux"
+    },
     "sdl2-ttf",
     "sdl2-image",
     {

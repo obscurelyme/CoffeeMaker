@@ -13,14 +13,7 @@ jobs:
   linux-build:
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    # container:
-    #   image: obscurelyme/coffeemaker:latest
-    #   credentials:
-    #     username: ${{ secrets.DOCKER_USERNAME }}
-    #     password: ${{ secrets.DOCKER_PASSWORD }}
     steps:
-      - name: SSH Remote Commands
-        uses: appleboy/ssh-action@v0.1.4
       - name: Checkout
         uses: actions/checkout@v2
       - uses: actions/cache@v2
