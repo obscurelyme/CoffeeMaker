@@ -70,14 +70,6 @@ jobs:
       - store_artifacts:
           path: ./win-release.zip
 
-  macos-build:
-    macos:
-      xcode: 11.3.0
-
-    steps:
-      - run: xcodebuild --version
-      - run: echo "Hello, Mac OS X!"
-
   deploy:
     machine:
       image: ubuntu-2004:202010-01
@@ -89,20 +81,13 @@ workflows:
   version: 2
   coffeemaker_ci:
     jobs:
-      # - macos-build:
+      # - windows-build:
       #     filters:
       #       branches:
       #         only:
       #           - /feature\/.*/
       #           - /bugfix\/.*/
       #           - master
-      - windows-build:
-          filters:
-            branches:
-              only:
-                - /feature\/.*/
-                - /bugfix\/.*/
-                - master
       - linux-build:
           filters:
             branches:
@@ -116,6 +101,4 @@ workflows:
               only:
                 - master
           requires:
-            - windows-build
             - linux-build
-            # - macos-build
