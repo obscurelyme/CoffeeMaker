@@ -29,6 +29,8 @@ jobs:
       - name: Configure
         run: |
           sudo apt update
+          sudo apt upgrade
+          sudo apt install libx11-dev
           sudo apt install make
           sudo apt install yasm
           sudo apt install xorg openbox
