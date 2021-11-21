@@ -203,7 +203,7 @@ elseif(LINUX_PLATFORM)
   # SDL2-ttf
   target_link_libraries(CoffeeMakerUnitTests PRIVATE SDL2::SDL2_ttf)
   # SDL2-mixer
-  target_link_libraries(main PRIVATE SDL2::SDL2_mixer)
+  target_link_libraries(CoffeeMakerUnitTests PRIVATE SDL2::SDL2_mixer)
   # SDL2-mixer dependencies
   target_link_libraries(CoffeeMakerUnitTests PRIVATE Ogg::ogg)
   target_link_libraries(CoffeeMakerUnitTests PRIVATE Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile)
