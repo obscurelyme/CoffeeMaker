@@ -15,12 +15,22 @@ namespace CoffeeMaker {
     public:
     static void Init();
     static spdlog::logger *Instance();
-    static void Trace(fmt::v8::format_string<> fmt);
+
+    template <typename S, typename... Args>
+    static void Trace(S fmt, Args &&...args) {
+      _logger->_spdlog->trace(fmt::format(fmt::runtime(std::forward<S>(fmt)), std::forward<Args &&>(args)...));
+    }
 #ifdef COFFEEMAKER_LOGGER_SOURCE_LOCATION
     static void Debug(fmt::v8::format_string<> fmt,
                       const std::source_location &location = std::source_location::current());
 #else
-    static void Debug(fmt::v8::format_string<> fmt);
+    template <typename S, typename... Args>
+    static void Debug(S fmt, Args... args) {
+      _logger->_spdlog->debug(fmt::format(fmt::runtime(std::forward<S>(fmt)), std::forward<Args &&>(args)...));
+    }
+
+    // template <typename S>
+    // static void Debug(S fmt);
 #endif
     static void Warn(fmt::v8::format_string<> fmt);
     static void Info(fmt::v8::format_string<> fmt);

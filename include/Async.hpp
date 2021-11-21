@@ -98,20 +98,19 @@ namespace CoffeeMaker {
       void Cancel() {
         std::lock_guard<std::mutex> lk(*_timeoutMutex);
         _canceled = true;
-        CoffeeMaker::Logger::Trace(
-            fmt::format(fmt::runtime("[TIMEOUT][{}] Canceled at {}"), _name, _timer->GetTicks()));
+        CoffeeMaker::Logger::Trace("[TIMEOUT][{}] Canceled at {}", _name, _timer->GetTicks());
       }
 
       void Pause() {
         std::lock_guard<std::mutex> lk(*_timeoutMutex);
         _timer->Pause();
-        CoffeeMaker::Logger::Trace(fmt::format(fmt::runtime("[TIMEOUT][{}] Paused at {}"), _name, _timer->GetTicks()));
+        CoffeeMaker::Logger::Trace("[TIMEOUT][{}] Paused at {}", _name, _timer->GetTicks());
       }
 
       void Unpause() {
         std::lock_guard<std::mutex> lk(*_timeoutMutex);
         _timer->Unpause();
-        CoffeeMaker::Logger::Trace(fmt::format(fmt::runtime("[TIMEOUT][{}] Resumed at {}"), _name, _timer->GetTicks()));
+        CoffeeMaker::Logger::Trace("[TIMEOUT][{}] Resumed at {}", _name, _timer->GetTicks());
       }
 
       private:
@@ -169,22 +168,19 @@ namespace CoffeeMaker {
       void Cancel() {
         std::lock_guard<std::mutex> lk(*_mutex);
         _canceled = true;
-        CoffeeMaker::Logger::Trace(
-            fmt::format(fmt::runtime("[INTERVAL][undefined] Resumed at {}"), _timer->GetTicks()));
+        CoffeeMaker::Logger::Trace("[INTERVAL][undefined] Resumed at {}", _timer->GetTicks());
       }
 
       void Pause() {
         std::lock_guard<std::mutex> lk(*_mutex);
         _timer->Pause();
-        CoffeeMaker::Logger::Trace(
-            fmt::format(fmt::runtime("[INTERVAL][undefined] Resumed at {}"), _timer->GetTicks()));
+        CoffeeMaker::Logger::Trace("[INTERVAL][undefined] Resumed at {}", _timer->GetTicks());
       }
 
       void Unpause() {
         std::lock_guard<std::mutex> lk(*_mutex);
         _timer->Unpause();
-        CoffeeMaker::Logger::Trace(
-            fmt::format(fmt::runtime("[INTERVAL][undefined] Resumed at {}"), _timer->GetTicks()));
+        CoffeeMaker::Logger::Trace("[INTERVAL][undefined] Resumed at {}", _timer->GetTicks());
       }
 
       private:
