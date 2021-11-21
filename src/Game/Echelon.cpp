@@ -100,13 +100,14 @@ void Echelon::Update(float deltaTime) {
 void Echelon::OnSDLUserEvent(const SDL_UserEvent&) {}
 
 bool Echelon::HitRightBoundary() const {
-  // Get sum of width + spacing of child elements
-  float w = 0.0f;
-  for (IEchelonItem* enemy : _enemies) {
-    w += enemy->GetEchelonSpace();
-  }
-  w += _spacing * ECHELON_SIZE;
-  return _position.x + w >= _rightBoundary;
+  // NOTE: use static width, don't try to use dynamic width because an enemy may be removed.
+  // float w = 0.0f;
+  // for (IEchelonItem* enemy : _enemies) {
+  //   if (e)
+  //   w += enemy->GetEchelonSpace();
+  // }
+  // w += _spacing * ECHELON_SIZE;
+  return _position.x + _width >= _rightBoundary;
 }
 
 bool Echelon::HitLeftBoundary() const { return _position.x <= _leftBoundary; }
