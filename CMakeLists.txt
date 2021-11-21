@@ -154,9 +154,10 @@ set(COFFEEMAKER_TEST_MAIN tests/main.cpp)
 set(COFFEEMAKER_DEMO_TEST_SOURCES tests/ComplexNumber.cpp tests/Complex.cpp tests/TestWithMocking.cpp)
 set(COFFEEMAKER_TEST_SOURCES
   # tests/TestBed.cpp
-  # tests/UCIEchelon.cpp
-  # tests/CoffeeMakerMath.cpp
   tests/CoffeeMakerUserEvents.cpp
+  tests/CoffeeMakerBSpline.cpp
+  tests/UCIEchelon.cpp
+  tests/CoffeeMakerMath.cpp
   # tests/CoffeeMakerShapesRect.cpp
   # tests/CoffeeMakerTextureTest.cpp
   # tests/CoffeeMakerUtilities.cpp
@@ -171,21 +172,23 @@ set(COFFEEMAKER_TEST_EXE_SOURCES ${COFFEEMAKER_TEST_MAIN} ${COFFEEMAKER_SOURCES}
 
 find_package(CppUnit CONFIG REQUIRED)
 
-add_executable(CoffeeMakerWindowUnitTests ${COFFEEMAKER_TEST_EXE_SOURCES})
-target_include_directories(CoffeeMakerWindowUnitTests PRIVATE "${VCPKG_INCLUDE}" include tests/include)
-target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE CppUnit spdlog::spdlog spdlog::spdlog_header_only glm::glm)
+add_executable(CoffeeMakerUnitTests ${COFFEEMAKER_TEST_EXE_SOURCES})
+target_include_directories(CoffeeMakerUnitTests PRIVATE "${VCPKG_INCLUDE}" include tests/include)
+target_link_libraries(CoffeeMakerUnitTests PRIVATE CppUnit spdlog::spdlog spdlog::spdlog_header_only glm::glm)
+target_link_libraries(CoffeeMakerUnitTests PRIVATE tinyspline::tinyspline tinysplinecxx::tinysplinecxx)
+
 if (WIN32)
-  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_ttf SDL2::SDL2_image SDL2::SDL2_mixer)
+  target_link_libraries(CoffeeMakerUnitTests PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_ttf SDL2::SDL2_image SDL2::SDL2_mixer)
 elseif(APPLE)
 message("Building for OSX")
   find_package(Ogg CONFIG REQUIRED)
   find_package(Vorbis CONFIG REQUIRED)
   find_package(mpg123 CONFIG REQUIRED)
 
-  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE Ogg::ogg)
-  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_ttf SDL2::SDL2_image SDL2::SDL2_mixer)
-  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile)
-  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE MPG123::libmpg123 MPG123::libout123 MPG123::libsyn123)
+  target_link_libraries(CoffeeMakerUnitTests PRIVATE Ogg::ogg)
+  target_link_libraries(CoffeeMakerUnitTests PRIVATE SDL2::SDL2main SDL2::SDL2-static SDL2::SDL2_ttf SDL2::SDL2_image SDL2::SDL2_mixer)
+  target_link_libraries(CoffeeMakerUnitTests PRIVATE Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile)
+  target_link_libraries(CoffeeMakerUnitTests PRIVATE MPG123::libmpg123 MPG123::libout123 MPG123::libsyn123)
 elseif(LINUX_PLATFORM)
   message("Linking dependencies for Linux")
 
@@ -194,17 +197,17 @@ elseif(LINUX_PLATFORM)
   find_package(Vorbis CONFIG REQUIRED)
   find_package(mpg123 CONFIG REQUIRED)
   # SDL2
-  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static)
+  target_link_libraries(CoffeeMakerUnitTests PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static)
   # SDL2-image
-  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2_image)
+  target_link_libraries(CoffeeMakerUnitTests PRIVATE SDL2::SDL2_image)
   # SDL2-ttf
-  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE SDL2::SDL2_ttf)
+  target_link_libraries(CoffeeMakerUnitTests PRIVATE SDL2::SDL2_ttf)
   # SDL2-mixer
   target_link_libraries(main PRIVATE SDL2::SDL2_mixer)
   # SDL2-mixer dependencies
-  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE Ogg::ogg)
-  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile)
-  target_link_libraries(CoffeeMakerWindowUnitTests PRIVATE MPG123::libmpg123 MPG123::libout123 MPG123::libsyn123)
+  target_link_libraries(CoffeeMakerUnitTests PRIVATE Ogg::ogg)
+  target_link_libraries(CoffeeMakerUnitTests PRIVATE Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile)
+  target_link_libraries(CoffeeMakerUnitTests PRIVATE MPG123::libmpg123 MPG123::libout123 MPG123::libsyn123)
 endif()
 
 
@@ -218,9 +221,9 @@ endif()
 
 # Set Warnings
 if (MSVC)
-  target_compile_options(CoffeeMakerWindowUnitTests PRIVATE /W4 /WX)
+  target_compile_options(CoffeeMakerUnitTests PRIVATE /W4 /WX)
   target_compile_options(main PRIVATE /W4 /WX)
 else()
-  target_compile_options(CoffeeMakerWindowUnitTests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  target_compile_options(CoffeeMakerUnitTests PRIVATE -Wall -Wextra -Wpedantic -Werror)
   target_compile_options(main PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()

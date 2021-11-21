@@ -28,5 +28,10 @@ jobs:
           sudo apt-get install make
           sudo apt-get install yasm
           bash .github/scripts/linux/configure.sh
+      - name: Test
+        run: |
+          bash .github/scripts/linux/build-tests.sh
+          chmod +x ./build/CoffeeMakerUnitTests
+          ./build/CoffeeMakerUnitTests
       - name: Build
         run: bash .github/scripts/linux/build.sh

@@ -4,8 +4,27 @@
 #include <vector>
 
 #include "Math.hpp"
+#include "Utilities.hpp"
+#include "tinysplinecxx.h"
 
 namespace CoffeeMaker {
+  /**
+   * @brief BSpline class, leverages De Boor's algorithm to compute B-Splines.
+   */
+  class BSpline {
+    public:
+    BSpline();
+    ~BSpline();
+
+    private:
+    Scope<tinyspline::BSpline> _tinysplineBSpline;
+  };
+
+  /**
+   * @brief Spline class, combines bezier curves into multiple splines using
+   * de Casteljau's algorithm.
+   * @deprecated Leverage CoffeeMaker::BSpline instead, which uses De Boor's algorithm.
+   */
   class Spline {
     using Vec2 = CoffeeMaker::Math::Vector2D;
 
