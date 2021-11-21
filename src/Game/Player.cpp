@@ -107,7 +107,7 @@ void Player::HandleDestroy(Collider* collider) {
   _lives--;
   CoffeeMaker::PushEvent(UCI::Events::PLAYER_LOST_LIFE);
   CoffeeMaker::PushEvent(UCI::Events::PLAYER_DESTROYED);
-  CoffeeMaker::Logger::Debug(fmt::format(fmt::runtime("[PLAYER_EVENT]-PLAYER_DESTROYED {}"), collider->ToString()));
+  CoffeeMaker::Logger::Debug("[PLAYER_EVENT]-PLAYER_DESTROYED {}", collider->ToString());
 }
 
 void Player::Init() {}
