@@ -21,7 +21,7 @@ namespace CoffeeMaker {
     public:
     virtual void OnSDLUserEvent(const SDL_UserEvent& event) = 0;
 
-    static unsigned int NumListeners() { return _listeners.size(); }
+    static size_t NumListeners() { return _listeners.size(); }
 
     friend class UserEventHandler;
 

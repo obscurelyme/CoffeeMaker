@@ -35,8 +35,8 @@ void CoffeeMakerUserEvents::testUserEventsListenedTo() {
 
 void CoffeeMakerUserEvents::testUserEventsDeletedSelf() {
   CoffeeMakerUserEventImpl* listener = new CoffeeMakerUserEventImpl();
-  unsigned int expectedListeners = 2;
-  unsigned int expectedListenersPostCall = 0;
+  size_t expectedListeners = 2;
+  size_t expectedListenersPostCall = 0;
 
   CPPUNIT_ASSERT_EQUAL(expectedListeners, listener->NumListeners());
 
@@ -61,7 +61,7 @@ void CoffeeMakerUserEvents::testUserEventsCreatedMoreListeners() {
   Scope<CoffeeMakerUserEventImpl> listener1 = CreateScope<CoffeeMakerUserEventImpl>();
   Scope<CoffeeMakerUserEventImpl> listener2;
   Scope<CoffeeMakerUserEventImpl> listener3;
-  unsigned int expectedListenersPostCall = 3;
+  size_t expectedListenersPostCall = 3;
   unsigned int listener2And3ExpectedHandledTimes = 0;
   unsigned int listener1ExpectedHandledTimes = 1;
   bool passOne = true;
@@ -99,7 +99,7 @@ void CoffeeMakerUserEvents::testUserEventsDeletedSubsequentListeners() {
   Scope<CoffeeMakerUserEventImpl> listener1 = CreateScope<CoffeeMakerUserEventImpl>();
   Scope<CoffeeMakerUserEventImpl> listener2 = CreateScope<CoffeeMakerUserEventImpl>();
   Scope<CoffeeMakerUserEventImpl> listener3 = CreateScope<CoffeeMakerUserEventImpl>();
-  unsigned int expectedListenersPostCall = 0;
+  size_t expectedListenersPostCall = 0;
   unsigned int listener2And3ExpectedHandledTimes = 0;
   unsigned int listener1ExpectedHandledTimes = 1;
   unsigned int listener1ActualHandledTimes = 0;
