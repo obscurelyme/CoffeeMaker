@@ -15,10 +15,14 @@ void CoffeeMaker::MouseEventHandler::HandleMouseEvents(const SDL_Event& event) {
   if (event.type == SDL_MOUSEWHEEL) {
     CoffeeMaker::IMouseListener::ProcessMouseWheelEvent(event.wheel);
   }
+
+  ClearMouseEvents();
 }
 
-CoffeeMaker::IMouseListener::IMouseListener() : _id(++_uid), _active(true) {
-  _instances.push_back(this);
+void CoffeeMaker::MouseEventHandler::ClearMouseEvents() { CoffeeMaker::IMouseListener::RemoveStaleListeners(); }
+
+CoffeeMaker::IMouseListener::IMouseListener() : _active(true), _id(++_uid) {
+  _listeners.push_back(this);
   _index = _listeners.size() - 1;
 }
 
@@ -35,27 +39,47 @@ void CoffeeMaker::IMouseListener::RemoveStaleListeners() {
 }
 
 void CoffeeMaker::IMouseListener::ProcessMouseWheelEvent(const SDL_MouseWheelEvent& event) {
-  for (auto& listener : _listeners) {
-    listener->OnMouseWheel(event);
+  // NOTE: process the listeners for the current frame.
+  // any added listeners during this process loop are not counted.
+  unsigned int currentSize = _listeners.size();
+
+  for (unsigned int i = 0; i < currentSize; i++) {
+    if (_listeners[i] != nullptr) {
+      _listeners[i]->OnMouseWheel(event);
+    }
   }
 }
 
 void CoffeeMaker::IMouseListener::ProcessMouseMotionEvent(const SDL_MouseMotionEvent& event) {
-  for (auto& listener : _listeners) {
-    listener->OnMouseMove(event);
+  // NOTE: process the listeners for the current frame.
+  // any added listeners during this process loop are not counted.
+  unsigned int currentSize = _listeners.size();
+
+  for (unsigned int i = 0; i < currentSize; i++) {
+    if (_listeners[i] != nullptr) {
+      _listeners[i]->OnMouseMove(event);
+    }
   }
 }
 
 void CoffeeMaker::IMouseListener::ProcessMouseButtonEvent(const SDL_MouseButtonEvent& event) {
+  // NOTE: process the listeners for the current frame.
+  // any added listeners during this process loop are not counted.
+  unsigned int currentSize = _listeners.size();
+
   if (event.type == SDL_MOUSEBUTTONDOWN) {
-    for (auto& listener : _listeners) {
-      listener->OnMouseDown(event);
+    for (unsigned int i = 0; i < currentSize; i++) {
+      if (_listeners[i] != nullptr) {
+        _listeners[i]->OnMouseDown(event);
+      }
     }
     return;
   }
   if (event.type == SDL_MOUSEBUTTONUP) {
-    for (auto& listener : _listeners) {
-      listener->OnMouseUp(event);
+    for (unsigned int i = 0; i < currentSize; i++) {
+      if (_listeners[i] != nullptr) {
+        _listeners[i]->OnMouseUp(event);
+      }
     }
   }
 }

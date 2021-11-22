@@ -30,16 +30,15 @@ namespace CoffeeMaker {
     virtual void OnMouseMove(const SDL_MouseMotionEvent& event) = 0;
     virtual void OnMouseWheel(const SDL_MouseWheelEvent& event) = 0;
 
+    bool IsActive() const { return _active; }
+
     friend MouseEventHandler;
 
     private:
+    bool _active;
     unsigned int _id;
     unsigned int _index;
-    bool _active;
     static unsigned int _uid;
-    // NOTE: upon creation, instances are not live until the next frame.
-    // after which they become listeners.
-    static std::vector<IMouseListener*> _instances;
 
     static std::vector<IMouseListener*> _listeners;
     static void ProcessMouseMotionEvent(const SDL_MouseMotionEvent& event);
@@ -51,7 +50,7 @@ namespace CoffeeMaker {
   class MouseEventHandler {
     public:
     static void HandleMouseEvents(const SDL_Event& event);
-    static void AddNewMouseHandlers();
+    static void ClearMouseEvents();
   };
 }  // namespace CoffeeMaker
 
