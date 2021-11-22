@@ -41,9 +41,9 @@ void CoffeeMaker::IMouseListener::RemoveStaleListeners() {
 void CoffeeMaker::IMouseListener::ProcessMouseWheelEvent(const SDL_MouseWheelEvent& event) {
   // NOTE: process the listeners for the current frame.
   // any added listeners during this process loop are not counted.
-  unsigned int currentSize = _listeners.size();
+  size_t currentSize = _listeners.size();
 
-  for (unsigned int i = 0; i < currentSize; i++) {
+  for (size_t i = 0; i < currentSize; i++) {
     if (_listeners[i] != nullptr) {
       _listeners[i]->OnMouseWheel(event);
     }
@@ -53,9 +53,9 @@ void CoffeeMaker::IMouseListener::ProcessMouseWheelEvent(const SDL_MouseWheelEve
 void CoffeeMaker::IMouseListener::ProcessMouseMotionEvent(const SDL_MouseMotionEvent& event) {
   // NOTE: process the listeners for the current frame.
   // any added listeners during this process loop are not counted.
-  unsigned int currentSize = _listeners.size();
+  size_t currentSize = _listeners.size();
 
-  for (unsigned int i = 0; i < currentSize; i++) {
+  for (size_t i = 0; i < currentSize; i++) {
     if (_listeners[i] != nullptr) {
       _listeners[i]->OnMouseMove(event);
     }
@@ -65,10 +65,10 @@ void CoffeeMaker::IMouseListener::ProcessMouseMotionEvent(const SDL_MouseMotionE
 void CoffeeMaker::IMouseListener::ProcessMouseButtonEvent(const SDL_MouseButtonEvent& event) {
   // NOTE: process the listeners for the current frame.
   // any added listeners during this process loop are not counted.
-  unsigned int currentSize = _listeners.size();
+  size_t currentSize = _listeners.size();
 
   if (event.type == SDL_MOUSEBUTTONDOWN) {
-    for (unsigned int i = 0; i < currentSize; i++) {
+    for (size_t i = 0; i < currentSize; i++) {
       if (_listeners[i] != nullptr) {
         _listeners[i]->OnMouseDown(event);
       }
@@ -76,7 +76,7 @@ void CoffeeMaker::IMouseListener::ProcessMouseButtonEvent(const SDL_MouseButtonE
     return;
   }
   if (event.type == SDL_MOUSEBUTTONUP) {
-    for (unsigned int i = 0; i < currentSize; i++) {
+    for (size_t i = 0; i < currentSize; i++) {
       if (_listeners[i] != nullptr) {
         _listeners[i]->OnMouseUp(event);
       }

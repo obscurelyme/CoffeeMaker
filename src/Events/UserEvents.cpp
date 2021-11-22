@@ -6,9 +6,9 @@ std::vector<CoffeeMaker::IUserEventListener*> CoffeeMaker::IUserEventListener::_
 void CoffeeMaker::IUserEventListener::ProcessUserEvent(const SDL_UserEvent& event) {
   // NOTE: process the listeners for the current frame.
   // any added listeners during this process loop are not counted.
-  unsigned int currentSize = _listeners.size();
+  size_t currentSize = _listeners.size();
 
-  for (unsigned int i = 0; i < currentSize; i++) {
+  for (size_t i = 0; i < currentSize; i++) {
     if (_listeners[i] != nullptr) {
       _listeners[i]->OnSDLUserEvent(event);
     }
