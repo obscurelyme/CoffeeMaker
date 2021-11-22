@@ -58,7 +58,7 @@ void HeadsUpDisplay::Pause() { _timer.Pause(); }
 void HeadsUpDisplay::Unpause() { _timer.Unpause(); }
 
 Uint32 HeadsUpDisplay::TimerInterval(Uint32 interval, void*) {
-  CoffeeMaker::PushEvent(UCI::Events::HEADS_UP_DISPLAY_INCREMENT_TIMER);
+  CoffeeMaker::PushUserEvent(UCI::Events::HEADS_UP_DISPLAY_INCREMENT_TIMER);
   return interval;
 }
 
@@ -87,15 +87,15 @@ void HeadsUpDisplay::DecrementLife() {
 void HeadsUpDisplay::IncrementTimer() { time->SetText("Time: " + _timer.toString()); }
 
 void HeadsUpDisplay::OnSDLUserEvent(const SDL_UserEvent& event) {
-  if (event.code == UCI::Events::HEADS_UP_DISPLAY_INCREMENT_TIMER) {
+  if (event.type == UCI::Events::HEADS_UP_DISPLAY_INCREMENT_TIMER) {
     IncrementTimer();
   }
 
-  if (event.code == UCI::Events::PLAYER_INCREMENT_SCORE) {
+  if (event.type == UCI::Events::PLAYER_INCREMENT_SCORE) {
     IncrementScore();
   }
 
-  if (event.code == UCI::Events::PLAYER_LOST_LIFE) {
+  if (event.type == UCI::Events::PLAYER_LOST_LIFE) {
     DecrementLife();
   }
 }

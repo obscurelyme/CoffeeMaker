@@ -35,6 +35,18 @@ void CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents appEvent) 
   SDL_PushEvent(&event);
 }
 
+void CoffeeMaker::PushUserEvent(Uint32 type, Sint32 eventCode, void* data1, void* data2) {
+  SDL_UserEvent userevent{.type = type,
+                          .timestamp = SDL_GetTicks(),
+                          .windowID = CoffeeMaker::GlobalWindow::ID(),
+                          .code = eventCode,
+                          .data1 = data1,
+                          .data2 = data2};
+  SDL_Event event;
+  event.user = userevent;
+  SDL_PushEvent(&event);
+}
+
 void CoffeeMaker::PushEvent(Sint32 eventCode, void* data1, void* data2) {
   SDL_UserEvent userevent{.type = SDL_USEREVENT,
                           .timestamp = SDL_GetTicks(),

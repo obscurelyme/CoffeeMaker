@@ -95,6 +95,8 @@ int main(int, char**) {
   std::chrono::duration<float> elapsedSeconds = end - start;
   CM_LOGGER_INFO("Initialization time took: {}", elapsedSeconds.count());
 
+  CoffeeMaker::UserEventHandler::RegisterUserEvents(UCI::NumEventsToRegister());
+
   while (!quit) {
     // get input
     while (SDL_PollEvent(&event)) {
@@ -104,7 +106,7 @@ int main(int, char**) {
         break;
       }
 
-      if (event.type == SDL_USEREVENT) {
+      if (event.type >= SDL_USEREVENT && event.type < SDL_LASTEVENT) {
         CoffeeMaker::UserEventHandler::HandleUserEvent(event.user);
         if (event.user.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
           paused = true;

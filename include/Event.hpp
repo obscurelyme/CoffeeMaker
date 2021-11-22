@@ -34,10 +34,16 @@ namespace CoffeeMaker {
   void PushCoffeeMakerEvent(ApplicationEvents appEvent);
 
   /**
-   * Constructs an SDL_USEREVENT based on the enum and pushes it
+   * Constructs an SDL_USEREVENT based on the code enum and pushes it
    * into the SDL_Event queue.
    */
   void PushEvent(Sint32 eventCode, void* data1 = nullptr, void* data2 = nullptr);
+
+  /**
+   * Constructs an SDL_USEREVENT based on the type enum and pushes it
+   * into the SDL_Event queue.
+   */
+  void PushUserEvent(Uint32 type, Sint32 eventCode = -1, void* data1 = nullptr, void* data2 = nullptr);
 
   class Delegate {
     public:

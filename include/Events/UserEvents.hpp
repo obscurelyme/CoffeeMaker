@@ -5,6 +5,8 @@
 
 #include <vector>
 
+#include "Logger.hpp"
+
 namespace CoffeeMaker {
   class UserEventHandler;
 
@@ -39,6 +41,16 @@ namespace CoffeeMaker {
    */
   class UserEventHandler {
     public:
+    static bool RegisterUserEvents(int numEventsToRegister) {
+      Uint32 result = SDL_RegisterEvents(numEventsToRegister);
+      if (result != -1U) {
+        CoffeeMaker::Logger::Trace("{} user events registered", numEventsToRegister);
+        return true;
+      }
+      CoffeeMaker::Logger::Trace("User events could not be registered");
+      return false;
+    }
+
     static void HandleUserEvent(const SDL_UserEvent& event) {
       CoffeeMaker::IUserEventListener::ProcessUserEvent(event);
       ClearUserEvents();

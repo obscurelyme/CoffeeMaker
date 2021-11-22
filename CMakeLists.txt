@@ -84,7 +84,8 @@ set(GAME_SOURCES
   src/Game/Animations/Explode.cpp
   src/Game/PowerUps.cpp
   src/Game/Echelon.cpp
-  src/Game/Scenes/TestEchelon.cpp)
+  src/Game/Scenes/TestEchelon.cpp
+  src/Game/Events.cpp)
 
 set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES})
 
