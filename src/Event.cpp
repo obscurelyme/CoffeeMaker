@@ -11,27 +11,6 @@
 
 using namespace CoffeeMaker;
 
-unsigned int CoffeeMaker::IUserEventListener::_uid = 0;
-std::vector<CoffeeMaker::IUserEventListener*> CoffeeMaker::IUserEventListener::_listeners = {};
-void CoffeeMaker::IUserEventListener::ProcessUserEvent(const SDL_UserEvent& event) {
-  for (auto& listener : _listeners) {
-    listener->OnSDLUserEvent(event);
-  }
-}
-
-CoffeeMaker::IUserEventListener::~IUserEventListener() {
-  for (auto it = _listeners.begin(); it != _listeners.end();) {
-    if (_id == (*it)->_id) {
-      it = _listeners.erase(it);
-      break;
-    } else {
-      ++it;
-    }
-  }
-}
-
-CoffeeMaker::IUserEventListener::IUserEventListener() : _id(++_uid) { _listeners.push_back(this); }
-
 int Delegate::_uid = 0;
 
 void CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents appEvent) {
@@ -52,6 +31,18 @@ void CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents appEvent) 
   };
   SDL_Event event;
   event.type = SDL_USEREVENT;
+  event.user = userevent;
+  SDL_PushEvent(&event);
+}
+
+void CoffeeMaker::PushUserEvent(Uint32 type, Sint32 eventCode, void* data1, void* data2) {
+  SDL_UserEvent userevent{.type = type,
+                          .timestamp = SDL_GetTicks(),
+                          .windowID = CoffeeMaker::GlobalWindow::ID(),
+                          .code = eventCode,
+                          .data1 = data1,
+                          .data2 = data2};
+  SDL_Event event;
   event.user = userevent;
   SDL_PushEvent(&event);
 }

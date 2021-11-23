@@ -293,12 +293,12 @@ void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
     _exitSpline->Reset();
     Spawn();
   }
-  if (event.code == UCI::Events::PLAYER_DESTROYED) {
+  if (event.type == UCI::Events::PLAYER_DESTROYED) {
     CoffeeMaker::Logger::Trace(
         fmt::format("[ENEMY_EVENT][ENEMY_AGGRESSION_STATE_CHANGED]: Enemy [ id={}, aggression=Passive ]", _id));
     _aggression = Enemy::AggressionState::Passive;
   }
-  if (event.code == UCI::Events::PLAYER_COMPLETE_SPAWN) {
+  if (event.type == UCI::Events::PLAYER_COMPLETE_SPAWN) {
     CoffeeMaker::Logger::Trace(
         fmt::format("[ENEMY_EVENT][ENEMY_AGGRESSION_STATE_CHANGED]: Enemy [ id={}, aggression=Active ]", _id));
     _aggression = Enemy::AggressionState::Active;

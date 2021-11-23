@@ -1,9 +1,12 @@
 #ifndef _game_events_hpp
 #define _game_events_hpp
 
+#include <SDL2/SDL.h>
+
 namespace UCI {
   enum Events {
-    INIT = 9000,
+    FIRST_EVENT = SDL_USEREVENT,
+    INIT,
     // Player Events ////////////////////////////////////////////////////////////
     PLAYER_LOST_LIFE,
     PLAYER_INCREMENT_SCORE,
@@ -25,8 +28,12 @@ namespace UCI {
     ENEMY_COMPLETE_EXIT,
     // User Interface Events ///////////////////////////////////////////////////
     SHOW_MENU,
-    HEADS_UP_DISPLAY_INCREMENT_TIMER
+    HEADS_UP_DISPLAY_INCREMENT_TIMER,
+
+    LAST_EVENT
   };
-}
+
+  int NumEventsToRegister();
+}  // namespace UCI
 
 #endif
