@@ -40,10 +40,7 @@ void CoffeeMakerUserEvents::testUserEventsDeletedSelf() {
 
   CPPUNIT_ASSERT_EQUAL(expectedListeners, listener->NumListeners());
 
-  listener->onSDLUserEventSpy = [&listener] {
-    delete listener;
-    // listener = nullptr;
-  };
+  listener->onSDLUserEventSpy = [&listener] { delete listener; };
   SDL_UserEvent userEvent{
       .type = SDL_USEREVENT,
       .timestamp = 123456,
