@@ -42,7 +42,7 @@ void CoffeeMakerUserEvents::testUserEventsDeletedSelf() {
 
   listener->onSDLUserEventSpy = [&listener] {
     delete listener;
-    listener = nullptr;
+    // listener = nullptr;
   };
   SDL_UserEvent userEvent{
       .type = SDL_USEREVENT,
