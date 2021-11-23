@@ -22,9 +22,9 @@ void CoffeeMakerUserEvents::testUserEventsListenedTo() {
   listener->onSDLUserEventSpy = [&called] { called++; };
   SDL_UserEvent userEvent{
       .type = SDL_USEREVENT,
-      .code = 123,
       .timestamp = 123456,
       .windowID = 1,
+      .code = 123,
       .data1 = nullptr,
       .data2 = nullptr,
   };
@@ -46,9 +46,9 @@ void CoffeeMakerUserEvents::testUserEventsDeletedSelf() {
   };
   SDL_UserEvent userEvent{
       .type = SDL_USEREVENT,
-      .code = 123,
       .timestamp = 123456,
       .windowID = 1,
+      .code = 123,
       .data1 = nullptr,
       .data2 = nullptr,
   };
@@ -74,9 +74,9 @@ void CoffeeMakerUserEvents::testUserEventsCreatedMoreListeners() {
   };
   SDL_UserEvent userEvent{
       .type = SDL_USEREVENT,
-      .code = 123,
       .timestamp = 123456,
       .windowID = 1,
+      .code = 123,
       .data1 = nullptr,
       .data2 = nullptr,
   };
@@ -116,9 +116,9 @@ void CoffeeMakerUserEvents::testUserEventsDeletedSubsequentListeners() {
 
   SDL_UserEvent userEvent{
       .type = SDL_USEREVENT,
-      .code = 123,
       .timestamp = 123456,
       .windowID = 1,
+      .code = 123,
       .data1 = nullptr,
       .data2 = nullptr,
   };
