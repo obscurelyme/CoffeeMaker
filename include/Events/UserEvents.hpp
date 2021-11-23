@@ -43,7 +43,7 @@ namespace CoffeeMaker {
     public:
     static bool RegisterUserEvents(int numEventsToRegister) {
       Uint32 result = SDL_RegisterEvents(numEventsToRegister);
-      if (result != -1U) {
+      if (result != static_cast<Uint32>(-1)) {
         CoffeeMaker::Logger::Trace("{} user events registered", numEventsToRegister);
         return true;
       }
