@@ -106,10 +106,10 @@ void CoffeeMakerUserEvents::testUserEventsDeletedSubsequentListeners() {
   unsigned int listener2ActualHandledTimes = 0;
   unsigned int listener3ActualHandledTimes = 0;
   listener1->onSDLUserEventSpy = [&listener1, &listener2, &listener3, &listener1ActualHandledTimes] {
-    listener1.reset();
-    listener2.reset();
-    listener3.reset();
     listener1ActualHandledTimes++;
+    listener3.reset();
+    listener2.reset();
+    listener1.reset();
   };
   listener2->onSDLUserEventSpy = [&listener2ActualHandledTimes] { listener2ActualHandledTimes++; };
   listener3->onSDLUserEventSpy = [&listener3ActualHandledTimes] { listener3ActualHandledTimes++; };
