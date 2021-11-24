@@ -28,6 +28,12 @@ namespace CoffeeMaker {
     void GenerateCurves(size_t precision = 1000);
     std::vector<CoffeeMaker::Math::Point2D> GetPoints() const;
 
+    /**
+     * @brief Returns a Point2D based on a given knot value between 0.0 and 1.0
+     *
+     * @param knot double between 0.0 and 1.0
+     * @return CoffeeMaker::Math::Point2D
+     */
     CoffeeMaker::Math::Point2D Point2DAtKnot(tinyspline::real knot);
 
     private:

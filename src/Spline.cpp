@@ -67,16 +67,9 @@ void CoffeeMaker::BSpline::GenerateCurves(size_t precision) {
 std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::BSpline::GetPoints() const { return _curves; }
 
 CoffeeMaker::Math::Point2D CoffeeMaker::BSpline::Point2DAtKnot(tinyspline::real knot) {
-  if (knot <= 1.0 && knot >= 0.0) {
-    std::vector<tinyspline::real> temp = _tinysplineBSpline->eval(knot).result();
-    return CoffeeMaker::Math::Point2D{.x = static_cast<float>(temp[0]), .y = static_cast<float>(temp[1])};
-  } else if (knot > 1.0) {
-    std::vector<tinyspline::real> temp = _tinysplineBSpline->eval(1.0).result();
-    return CoffeeMaker::Math::Point2D{.x = static_cast<float>(temp[0]), .y = static_cast<float>(temp[1])};
-  } else {
-    std::vector<tinyspline::real> temp = _tinysplineBSpline->eval(0.0).result();
-    return CoffeeMaker::Math::Point2D{.x = static_cast<float>(temp[0]), .y = static_cast<float>(temp[1])};
-  }
+  tinyspline::real filteredKnot = std::clamp(knot, 0.0, 1.0);
+  std::vector<tinyspline::real> temp = _tinysplineBSpline->eval(filteredKnot).result();
+  return CoffeeMaker::Math::Point2D{.x = static_cast<float>(temp[0]), .y = static_cast<float>(temp[1])};
 }
 
 CoffeeMaker::Spline::Spline() :
