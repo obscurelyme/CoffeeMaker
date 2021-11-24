@@ -16,31 +16,14 @@ namespace CoffeeMaker {
     explicit BSpline(size_t numControlPoints = 4);
     ~BSpline();
 
-    inline std::vector<CoffeeMaker::Math::Point2D> GetControlPoints() const {
-      std::vector<CoffeeMaker::Math::Point2D> points{};
-      std::vector<tinyspline::real> controlPoints = _tinysplineBSpline->controlPoints();
+    std::vector<CoffeeMaker::Math::Point2D> GetControlPoints() const;
 
-      for (unsigned int i = 0; i < controlPoints.size() / 2; i++) {
-        points.push_back(CoffeeMaker::Math::Point2D{.x = static_cast<float>(controlPoints[i]),
-                                                    .y = static_cast<float>(controlPoints[i + 1])});
-      }
+    void SetControlPoints(const std::vector<tinyspline::real>& controlPoints);
+    void SetControlPoints(const std::vector<CoffeeMaker::Math::Point2D>& controlPoints);
+    void SetControlPoints(const std::vector<CoffeeMaker::Math::Vector2D>& controlPoints);
 
-      return points;
-    }
-
-    void SetControlPoints(const std::vector<tinyspline::real>& controlPoints) {
-      _tinysplineBSpline->setControlPoints(controlPoints);
-    }
-    void SetControlPointAt(unsigned long index, CoffeeMaker::Math::Vector2D vector) {
-      std::vector<tinyspline::real> pointToAdd{static_cast<tinyspline::real>(vector.x),
-                                               static_cast<tinyspline::real>(vector.y)};
-      _tinysplineBSpline->setControlPointAt(index, pointToAdd);
-    }
-    void SetControlPointAt(unsigned long index, CoffeeMaker::Math::Point2D point) {
-      std::vector<tinyspline::real> pointToAdd{static_cast<tinyspline::real>(point.x),
-                                               static_cast<tinyspline::real>(point.y)};
-      _tinysplineBSpline->setControlPointAt(index, pointToAdd);
-    }
+    void SetControlPointAt(unsigned long index, CoffeeMaker::Math::Vector2D vector);
+    void SetControlPointAt(unsigned long index, CoffeeMaker::Math::Point2D point);
 
     private:
     Scope<tinyspline::BSpline> _tinysplineBSpline;

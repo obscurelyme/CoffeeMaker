@@ -11,6 +11,12 @@ class CoffeeMakerBSpline : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(CoffeeMakerBSpline);
   // TODO append your unit tests here
   CPPUNIT_TEST(testCreateBSpline);
+  CPPUNIT_TEST(testSetBSplineTinysplineRealControlPoints);
+  CPPUNIT_TEST(testSetBSplineVector2DControlPoints);
+  CPPUNIT_TEST(testSetBSplinePoint2DControlPoints);
+  CPPUNIT_TEST(testSetBSplineTinysplineRealControlPointAt);
+  CPPUNIT_TEST(testSetBSplineVector2DControlPointAt);
+  CPPUNIT_TEST(testSetBSplinePoint2DControlPointAt);
   CPPUNIT_TEST_SUITE_END();
 
   public:
@@ -20,6 +26,14 @@ class CoffeeMakerBSpline : public CppUnit::TestFixture {
   void tearDown();
 
   void testCreateBSpline();
+
+  void testSetBSplineTinysplineRealControlPoints();
+  void testSetBSplineVector2DControlPoints();
+  void testSetBSplinePoint2DControlPoints();
+
+  void testSetBSplineTinysplineRealControlPointAt();
+  void testSetBSplineVector2DControlPointAt();
+  void testSetBSplinePoint2DControlPointAt();
 };
 
 #endif

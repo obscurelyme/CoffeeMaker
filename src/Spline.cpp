@@ -6,9 +6,54 @@
 #include "Renderer.hpp"
 
 CoffeeMaker::BSpline::BSpline(size_t numControlPoints) :
-    _tinysplineBSpline(CreateScope<tinyspline::BSpline>(numControlPoints)) {}
+    _tinysplineBSpline(CreateScope<tinyspline::BSpline>(numControlPoints)) {
+  for (size_t i = 0; i < numControlPoints; i++) {
+    _tinysplineBSpline->setControlPointAt(i, std::vector<tinyspline::real>{0, 0});
+  }
+}
 
 CoffeeMaker::BSpline::~BSpline() {}
+
+std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::BSpline::GetControlPoints() const {
+  std::vector<CoffeeMaker::Math::Point2D> points{};
+  std::vector<tinyspline::real> controlPoints = _tinysplineBSpline->controlPoints();
+
+  for (unsigned int i = 0; i < controlPoints.size() / 2; i++) {
+    points.push_back(CoffeeMaker::Math::Point2D{.x = static_cast<float>(controlPoints[i * 2]),
+                                                .y = static_cast<float>(controlPoints[i * 2 + 1])});
+  }
+
+  return points;
+}
+
+void CoffeeMaker::BSpline::SetControlPoints(const std::vector<tinyspline::real>& controlPoints) {
+  _tinysplineBSpline->setControlPoints(controlPoints);
+}
+
+void CoffeeMaker::BSpline::SetControlPoints(const std::vector<CoffeeMaker::Math::Point2D>& controlPoints) {
+  // _tinysplineBSpline->numControlPoints();
+  for (size_t i = 0; i < controlPoints.size(); i++) {
+    SetControlPointAt(i, controlPoints[i]);
+  }
+}
+
+void CoffeeMaker::BSpline::SetControlPoints(const std::vector<CoffeeMaker::Math::Vector2D>& controlPoints) {
+  for (size_t i = 0; i < controlPoints.size(); i++) {
+    SetControlPointAt(i, controlPoints[i]);
+  }
+}
+
+void CoffeeMaker::BSpline::SetControlPointAt(unsigned long index, CoffeeMaker::Math::Vector2D vector) {
+  std::vector<tinyspline::real> pointToAdd{static_cast<tinyspline::real>(vector.x),
+                                           static_cast<tinyspline::real>(vector.y)};
+  _tinysplineBSpline->setControlPointAt(index, pointToAdd);
+}
+
+void CoffeeMaker::BSpline::SetControlPointAt(unsigned long index, CoffeeMaker::Math::Point2D point) {
+  std::vector<tinyspline::real> pointToAdd{static_cast<tinyspline::real>(point.x),
+                                           static_cast<tinyspline::real>(point.y)};
+  _tinysplineBSpline->setControlPointAt(index, pointToAdd);
+}
 
 CoffeeMaker::Spline::Spline() :
     _spline({}),
