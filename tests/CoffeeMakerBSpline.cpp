@@ -83,11 +83,6 @@ void CoffeeMakerBSpline::testSetBSplinePoint2DControlPoints() {
   }
 }
 
-void CoffeeMakerBSpline::testSetBSplineTinysplineRealControlPointAt() {}
-void CoffeeMakerBSpline::testSetBSplineVector2DControlPointAt() {}
-void CoffeeMakerBSpline::testSetBSplinePoint2DControlPointAt() {}
-void CoffeeMakerBSpline::testSetBSplineGenerateCurves() {}
-
 void CoffeeMakerBSpline::testSetBSplinePoint2DAtKnot() {
   using Pt2 = CoffeeMaker::Math::Point2D;
   Scope<CoffeeMaker::BSpline> bSpline = CreateScope<CoffeeMaker::BSpline>(5);

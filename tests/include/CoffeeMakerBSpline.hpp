@@ -14,10 +14,6 @@ class CoffeeMakerBSpline : public CppUnit::TestFixture {
   CPPUNIT_TEST(testSetBSplineTinysplineRealControlPoints);
   CPPUNIT_TEST(testSetBSplineVector2DControlPoints);
   CPPUNIT_TEST(testSetBSplinePoint2DControlPoints);
-  CPPUNIT_TEST(testSetBSplineTinysplineRealControlPointAt);
-  CPPUNIT_TEST(testSetBSplineVector2DControlPointAt);
-  CPPUNIT_TEST(testSetBSplinePoint2DControlPointAt);
-  CPPUNIT_TEST(testSetBSplineGenerateCurves);
   CPPUNIT_TEST(testSetBSplinePoint2DAtKnot);
   CPPUNIT_TEST_SUITE_END();
 
@@ -33,11 +29,6 @@ class CoffeeMakerBSpline : public CppUnit::TestFixture {
   void testSetBSplineVector2DControlPoints();
   void testSetBSplinePoint2DControlPoints();
 
-  void testSetBSplineTinysplineRealControlPointAt();
-  void testSetBSplineVector2DControlPointAt();
-  void testSetBSplinePoint2DControlPointAt();
-
-  void testSetBSplineGenerateCurves();
   void testSetBSplinePoint2DAtKnot();
 };
 
