@@ -22,8 +22,8 @@ namespace CoffeeMaker {
     void SetControlPoints(const std::vector<CoffeeMaker::Math::Point2D>& controlPoints);
     void SetControlPoints(const std::vector<CoffeeMaker::Math::Vector2D>& controlPoints);
 
-    void SetControlPointAt(unsigned long index, CoffeeMaker::Math::Vector2D vector);
-    void SetControlPointAt(unsigned long index, CoffeeMaker::Math::Point2D point);
+    void SetControlPointAt(size_t index, CoffeeMaker::Math::Vector2D vector);
+    void SetControlPointAt(size_t index, CoffeeMaker::Math::Point2D point);
 
     private:
     Scope<tinyspline::BSpline> _tinysplineBSpline;

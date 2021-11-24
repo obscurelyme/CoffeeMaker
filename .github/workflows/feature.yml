@@ -23,10 +23,10 @@ jobs:
           key: vcpkg-archives-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
       - name: Configure
         run: .github/scripts/win/configure.bat
-      - name: Test
-        run: |
-          bash .github/scripts/win/build-tests.bat
-          ./build/Debug/CoffeeMakerUnitTests.exe
+      - name: Build Tests
+        run: .github/scripts/win/build-tests.bat
+      - name: Run Tests
+        run:  ./build/Debug/CoffeeMakerUnitTests.exe
       - name: Build
         run: .github/scripts/win/build.bat
 
@@ -48,9 +48,10 @@ jobs:
           sudo apt-get install make
           sudo apt-get install yasm
           bash .github/scripts/linux/configure.sh
-      - name: Test
+      - name: Build Tests
+        run: bash .github/scripts/linux/build-tests.sh
+      - name: Run Tests
         run: |
-          bash .github/scripts/linux/build-tests.sh
           chmod +x ./build/CoffeeMakerUnitTests
           ./build/CoffeeMakerUnitTests
       - name: Build

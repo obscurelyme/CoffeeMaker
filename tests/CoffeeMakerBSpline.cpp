@@ -51,8 +51,38 @@ void CoffeeMakerBSpline::testSetBSplineTinysplineRealControlPoints() {
   }
 }
 
-void CoffeeMakerBSpline::testSetBSplineVector2DControlPoints() {}
-void CoffeeMakerBSpline::testSetBSplinePoint2DControlPoints() {}
+void CoffeeMakerBSpline::testSetBSplineVector2DControlPoints() {
+  using Vec2 = CoffeeMaker::Math::Vector2D;
+  using Pt2 = CoffeeMaker::Math::Point2D;
+  Scope<CoffeeMaker::BSpline> bSpline = CreateScope<CoffeeMaker::BSpline>();
+  std::vector<Vec2> givenControlPoints{Vec2{0, 0}, Vec2{1, 1}, Vec2{2, 2}, Vec2{3, 3}};
+  std::vector<Pt2> controlPoints;
+
+  bSpline->SetControlPoints(givenControlPoints);
+  controlPoints = bSpline->GetControlPoints();
+
+  for (size_t i = 0; i < givenControlPoints.size(); i++) {
+    CPPUNIT_ASSERT_EQUAL(givenControlPoints[i].x, controlPoints[i].x);
+    CPPUNIT_ASSERT_EQUAL(givenControlPoints[i].y, controlPoints[i].y);
+  }
+}
+
+void CoffeeMakerBSpline::testSetBSplinePoint2DControlPoints() {
+  using Pt2 = CoffeeMaker::Math::Point2D;
+  Scope<CoffeeMaker::BSpline> bSpline = CreateScope<CoffeeMaker::BSpline>();
+  std::vector<Pt2> givenControlPoints{Pt2{.x = 0, .y = 0}, Pt2{.x = 1, .y = 1}, Pt2{.x = 2, .y = 2},
+                                      Pt2{.x = 3, .y = 3}};
+  std::vector<Pt2> controlPoints;
+
+  bSpline->SetControlPoints(givenControlPoints);
+  controlPoints = bSpline->GetControlPoints();
+
+  for (size_t i = 0; i < givenControlPoints.size(); i++) {
+    CPPUNIT_ASSERT_EQUAL(givenControlPoints[i].x, controlPoints[i].x);
+    CPPUNIT_ASSERT_EQUAL(givenControlPoints[i].y, controlPoints[i].y);
+  }
+}
+
 void CoffeeMakerBSpline::testSetBSplineTinysplineRealControlPointAt() {}
 void CoffeeMakerBSpline::testSetBSplineVector2DControlPointAt() {}
 void CoffeeMakerBSpline::testSetBSplinePoint2DControlPointAt() {}

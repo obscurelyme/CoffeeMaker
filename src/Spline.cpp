@@ -43,13 +43,13 @@ void CoffeeMaker::BSpline::SetControlPoints(const std::vector<CoffeeMaker::Math:
   }
 }
 
-void CoffeeMaker::BSpline::SetControlPointAt(unsigned long index, CoffeeMaker::Math::Vector2D vector) {
+void CoffeeMaker::BSpline::SetControlPointAt(size_t index, CoffeeMaker::Math::Vector2D vector) {
   std::vector<tinyspline::real> pointToAdd{static_cast<tinyspline::real>(vector.x),
                                            static_cast<tinyspline::real>(vector.y)};
   _tinysplineBSpline->setControlPointAt(index, pointToAdd);
 }
 
-void CoffeeMaker::BSpline::SetControlPointAt(unsigned long index, CoffeeMaker::Math::Point2D point) {
+void CoffeeMaker::BSpline::SetControlPointAt(size_t index, CoffeeMaker::Math::Point2D point) {
   std::vector<tinyspline::real> pointToAdd{static_cast<tinyspline::real>(point.x),
                                            static_cast<tinyspline::real>(point.y)};
   _tinysplineBSpline->setControlPointAt(index, pointToAdd);
