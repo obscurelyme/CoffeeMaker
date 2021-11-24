@@ -64,6 +64,8 @@ void CoffeeMaker::BSpline::GenerateCurves(size_t precision) {
   }
 }
 
+std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::BSpline::GetPoints() const { return _curves; }
+
 CoffeeMaker::Math::Point2D CoffeeMaker::BSpline::Point2DAtKnot(tinyspline::real knot) {
   if (knot <= 1.0 && knot >= 0.0) {
     std::vector<tinyspline::real> temp = _tinysplineBSpline->eval(knot).result();

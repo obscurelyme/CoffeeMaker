@@ -26,6 +26,7 @@ namespace CoffeeMaker {
     void SetControlPointAt(size_t index, CoffeeMaker::Math::Point2D point);
 
     void GenerateCurves(size_t precision = 1000);
+    std::vector<CoffeeMaker::Math::Point2D> GetPoints() const;
 
     CoffeeMaker::Math::Point2D Point2DAtKnot(tinyspline::real knot);
 
