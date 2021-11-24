@@ -86,5 +86,29 @@ void CoffeeMakerBSpline::testSetBSplinePoint2DControlPoints() {
 void CoffeeMakerBSpline::testSetBSplineTinysplineRealControlPointAt() {}
 void CoffeeMakerBSpline::testSetBSplineVector2DControlPointAt() {}
 void CoffeeMakerBSpline::testSetBSplinePoint2DControlPointAt() {}
+void CoffeeMakerBSpline::testSetBSplineGenerateCurves() {}
+
+void CoffeeMakerBSpline::testSetBSplinePoint2DAtKnot() {
+  using Pt2 = CoffeeMaker::Math::Point2D;
+  Scope<CoffeeMaker::BSpline> bSpline = CreateScope<CoffeeMaker::BSpline>(5);
+  std::vector<Pt2> givenControlPoints{Pt2{.x = 1, .y = 1}, Pt2{.x = 1.25, .y = 1.25}, Pt2{.x = 1.5, .y = 1.5},
+                                      Pt2{.x = 1.75, .y = 1.75}, Pt2{.x = 2, .y = 2}};
+  bSpline->SetControlPoints(givenControlPoints);
+
+  CPPUNIT_ASSERT_EQUAL(1.5f, bSpline->Point2DAtKnot(0.5).x);
+  CPPUNIT_ASSERT_EQUAL(1.5f, bSpline->Point2DAtKnot(0.5).y);
+
+  CPPUNIT_ASSERT_EQUAL(1.0f, bSpline->Point2DAtKnot(0.0).x);
+  CPPUNIT_ASSERT_EQUAL(1.0f, bSpline->Point2DAtKnot(0.0).y);
+
+  CPPUNIT_ASSERT_EQUAL(2.0f, bSpline->Point2DAtKnot(1.0).x);
+  CPPUNIT_ASSERT_EQUAL(2.0f, bSpline->Point2DAtKnot(1.0).y);
+
+  CPPUNIT_ASSERT_EQUAL_MESSAGE("With domains exceeding 1.0", 2.0f, bSpline->Point2DAtKnot(1.5).x);
+  CPPUNIT_ASSERT_EQUAL_MESSAGE("With domains exceeding 1.0", 2.0f, bSpline->Point2DAtKnot(1.5).y);
+
+  CPPUNIT_ASSERT_EQUAL_MESSAGE("With negative domains", 1.0f, bSpline->Point2DAtKnot(-1.0).x);
+  CPPUNIT_ASSERT_EQUAL_MESSAGE("With negative domains", 1.0f, bSpline->Point2DAtKnot(-1.0).y);
+}
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoffeeMakerBSpline);

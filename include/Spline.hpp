@@ -25,8 +25,13 @@ namespace CoffeeMaker {
     void SetControlPointAt(size_t index, CoffeeMaker::Math::Vector2D vector);
     void SetControlPointAt(size_t index, CoffeeMaker::Math::Point2D point);
 
+    void GenerateCurves(size_t precision = 1000);
+
+    CoffeeMaker::Math::Point2D Point2DAtKnot(tinyspline::real knot);
+
     private:
     Scope<tinyspline::BSpline> _tinysplineBSpline;
+    std::vector<CoffeeMaker::Math::Point2D> _curves;
   };
 
   /**

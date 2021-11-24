@@ -6,7 +6,7 @@
 #include "Renderer.hpp"
 
 CoffeeMaker::BSpline::BSpline(size_t numControlPoints) :
-    _tinysplineBSpline(CreateScope<tinyspline::BSpline>(numControlPoints)) {
+    _tinysplineBSpline(CreateScope<tinyspline::BSpline>(numControlPoints)), _curves({}) {
   for (size_t i = 0; i < numControlPoints; i++) {
     _tinysplineBSpline->setControlPointAt(i, std::vector<tinyspline::real>{0, 0});
   }
@@ -53,6 +53,28 @@ void CoffeeMaker::BSpline::SetControlPointAt(size_t index, CoffeeMaker::Math::Po
   std::vector<tinyspline::real> pointToAdd{static_cast<tinyspline::real>(point.x),
                                            static_cast<tinyspline::real>(point.y)};
   _tinysplineBSpline->setControlPointAt(index, pointToAdd);
+}
+
+void CoffeeMaker::BSpline::GenerateCurves(size_t precision) {
+  _curves.clear();
+  std::vector<tinyspline::real> temp = _tinysplineBSpline->sample(precision);
+  for (size_t i = 0; i < temp.size() / 2; i++) {
+    _curves.push_back(
+        CoffeeMaker::Math::Point2D{.x = static_cast<float>(temp[i * 2]), .y = static_cast<float>(temp[i * 2 + 1])});
+  }
+}
+
+CoffeeMaker::Math::Point2D CoffeeMaker::BSpline::Point2DAtKnot(tinyspline::real knot) {
+  if (knot <= 1.0 && knot >= 0.0) {
+    std::vector<tinyspline::real> temp = _tinysplineBSpline->eval(knot).result();
+    return CoffeeMaker::Math::Point2D{.x = static_cast<float>(temp[0]), .y = static_cast<float>(temp[1])};
+  } else if (knot > 1.0) {
+    std::vector<tinyspline::real> temp = _tinysplineBSpline->eval(1.0).result();
+    return CoffeeMaker::Math::Point2D{.x = static_cast<float>(temp[0]), .y = static_cast<float>(temp[1])};
+  } else {
+    std::vector<tinyspline::real> temp = _tinysplineBSpline->eval(0.0).result();
+    return CoffeeMaker::Math::Point2D{.x = static_cast<float>(temp[0]), .y = static_cast<float>(temp[1])};
+  }
 }
 
 CoffeeMaker::Spline::Spline() :
