@@ -6,7 +6,7 @@
 #include "Renderer.hpp"
 
 CoffeeMaker::BSpline::BSpline(size_t numControlPoints) :
-    _tinysplineBSpline(CreateScope<tinyspline::BSpline>(numControlPoints)), _curves({}) {
+    _cache({}), _tinysplineBSpline(CreateScope<tinyspline::BSpline>(numControlPoints)), _curves({}) {
   for (size_t i = 0; i < numControlPoints; i++) {
     _tinysplineBSpline->setControlPointAt(i, std::vector<tinyspline::real>{0, 0});
   }
@@ -26,12 +26,32 @@ std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::BSpline::GetControlPoints()
   return points;
 }
 
+void CoffeeMaker::BSpline::AddControlPoint(const CoffeeMaker::Math::Point2D& controlPoint) {
+  _cache.push_back(controlPoint);
+  if (_cache.size() > _tinysplineBSpline->numControlPoints()) {
+    // increase size of the spline.
+    _tinysplineBSpline.reset(new tinyspline::BSpline(_cache.size()));
+    SetControlPoints(_cache);
+    return;
+  }
+  SetControlPointAt(_cache.size() - 1, controlPoint);
+}
+
+void CoffeeMaker::BSpline::RemoveControlPointAt(size_t index) {
+  _cache.erase(_cache.begin() + index);
+  if (_cache.size() < 4) {
+    _tinysplineBSpline.reset(new tinyspline::BSpline(4));
+  } else {
+    _tinysplineBSpline.reset(new tinyspline::BSpline(_cache.size()));
+  }
+  SetControlPoints(_cache);
+}
+
 void CoffeeMaker::BSpline::SetControlPoints(const std::vector<tinyspline::real>& controlPoints) {
   _tinysplineBSpline->setControlPoints(controlPoints);
 }
 
 void CoffeeMaker::BSpline::SetControlPoints(const std::vector<CoffeeMaker::Math::Point2D>& controlPoints) {
-  // _tinysplineBSpline->numControlPoints();
   for (size_t i = 0; i < controlPoints.size(); i++) {
     SetControlPointAt(i, controlPoints[i]);
   }
@@ -70,6 +90,12 @@ CoffeeMaker::Math::Point2D CoffeeMaker::BSpline::Point2DAtKnot(tinyspline::real 
   tinyspline::real filteredKnot = std::clamp(knot, 0.0, 1.0);
   std::vector<tinyspline::real> temp = _tinysplineBSpline->eval(filteredKnot).result();
   return CoffeeMaker::Math::Point2D{.x = static_cast<float>(temp[0]), .y = static_cast<float>(temp[1])};
+}
+
+void CoffeeMaker::BSpline::SetKnotAt(size_t index, tinyspline::real knot) {
+  tinyspline::real clampedKnot = std::clamp(knot, 0.0, 1.0);
+  std::vector<tinyspline::real> allKnots = _tinysplineBSpline->knots();
+  _tinysplineBSpline->setKnotAt(index, clampedKnot);
 }
 
 CoffeeMaker::Spline::Spline() :

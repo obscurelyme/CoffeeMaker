@@ -81,6 +81,7 @@ set(GAME_SOURCES
   src/Game/Scenes/MainScene.cpp
   src/Game/Scenes/TestBedScene.cpp
   src/Game/Scenes/TestAnimations.cpp
+  src/Game/Scenes/SplineBuilder.cpp
   src/Game/Scene.cpp
   src/Game/Collider.cpp
   src/Game/Entity.cpp

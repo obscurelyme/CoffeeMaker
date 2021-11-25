@@ -18,6 +18,9 @@ namespace CoffeeMaker {
 
     std::vector<CoffeeMaker::Math::Point2D> GetControlPoints() const;
 
+    void AddControlPoint(const CoffeeMaker::Math::Point2D& point);
+    void RemoveControlPointAt(size_t index);
+
     void SetControlPoints(const std::vector<tinyspline::real>& controlPoints);
     void SetControlPoints(const std::vector<CoffeeMaker::Math::Point2D>& controlPoints);
     void SetControlPoints(const std::vector<CoffeeMaker::Math::Vector2D>& controlPoints);
@@ -47,7 +50,12 @@ namespace CoffeeMaker {
      */
     CoffeeMaker::Math::Point2D Point2DAtKnot(tinyspline::real knot);
 
+    void SetKnotAt(size_t index, tinyspline::real knot);
+
+    std::vector<tinyspline::real> GetKnots() const { return _tinysplineBSpline->knots(); }
+
     private:
+    std::vector<CoffeeMaker::Math::Point2D> _cache;
     Scope<tinyspline::BSpline> _tinysplineBSpline;
     std::vector<CoffeeMaker::Math::Point2D> _curves;
   };
