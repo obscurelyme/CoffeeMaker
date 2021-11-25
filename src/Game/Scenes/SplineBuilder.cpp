@@ -50,6 +50,10 @@ void SplineBuilder::Update(float) {
       std::cout << k << std::endl;
     }
   }
+
+  if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_S)) {
+    _bSpline->Save();
+  }
 }
 
 void SplineBuilder::Init() {}

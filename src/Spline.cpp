@@ -5,14 +5,21 @@
 #include "Color.hpp"
 #include "Renderer.hpp"
 
-CoffeeMaker::BSpline::BSpline(size_t numControlPoints) :
-    _cache({}), _tinysplineBSpline(CreateScope<tinyspline::BSpline>(numControlPoints)), _curves({}) {
+CoffeeMaker::BSpline::BSpline(const std::string& name, size_t numControlPoints) :
+    _cache({}), _tinysplineBSpline(CreateScope<tinyspline::BSpline>(numControlPoints)), _curves({}), _name("") {
   for (size_t i = 0; i < numControlPoints; i++) {
     _tinysplineBSpline->setControlPointAt(i, std::vector<tinyspline::real>{0, 0});
   }
 }
 
 CoffeeMaker::BSpline::~BSpline() {}
+
+void CoffeeMaker::BSpline::Load(const std::string& filePath) {
+  tinyspline::BSpline tmp = tinyspline::BSpline::load(filePath);
+  _tinysplineBSpline.reset(&tmp);
+}
+
+void CoffeeMaker::BSpline::Save() const { _tinysplineBSpline->save(_name + ".spline"); }
 
 std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::BSpline::GetControlPoints() const {
   std::vector<CoffeeMaker::Math::Point2D> points{};

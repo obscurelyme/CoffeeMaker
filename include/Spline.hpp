@@ -1,6 +1,7 @@
 #ifndef _coffeemaker_spline_hpp
 #define _coffeemaker_spline_hpp
 
+#include <string>
 #include <vector>
 
 #include "Math.hpp"
@@ -13,7 +14,7 @@ namespace CoffeeMaker {
    */
   class BSpline {
     public:
-    explicit BSpline(size_t numControlPoints = 4);
+    explicit BSpline(const std::string& name = "spline", size_t numControlPoints = 4);
     ~BSpline();
 
     std::vector<CoffeeMaker::Math::Point2D> GetControlPoints() const;
@@ -43,6 +44,9 @@ namespace CoffeeMaker {
      */
     std::vector<CoffeeMaker::Math::Point2D> GetPoints() const;
 
+    void Load(const std::string& filename);
+    void Save() const;
+
     /**
      * @brief Returns a Point2D based on a given knot value clamped between 0.0 and 1.0
      * @param knot double value clamped between 0.0 and 1.0
@@ -58,6 +62,7 @@ namespace CoffeeMaker {
     std::vector<CoffeeMaker::Math::Point2D> _cache;
     Scope<tinyspline::BSpline> _tinysplineBSpline;
     std::vector<CoffeeMaker::Math::Point2D> _curves;
+    std::string _name;
   };
 
   /**
