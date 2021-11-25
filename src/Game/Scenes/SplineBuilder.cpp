@@ -27,7 +27,7 @@ void SplineBuilder::Render() {
 
   SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), 255, 255, 255, 255);
   for (auto& curvePoint : _bSplineCurvePoints) {
-    SDL_FRect s = SDL_FRect{.h = 1, .w = 1, .x = curvePoint.x, .y = curvePoint.y};
+    SDL_FRect s = SDL_FRect{.x = curvePoint.x, .y = curvePoint.y, .w = 1, .h = 1};
     SDL_RenderFillRectF(CoffeeMaker::Renderer::Instance(), &s);
   }
 }

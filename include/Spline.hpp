@@ -14,7 +14,7 @@ namespace CoffeeMaker {
    */
   class BSpline {
     public:
-    explicit BSpline(const std::string& name = "spline", size_t numControlPoints = 4);
+    BSpline(size_t numControlPoints = 4);
     ~BSpline();
 
     std::vector<CoffeeMaker::Math::Point2D> GetControlPoints() const;
@@ -62,7 +62,6 @@ namespace CoffeeMaker {
     std::vector<CoffeeMaker::Math::Point2D> _cache;
     Scope<tinyspline::BSpline> _tinysplineBSpline;
     std::vector<CoffeeMaker::Math::Point2D> _curves;
-    std::string _name;
   };
 
   /**

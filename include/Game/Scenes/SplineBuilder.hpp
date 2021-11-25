@@ -19,7 +19,7 @@ class SplinePoint : public CoffeeMaker::IMouseListener {
   public:
   SplinePoint(float xPos, float yPos, size_t index) :
       _selected(false),
-      _rect(SDL_FRect{.w = 8, .h = 8, .x = xPos, .y = yPos}),
+      _rect(SDL_FRect{.x = xPos, .y = yPos, .w = 8, .h = 8}),
       _point(CoffeeMaker::Math::Point2D{.x = xPos, .y = yPos}),
       _dragListeners({}),
       _index(index),
@@ -84,8 +84,8 @@ class SplinePoint : public CoffeeMaker::IMouseListener {
 
   virtual void OnMouseMove(const SDL_MouseMotionEvent& event) {
     if (_selected) {
-      _point.x = event.x;
-      _point.y = event.y;
+      _point.x = static_cast<float>(event.x);
+      _point.y = static_cast<float>(event.y);
       _rect.x = _point.x;
       _rect.y = _point.y;
       HandleDrag();
