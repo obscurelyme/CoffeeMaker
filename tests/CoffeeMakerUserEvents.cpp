@@ -22,9 +22,9 @@ void CoffeeMakerUserEvents::testUserEventsListenedTo() {
   listener->onSDLUserEventSpy = [&called] { called++; };
   SDL_UserEvent userEvent{
       .type = SDL_USEREVENT,
-      .code = 123,
       .timestamp = 123456,
       .windowID = 1,
+      .code = 123,
       .data1 = nullptr,
       .data2 = nullptr,
   };
@@ -40,15 +40,12 @@ void CoffeeMakerUserEvents::testUserEventsDeletedSelf() {
 
   CPPUNIT_ASSERT_EQUAL(expectedListeners, listener->NumListeners());
 
-  listener->onSDLUserEventSpy = [&listener] {
-    delete listener;
-    listener = nullptr;
-  };
+  listener->onSDLUserEventSpy = [&listener] { delete listener; };
   SDL_UserEvent userEvent{
       .type = SDL_USEREVENT,
-      .code = 123,
       .timestamp = 123456,
       .windowID = 1,
+      .code = 123,
       .data1 = nullptr,
       .data2 = nullptr,
   };
@@ -74,9 +71,9 @@ void CoffeeMakerUserEvents::testUserEventsCreatedMoreListeners() {
   };
   SDL_UserEvent userEvent{
       .type = SDL_USEREVENT,
-      .code = 123,
       .timestamp = 123456,
       .windowID = 1,
+      .code = 123,
       .data1 = nullptr,
       .data2 = nullptr,
   };
@@ -106,19 +103,19 @@ void CoffeeMakerUserEvents::testUserEventsDeletedSubsequentListeners() {
   unsigned int listener2ActualHandledTimes = 0;
   unsigned int listener3ActualHandledTimes = 0;
   listener1->onSDLUserEventSpy = [&listener1, &listener2, &listener3, &listener1ActualHandledTimes] {
-    listener1.reset();
-    listener2.reset();
-    listener3.reset();
     listener1ActualHandledTimes++;
+    listener3.reset();
+    listener2.reset();
+    listener1.reset();
   };
   listener2->onSDLUserEventSpy = [&listener2ActualHandledTimes] { listener2ActualHandledTimes++; };
   listener3->onSDLUserEventSpy = [&listener3ActualHandledTimes] { listener3ActualHandledTimes++; };
 
   SDL_UserEvent userEvent{
       .type = SDL_USEREVENT,
-      .code = 123,
       .timestamp = 123456,
       .windowID = 1,
+      .code = 123,
       .data1 = nullptr,
       .data2 = nullptr,
   };

@@ -87,7 +87,8 @@ int main(int, char**) {
   SceneManager::AddScene(new TestBedScene());
   SceneManager::AddScene(new TestAnimations());
   SceneManager::AddScene(new TestEchelonScene());
-  SceneManager::LoadScene();
+  SceneManager::AddScene(new SplineBuilder());
+  SceneManager::LoadScene(5);
   win.ShowWindow();
   CoffeeMaker::InputManager::Init();
 
@@ -122,7 +123,7 @@ int main(int, char**) {
       }
 
       CoffeeMaker::Button::PollEvents(&event);
-
+      CoffeeMaker::MouseEventHandler::HandleMouseEvents(event);
       if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
         CoffeeMaker::InputManager::HandleKeyBoardEvent(&event.key);
       }

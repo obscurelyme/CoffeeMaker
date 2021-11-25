@@ -21,7 +21,7 @@ Cursor::Cursor(const std::string& filePath) : _cursor(nullptr) {
   SDL_SetColorKey(surface, SDL_TRUE,
                   SDL_MapRGB(surface->format, CoffeeMaker::Texture::COLOR_KEY.r, CoffeeMaker::Texture::COLOR_KEY.g,
                              CoffeeMaker::Texture::COLOR_KEY.b));
-  _cursor = SDL_CreateColorCursor(surface, surface->w / 2, surface->h / 2);
+  _cursor = SDL_CreateColorCursor(surface, 0, 0);
   SDL_SetCursor(_cursor);
   SDL_FreeSurface(surface);
 }
