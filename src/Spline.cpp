@@ -44,14 +44,14 @@ void CoffeeMaker::BSpline::AddControlPoint(const CoffeeMaker::Math::Point2D& con
   SetControlPointAt(_cache.size() - 1, controlPoint);
 }
 
-void CoffeeMaker::BSpline::RemoveControlPointAt(size_t index) {
-  _cache.erase(_cache.begin() + index);
-  if (_cache.size() < 4) {
-    _tinysplineBSpline.reset(new tinyspline::BSpline(4));
-  } else {
-    _tinysplineBSpline.reset(new tinyspline::BSpline(_cache.size()));
-  }
-  SetControlPoints(_cache);
+void CoffeeMaker::BSpline::RemoveControlPointAt(size_t) {
+  // _cache.erase(_cache.begin() + index);
+  // if (_cache.size() < 4) {
+  //   _tinysplineBSpline.reset(new tinyspline::BSpline(4));
+  // } else {
+  //   _tinysplineBSpline.reset(new tinyspline::BSpline(_cache.size()));
+  // }
+  // SetControlPoints(_cache);
 }
 
 void CoffeeMaker::BSpline::SetControlPoints(const std::vector<tinyspline::real>& controlPoints) {

@@ -122,19 +122,19 @@ void CoffeeMakerBSpline::testSetBSplinePointAddControlPoint() {
   CPPUNIT_ASSERT_EQUAL(5.0f, controlPoints[4].y);
 }
 
-void CoffeeMakerBSpline::testSetBSplinePointRemoveControlPoint() {
-  using Pt2 = CoffeeMaker::Math::Point2D;
-  Scope<CoffeeMaker::BSpline> bSpline = CreateScope<CoffeeMaker::BSpline>();
-  bSpline->AddControlPoint(Pt2{1, 1});
-  bSpline->AddControlPoint(Pt2{2, 2});
-  bSpline->AddControlPoint(Pt2{3, 3});
-  bSpline->AddControlPoint(Pt2{4, 4});  // to be removed
-  bSpline->RemoveControlPointAt(3);
+// void CoffeeMakerBSpline::testSetBSplinePointRemoveControlPoint() {
+//   using Pt2 = CoffeeMaker::Math::Point2D;
+//   Scope<CoffeeMaker::BSpline> bSpline = CreateScope<CoffeeMaker::BSpline>();
+//   bSpline->AddControlPoint(Pt2{1, 1});
+//   bSpline->AddControlPoint(Pt2{2, 2});
+//   bSpline->AddControlPoint(Pt2{3, 3});
+//   bSpline->AddControlPoint(Pt2{4, 4});  // to be removed
+//   bSpline->RemoveControlPointAt(3);
 
-  std::vector<Pt2> controlPoints = bSpline->GetControlPoints();
-  CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), controlPoints.size());
-  CPPUNIT_ASSERT_EQUAL(0.0f, controlPoints[3].x);
-  CPPUNIT_ASSERT_EQUAL(0.0f, controlPoints[3].y);
-}
+//   std::vector<Pt2> controlPoints = bSpline->GetControlPoints();
+//   CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), controlPoints.size());
+//   CPPUNIT_ASSERT_EQUAL(0.0f, controlPoints[3].x);
+//   CPPUNIT_ASSERT_EQUAL(0.0f, controlPoints[3].y);
+// }
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoffeeMakerBSpline);
