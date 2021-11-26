@@ -95,7 +95,7 @@ set(GAME_SOURCES
   src/Game/Animations/EnemyAnimations.cpp
   src/Game/Animations/SpriteAnimation.cpp
   src/Game/Animations/Explode.cpp
-  src/Game/PowerUps.cpp
+  src/Game/PowerUps/BasePowerUp.cpp
   src/Game/Echelon.cpp
   src/Game/Scenes/TestEchelon.cpp
   src/Game/Events.cpp)

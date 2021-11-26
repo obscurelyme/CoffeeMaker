@@ -1,5 +1,5 @@
-#ifndef _powerups_hpp
-#define _powerups_hpp
+#ifndef _basepowerup_hpp
+#define _basepowerup_hpp
 
 #include "Timer.hpp"
 
