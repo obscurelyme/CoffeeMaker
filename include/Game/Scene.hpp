@@ -48,12 +48,14 @@ class SceneManager {
   static void UnpauseScene();
   static void UpdateCurrentScene(float deltaTime);
   static void RenderCurrentScene();
-  static void LoadScene();
-  static void LoadScene(unsigned long index);
+  static bool LoadScene();
+  static bool LoadScene(unsigned long index);
   static void AddScene(Scene* scene);
   static void DestroyAllScenes();
   static void DestroyCurrentScene();
   static bool CurrentScenePaused();
+  static bool IsInit();
+
   static std::vector<Scene*> scenes;
 
   private:

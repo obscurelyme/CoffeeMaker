@@ -47,6 +47,7 @@ find_package(glm CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(tinyspline CONFIG REQUIRED)
 find_package(tinysplinecxx CONFIG REQUIRED)
+find_package(argparse CONFIG REQUIRED)
 
 set(APP_RESOURCES resources.rc)
 
@@ -105,6 +106,7 @@ add_executable(main ${COFFEEMAKER_EXE_SOURCES})
 target_include_directories(main PRIVATE include)
 target_link_libraries(main PRIVATE fmt::fmt spdlog::spdlog spdlog::spdlog_header_only glm::glm)
 target_link_libraries(main PRIVATE tinyspline::tinyspline tinysplinecxx::tinysplinecxx)
+target_link_libraries(main PRIVATE argparse::argparse)
 
 if (WIN32)
   message("Building for Win32")
