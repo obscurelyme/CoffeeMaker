@@ -12,6 +12,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
+#include <argparse/argparse.hpp>
 #include <chrono>
 #include <filesystem>
 #include <iostream>
@@ -46,7 +47,18 @@ SDL_Event event;
 //   return SDL_ASSERTION_IGNORE;
 // };
 
-int main(int, char**) {
+int main(int argc, char** argv) {
+  argparse::ArgumentParser program("ultra-cosmo-invaders", "0.1.0");
+  program.add_argument("-s", "--scene").default_value(0).help("load a specific scene").scan<'i', int>().nargs(1);
+
+  try {
+    program.parse_args(argc, argv);
+  } catch (const std::runtime_error& e) {
+    std::cerr << e.what() << std::endl;
+    std::cerr << program;
+    return 1;
+  }
+
   CoffeeMaker::Math::RandomEngine::Init();
   // Start clock
   auto start = std::chrono::steady_clock::now();
@@ -88,15 +100,20 @@ int main(int, char**) {
   SceneManager::AddScene(new TestAnimations());
   SceneManager::AddScene(new TestEchelonScene());
   SceneManager::AddScene(new SplineBuilder());
-  SceneManager::LoadScene(5);
-  win.ShowWindow();
-  CoffeeMaker::InputManager::Init();
 
-  auto end = std::chrono::steady_clock::now();
-  std::chrono::duration<float> elapsedSeconds = end - start;
-  CM_LOGGER_INFO("Initialization time took: {}", elapsedSeconds.count());
+  CoffeeMaker::Logger::Debug("Loading scene at index...{}", program.get<int>("--scene"));
+  if (!SceneManager::LoadScene(program.get<int>("--scene"))) {
+    quit = true;
+  } else {
+    win.ShowWindow();
+    CoffeeMaker::InputManager::Init();
 
-  CoffeeMaker::UserEventHandler::RegisterUserEvents(UCI::NumEventsToRegister());
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<float> elapsedSeconds = end - start;
+    CM_LOGGER_INFO("Initialization time took: {}", elapsedSeconds.count());
+
+    CoffeeMaker::UserEventHandler::RegisterUserEvents(UCI::NumEventsToRegister());
+  }
 
   while (!quit) {
     // get input

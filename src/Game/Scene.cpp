@@ -3,6 +3,7 @@
 #include "Event.hpp"
 #include "Game/Enemy.hpp"
 #include "Game/Player.hpp"
+#include "Logger.hpp"
 
 int SceneManager::_currentSceneIndex = -1;
 std::vector<Scene*> SceneManager::scenes = {};
@@ -24,13 +25,12 @@ void SceneManager::RenderCurrentScene() { _currentScene->Render(); }
 
 void SceneManager::AddScene(Scene* scene) { scenes.push_back(scene); }
 
-void SceneManager::LoadScene() {
+bool SceneManager::LoadScene() {
   // NOTE: Handle first scene case
   if (_currentSceneIndex == -1) {
     _currentScene = scenes[++_currentSceneIndex];
     _currentScene->Init();
     CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_LOAD);
-    return;
   }
   // NOTE: If not the first scene, clean up and then move to next scene
   _currentScene->Destroy();
@@ -43,9 +43,15 @@ void SceneManager::LoadScene() {
   }
   _currentScene->Init();
   CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_LOAD);
+  return true;
 }
 
-void SceneManager::LoadScene(unsigned long index) {
+bool SceneManager::LoadScene(unsigned long index) {
+  if (static_cast<int>(index) < 0 || index >= scenes.size()) {
+    // Scene does not exist
+    CoffeeMaker::Logger::Critical("Scene does not exist");
+    return false;
+  }
   if (scenes.size() >= index) {
     if (_currentScene != nullptr && _currentScene->IsLoaded()) {
       _currentScene->Destroy();
@@ -55,7 +61,10 @@ void SceneManager::LoadScene(unsigned long index) {
     _currentScene->Init();
     CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_LOAD);
   }
+  return true;
 }
+
+bool SceneManager::IsInit() { return _currentSceneIndex != -1; }
 
 void SceneManager::DestroyAllScenes() {
   for (auto scene : scenes) {
