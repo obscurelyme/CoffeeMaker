@@ -24,7 +24,7 @@ Player::Player() :
     _collider(new Collider(Collider::Type::Player, true)),
     _active(true),
     _destroyed(false),
-    _lives(999),
+    _lives(3),
     _destroyedAnimation(CreateScope<UCI::Animations::ExplodeSpriteAnimation>()),
     _asyncRespawnTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[PLAYER][RESPAWN-TASK]",
@@ -46,7 +46,8 @@ Player::Player() :
           CoffeeMaker::PushUserEvent(UCI::Events::PLAYER_FIRE_DELAY_END);
         },
         250)),
-    _fireMissileState(Player::FireMissileState::Unlocked) {
+    _fireMissileState(Player::FireMissileState::Unlocked),
+    _warpPowerup(CreateScope<UCI::Warp>()) {
   if (_instance != nullptr) {
     // NOTE: You really messed this one up.
     CoffeeMaker::Logger::Critical("[PLAYER_EVENT][CONSTRUCTION] - An instance of the player class already exists.");
@@ -66,6 +67,10 @@ Player::Player() :
   _collider->Update(_clientRect);
   _collider->OnCollide(std::bind(&Player::OnHit, this, std::placeholders::_1));
   _destroyedAnimation->OnComplete([] { CoffeeMaker::PushUserEvent(UCI::Events::PLAYER_BEGIN_SPAWN); });
+  _oscillation->OnEnd = [this] {
+    _isImmune = false;
+    _texture.SetAlpha(255);
+  };
   _instance = this;
 }
 
@@ -120,6 +125,10 @@ void Player::Update(float deltaTime) {
   if (_active) {
     _rotation = -90;
 
+    if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_W)) {
+      _warpPowerup->Use();
+    }
+
     if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_SPACE)) {
       if (_fireMissileState == Player::FireMissileState::Unlocked) {
         Fire();
@@ -147,7 +156,7 @@ void Player::Update(float deltaTime) {
     projectile->Update(deltaTime);
   }
 
-  if (_isImmune) {
+  if (_isImmune && !_oscillation->Ended()) {
     _texture.SetAlpha(static_cast<Uint8>(_oscillation->Update()));
   }
 }
@@ -195,10 +204,32 @@ void Player::Reload() {
 bool Player::IsOffScreenLeft() { return _clientRect.x + _clientRect.w <= 0; }
 bool Player::IsOffScreenRight() { return _clientRect.x >= 800; }
 
-void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
-  if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
-    // CM_LOGGER_INFO("[PLAYER_EVENT] - COFFEEMAKER_GAME_PAUSE");
+void Player::HandlePowerUpGained(Sint32 event) {
+  if (event == UCI::PowerUp::PowerUpType::Warp) {
+    CoffeeMaker::Logger::Debug("[PLAYER_EVENT][PLAYER_POWER_UP_GAINED][WARP]");
+    _speed = 750;
+  }
+}
 
+void Player::HandlePowerUpLost(Sint32 event) {
+  if (event == UCI::PowerUp::PowerUpType::Warp) {
+    CoffeeMaker::Logger::Debug("[PLAYER_EVENT][PLAYER_POWER_UP_LOST][WARP]");
+    _speed = 225;
+  }
+}
+
+void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
+  if (event.type == UCI::Events::PLAYER_POWER_UP_GAINED) {
+    HandlePowerUpGained(event.code);
+    return;
+  }
+
+  if (event.type == UCI::Events::PLAYER_POWER_UP_LOST) {
+    HandlePowerUpLost(event.code);
+    return;
+  }
+
+  if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
     _asyncRespawnTask->Pause();
     _asyncImmunityTask->Pause();
     _fireDelay->Pause();
@@ -206,8 +237,6 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
   }
 
   if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE) {
-    // CM_LOGGER_INFO("[PLAYER_EVENT] - COFFEEMAKER_GAME_UNPAUSE");
-
     _asyncRespawnTask->Unpause();
     _asyncImmunityTask->Unpause();
     _fireDelay->Unpause();
@@ -215,14 +244,14 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
   }
 
   if (event.type == UCI::Events::PLAYER_BEGIN_SPAWN) {
-    // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_BEGIN_SPAWN");
+    CoffeeMaker::Logger::Debug("[PLAYER_EVENT] - PLAYER_BEGIN_SPAWN");
     _destroyed = false;
     _asyncRespawnTask->Start();
     return;
   }
 
   if (event.type == UCI::Events::PLAYER_POWER_UP_GAINED_IMMUNITY) {
-    // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_POWER_UP_GAINED_IMMUNITY");
+    CoffeeMaker::Logger::Debug("[PLAYER_EVENT] - PLAYER_POWER_UP_GAINED_IMMUNITY");
     _isImmune = true;
     _asyncImmunityTask->Start();
     _oscillation->Start();
@@ -230,8 +259,7 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
   }
 
   if (event.type == UCI::Events::PLAYER_POWER_UP_LOST_IMMUNITY) {
-    // CM_LOGGER_INFO("[PLAYER_EVENT] - PLAYER_POWER_UP_LOST_IMMUNITY");
-    _isImmune = false;
+    CoffeeMaker::Logger::Debug("[PLAYER_EVENT] - PLAYER_POWER_UP_LOST_IMMUNITY");
     _oscillation->Stop();
     return;
   }

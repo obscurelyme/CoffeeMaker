@@ -45,6 +45,24 @@ namespace CoffeeMaker {
    */
   void PushUserEvent(Uint32 type, Sint32 eventCode = -1, void* data1 = nullptr, void* data2 = nullptr);
 
+  class UserEventEmitter {
+    protected:
+    UserEventEmitter() {}
+    ~UserEventEmitter() = default;
+
+    /**
+     * @brief Alias for CoffeeMaker::PushUserEvent
+     *
+     * @param type
+     * @param eventCode
+     * @param data1
+     * @param data2
+     */
+    void EmitUserEvent(Uint32 type, Sint32 eventCode = -1, void* data1 = nullptr, void* data2 = nullptr) {
+      CoffeeMaker::PushUserEvent(type, eventCode, data1, data2);
+    }
+  };
+
   class Delegate {
     public:
     explicit Delegate(std::function<void(const Event& event)> fn);

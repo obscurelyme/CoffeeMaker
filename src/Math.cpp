@@ -160,7 +160,7 @@ CoffeeMaker::Math::Vector2D CoffeeMaker::Math::Normalize(const CoffeeMaker::Math
 }
 
 CoffeeMaker::Math::Oscillate::Oscillate(float min, float max, float speed) :
-    _min(min), _max(max), _speed(speed), _current(min / max), _stopping(false), _end(false) {}
+    OnEnd(nullptr), _min(min), _max(max), _speed(speed), _current(min / max), _stopping(false), _end(false) {}
 
 float CoffeeMaker::Math::Oscillate::Update() {
   if (_end) {
@@ -172,6 +172,9 @@ float CoffeeMaker::Math::Oscillate::Update() {
 
   if (_stopping && _current / _max >= 0.99) {
     _end = true;
+    if (OnEnd != nullptr) {
+      OnEnd();
+    }
   }
 
   return _current;
@@ -183,3 +186,5 @@ void CoffeeMaker::Math::Oscillate::Start() {
   _stopping = false;
   _end = false;
 }
+
+bool CoffeeMaker::Math::Oscillate::Ended() { return _end; }

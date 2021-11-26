@@ -13,6 +13,7 @@
 #include "Game/Collider.hpp"
 #include "Game/Entity.hpp"
 #include "Math.hpp"
+#include "PowerUps/BasePowerUp.hpp"
 #include "Projectile.hpp"
 #include "Texture.hpp"
 #include "Timer.hpp"
@@ -47,6 +48,8 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   bool IsOffScreenLeft();
   bool IsOffScreenRight();
   void HandleDestroy(Collider* collider);
+  void HandlePowerUpGained(Sint32 eventCode);
+  void HandlePowerUpLost(Sint32 eventCode);
 
   CoffeeMaker::Texture _texture{"PlayerV1.png", true};
   SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};
@@ -70,6 +73,7 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   Scope<CoffeeMaker::Math::Oscillate> _oscillation;
   Scope<CoffeeMaker::Async::TimeoutTask> _fireDelay;
   Player::FireMissileState _fireMissileState;
+  Scope<UCI::Warp> _warpPowerup;
 };
 
 #endif
