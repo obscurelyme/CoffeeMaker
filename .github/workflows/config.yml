@@ -37,6 +37,17 @@ jobs:
           bash .github/scripts/osx/configure.sh
       - name: Build
         run: bash .github/scripts/osx/build.sh
+      - name: Test
+        run: |
+          chmod +x ./build/CoffeeMakerUnitTests
+          ./build/CoffeeMakerUnitTests
+      - name: Package
+        run: bash .github/scripts/osx/package.sh
+      - name: Store Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ultra-cosmo-invaders-linux
+          path: /tmp/ultra-cosmo-invaders-linux.tar.gz
 
   windows-build:
     timeout-minutes: 15
@@ -53,6 +64,15 @@ jobs:
         run: .github/scripts/win/configure.bat
       - name: Build
         run: .github/scripts/win/build.bat
+      - name: Test
+        run: ./build/Debug/CoffeeMakerUnitTests.exe
+      - name: Package
+        run: .github/scripts/win/package.bat
+      - name: Store Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ultra-cosmo-invaders-win
+          path: ultra-cosmo-invaders-win.zip
 
   linux-build:
     timeout-minutes: 15
@@ -74,6 +94,17 @@ jobs:
           bash .github/scripts/linux/configure.sh
       - name: Build
         run: bash .github/scripts/linux/build.sh
+      - name: Test
+        run: |
+          chmod +x ./build/CoffeeMakerUnitTests
+          ./build/CoffeeMakerUnitTests
+      - name: Package
+        run: bash .github/scripts/linux/package.sh
+      - name: Store Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ultra-cosmo-invaders-osx
+          path: /tmp/ultra-cosmo-invaders-osx.tar.gz
 
   deploy:
     runs-on: ubuntu-latest

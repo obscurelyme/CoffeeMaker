@@ -1,3 +1,3 @@
 #!/bin/sh
 
-cmake --build build --config Debug --target main
+cmake --build build --config Debug
