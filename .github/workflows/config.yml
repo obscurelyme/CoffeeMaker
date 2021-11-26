@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ultra-cosmo-invaders-linux
-          path: /tmp/ultra-cosmo-invaders-linux.tar.gz
+          path: ultra-cosmo-invaders-linux.tar.gz
 
   windows-build:
     timeout-minutes: 15
@@ -104,7 +104,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ultra-cosmo-invaders-osx
-          path: /tmp/ultra-cosmo-invaders-osx.tar.gz
+          path: ultra-cosmo-invaders-osx.tar.gz
 
   deploy:
     runs-on: ubuntu-latest

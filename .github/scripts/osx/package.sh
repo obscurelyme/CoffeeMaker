@@ -2,4 +2,4 @@
 
 mkdir release &&
   cp ./build/main ./release/ultra-cosmo-invaders &&
-  tar vcfz /tmp/ultra-cosmo-invaders-osx.tar.gz ./release
+  tar vcfz ultra-cosmo-invaders-osx.tar.gz ./release
