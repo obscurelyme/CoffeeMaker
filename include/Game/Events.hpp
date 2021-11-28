@@ -17,6 +17,11 @@ namespace UCI {
     PLAYER_DESTROYED,
     PLAYER_FIRE_DELAY_START,
     PLAYER_FIRE_DELAY_END,
+    // Player Power up Events //////////////////////////////////////////////////
+    PLAYER_POWER_UP_GAINED,
+    PLAYER_POWER_UP_USED,
+    PLAYER_POWER_UP_LOST,
+    PLAYER_POWER_UP_RECHARGED,
     // Enemy Events ////////////////////////////////////////////////////////////
     ENEMY_INITIAL_INTERVAL_SPAWN,
     ENEMY_DESTROYED,

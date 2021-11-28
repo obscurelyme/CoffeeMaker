@@ -4,6 +4,7 @@
 #include <fmt/core.h>
 
 #include <chrono>
+#include <functional>
 #include <random>
 
 using RNG = std::mt19937;
@@ -189,6 +190,9 @@ namespace CoffeeMaker {
       float Update();
       void Stop();
       void Start();
+      bool Ended();
+
+      std::function<void(void)> OnEnd;
 
       private:
       float _min;
