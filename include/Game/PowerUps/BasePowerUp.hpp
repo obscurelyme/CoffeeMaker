@@ -26,7 +26,7 @@ namespace UCI {
 
   class PowerUpCharge : public CoffeeMaker::UserEventEmitter {
     public:
-    PowerUpCharge(PowerUp::PowerUpType type, float enabledDuration, float cooldownDuration) :
+    PowerUpCharge(PowerUp::PowerUpType type, int enabledDuration, int cooldownDuration) :
         _onCooldown(false), _powerUpType(type) {
       durationTimer = CreateScope<CoffeeMaker::Async::TimeoutTask>(
           "PowerUpEnabled", [this] { EmitUserEvent(UCI::Events::PLAYER_POWER_UP_LOST, _powerUpType); },
@@ -124,8 +124,8 @@ namespace UCI {
 
     private:
     std::vector<PowerUpCharge*> _charges;
-    static constexpr float enabledDuration = 250;
-    static constexpr float cooldownDuration = 5000;
+    static constexpr int enabledDuration = 250;
+    static constexpr int cooldownDuration = 5000;
     static const std::string soundFileName;
   };
 }  // namespace UCI
