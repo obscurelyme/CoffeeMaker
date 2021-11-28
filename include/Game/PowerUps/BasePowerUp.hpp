@@ -1,6 +1,8 @@
 #ifndef _basepowerup_hpp
 #define _basepowerup_hpp
 
+#include <atomic>
+
 #include "Async.hpp"
 #include "Audio.hpp"
 #include "Event.hpp"
@@ -29,62 +31,108 @@ namespace UCI {
     Scope<CoffeeMaker::AudioElement> _disabledSoundEffect;
   };
 
+  class PowerUpCharge : public CoffeeMaker::UserEventEmitter {
+    public:
+    PowerUpCharge(PowerUp::PowerUpType type, float duration, float cooldownDuration) :
+        _onCooldown(false), _powerUpType(type) {
+      durationTimer = CreateScope<CoffeeMaker::Async::TimeoutTask>(
+          "PowerUpEnabled", [this] { EmitUserEvent(UCI::Events::PLAYER_POWER_UP_LOST, _powerUpType); }, duration);
+      cooldownTimer = CreateScope<CoffeeMaker::Async::TimeoutTask>(
+          "PowerUpCooldown",
+          [this] {
+            _onCooldown = false;
+            EmitUserEvent(UCI::Events::PLAYER_POWER_UP_RECHARGED, _powerUpType);
+          },
+          cooldownDuration);
+    }
+
+    ~PowerUpCharge() {
+      durationTimer->Cancel();
+      cooldownTimer->Cancel();
+    }
+
+    bool IsOnCooldown() const { return _onCooldown; };
+
+    bool Use() {
+      if (!IsOnCooldown()) {
+        _onCooldown = true;
+        EmitUserEvent(UCI::Events::PLAYER_POWER_UP_GAINED, _powerUpType);
+        durationTimer->Start();
+        cooldownTimer->Start();
+        return true;
+      }
+      return false;
+    }
+
+    void Pause() {
+      durationTimer->Pause();
+      cooldownTimer->Pause();
+    }
+
+    void Resume() {
+      durationTimer->Unpause();
+      cooldownTimer->Unpause();
+    }
+
+    private:
+    std::atomic<bool> _onCooldown;
+    PowerUp::PowerUpType _powerUpType;
+    Scope<CoffeeMaker::Async::TimeoutTask> cooldownTimer;
+    Scope<CoffeeMaker::Async::TimeoutTask> durationTimer;
+  };
+
   class PowerMissle;
   class MineBomb;
   class ForceShield;
 
   class Warp : public PowerUp, CoffeeMaker::IUserEventListener {
     public:
-    Warp() : _charges(3) {
+    Warp() {
       _enabledSoundEffect = CreateScope<CoffeeMaker::AudioElement>("effects/Warp.ogg");
-      _enableTimeout = CreateScope<CoffeeMaker::Async::TimeoutTask>(
-          "[POWER_UP][WARP][ENABLED]",
-          [] { CoffeeMaker::PushUserEvent(UCI::Events::PLAYER_POWER_UP_LOST, PowerUpType::Warp); }, 250);
-      _rechargeTimeout = CreateScope<CoffeeMaker::Async::TimeoutTask>(
-          "[POWER_UP][WARP][RECHARGE_TIMER]",
-          [] { CoffeeMaker::PushUserEvent(UCI::Events::PLAYER_POWER_UP_RECHARGED, PowerUpType::Warp); }, 5000);
+      _charges.push_back(new PowerUpCharge(PowerUp::PowerUpType::Warp, 250, 5000));
+      _charges.push_back(new PowerUpCharge(PowerUp::PowerUpType::Warp, 250, 5000));
+      _charges.push_back(new PowerUpCharge(PowerUp::PowerUpType::Warp, 250, 5000));
     }
 
     virtual void Use() {
-      if (_charges > 0) {
-        _charges--;
-        EmitUserEvent(UCI::Events::PLAYER_POWER_UP_GAINED, PowerUpType::Warp);
-        _enableTimeout->Start();
-        _enabledSoundEffect->Play();
-        if (_charges == 0) {
-          CoffeeMaker::Logger::Debug("[PLAYER_EVENT][PLAYER_POWER_UP_RECHARGING][WARP]");
-          _rechargeTimeout->Start();
+      for (size_t i = 0; i < _charges.size(); i++) {
+        if (_charges[i]->Use()) {
+          _enabledSoundEffect->Play();
+          break;
         }
       }
     }
 
     virtual void OnSDLUserEvent(const SDL_UserEvent& event) {
       if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_PAUSE) {
-        _rechargeTimeout->Pause();
+        for (size_t i = 0; i < _charges.size(); i++) {
+          _charges[i]->Pause();
+        }
         return;
       }
 
       if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE) {
-        _rechargeTimeout->Unpause();
+        for (size_t i = 0; i < _charges.size(); i++) {
+          _charges[i]->Resume();
+        }
         return;
       }
 
       if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_UNLOAD) {
-        _rechargeTimeout->Cancel();
+        for (size_t i = 0; i < _charges.size(); i++) {
+          delete _charges[i];
+        }
         return;
       }
 
       if (event.type == UCI::Events::PLAYER_POWER_UP_RECHARGED && event.code == PowerUpType::Warp) {
-        _charges = 3;
         CoffeeMaker::Logger::Debug("[PLAYER_EVENT][PLAYER_POWER_UP_RECHARGED][WARP]");
         return;
       }
     }
 
     private:
-    unsigned int _charges;
-    Scope<CoffeeMaker::Async::TimeoutTask> _recharge2Timeout;
-    Scope<CoffeeMaker::Async::TimeoutTask> _recharge3Timeout;
+    std::vector<PowerUpCharge*> _charges;
   };
 }  // namespace UCI
 
