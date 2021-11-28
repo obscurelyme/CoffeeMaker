@@ -46,8 +46,8 @@ jobs:
       - name: Store Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ultra-cosmo-invaders-linux
-          path: ultra-cosmo-invaders-linux.tar.gz
+          name: ultra-cosmo-invaders-osx
+          path: ultra-cosmo-invaders-osx.tar.gz
 
   windows-build:
     timeout-minutes: 15
@@ -103,8 +103,8 @@ jobs:
       - name: Store Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ultra-cosmo-invaders-osx
-          path: ultra-cosmo-invaders-osx.tar.gz
+          name: ultra-cosmo-invaders-linux
+          path: ultra-cosmo-invaders-linux.tar.gz
 
   deploy:
     runs-on: ubuntu-latest
