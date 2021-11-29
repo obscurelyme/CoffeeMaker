@@ -84,6 +84,11 @@ namespace UCI {
       _charges.push_back(new PowerUpCharge(PowerUp::PowerUpType::Warp, enabledDuration, cooldownDuration));
       _charges.push_back(new PowerUpCharge(PowerUp::PowerUpType::Warp, enabledDuration, cooldownDuration));
     }
+    ~Warp() {
+      for (size_t i = 0; i < _charges.size(); i++) {
+        delete _charges[i];
+      }
+    }
 
     void Use() override {
       for (size_t i = 0; i < _charges.size(); i++) {
@@ -105,13 +110,6 @@ namespace UCI {
       if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_UNPAUSE) {
         for (size_t i = 0; i < _charges.size(); i++) {
           _charges[i]->Resume();
-        }
-        return;
-      }
-
-      if (event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_SCENE_UNLOAD) {
-        for (size_t i = 0; i < _charges.size(); i++) {
-          delete _charges[i];
         }
         return;
       }

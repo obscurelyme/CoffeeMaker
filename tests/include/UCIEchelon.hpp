@@ -8,18 +8,19 @@
 #include "Game/Echelon.hpp"
 
 namespace EchelonTester {
-  class EchelonImpl : public IEchelonItem {
+  class EchelonImpl : public EchelonItem {
     using Vec2 = CoffeeMaker::Math::Vector2D;
 
     public:
     explicit EchelonImpl(float width) : _position(Vec2{0.0f, 0.0f}), _width(width) {}
     ~EchelonImpl() = default;
-    virtual void SetEchelonPosition(const Vec2 &echelonPosition) {
+    Vec2 GetEchelonPosition() override { return _position; }
+    void SetEchelonPosition(const Vec2 &echelonPosition) override {
       _position.x = echelonPosition.x + (GetEchelonSpace() * static_cast<float>(_echelonIndex)) +
                     (_echelon->GetSpacing() * static_cast<float>(_echelonIndex));
       _position.y = echelonPosition.y;
     }
-    virtual float GetEchelonSpace() { return _width; }
+    float GetEchelonSpace() override { return _width; }
     std::string GetEchelonId() { return _echelonId; }
     Vec2 GetPosition() const { return _position; }
 

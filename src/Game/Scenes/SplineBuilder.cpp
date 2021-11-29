@@ -9,7 +9,7 @@
 
 SplineBuilder::SplineBuilder() :
     _backgroundColor(CoffeeMaker::Colors::Black),
-    _bSpline(CreateScope<CoffeeMaker::BSpline>()),
+    _bSpline(nullptr),
     _bSplineCurvePoints({}),
     _bSplineControlPoints({}),
     _current(0) {}
@@ -45,18 +45,25 @@ void SplineBuilder::Update(float) {
   }
 
   if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_R)) {
-    std::vector<tinyspline::real> knot = _bSpline->GetKnots();
-    for (auto& k : knot) {
-      std::cout << k << std::endl;
+    if (_bSpline != nullptr) {
+      std::vector<tinyspline::real> knot = _bSpline->GetKnots();
+      for (auto& k : knot) {
+        std::cout << k << std::endl;
+      }
     }
   }
 
   if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_S)) {
-    _bSpline->Save();
+    if (_bSpline != nullptr) {
+      _bSpline->Save();
+    }
   }
 }
 
-void SplineBuilder::Init() {}
+void SplineBuilder::Init() {
+  // _bSpline->Load("assets/DroneEntrance1.spline");
+  // _bSpline->GenerateCurves();
+}
 void SplineBuilder::Destroy() {}
 void SplineBuilder::Pause() {}
 void SplineBuilder::Unpause() {}
@@ -64,7 +71,8 @@ void SplineBuilder::Unpause() {}
 void SplineBuilder::OnSDLUserEvent(const SDL_UserEvent&) {}
 
 void SplineBuilder::OnMouseDown(const SDL_MouseButtonEvent& event) {
-  if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_LSHIFT) && event.button == SDL_BUTTON_LEFT) {
+  if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_LSHIFT) && event.button == SDL_BUTTON_LEFT &&
+      _bSpline != nullptr) {
     Ref<SplinePoint> splinePoint =
         CreateRef<SplinePoint>(static_cast<float>(event.x), static_cast<float>(event.y), _current);
     splinePoint->OnDrag([this](size_t i, float x, float y) {

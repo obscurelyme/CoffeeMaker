@@ -12,11 +12,11 @@ CoffeeMaker::BSpline::BSpline(size_t numControlPoints) :
   }
 }
 
-CoffeeMaker::BSpline::~BSpline() {}
+CoffeeMaker::BSpline::~BSpline() = default;
 
 void CoffeeMaker::BSpline::Load(const std::string& filePath) {
   tinyspline::BSpline tmp = tinyspline::BSpline::load(filePath);
-  _tinysplineBSpline.reset(&tmp);
+  _tinysplineBSpline = CreateScope<tinyspline::BSpline>(tmp);
 }
 
 void CoffeeMaker::BSpline::Save() const { _tinysplineBSpline->save("tmp.spline"); }
@@ -24,8 +24,9 @@ void CoffeeMaker::BSpline::Save() const { _tinysplineBSpline->save("tmp.spline")
 std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::BSpline::GetControlPoints() const {
   std::vector<CoffeeMaker::Math::Point2D> points{};
   std::vector<tinyspline::real> controlPoints = _tinysplineBSpline->controlPoints();
+  size_t controlPointsSize = controlPoints.size() / static_cast<size_t>(2);
 
-  for (unsigned int i = 0; i < controlPoints.size() / 2; i++) {
+  for (unsigned int i = 0; i < controlPointsSize; i++) {
     points.push_back(CoffeeMaker::Math::Point2D{.x = static_cast<float>(controlPoints[i * 2]),
                                                 .y = static_cast<float>(controlPoints[i * 2 + 1])});
   }
@@ -33,11 +34,13 @@ std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::BSpline::GetControlPoints()
   return points;
 }
 
+size_t CoffeeMaker::BSpline::NumControlPoints() const { return _tinysplineBSpline->numControlPoints(); }
+
 void CoffeeMaker::BSpline::AddControlPoint(const CoffeeMaker::Math::Point2D& controlPoint) {
   _cache.push_back(controlPoint);
   if (_cache.size() > _tinysplineBSpline->numControlPoints()) {
     // increase size of the spline.
-    _tinysplineBSpline.reset(new tinyspline::BSpline(_cache.size()));
+    _tinysplineBSpline = CreateScope<tinyspline::BSpline>(_cache.size());
     SetControlPoints(_cache);
     return;
   }
@@ -70,13 +73,13 @@ void CoffeeMaker::BSpline::SetControlPoints(const std::vector<CoffeeMaker::Math:
   }
 }
 
-void CoffeeMaker::BSpline::SetControlPointAt(size_t index, CoffeeMaker::Math::Vector2D vector) {
+void CoffeeMaker::BSpline::SetControlPointAt(size_t index, const CoffeeMaker::Math::Vector2D& vector) {
   std::vector<tinyspline::real> pointToAdd{static_cast<tinyspline::real>(vector.x),
                                            static_cast<tinyspline::real>(vector.y)};
   _tinysplineBSpline->setControlPointAt(index, pointToAdd);
 }
 
-void CoffeeMaker::BSpline::SetControlPointAt(size_t index, CoffeeMaker::Math::Point2D point) {
+void CoffeeMaker::BSpline::SetControlPointAt(size_t index, const CoffeeMaker::Math::Point2D& point) {
   std::vector<tinyspline::real> pointToAdd{static_cast<tinyspline::real>(point.x),
                                            static_cast<tinyspline::real>(point.y)};
   _tinysplineBSpline->setControlPointAt(index, pointToAdd);
@@ -85,10 +88,23 @@ void CoffeeMaker::BSpline::SetControlPointAt(size_t index, CoffeeMaker::Math::Po
 void CoffeeMaker::BSpline::GenerateCurves(size_t precision) {
   _curves.clear();
   std::vector<tinyspline::real> temp = _tinysplineBSpline->sample(precision);
-  for (size_t i = 0; i < temp.size() / 2; i++) {
+  size_t tempSize = temp.size() / static_cast<size_t>(2);
+  for (size_t i = 0; i < tempSize; i++) {
     _curves.push_back(
         CoffeeMaker::Math::Point2D{.x = static_cast<float>(temp[i * 2]), .y = static_cast<float>(temp[i * 2 + 1])});
   }
+}
+
+std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::BSpline::InvertControlPoints() {
+  std::vector<CoffeeMaker::Math::Point2D> controlPoints = GetControlPoints();
+  std::vector<CoffeeMaker::Math::Point2D> invertedPoints = {};
+
+  for (size_t i = 0; i < controlPoints.size(); i++) {
+    invertedPoints.push_back(controlPoints[i]);
+    invertedPoints[i].x = 800 - invertedPoints[i].x;
+  }
+
+  return invertedPoints;
 }
 
 std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::BSpline::GetPoints() const { return _curves; }

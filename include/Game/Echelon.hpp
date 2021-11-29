@@ -7,12 +7,11 @@
 #include <string>
 
 #include "Event.hpp"
-#include "Game/Enemy.hpp"
 #include "Math.hpp"
 
 class Echelon;
 
-class IEchelonItem {
+class EchelonItem {
   using Vec2 = CoffeeMaker::Math::Vector2D;
 
   public:
@@ -24,6 +23,7 @@ class IEchelonItem {
   bool IsInEchelon() const;
   bool IsSynced() const;
 
+  virtual Vec2 GetEchelonPosition() = 0;
   virtual void SetEchelonPosition(const Vec2 &pos) = 0;
   /**
    * @brief This will be the amount of space (width)
@@ -32,8 +32,8 @@ class IEchelonItem {
   virtual float GetEchelonSpace() = 0;
 
   protected:
-  IEchelonItem();
-  ~IEchelonItem() = default;
+  EchelonItem();
+  ~EchelonItem() = default;
 
   bool _isInEchelon;
   std::string _echelonId;
@@ -52,13 +52,13 @@ class Echelon : public CoffeeMaker::IUserEventListener {
   using Vec2 = CoffeeMaker::Math::Vector2D;
 
   public:
-  friend class IEchelonItem;
+  friend class EchelonItem;
 
   Echelon(float width, float height, float spacing = 0.0f, float speed = 150.0f,
           const std::string &name = "Unknown Echelon");
   ~Echelon();
 
-  void Add(IEchelonItem *);
+  void Add(EchelonItem *);
   void RemoveAtIndex(unsigned int index);
 
   std::string GetId() const { return _id; }
@@ -67,6 +67,7 @@ class Echelon : public CoffeeMaker::IUserEventListener {
   float GetSpacing();
   float GetWidth();
   void SetPosition(const Vec2 &newPosition);
+  Vec2 GetPosition();
 
   void Update(float);
   void OnSDLUserEvent(const SDL_UserEvent &);
@@ -85,7 +86,7 @@ class Echelon : public CoffeeMaker::IUserEventListener {
   float _spacing;
   Vec2 _position;
   float _speed;
-  std::array<IEchelonItem *, ECHELON_SIZE> _enemies;
+  std::array<EchelonItem *, ECHELON_SIZE> _enemies;
   MovementState _movementState;
   std::string _id;
   std::string _name;

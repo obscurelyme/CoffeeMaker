@@ -8,6 +8,7 @@
 
 #include "Async.hpp"
 #include "Audio.hpp"
+#include "Game/Echelon.hpp"
 #include "Game/Enemy.hpp"
 #include "Game/Entity.hpp"
 #include "Game/Hud.hpp"
@@ -30,20 +31,20 @@ class MainScene : public Scene {
   virtual void OnSDLUserEvent(const SDL_UserEvent& event) override;
 
   private:
-  static void AsyncSpawnEnemy(MainScene* scene);
-
   static const unsigned int MAX_ENEMIES = 10;
   static std::mutex _enemyMutex;
 
   Tiles* _backgroundTiles;
   Player* _player;
-  std::array<Enemy*, MAX_ENEMIES> _enemies;
+  std::array<EchelonEnemy*, MAX_ENEMIES> _enemies;
   std::vector<Entity*> _entities;
   Menu* _menu;
   HeadsUpDisplay* _hud;
   unsigned int _currentSpawn{0};
   CoffeeMaker::MusicTrack* _music;
   Scope<CoffeeMaker::Async::IntervalTask> _enemySpawnTask;
+  Echelon* _backEchelon;
+  Echelon* _frontEchelon;
 };
 
 #endif

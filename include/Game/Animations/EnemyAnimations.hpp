@@ -22,26 +22,57 @@ namespace Animations {
     void DebugRender() const;
     bool Complete() const;
 
-    void OnStart(std::function<void(void*)>);
-    void OnComplete(std::function<void(void*)>);
+    void OnStart(std::function<void(void *)>);
+    void OnComplete(std::function<void(void *)>);
 
     protected:
     void ProcessStart();
     void ProcessComplete();
 
     Scope<CoffeeMaker::Spline> _spline;
-    std::vector<std::function<void(void*)>> _startListeners;
-    std::vector<std::function<void(void*)>> _completeListeners;
+    std::vector<std::function<void(void *)>> _startListeners;
+    std::vector<std::function<void(void *)>> _completeListeners;
   };
 
-  /**
-   * @brief Enemies do a double loop traveling down the screen towards the player.
-   * Enemies will collide with the player if possible.
-   */
+  class SplineAnimation {
+    public:
+    SplineAnimation();
+    ~SplineAnimation();
+    void OnStart(std::function<void(void *)>);
+    void OnComplete(std::function<void(void *)>);
+
+    protected:
+    std::vector<std::function<void(void *)>> _startListeners;
+    std::vector<std::function<void(void *)>> _completeListeners;
+  };
+
   class EnemyEntrance : public BaseSplineAnimation {
     public:
     EnemyEntrance();
     ~EnemyEntrance() = default;
+  };
+
+  class EnemyEntrance001 : public SplineAnimation {
+    public:
+    explicit EnemyEntrance001(float duration = 1.75f);
+    EnemyEntrance001(bool inverted, float duration = 1.75f);
+    ~EnemyEntrance001() = default;
+
+    void Reset();
+    void Update(float deltaTime);
+    CoffeeMaker::Math::Point2D CurrentPosition();
+    void SetFinalPosition(const CoffeeMaker::Math::Point2D &pos);
+
+    private:
+    float _inverted;
+    float _knot;
+    float _currentTime;
+    float _duration;
+    CoffeeMaker::Math::Point2D _currentPoint;
+
+    static Scope<CoffeeMaker::BSpline> _bSpline;
+    static Scope<CoffeeMaker::BSpline> _bSplineInverted;
+    static void LoadBSpline();
   };
 
   /**

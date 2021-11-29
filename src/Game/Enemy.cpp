@@ -28,6 +28,7 @@ Enemy::Enemy() :
     _collider(nullptr),
     _sprite(CreateScope<CoffeeMaker::Sprite>("EnemyV1.png")),
     _entranceSpline(CreateScope<Animations::EnemyEntrance>()),
+    _entranceSpline2(CreateScope<Animations::EnemyEntrance001>()),
     _exitSpline(CreateScope<Animations::EnemyExit>()),
     // TIMEOUTS AND INTERVALS
     _fireMissileTask(CreateScope<CoffeeMaker::Async::IntervalTask>(
@@ -63,16 +64,14 @@ Enemy::Enemy() :
   _sprite->clientRect.y = _position.y;
   _sprite->clientRect.w = 48;
   _sprite->clientRect.h = 48;
-  _entranceSpline->OnComplete([this](void*) {
-    CoffeeMaker::Logger::Trace(
-        fmt::format(fmt::runtime("[ENEMY_EVENT][ENEMY_ENTRANCE_SPLINE] Complete Enemy ID: {}"), _id));
+  _entranceSpline2->OnComplete([this](void*) {
+    CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_ENTRANCE_SPLINE] Complete Enemy ID: {}", _id);
     _state = Enemy::State::StrafingLeft;
     _fireMissileTask->Start();
     _exitTimeoutTask->Start();
   });
   _exitSpline->OnComplete([this](void*) {
-    CoffeeMaker::Logger::Trace(
-        fmt::format(fmt::runtime("[ENEMY_EVENT][ENEMY_EXIT_SPLINE] Complete Enemy ID: {}"), _id));
+    CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_EXIT_SPLINE] Complete Enemy ID: {}", _id);
     _active = false;
     _state = Enemy::State::Idle;
     _respawnTimeoutTask->Start();
@@ -136,6 +135,7 @@ void Enemy::Unpause() {
 
 void Enemy::Update(float deltaTime) {
   using Vec2 = CoffeeMaker::Math::Vector2D;
+  using Pt2 = CoffeeMaker::Math::Point2D;
 
   switch (_state) {
     // case Enemy::State::WillExit_StrafeLeft: {
@@ -168,10 +168,12 @@ void Enemy::Update(float deltaTime) {
     } break;
     case Enemy::State::Entering: {
       if (!SceneManager::CurrentScenePaused()) {
-        _entranceSpline->Update(deltaTime);
+        _entranceSpline2->Update(deltaTime);
       }
 
-      Vec2 currentPos = _entranceSpline->Position();
+      Pt2 pt = _entranceSpline2->CurrentPosition();
+      Vec2 currentPos{pt.x, pt.y};
+      // Vec2 currentPos = _entranceSpline->Position();
 
       _rotation = CoffeeMaker::Math::rad2deg(_position.LookAt(currentPos)) + 90;
       _position = currentPos;
@@ -214,7 +216,7 @@ void Enemy::OnCollision(Collider* collider) {
   if (_collider->active) {
     if (collider->GetType() == Collider::Type::Projectile && _collider->active) {
       CoffeeMaker::PushEvent(UCI::Events::ENEMY_DESTROYED, this);
-      CoffeeMaker::PushEvent(UCI::Events::PLAYER_INCREMENT_SCORE);
+      CoffeeMaker::PushUserEvent(UCI::Events::PLAYER_INCREMENT_SCORE);
       return;
     }
 
@@ -268,7 +270,7 @@ void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
   }
   if (event.code == UCI::Events::ENEMY_SPAWNED && event.data1 == this) {
     CoffeeMaker::Logger::Trace(fmt::format("[ENEMY_EVENT][ENEMY_SPAWNED]: Enemy ID: {}", _id));
-    _entranceSpline->Reset();
+    _entranceSpline2->Reset();
     _exitSpline->Reset();
     Spawn();
     return;
@@ -289,7 +291,7 @@ void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (event.code == UCI::Events::ENEMY_COMPLETE_EXIT && event.data1 == this) {
     // NOTE: Does the same thing as Spawned right now
     CoffeeMaker::Logger::Trace(fmt::format("[ENEMY_EVENT][ENEMY_COMPLETE_EXIT]: Enemy ID: {}", _id));
-    _entranceSpline->Reset();
+    _entranceSpline2->Reset();
     _exitSpline->Reset();
     Spawn();
   }
@@ -305,108 +307,90 @@ void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
   }
 }
 
+EchelonEnemy::EchelonEnemy() {
+  _entranceSpline2->OnComplete([this](void*) {
+    // NOTE: sync with the echelon once we've entered the scene
+    _echelonState = EchelonItem::EchelonState::Synced;
+  });
+
+  _exitTimeoutTask = CreateScope<CoffeeMaker::Async::TimeoutTask>(
+      "[ENEMY][EXIT-TIMEOUT-TASK] - " + _id,
+      [this] {
+        _echelonState = EchelonItem::EchelonState::Solo;
+        CoffeeMaker::PushEvent(UCI::Events::ENEMY_BEGIN_EXIT, this);
+      },
+      12000);
+}
+
+void EchelonEnemy::Update(float deltaTime) {
+  if (_echelonState == EchelonItem::EchelonState::Synced) {
+    // Synced state stuff
+    _sprite->rotation = 180;
+    _sprite->SetPosition(_position);
+    _collider->Update(_sprite->clientRect);
+
+    for (auto& projectile : _projectiles) {
+      projectile->Update(deltaTime);
+    }
+  }
+  if (_echelonState == EchelonItem::EchelonState::Solo) {
+    // Solo state stuff
+    if (_state == Enemy::State::Entering) {
+      // Set to would-be position in echelon
+      using Pt2 = CoffeeMaker::Math::Point2D;
+      using Vec2 = CoffeeMaker::Math::Vector2D;
+      Vec2 currentPos = GetEchelonPosition();
+      _entranceSpline2->SetFinalPosition(Pt2{.x = currentPos.x, .y = currentPos.y});
+    }
+    Enemy::Update(deltaTime);
+  }
+}
+
+CoffeeMaker::Math::Vector2D EchelonEnemy::GetEchelonPosition() {
+  using Vec2 = CoffeeMaker::Math::Vector2D;
+
+  if (_echelon != nullptr) {
+    Vec2 currentPos{0, 0};
+    Vec2 echelonPos = _echelon->GetPosition();
+    currentPos.y = echelonPos.y;
+    currentPos.x = echelonPos.x + (GetEchelonSpace() * static_cast<float>(_echelonIndex)) +
+                   (_echelon->GetSpacing() * static_cast<float>(_echelonIndex));
+    return currentPos;
+  }
+
+  return Vec2{0, 0};
+}
+
+void EchelonEnemy::SetEchelonPosition(const Vec2& echelonPosition) {
+  _position.x = echelonPosition.x + (GetEchelonSpace() * static_cast<float>(_echelonIndex)) +
+                (_echelon->GetSpacing() * static_cast<float>(_echelonIndex));
+  _position.y = echelonPosition.y;
+}
+
+float EchelonEnemy::GetEchelonSpace() { return _sprite->clientRect.w; }
+
+void EchelonEnemy::OnSDLUserEvent(const SDL_UserEvent& event) {
+  if (event.code == UCI::Events::ENEMY_DESTROYED && event.data1 == this) {
+    _echelonState = EchelonItem::EchelonState::Solo;
+  }
+
+  Enemy::OnSDLUserEvent(event);
+}
+
 Drone::Drone() {
-  // NOTE: override the parent _entranceSpline
-  _entranceSpline = CreateScope<::Animations::EnemyBriefEntrance>();
-  _entranceSpline->OnComplete([this](void*) {
-    _state = Enemy::State::StrafingLeft;
+  _entranceSpline2 = CreateScope<Animations::EnemyEntrance001>(true);
+  _entranceSpline2->OnComplete([this](void*) {
+    _echelonState = EchelonItem::EchelonState::Synced;
     _fireMissileTask->Start();
     _exitTimeoutTask->Start();
   });
+  // _exitTimeoutTask = CreateScope<CoffeeMaker::Async::TimeoutTask>(
+  //     "[ENEMY][EXIT-TIMEOUT-TASK] - " + _id,
+  //     [this] {
+  //       _echelonState = EchelonItem::EchelonState::Solo;
+  //       CoffeeMaker::PushEvent(UCI::Events::ENEMY_BEGIN_EXIT, this);
+  //     },
+  //     12000);
 }
 
 Drone::~Drone() {}
-
-// SpecialEnemy::SpecialEnemy() {}
-
-// SpecialEnemy::~SpecialEnemy() {}
-
-// void SpecialEnemy::Init() {
-//   _transformVector.x = 0;
-//   _transformVector.y = 600;
-//   _endVector.x = 400;
-//   _endVector.y = 300;
-//   _clientRect.x = _transformVector.x;
-//   _clientRect.y = _transformVector.y;
-// }
-
-// void SpecialEnemy::Update(float deltaTime) {
-//   using Vec2 = CoffeeMaker::Math::Vector2D;
-//   if (_active) {
-//     _currentTime += deltaTime;
-//     float weight = _currentTime / 1.5f;
-//     Vec2 pos{_clientRect.x, _clientRect.y};
-//     _rotation = CoffeeMaker::Math::rad2deg(pos.LookAt(Player::Position())) + 90;
-//     if (weight <= 1.0f) {
-//       CoffeeMaker::Math::Vector2D currentPos = CoffeeMaker::Math::CubicBezierCurve(
-//           CoffeeMaker::Math::Vector2D(-200.0f, 600.0f), CoffeeMaker::Math::Vector2D(0.0f, -50.0f),
-//           CoffeeMaker::Math::Vector2D(800.0f, 0.0f), CoffeeMaker::Math::Vector2D(400.0f, 150.0f), weight);
-//       _clientRect.x = currentPos.x;
-//       _clientRect.y = currentPos.y;
-//       _collider->Update(_clientRect);
-//     } else {
-//       // NOTE: side to side motion
-//       if (_moveright) {
-//         // move right
-//         _clientRect.x += deltaTime * (_speed);
-//         _collider->Update(_clientRect);
-//         if (_clientRect.x >= 700) {
-//           _moveright = false;
-//         }
-//       } else {
-//         // move left
-//         _clientRect.x -= deltaTime * (_speed);
-//         _collider->Update(_clientRect);
-//         if (_clientRect.x <= 100) {
-//           _moveright = true;
-//         }
-//       }
-//     }
-
-//     if (!_enteredScreen && !IsOffScreen()) {
-//       _enteredScreen = true;
-//     }
-
-//     if (IsOffScreen() && _enteredScreen) {
-//       // Enemy went off screen
-//       Spawn();
-//     }
-//   }
-//   // NOTE: projectiles that have already been fired are still fine to be updated
-//   for (auto& projectile : _projectiles) {
-//     projectile->Update(deltaTime);
-//   }
-// }
-
-// void SpecialEnemy::Render() {
-//   if (_destroyed) {
-//     _destroyedAnimation->Render();
-//   } else {
-//     SDL_RendererFlip flip = SDL_FLIP_NONE;
-//     SDL_RenderCopyExF(CoffeeMaker::Renderer::Instance(), _texture.Handle(), &_clipRect, &_clientRect, _rotation,
-//     NULL,
-//                       flip);
-//   }
-
-//   for (auto& projectile : _projectiles) {
-//     projectile->Render();
-//   }
-// }
-
-// void SpecialEnemy::Pause() { _fireMissileTask->Pause(); }
-
-// void SpecialEnemy::Unpause() { _fireMissileTask->Unpause(); }
-
-// void SpecialEnemy::Spawn() {
-//   _currentTime = 0.0f;
-//   _enteredScreen = false;
-//   _collider->active = false;
-//   _moveright = false;
-
-//   _clientRect.x = _transformVector.x;
-//   _clientRect.y = _transformVector.y;
-//   _collider->Update(_clientRect);
-
-//   _active = true;
-//   _collider->active = true;
-// }

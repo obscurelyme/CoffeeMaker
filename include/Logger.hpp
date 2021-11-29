@@ -6,6 +6,8 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
+#include <iostream>
+
 #ifdef COFFEEMAKER_LOGGER_SOURCE_LOCATION
 #include <source_location>
 #endif
@@ -30,7 +32,7 @@ namespace CoffeeMaker {
     }
 #else
     template <typename S, typename... Args>
-    static void Debug(S fmt, Args... args) {
+    static void Debug(S fmt, Args &&...args) {
       _logger->_spdlog->debug(fmt::format(fmt::runtime(std::forward<S>(fmt)), std::forward<Args &&>(args)...));
     }
 
