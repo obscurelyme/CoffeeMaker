@@ -56,7 +56,7 @@ Enemy::Enemy() :
     _destroyedAnimation(CreateScope<UCI::Animations::ExplodeSpriteAnimation>()),
     _impactSound(CreateScope<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg")),
     _state(Enemy::State::Idle),
-    _aggression(Enemy::AggressionState::Active) {
+    _aggression(Enemy::AggressionState::Passive) {
   _position.x = 400;
   _position.y = 150;
 
@@ -65,15 +65,13 @@ Enemy::Enemy() :
   _sprite->clientRect.w = 48;
   _sprite->clientRect.h = 48;
   _entranceSpline2->OnComplete([this](void*) {
-    CoffeeMaker::Logger::Trace(
-        fmt::format(fmt::runtime("[ENEMY_EVENT][ENEMY_ENTRANCE_SPLINE] Complete Enemy ID: {}"), _id));
+    CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_ENTRANCE_SPLINE] Complete Enemy ID: {}", _id);
     _state = Enemy::State::StrafingLeft;
     _fireMissileTask->Start();
     _exitTimeoutTask->Start();
   });
   _exitSpline->OnComplete([this](void*) {
-    CoffeeMaker::Logger::Trace(
-        fmt::format(fmt::runtime("[ENEMY_EVENT][ENEMY_EXIT_SPLINE] Complete Enemy ID: {}"), _id));
+    CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_EXIT_SPLINE] Complete Enemy ID: {}", _id);
     _active = false;
     _state = Enemy::State::Idle;
     _respawnTimeoutTask->Start();
@@ -175,6 +173,7 @@ void Enemy::Update(float deltaTime) {
 
       Pt2 pt = _entranceSpline2->CurrentPosition();
       Vec2 currentPos{pt.x, pt.y};
+      // Vec2 currentPos = _entranceSpline->Position();
 
       _rotation = CoffeeMaker::Math::rad2deg(_position.LookAt(currentPos)) + 90;
       _position = currentPos;
@@ -304,7 +303,7 @@ void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (event.type == UCI::Events::PLAYER_COMPLETE_SPAWN) {
     CoffeeMaker::Logger::Trace(
         fmt::format("[ENEMY_EVENT][ENEMY_AGGRESSION_STATE_CHANGED]: Enemy [ id={}, aggression=Active ]", _id));
-    _aggression = Enemy::AggressionState::Active;
+    // _aggression = Enemy::AggressionState::Active;
   }
 }
 
@@ -379,20 +378,18 @@ void EchelonEnemy::OnSDLUserEvent(const SDL_UserEvent& event) {
 }
 
 Drone::Drone() {
-  // NOTE: override the parent _entranceSpline
-  _entranceSpline = CreateScope<::Animations::EnemyBriefEntrance>();
-  _entranceSpline->OnComplete([this](void*) {
-    _echelonState = EchelonItem::EchelonState::Synced;
-    _fireMissileTask->Start();
-    _exitTimeoutTask->Start();
-  });
-  _exitTimeoutTask = CreateScope<CoffeeMaker::Async::TimeoutTask>(
-      "[ENEMY][EXIT-TIMEOUT-TASK] - " + _id,
-      [this] {
-        _echelonState = EchelonItem::EchelonState::Solo;
-        CoffeeMaker::PushEvent(UCI::Events::ENEMY_BEGIN_EXIT, this);
-      },
-      12000);
+  // _entranceSpline2->OnComplete([this](void*) {
+  //   _echelonState = EchelonItem::EchelonState::Synced;
+  //   _fireMissileTask->Start();
+  //   _exitTimeoutTask->Start();
+  // });
+  // _exitTimeoutTask = CreateScope<CoffeeMaker::Async::TimeoutTask>(
+  //     "[ENEMY][EXIT-TIMEOUT-TASK] - " + _id,
+  //     [this] {
+  //       _echelonState = EchelonItem::EchelonState::Solo;
+  //       CoffeeMaker::PushEvent(UCI::Events::ENEMY_BEGIN_EXIT, this);
+  //     },
+  //     12000);
 }
 
 Drone::~Drone() {}

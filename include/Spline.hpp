@@ -27,8 +27,8 @@ namespace CoffeeMaker {
     void SetControlPoints(const std::vector<CoffeeMaker::Math::Point2D>& controlPoints);
     void SetControlPoints(const std::vector<CoffeeMaker::Math::Vector2D>& controlPoints);
 
-    void SetControlPointAt(size_t index, CoffeeMaker::Math::Vector2D vector);
-    void SetControlPointAt(size_t index, CoffeeMaker::Math::Point2D point);
+    void SetControlPointAt(size_t index, const CoffeeMaker::Math::Vector2D& vector);
+    void SetControlPointAt(size_t index, const CoffeeMaker::Math::Point2D& point);
 
     /**
      * @brief Generates a vector of Point2Ds that follow the B-Spline curve based on
@@ -45,7 +45,7 @@ namespace CoffeeMaker {
      */
     std::vector<CoffeeMaker::Math::Point2D> GetPoints() const;
 
-    void Load(const std::string& filename);
+    void Load(const std::string& filePath);
     void Save() const;
 
     /**

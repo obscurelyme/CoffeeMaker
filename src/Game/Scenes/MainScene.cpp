@@ -84,8 +84,8 @@ void MainScene::Init() {
   _menu->Init();
   _backgroundTiles = new Tiles("space.png", 800, 600);
   _player = new Player();
-  _frontEchelon = CreateScope<Echelon>(300.0f, 50.0f, 5.0f);
-  _backEchelon = CreateScope<Echelon>(300.0f, 50.0f, 5.0f);
+  _frontEchelon = new Echelon(300.0f, 50.0f, 5.0f);
+  _backEchelon = new Echelon(300.0f, 50.0f, 5.0f);
   _frontEchelon->SetPosition(CoffeeMaker::Math::Vector2D{50.0f, 150.0f});
   _backEchelon->SetPosition(CoffeeMaker::Math::Vector2D{50.0f, 100.0f});
 
@@ -116,8 +116,8 @@ void MainScene::Destroy() {
     e->RemoveFromEchelon();
     delete e;
   }
-  _frontEchelon.reset();
-  _backEchelon.reset();
+  delete _frontEchelon;
+  delete _backEchelon;
   _enemies.fill(nullptr);
   Collider::ClearAllUnprocessedCollisions();
   delete _backgroundTiles;

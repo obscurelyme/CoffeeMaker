@@ -119,7 +119,7 @@
     "__functional_03": "cpp"
   },
   "cmake.configureSettings": {
-    "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"
+    "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
   },
   "[cpp]": {
     "editor.formatOnSave": true,

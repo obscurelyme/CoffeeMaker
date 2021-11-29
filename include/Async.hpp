@@ -67,12 +67,18 @@ namespace CoffeeMaker {
           delete _thread;
           _thread = nullptr;
         }
+        delete _timeoutMutex;
       }
 
       void Start() {
         if (!_running) {
           _running = true;
           _canceled = false;
+          if (_thread != nullptr) {
+            _thread->join();
+            delete _thread;
+            _thread = nullptr;
+          }
           _thread = new std::thread([this] {
             _timer->Start();
             while (!_canceled) {
@@ -141,13 +147,21 @@ namespace CoffeeMaker {
         }
         if (_thread != nullptr && _thread->joinable()) {
           _thread->join();
+          delete _thread;
+          _thread = nullptr;
         }
+        delete _mutex;
       }
 
       void Start() {
         if (!_running) {
           _running = true;
           _canceled = false;
+          if (_thread != nullptr) {
+            _thread->join();
+            delete _thread;
+            _thread = nullptr;
+          }
           _thread = new std::thread([this] {
             _timer->Start();
             while (!_canceled) {

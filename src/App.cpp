@@ -96,10 +96,10 @@ int main(int argc, char** argv) {
 
   SceneManager::AddScene(new TitleScene());
   SceneManager::AddScene(new MainScene());
-  SceneManager::AddScene(new TestBedScene());
-  SceneManager::AddScene(new TestAnimations());
-  SceneManager::AddScene(new TestEchelonScene());
-  SceneManager::AddScene(new SplineBuilder());
+  // SceneManager::AddScene(new TestBedScene());
+  // SceneManager::AddScene(new TestAnimations());
+  // SceneManager::AddScene(new TestEchelonScene());
+  // SceneManager::AddScene(new SplineBuilder());
 
   CoffeeMaker::Logger::Debug("Loading scene at index...{}", program.get<int>("--scene"));
   if (!SceneManager::LoadScene(program.get<int>("--scene"))) {
@@ -156,7 +156,7 @@ int main(int argc, char** argv) {
       Collider::PhysicsUpdate();
 
       // run logic
-      fpsCounter.Update();
+      // fpsCounter.Update();
       SceneManager::UpdateCurrentScene(!paused ? timeStep : 0.0f);
 
       // Reset Timer
@@ -166,7 +166,7 @@ int main(int argc, char** argv) {
       renderer.BeginRender();
 
       SceneManager::RenderCurrentScene();
-      fpsCounter.Render();
+      // fpsCounter.Render();
 
       renderer.EndRender();
       // NOTE: uncomment here to view draw calls

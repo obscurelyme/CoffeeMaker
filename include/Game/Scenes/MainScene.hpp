@@ -43,8 +43,8 @@ class MainScene : public Scene {
   unsigned int _currentSpawn{0};
   CoffeeMaker::MusicTrack* _music;
   Scope<CoffeeMaker::Async::IntervalTask> _enemySpawnTask;
-  Scope<Echelon> _backEchelon;
-  Scope<Echelon> _frontEchelon;
+  Echelon* _backEchelon;
+  Echelon* _frontEchelon;
 };
 
 #endif
