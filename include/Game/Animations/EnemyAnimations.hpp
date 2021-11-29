@@ -37,7 +37,7 @@ namespace Animations {
   class SplineAnimation {
     public:
     SplineAnimation();
-    ~SplineAnimation() = default;
+    ~SplineAnimation();
     void OnStart(std::function<void(void *)>);
     void OnComplete(std::function<void(void *)>);
 
@@ -130,8 +130,10 @@ namespace Animations {
     float _knot;
     float _currentTime;
     float _duration;
-    Scope<CoffeeMaker::BSpline> _bSpline;
     CoffeeMaker::Math::Point2D _currentPoint;
+
+    static Scope<CoffeeMaker::BSpline> _bSpline;
+    static void LoadBSpline();
   };
 
   /**

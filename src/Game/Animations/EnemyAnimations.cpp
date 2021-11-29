@@ -80,13 +80,20 @@ Animations::EnemyExit::EnemyExit() : Animations::BaseSplineAnimation(1.25f) {
 
 Animations::SplineAnimation::SplineAnimation() {}
 
+Animations::SplineAnimation::~SplineAnimation() {
+  _startListeners.clear();
+  _completeListeners.clear();
+}
+
 void Animations::SplineAnimation::OnStart(std::function<void(void *)> fn) { _startListeners.push_back(fn); }
 
 void Animations::SplineAnimation::OnComplete(std::function<void(void *)> fn) { _completeListeners.push_back(fn); }
 
-Animations::EnemyEntrance001::EnemyEntrance001(float duration) :
-    _knot(0.0f), _currentTime(0.0f), _duration(duration), _bSpline(CreateScope<CoffeeMaker::BSpline>()) {
+Scope<CoffeeMaker::BSpline> Animations::EnemyEntrance001::_bSpline = nullptr;
+
+void Animations::EnemyEntrance001::LoadBSpline() {
   using Pt2 = CoffeeMaker::Math::Point2D;
+  _bSpline = CreateScope<CoffeeMaker::BSpline>();
   _bSpline->AddControlPoint(Pt2{.x = 0, .y = 0});
   _bSpline->AddControlPoint(Pt2{.x = 28, .y = 111});
   _bSpline->AddControlPoint(Pt2{.x = 50, .y = 220});
@@ -120,7 +127,12 @@ Animations::EnemyEntrance001::EnemyEntrance001(float duration) :
   _bSpline->AddControlPoint(Pt2{.x = 366, .y = 171});
   _bSpline->AddControlPoint(Pt2{.x = 403, .y = 93});
   _bSpline->AddControlPoint(Pt2{.x = 421, .y = 63});
-  _bSpline->GenerateCurves();
+}
+
+Animations::EnemyEntrance001::EnemyEntrance001(float duration) : _knot(0.0f), _currentTime(0.0f), _duration(duration) {
+  if (_bSpline == nullptr) {
+    LoadBSpline();
+  }
 }
 
 void Animations::EnemyEntrance001::Reset() {
