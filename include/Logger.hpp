@@ -19,9 +19,8 @@ namespace CoffeeMaker {
     static spdlog::logger *Instance();
 
     template <typename S, typename... Args>
-    static void Trace(S, Args &&...) {
-      // NOOP function
-      // _logger->_spdlog->trace(fmt::format(fmt::runtime(std::forward<S>(fmt)), std::forward<Args &&>(args)...));
+    static void Trace(S fmt, Args &&...args) {
+      _logger->_spdlog->trace(fmt::format(fmt::runtime(std::forward<S>(fmt)), std::forward<Args &&>(args)...));
     }
 #ifdef COFFEEMAKER_LOGGER_SOURCE_LOCATION
     template <typename S, typename... Args>
@@ -33,9 +32,8 @@ namespace CoffeeMaker {
     }
 #else
     template <typename S, typename... Args>
-    static void Debug(S, Args &&...) {
-      // NOOP function
-      // _logger->_spdlog->debug(fmt::format(fmt::runtime(std::forward<S>(fmt)), std::forward<Args &&>(args)...));
+    static void Debug(S fmt, Args &&...args) {
+      _logger->_spdlog->debug(fmt::format(fmt::runtime(std::forward<S>(fmt)), std::forward<Args &&>(args)...));
     }
 
     // template <typename S>

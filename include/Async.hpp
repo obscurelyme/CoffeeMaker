@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 
+#include <atomic>
 #include <functional>
 #include <future>
 #include <mutex>
@@ -74,12 +75,15 @@ namespace CoffeeMaker {
         if (!_running) {
           _running = true;
           _canceled = false;
-          if (_thread != nullptr) {
+          if (_shouldKill) {
+            CoffeeMaker::Logger::Trace("{} thread will be killed", _name);
             _thread->join();
             delete _thread;
-            _thread = nullptr;
+            CoffeeMaker::Logger::Trace("{} thread was killed", _name);
           }
+          CoffeeMaker::Logger::Trace("{} thread was created", _name);
           _thread = new std::thread([this] {
+            _shouldKill = false;
             _timer->Start();
             while (!_canceled) {
               std::this_thread::sleep_for(std::chrono::milliseconds(16));
@@ -91,6 +95,7 @@ namespace CoffeeMaker {
               }
             }
             _running = false;
+            _shouldKill = true;
             return;
           });
         }
@@ -128,6 +133,7 @@ namespace CoffeeMaker {
       Scope<CoffeeMaker::StopWatch> _timer;
       std::mutex* _timeoutMutex;
       std::thread* _thread;
+      std::atomic<bool> _shouldKill;
     };
 
     class IntervalTask {
@@ -157,12 +163,15 @@ namespace CoffeeMaker {
         if (!_running) {
           _running = true;
           _canceled = false;
-          if (_thread != nullptr) {
+          if (_shouldKill) {
+            CoffeeMaker::Logger::Trace("{} thread will be killed", "Interval");
             _thread->join();
             delete _thread;
-            _thread = nullptr;
+            CoffeeMaker::Logger::Trace("{} thread was killed", "Interval");
           }
+          CoffeeMaker::Logger::Trace("{} thread was created", "Interval");
           _thread = new std::thread([this] {
+            _shouldKill = false;
             _timer->Start();
             while (!_canceled) {
               std::this_thread::sleep_for(std::chrono::milliseconds(16));
@@ -174,6 +183,7 @@ namespace CoffeeMaker {
               }
             }
             _running = false;
+            _shouldKill = true;
             return;
           });
         }
@@ -205,6 +215,7 @@ namespace CoffeeMaker {
       Scope<CoffeeMaker::StopWatch> _timer;
       std::mutex* _mutex;
       std::thread* _thread;
+      std::atomic<bool> _shouldKill;
     };
   }  // namespace Async
 }  // namespace CoffeeMaker

@@ -54,7 +54,8 @@ namespace Animations {
 
   class EnemyEntrance001 : public SplineAnimation {
     public:
-    EnemyEntrance001(float duration = 1.75f);
+    explicit EnemyEntrance001(float duration = 1.75f);
+    EnemyEntrance001(bool inverted, float duration = 1.75f);
     ~EnemyEntrance001() = default;
 
     void Reset();
@@ -63,12 +64,14 @@ namespace Animations {
     void SetFinalPosition(const CoffeeMaker::Math::Point2D &pos);
 
     private:
+    float _inverted;
     float _knot;
     float _currentTime;
     float _duration;
     CoffeeMaker::Math::Point2D _currentPoint;
 
     static Scope<CoffeeMaker::BSpline> _bSpline;
+    static Scope<CoffeeMaker::BSpline> _bSplineInverted;
     static void LoadBSpline();
   };
 

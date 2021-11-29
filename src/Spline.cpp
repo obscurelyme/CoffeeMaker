@@ -95,6 +95,18 @@ void CoffeeMaker::BSpline::GenerateCurves(size_t precision) {
   }
 }
 
+std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::BSpline::InvertControlPoints() {
+  std::vector<CoffeeMaker::Math::Point2D> controlPoints = GetControlPoints();
+  std::vector<CoffeeMaker::Math::Point2D> invertedPoints = {};
+
+  for (size_t i = 0; i < controlPoints.size(); i++) {
+    invertedPoints.push_back(controlPoints[i]);
+    invertedPoints[i].x = 800 - invertedPoints[i].x;
+  }
+
+  return invertedPoints;
+}
+
 std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::BSpline::GetPoints() const { return _curves; }
 
 CoffeeMaker::Math::Point2D CoffeeMaker::BSpline::Point2DAtKnot(tinyspline::real knot) {
