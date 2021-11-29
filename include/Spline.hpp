@@ -18,6 +18,7 @@ namespace CoffeeMaker {
     ~BSpline();
 
     std::vector<CoffeeMaker::Math::Point2D> GetControlPoints() const;
+    inline size_t NumControlPoints() const { return _tinysplineBSpline->numControlPoints(); }
 
     void AddControlPoint(const CoffeeMaker::Math::Point2D& point);
     void RemoveControlPointAt(size_t index);

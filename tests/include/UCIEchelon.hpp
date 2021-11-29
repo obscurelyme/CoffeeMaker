@@ -8,7 +8,7 @@
 #include "Game/Echelon.hpp"
 
 namespace EchelonTester {
-  class EchelonImpl : public IEchelonItem {
+  class EchelonImpl : public EchelonItem {
     using Vec2 = CoffeeMaker::Math::Vector2D;
 
     public:

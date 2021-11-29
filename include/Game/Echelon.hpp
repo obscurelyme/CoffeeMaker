@@ -7,12 +7,11 @@
 #include <string>
 
 #include "Event.hpp"
-#include "Game/Enemy.hpp"
 #include "Math.hpp"
 
 class Echelon;
 
-class IEchelonItem {
+class EchelonItem {
   using Vec2 = CoffeeMaker::Math::Vector2D;
 
   public:
@@ -32,8 +31,8 @@ class IEchelonItem {
   virtual float GetEchelonSpace() = 0;
 
   protected:
-  IEchelonItem();
-  ~IEchelonItem() = default;
+  EchelonItem();
+  ~EchelonItem() = default;
 
   bool _isInEchelon;
   std::string _echelonId;
@@ -52,13 +51,13 @@ class Echelon : public CoffeeMaker::IUserEventListener {
   using Vec2 = CoffeeMaker::Math::Vector2D;
 
   public:
-  friend class IEchelonItem;
+  friend class EchelonItem;
 
   Echelon(float width, float height, float spacing = 0.0f, float speed = 150.0f,
           const std::string &name = "Unknown Echelon");
   ~Echelon();
 
-  void Add(IEchelonItem *);
+  void Add(EchelonItem *);
   void RemoveAtIndex(unsigned int index);
 
   std::string GetId() const { return _id; }
@@ -85,7 +84,7 @@ class Echelon : public CoffeeMaker::IUserEventListener {
   float _spacing;
   Vec2 _position;
   float _speed;
-  std::array<IEchelonItem *, ECHELON_SIZE> _enemies;
+  std::array<EchelonItem *, ECHELON_SIZE> _enemies;
   MovementState _movementState;
   std::string _id;
   std::string _name;

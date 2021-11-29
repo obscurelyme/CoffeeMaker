@@ -56,7 +56,10 @@ void SplineBuilder::Update(float) {
   }
 }
 
-void SplineBuilder::Init() {}
+void SplineBuilder::Init() {
+  _bSpline->Load("assets/DroneEntrance1.spline");
+  _bSpline->GenerateCurves();
+}
 void SplineBuilder::Destroy() {}
 void SplineBuilder::Pause() {}
 void SplineBuilder::Unpause() {}

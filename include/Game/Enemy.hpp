@@ -14,7 +14,9 @@
 #include "Game/Animations/EnemyAnimations.hpp"
 #include "Game/Animations/Explode.hpp"
 #include "Game/Collider.hpp"
+#include "Game/Echelon.hpp"
 #include "Game/Entity.hpp"
+#include "Game/Events.hpp"
 #include "Game/Projectile.hpp"
 #include "Math.hpp"
 #include "Texture.hpp"
@@ -58,6 +60,7 @@ class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
   Scope<CoffeeMaker::Sprite> _sprite;
   CoffeeMaker::Math::Vector2D _position;
   Scope<Animations::BaseSplineAnimation> _entranceSpline;
+  Scope<Animations::EnemyEntrance001> _entranceSpline2;
   Scope<Animations::EnemyExit> _exitSpline;
   Scope<CoffeeMaker::Async::IntervalTask> _fireMissileTask;
   Scope<CoffeeMaker::Async::TimeoutTask> _exitTimeoutTask;
@@ -68,31 +71,23 @@ class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
   AggressionState _aggression;
 };
 
-class Drone : public Enemy {
+class EchelonEnemy : public Enemy, public EchelonItem {
+  using Vec2 = CoffeeMaker::Math::Vector2D;
+
+  public:
+  EchelonEnemy();
+  virtual ~EchelonEnemy() = default;
+
+  virtual void Update(float deltaTime);
+  virtual void SetEchelonPosition(const Vec2& echelonPosition);
+  virtual float GetEchelonSpace();
+  virtual void OnSDLUserEvent(const SDL_UserEvent& event);
+};
+
+class Drone : public EchelonEnemy {
   public:
   Drone();
   virtual ~Drone();
 };
-
-// class SpecialEnemy : public Enemy {
-//   public:
-//   SpecialEnemy();
-//   virtual ~SpecialEnemy();
-
-//   virtual void Init();
-//   virtual void Update(float deltaTime);
-//   virtual void Render();
-//   virtual void Pause();
-//   virtual void Unpause();
-
-//   virtual void Spawn();
-
-//   protected:
-//   CoffeeMaker::Math::Vector2D _transformVector;
-//   CoffeeMaker::Math::Vector2D _endVector;
-//   float _totalTime{3.0f};
-//   float _currentTime{0.0f};
-//   bool _moveright{true};
-// };
 
 #endif

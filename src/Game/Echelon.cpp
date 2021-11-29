@@ -4,28 +4,28 @@ float Echelon::_rightBoundary = 750;
 float Echelon::_leftBoundary = 50;
 unsigned int Echelon::_uid = 0;
 
-IEchelonItem::IEchelonItem() :
-    _isInEchelon(false), _echelonId(""), _echelon(nullptr), _echelonState(IEchelonItem::EchelonState::Solo) {}
+EchelonItem::EchelonItem() :
+    _isInEchelon(false), _echelonId(""), _echelon(nullptr), _echelonState(EchelonItem::EchelonState::Solo) {}
 
-void IEchelonItem::AddToEchelon(Echelon* echelon) {
+void EchelonItem::AddToEchelon(Echelon* echelon) {
   _echelonId = echelon->GetId();
   _echelonIndex = echelon->_currentIndex;
   _echelon = echelon;
 }
 
-void IEchelonItem::RemoveFromEchelon() {
+void EchelonItem::RemoveFromEchelon() {
   _echelon->RemoveAtIndex(_echelonIndex);
-  _echelonState = IEchelonItem::EchelonState::Solo;
+  _echelonState = EchelonItem::EchelonState::Solo;
   _echelon = nullptr;
 }
 
-void IEchelonItem::SyncToEchelon() { _echelonState = IEchelonItem::EchelonState::Synced; }
+void EchelonItem::SyncToEchelon() { _echelonState = EchelonItem::EchelonState::Synced; }
 
-void IEchelonItem::DesyncFromEchelon() { _echelonState = IEchelonItem::EchelonState::Solo; }
+void EchelonItem::DesyncFromEchelon() { _echelonState = EchelonItem::EchelonState::Solo; }
 
-bool IEchelonItem::IsInEchelon() const { return _echelon != nullptr; }
+bool EchelonItem::IsInEchelon() const { return _echelon != nullptr; }
 
-bool IEchelonItem::IsSynced() const { return _echelonState == IEchelonItem::EchelonState::Synced; }
+bool EchelonItem::IsSynced() const { return _echelonState == EchelonItem::EchelonState::Synced; }
 
 Echelon::Echelon(float width, float height, float spacing, float speed, const std::string& name) :
     _height(height),
@@ -48,7 +48,7 @@ Echelon::~Echelon() {
   _enemies.fill(nullptr);
 }
 
-void Echelon::Add(IEchelonItem* enemy) {
+void Echelon::Add(EchelonItem* enemy) {
   if (_currentIndex <= ECHELON_SIZE - 1) {
     enemy->AddToEchelon(this);
     _enemies[_currentIndex] = enemy;
@@ -89,7 +89,7 @@ void Echelon::Update(float deltaTime) {
 
   // Update all nested enemy positions
   int index = 0;
-  for (IEchelonItem* enemy : _enemies) {
+  for (EchelonItem* enemy : _enemies) {
     if (enemy != nullptr && enemy->IsSynced()) {
       enemy->SetEchelonPosition(_position);
     }
