@@ -79,6 +79,7 @@ class EchelonEnemy : public Enemy, public EchelonItem {
   virtual ~EchelonEnemy() = default;
 
   virtual void Update(float deltaTime);
+  virtual Vec2 GetEchelonPosition();
   virtual void SetEchelonPosition(const Vec2& echelonPosition);
   virtual float GetEchelonSpace();
   virtual void OnSDLUserEvent(const SDL_UserEvent& event);

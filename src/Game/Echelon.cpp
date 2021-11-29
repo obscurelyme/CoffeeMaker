@@ -66,6 +66,8 @@ float Echelon::GetHeight() { return _height; }
 float Echelon::GetSpacing() { return _spacing; }
 float Echelon::GetWidth() { return _width; }
 
+CoffeeMaker::Math::Vector2D Echelon::GetPosition() { return _position; }
+
 void Echelon::SetPosition(const Vec2& newPosition) { _position = newPosition; }
 
 void Echelon::Update(float deltaTime) {

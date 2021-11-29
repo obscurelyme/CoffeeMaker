@@ -33,6 +33,8 @@ std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::BSpline::GetControlPoints()
   return points;
 }
 
+size_t CoffeeMaker::BSpline::NumControlPoints() const { return _tinysplineBSpline->numControlPoints(); }
+
 void CoffeeMaker::BSpline::AddControlPoint(const CoffeeMaker::Math::Point2D& controlPoint) {
   _cache.push_back(controlPoint);
   if (_cache.size() > _tinysplineBSpline->numControlPoints()) {

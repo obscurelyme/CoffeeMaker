@@ -23,6 +23,7 @@ class EchelonItem {
   bool IsInEchelon() const;
   bool IsSynced() const;
 
+  virtual Vec2 GetEchelonPosition() = 0;
   virtual void SetEchelonPosition(const Vec2 &pos) = 0;
   /**
    * @brief This will be the amount of space (width)
@@ -66,6 +67,7 @@ class Echelon : public CoffeeMaker::IUserEventListener {
   float GetSpacing();
   float GetWidth();
   void SetPosition(const Vec2 &newPosition);
+  Vec2 GetPosition();
 
   void Update(float);
   void OnSDLUserEvent(const SDL_UserEvent &);

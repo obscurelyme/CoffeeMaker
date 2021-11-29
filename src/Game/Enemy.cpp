@@ -217,7 +217,7 @@ void Enemy::OnCollision(Collider* collider) {
   if (_collider->active) {
     if (collider->GetType() == Collider::Type::Projectile && _collider->active) {
       CoffeeMaker::PushEvent(UCI::Events::ENEMY_DESTROYED, this);
-      CoffeeMaker::PushEvent(UCI::Events::PLAYER_INCREMENT_SCORE);
+      CoffeeMaker::PushUserEvent(UCI::Events::PLAYER_INCREMENT_SCORE);
       return;
     }
 
@@ -338,10 +338,28 @@ void EchelonEnemy::Update(float deltaTime) {
     // Solo state stuff
     if (_state == Enemy::State::Entering) {
       // Set to would-be position in echelon
-      // _entranceSpline2->SetFinalPosition();
+      using Pt2 = CoffeeMaker::Math::Point2D;
+      using Vec2 = CoffeeMaker::Math::Vector2D;
+      Vec2 currentPos = GetEchelonPosition();
+      _entranceSpline2->SetFinalPosition(Pt2{.x = currentPos.x, .y = currentPos.y});
     }
     Enemy::Update(deltaTime);
   }
+}
+
+CoffeeMaker::Math::Vector2D EchelonEnemy::GetEchelonPosition() {
+  using Vec2 = CoffeeMaker::Math::Vector2D;
+
+  if (_echelon != nullptr) {
+    Vec2 currentPos{0, 0};
+    Vec2 echelonPos = _echelon->GetPosition();
+    currentPos.y = echelonPos.y;
+    currentPos.x = echelonPos.x + (GetEchelonSpace() * static_cast<float>(_echelonIndex)) +
+                   (_echelon->GetSpacing() * static_cast<float>(_echelonIndex));
+    return currentPos;
+  }
+
+  return Vec2{0, 0};
 }
 
 void EchelonEnemy::SetEchelonPosition(const Vec2& echelonPosition) {
@@ -349,6 +367,7 @@ void EchelonEnemy::SetEchelonPosition(const Vec2& echelonPosition) {
                 (_echelon->GetSpacing() * static_cast<float>(_echelonIndex));
   _position.y = echelonPosition.y;
 }
+
 float EchelonEnemy::GetEchelonSpace() { return _sprite->clientRect.w; }
 
 void EchelonEnemy::OnSDLUserEvent(const SDL_UserEvent& event) {
