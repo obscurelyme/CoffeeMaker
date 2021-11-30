@@ -17,7 +17,7 @@ UIComponent::~UIComponent() {
   _children.clear();
 }
 
-UIComponent::UIComponent() : _parent(nullptr) {
+UIComponent::UIComponent() : _parent(nullptr), _marginTop(0), _marginBottom(0), _marginLeft(0), _marginRight(0) {
   SDL_RenderGetViewport(Renderer::Instance(), &viewport);
   clientRect.h = viewport.h;
   clientRect.w = viewport.w;
@@ -28,7 +28,8 @@ UIComponent::UIComponent() : _parent(nullptr) {
   _id = "UIComponent-" + std::to_string(++_uid);
 }
 
-UIComponent::UIComponent(const SDL_Rect clientRect) : clientRect(clientRect), _parent(nullptr) {
+UIComponent::UIComponent(const SDL_Rect& clientRect) :
+    clientRect(clientRect), _parent(nullptr), _marginTop(0), _marginBottom(0), _marginLeft(0), _marginRight(0) {
   SDL_RenderGetViewport(Renderer::Instance(), &viewport);
   _xAlign = HorizontalAlignment::Left;
   _yAlign = VerticalAlignment::Top;
@@ -54,8 +55,8 @@ void UIComponent::RepositionChildren() {
 }
 
 void UIComponent::CalcPosition() {
-  clientRect.x = UIComponent::DeriveXPosition();
-  clientRect.y = UIComponent::DeriveYPosition();
+  clientRect.x = UIComponent::DeriveXPosition() + static_cast<int>(_marginLeft);
+  clientRect.y = UIComponent::DeriveYPosition() + static_cast<int>(_marginTop);
   RepositionChildren();
 }
 
@@ -122,3 +123,11 @@ int UIComponent::DeriveYPosition() {
 }
 
 void UIComponent::SetDebugRender(bool toggle) { _debugRendering = toggle; }
+
+void UIComponent::SetMargins(const Margins& margins) {
+  _marginTop = margins.top;
+  _marginBottom = margins.bottom;
+  _marginLeft = margins.left;
+  _marginRight = margins.right;
+  CalcPosition();
+}

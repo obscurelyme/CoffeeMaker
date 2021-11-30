@@ -18,9 +18,14 @@ namespace CoffeeMaker {
     static void Init();
     static spdlog::logger *Instance();
 
-    template <typename S, typename... Args>
-    static void Trace(S, Args &&...) {
-      // _logger->_spdlog->trace(fmt::format(std::forward<S>(fmt), std::forward<Args &&>(args)...));
+    // template <typename S, typename... Args>
+    // static void Trace(S, Args &&...) {
+    //   // _logger->_spdlog->trace(fmt::format(std::forward<S>(fmt), std::forward<Args &&>(args)...));
+    // }
+
+    template <typename... Args>
+    static void Trace(fmt::format_string<Args...> fmt, Args &&...args) {
+      _logger->_spdlog->trace(fmt, args...);
     }
 #ifdef COFFEEMAKER_LOGGER_SOURCE_LOCATION
     template <typename S, typename... Args>
@@ -31,9 +36,14 @@ namespace CoffeeMaker {
           fmt::format(fmt::runtime(std::forward<S>(fmt) + " - " + sourceFmt), std::forward<Args &&>(args)...));
     }
 #else
-    template <typename S, typename... Args>
-    static void Debug(S, Args &&...) {
-      //_logger->_spdlog->debug(fmt::format(std::forward<S>(fmt), std::forward<Args &&>(args)...));
+    // template <typename S, typename... Args>
+    // static void Debug(S, Args &&...) {
+    //   //_logger->_spdlog->debug(fmt::format(std::forward<S>(fmt), std::forward<Args &&>(args)...));
+    // }
+
+    template <typename... Args>
+    static void Debug(fmt::format_string<Args...> fmt, Args &&...args) {
+      _logger->_spdlog->debug(fmt, args...);
     }
 
     // template <typename S>

@@ -25,9 +25,14 @@ void CoffeeMaker::IUserEventListener::RemoveStaleListeners() {
   }
 }
 
-CoffeeMaker::IUserEventListener::~IUserEventListener() { _listeners[_index] = nullptr; }
-
-CoffeeMaker::IUserEventListener::IUserEventListener() : _id(++_uid) {
-  _listeners.push_back(this);
-  _index = _listeners.size() - 1;
+CoffeeMaker::IUserEventListener::~IUserEventListener() {
+  for (auto it = _listeners.begin(); it != _listeners.end();) {
+    if ((*it) == this) {
+      *it = nullptr;
+    } else {
+      ++it;
+    }
+  }
 }
+
+CoffeeMaker::IUserEventListener::IUserEventListener() : _id(++_uid) { _listeners.push_back(this); }

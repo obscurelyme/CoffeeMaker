@@ -21,12 +21,17 @@ void CoffeeMaker::MouseEventHandler::HandleMouseEvents(const SDL_Event& event) {
 
 void CoffeeMaker::MouseEventHandler::ClearMouseEvents() { CoffeeMaker::IMouseListener::RemoveStaleListeners(); }
 
-CoffeeMaker::IMouseListener::IMouseListener() : _active(true), _id(++_uid) {
-  _listeners.push_back(this);
-  _index = _listeners.size() - 1;
-}
+CoffeeMaker::IMouseListener::IMouseListener() : _active(true), _id(++_uid) { _listeners.push_back(this); }
 
-CoffeeMaker::IMouseListener::~IMouseListener() { _listeners[_index] = nullptr; }
+CoffeeMaker::IMouseListener::~IMouseListener() {
+  for (auto it = _listeners.begin(); it != _listeners.end();) {
+    if ((*it) == this) {
+      *it = nullptr;
+    } else {
+      ++it;
+    }
+  }
+}
 
 void CoffeeMaker::IMouseListener::RemoveStaleListeners() {
   for (auto it = _listeners.begin(); it != _listeners.end();) {

@@ -101,7 +101,9 @@ set(GAME_SOURCES
   src/Game/PowerUps/BasePowerUp.cpp
   src/Game/Echelon.cpp
   src/Game/Scenes/TestEchelon.cpp
-  src/Game/Events.cpp)
+  src/Game/Scenes/HighScoreScene.cpp
+  src/Game/Events.cpp
+  src/Game/ScoreManager.cpp)
 
 set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES})
 
@@ -166,6 +168,7 @@ set(COFFEEMAKER_TEST_SOURCES
   tests/CoffeeMakerMath.cpp
   tests/CoffeeMakerCoroutine.cpp
   tests/CoffeeMakerDateTime.cpp
+  tests/UCIScoreManager.cpp
   # tests/CoffeeMakerShapesRect.cpp
   # tests/CoffeeMakerTextureTest.cpp
   # tests/CoffeeMakerUtilities.cpp

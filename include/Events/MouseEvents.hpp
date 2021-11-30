@@ -37,7 +37,7 @@ namespace CoffeeMaker {
     private:
     bool _active;
     unsigned int _id;
-    size_t _index;
+    // size_t _index;
     static unsigned int _uid;
 
     static std::vector<IMouseListener*> _listeners;
