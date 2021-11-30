@@ -83,6 +83,11 @@ int main(int argc, char** argv) {
   CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 800, 600);
   CoffeeMaker::Renderer renderer;
 
+  std::string basePath = SDL_GetBasePath();
+  basePath += "/assets/images/Player-NoBkGrd.png";
+  SDL_Surface* iconSurface = IMG_Load(basePath.c_str());
+  SDL_SetWindowIcon(win.Handle(), iconSurface);
+  SDL_FreeSurface(iconSurface);
   CoffeeMaker::Cursor cursor("cursor.png");
   CoffeeMaker::FontManager::Init();
   CoffeeMaker::FontManager::LoadFont("Sarpanch/Sarpanch-Regular");
