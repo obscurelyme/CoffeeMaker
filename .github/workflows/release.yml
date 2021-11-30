@@ -106,6 +106,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ultra-cosmo-invaders-win.zip
-            ultra-cosmo-invaders-linux.tar.gz
-            ultra-cosmo-invaders-osx.tar.gz
+            /home/runner/work/CoffeeMaker/CoffeeMaker/ultra-cosmo-invaders-win.zip
+            /home/runner/work/CoffeeMaker/CoffeeMaker/ultra-cosmo-invaders-osx.tar.gz
+            /home/runner/work/CoffeeMaker/CoffeeMaker/ultra-cosmo-invaders-linux.tar.gz
