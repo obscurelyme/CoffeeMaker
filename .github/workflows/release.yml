@@ -24,6 +24,8 @@ jobs:
           bash .github/scripts/osx/configure.sh
       - name: Build
         run: bash .github/scripts/osx/build.sh
+      - name: Package
+        run: bash .github/scripts/osx/package.sh
       - name: Store Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -73,6 +75,8 @@ jobs:
           bash .github/scripts/linux/configure.sh
       - name: Build
         run: bash .github/scripts/linux/build.sh
+      - name: Package
+        run: bash .github/scripts/linux/package.sh
       - name: Store Artifact
         uses: actions/upload-artifact@v2
         with:
