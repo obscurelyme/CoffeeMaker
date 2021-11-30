@@ -24,6 +24,11 @@ jobs:
           bash .github/scripts/osx/configure.sh
       - name: Build
         run: bash .github/scripts/osx/build.sh
+      - name: Store Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ultra-cosmo-invaders-osx
+          path: ultra-cosmo-invaders-osx.tar.gz
 
   windows-release-build:
     timeout-minutes: 30
@@ -42,6 +47,11 @@ jobs:
         run: .github/scripts/win/build.bat
       - name: Package
         run: .github/scripts/win/package.bat
+      - name: Store Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ultra-cosmo-invaders-win
+          path: ultra-cosmo-invaders-win.zip
 
   linux-release-build:
     timeout-minutes: 30
@@ -63,7 +73,11 @@ jobs:
           bash .github/scripts/linux/configure.sh
       - name: Build
         run: bash .github/scripts/linux/build.sh
-
+      - name: Store Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ultra-cosmo-invaders-linux
+          path: ultra-cosmo-invaders-linux.tar.gz
 
   release:
     runs-on: ubuntu-latest
