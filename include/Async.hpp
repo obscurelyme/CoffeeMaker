@@ -76,12 +76,14 @@ namespace CoffeeMaker {
           _running = true;
           _canceled = false;
           if (_shouldKill) {
-            CoffeeMaker::Logger::Trace("{} thread will be killed", _name);
+            // CM_LOGGER_DEBUG("{} thread will be killed", _name);
             _thread->join();
             delete _thread;
-            CoffeeMaker::Logger::Trace("{} thread was killed", _name);
+            // CM_LOGGER_DEBUG("{} thread was killed", _name);
+          } else {
+            // CM_LOGGER_DEBUG("{} thread was NOT killed", _name);
           }
-          CoffeeMaker::Logger::Trace("{} thread was created", _name);
+          // CM_LOGGER_DEBUG("{} thread was created", _name);
           _thread = new std::thread([this] {
             _shouldKill = false;
             _timer->Start();
@@ -91,6 +93,7 @@ namespace CoffeeMaker {
               if (_timer->Expired()) {
                 _callback();
                 _running = false;
+                _shouldKill = true;
                 return;
               }
             }

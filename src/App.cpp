@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
   CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 800, 600);
   CoffeeMaker::Renderer renderer;
 
-  std::string basePath = SDL_GetBasePath();
+  std::string basePath = CoffeeMaker::Utilities::BaseDirectory();
   basePath += "/assets/images/Player-NoBkGrd.png";
   SDL_Surface* iconSurface = IMG_Load(basePath.c_str());
   SDL_SetWindowIcon(win.Handle(), iconSurface);

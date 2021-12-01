@@ -19,8 +19,8 @@ namespace CoffeeMaker {
     static spdlog::logger *Instance();
 
     template <typename S, typename... Args>
-    static void Trace(S fmt, Args &&...args) {
-      _logger->_spdlog->trace(fmt::format(fmt::runtime(std::forward<S>(fmt)), std::forward<Args &&>(args)...));
+    static void Trace(S, Args &&...) {
+      // _logger->_spdlog->trace(fmt::format(std::forward<S>(fmt), std::forward<Args &&>(args)...));
     }
 #ifdef COFFEEMAKER_LOGGER_SOURCE_LOCATION
     template <typename S, typename... Args>
@@ -32,8 +32,8 @@ namespace CoffeeMaker {
     }
 #else
     template <typename S, typename... Args>
-    static void Debug(S fmt, Args &&...args) {
-      _logger->_spdlog->debug(fmt::format(fmt::runtime(std::forward<S>(fmt)), std::forward<Args &&>(args)...));
+    static void Debug(S, Args &&...) {
+      //_logger->_spdlog->debug(fmt::format(std::forward<S>(fmt), std::forward<Args &&>(args)...));
     }
 
     // template <typename S>
@@ -64,6 +64,7 @@ namespace CoffeeMaker {
 #define CM_LOGGER_ERROR(...) CoffeeMaker::Logger::Instance()->error(__VA_ARGS__)
 #define CM_LOGGER_WARN(...) CoffeeMaker::Logger::Instance()->warn(__VA_ARGS__)
 #define CM_LOGGER_INFO(...) CoffeeMaker::Logger::Instance()->info(__VA_ARGS__)
+#define CM_LOGGER_DEBUG(...) CoffeeMaker::Logger::Instance()->debug(__VA_ARGS__)
 #define CM_LOGGER_TRACE(...) CoffeeMaker::Logger::Instance()->trace(__VA_ARGS__)
 
 #endif
