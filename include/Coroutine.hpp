@@ -287,7 +287,7 @@ namespace CoffeeMaker {
         SDL_RWops* file = SDL_RWFromFile(_fileName.c_str(), "r");
         if (file == NULL) {
           _str = std::string{"Could not read file!"};
-          handle.resume();
+          static_cast<std::experimental::coroutine_handle<Coroutine::promise_type>>(handle).resume();
           return;
         }
         Sint64 resultSize = SDL_RWsize(file);
