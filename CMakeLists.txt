@@ -72,7 +72,8 @@ set(COFFEEMAKER_ROOT_SOURCES
   src/Math.cpp
   src/Sprite.cpp
   src/Spline.cpp
-  src/Audio.cpp)
+  src/Audio.cpp
+  src/Coroutine.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cpp)
 set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/UIComponent.cpp src/Widgets/View.cpp src/Widgets/Text.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES} ${APP_RESOURCES})
@@ -107,6 +108,20 @@ target_include_directories(main PRIVATE include)
 target_link_libraries(main PRIVATE fmt::fmt spdlog::spdlog spdlog::spdlog_header_only glm::glm)
 target_link_libraries(main PRIVATE tinyspline::tinyspline tinysplinecxx::tinysplinecxx)
 target_link_libraries(main PRIVATE argparse::argparse)
+
+
+# Set Coroutine Support
+if (MSVC)
+  message("Compiler is MSVC and engine will use <coroutine> headers")
+  add_compile_definitions(COROUTINE_SUPPORT)
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+  message("Compiler is GNU and engine will use <coroutine> headers")
+  target_compile_options(main PRIVATE -fcoroutines)
+  add_compile_definitions(COROUTINE_SUPPORT)
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+  message("Compiler is Clang and engine will use <experimental/coroutine> headers")
+  add_compile_definitions(COROUTINE_EXPERIMENTAL_SUPPORT)
+endif()
 
 if (WIN32)
   message("Building for Win32")
@@ -161,6 +176,7 @@ set(COFFEEMAKER_TEST_SOURCES
   tests/CoffeeMakerBSpline.cpp
   tests/UCIEchelon.cpp
   tests/CoffeeMakerMath.cpp
+  tests/CoffeeMakerCoroutine.cpp
   # tests/CoffeeMakerShapesRect.cpp
   # tests/CoffeeMakerTextureTest.cpp
   # tests/CoffeeMakerUtilities.cpp
