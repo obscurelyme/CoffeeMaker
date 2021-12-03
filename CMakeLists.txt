@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16.0)
 
+set(VCPKG_FEATURE_FLAGS "versions")
 set(VCPKG_MANIFEST_MODE ON)
 # comment here.
 

@@ -42,5 +42,24 @@
     "glm",
     "tinyspline",
     "argparse"
+  ],
+  "builtin-baseline": "1b664707c109f5d48b0b142e96117a53deb653be",
+  "overrides": [
+    {
+      "name": "sdl2-mixer",
+      "version": "2.0.4#13"
+    },
+    {
+      "name": "mpg123",
+      "version": "1.28.0#1"
+    },
+    {
+      "name": "libogg",
+      "version": "1.3.5"
+    },
+    {
+      "name": "libvorbis",
+      "version": "1.3.7#1"
+    }
   ]
 }
