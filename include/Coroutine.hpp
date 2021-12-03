@@ -306,7 +306,7 @@ namespace CoffeeMaker {
         }
         _result[nb_read_total] = '\0';
         _str = std::string{_result};
-        handle.resume();
+        static_cast<std::experimental::coroutine_handle<Coroutine::promise_type>>(handle).resume();
       }).detach();
     }
     std::string await_resume() override { return _str; }
@@ -337,7 +337,7 @@ namespace CoffeeMaker {
           }
           SDL_RWclose(file);
         }
-        handle.resume();
+        static_cast<std::experimental::coroutine_handle<Coroutine::promise_type>>(handle).resume();
       }).detach();
     }
     bool await_resume() override { return _result; }
