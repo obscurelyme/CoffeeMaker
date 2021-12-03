@@ -1,11 +1,16 @@
 #ifndef _coffeemaker_coroutine_hpp
 #define _coffeemaker_coroutine_hpp
 
-#ifdef COROUTINE_SUPPORT
+#include <SDL2/SDL.h>
+
 #include <chrono>
-#include <coroutine>
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <thread>
+
+#ifdef COROUTINE_SUPPORT
+#include <coroutine>
 
 namespace CoffeeMaker {
 
@@ -40,11 +45,7 @@ namespace CoffeeMaker {
       return *this;
     }
 
-    ~Coroutine() {
-      // if (_handle) {
-      //   _handle.destroy();
-      // }
-    }
+    ~Coroutine() = default;
 
     void Resume() {
       if (!_handle.done()) {
@@ -56,10 +57,17 @@ namespace CoffeeMaker {
     std::coroutine_handle<promise_type> _handle;
   };
 
-  class Awaiter {
+  template <typename ReturnType>
+  class IAwaiter {
+    virtual bool await_ready() = 0;
+    virtual void await_suspend(std::coroutine_handle<Coroutine::promise_type> handle) = 0;
+    virtual ReturnType await_resume() = 0;
+  };
+
+  class Awaiter : public IAwaiter<int> {
     public:
-    bool await_ready() { return false; }
-    void await_suspend(std::coroutine_handle<Coroutine::promise_type> handle) {
+    bool await_ready() override { return false; }
+    void await_suspend(std::coroutine_handle<Coroutine::promise_type> handle) override {
       std::thread([handle] {
         // do expensive task...
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -67,22 +75,19 @@ namespace CoffeeMaker {
         handle.resume();
       }).detach();
     }
-    int await_resume() {
+    int await_resume() override {
       std::cout << "resumed" << std::endl;
       return 4;
     }
   };
 
-  class TimeoutAwaiter {
+  class TimeoutAwaiter : public IAwaiter<void> {
     public:
-    explicit TimeoutAwaiter(int duration) {
-      _clockStart = std::chrono::steady_clock::now();
-      _duration = duration;
-    }
+    explicit TimeoutAwaiter(int duration) : _clockStart(std::chrono::steady_clock::now()), _duration(duration) {}
     ~TimeoutAwaiter() = default;
 
-    bool await_ready() { return false; }
-    void await_suspend(std::coroutine_handle<Coroutine::promise_type> handle) {
+    bool await_ready() override { return false; }
+    void await_suspend(std::coroutine_handle<Coroutine::promise_type> handle) override {
       std::thread([handle, this] {
         while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - _clockStart)
                    .count() < _duration) {
@@ -91,27 +96,92 @@ namespace CoffeeMaker {
         handle.resume();
       }).detach();
     }
-    void await_resume() {}
+    void await_resume() override {}
 
     private:
     std::chrono::steady_clock::time_point _clockStart;
     int _duration;
-    // int _clockPaused;
-    // bool _started;
-    // bool _paused;
   };
 
   class HttpAwaiter;
-  class FileAwaiter;
+
+  class ReadFileAwaiter : public IAwaiter<std::string> {
+    public:
+    explicit ReadFileAwaiter(const std::string& fileName) : _fileName(fileName), _result(nullptr), _str("") {}
+    ~ReadFileAwaiter() {}
+
+    bool await_ready() override { return false; }
+    void await_suspend(std::coroutine_handle<Coroutine::promise_type> handle) override {
+      std::thread([handle, this] {
+        SDL_RWops* file = SDL_RWFromFile(_fileName.c_str(), "r");
+        if (file == NULL) {
+          _str = std::string{"Could not read file!"};
+          handle.resume();
+          return;
+        }
+        Sint64 resultSize = SDL_RWsize(file);
+        _result = (char*)malloc(resultSize + 1);
+        char* buf = _result;
+        Sint64 nb_read_total = 0;
+        Sint64 nb_read = 1;
+        while (nb_read_total < resultSize && nb_read != 0) {
+          nb_read = SDL_RWread(file, buf, 1, resultSize - nb_read_total);
+          nb_read_total += nb_read;
+          buf += nb_read;
+        }
+        SDL_RWclose(file);
+        if (nb_read_total != resultSize) {
+          free(_result);
+        }
+        _result[nb_read_total] = '\0';
+        _str = std::string{_result};
+        handle.resume();
+      }).detach();
+    }
+    std::string await_resume() override { return _str; }
+
+    private:
+    std::string _fileName;
+    char* _result;
+    std::string _str;
+  };
+
+  class WriteFileAwaiter : public IAwaiter<bool> {
+    public:
+    explicit WriteFileAwaiter(const std::string& fileName, const std::string& data) :
+        _fileName(fileName), _data(data), _result(false) {}
+    ~WriteFileAwaiter() {}
+
+    bool await_ready() override { return false; }
+    void await_suspend(std::coroutine_handle<Coroutine::promise_type> handle) override {
+      std::thread([handle, this] {
+        SDL_RWops* file = SDL_RWFromFile(_fileName.c_str(), "w");
+        if (file != NULL) {
+          const char* str = _data.c_str();
+          size_t len = SDL_strlen(str);
+          if (SDL_RWwrite(file, str, 1, len) != len) {
+            _result = false;
+          } else {
+            _result = true;
+          }
+          SDL_RWclose(file);
+        }
+        handle.resume();
+      }).detach();
+    }
+    bool await_resume() override { return _result; }
+
+    private:
+    std::string _fileName;
+    std::string _data;
+    bool _result;
+  };
 }  // namespace CoffeeMaker
 
 #endif
 
 #ifdef COROUTINE_EXPERIMENTAL_SUPPORT
-#include <chrono>
 #include <experimental/coroutine>
-#include <iostream>
-#include <thread>
 
 namespace CoffeeMaker {
 
@@ -148,11 +218,7 @@ namespace CoffeeMaker {
       return *this;
     }
 
-    ~Coroutine() {
-      // if (_handle) {
-      //   _handle.destroy();
-      // }
-    }
+    ~Coroutine() = default;
 
     void Resume() {
       if (!_handle.done()) {
@@ -162,6 +228,13 @@ namespace CoffeeMaker {
 
     private:
     std::experimental::coroutine_handle<promise_type> _handle;
+  };
+
+  template <typename ReturnType>
+  class IAwaiter {
+    virtual bool await_ready() = 0;
+    virtual void await_suspend(std::experimental::coroutine_handle<Coroutine::promise_type> handle) = 0;
+    virtual ReturnType await_resume() = 0;
   };
 
   class Awaiter {
@@ -183,10 +256,7 @@ namespace CoffeeMaker {
 
   class TimeoutAwaiter {
     public:
-    explicit TimeoutAwaiter(int duration) {
-      _clockStart = std::chrono::steady_clock::now();
-      _duration = duration;
-    }
+    explicit TimeoutAwaiter(int duration) : _clockStart(std::chrono::steady_clock::now()), _duration(duration) {}
     ~TimeoutAwaiter() = default;
 
     bool await_ready() { return false; }
@@ -204,13 +274,79 @@ namespace CoffeeMaker {
     private:
     std::chrono::steady_clock::time_point _clockStart;
     int _duration;
-    // int _clockPaused;
-    // bool _started;
-    // bool _paused;
   };
 
-  class HttpAwaiter;
-  class FileAwaiter;
+  class ReadFileAwaiter : public IAwaiter<std::string> {
+    public:
+    explicit ReadFileAwaiter(const std::string& fileName) : _fileName(fileName), _result(nullptr), _str("") {}
+    ~ReadFileAwaiter() {}
+
+    bool await_ready() override { return false; }
+    void await_suspend(std::experimental::coroutine_handle<Coroutine::promise_type> handle) override {
+      std::thread([handle, this] {
+        SDL_RWops* file = SDL_RWFromFile(_fileName.c_str(), "r");
+        if (file == NULL) {
+          _str = std::string{"Could not read file!"};
+          handle.resume();
+          return;
+        }
+        Sint64 resultSize = SDL_RWsize(file);
+        _result = (char*)malloc(resultSize + 1);
+        char* buf = _result;
+        Sint64 nb_read_total = 0;
+        Sint64 nb_read = 1;
+        while (nb_read_total < resultSize && nb_read != 0) {
+          nb_read = SDL_RWread(file, buf, 1, resultSize - nb_read_total);
+          nb_read_total += nb_read;
+          buf += nb_read;
+        }
+        SDL_RWclose(file);
+        if (nb_read_total != resultSize) {
+          free(_result);
+        }
+        _result[nb_read_total] = '\0';
+        _str = std::string{_result};
+        handle.resume();
+      }).detach();
+    }
+    std::string await_resume() override { return _str; }
+
+    private:
+    std::string _fileName;
+    char* _result;
+    std::string _str;
+  };
+
+  class WriteFileAwaiter : public IAwaiter<bool> {
+    public:
+    explicit WriteFileAwaiter(const std::string& fileName, const std::string& data) :
+        _fileName(fileName), _data(data), _result(false) {}
+    ~WriteFileAwaiter() {}
+
+    bool await_ready() override { return false; }
+    void await_suspend(std::experimental::coroutine_handle<Coroutine::promise_type> handle) override {
+      std::thread([handle, this] {
+        SDL_RWops* file = SDL_RWFromFile(_fileName.c_str(), "w");
+        if (file != NULL) {
+          const char* str = _data.c_str();
+          size_t len = SDL_strlen(str);
+          if (SDL_RWwrite(file, str, 1, len) != len) {
+            _result = false;
+          } else {
+            _result = true;
+          }
+          SDL_RWclose(file);
+        }
+        handle.resume();
+      }).detach();
+    }
+    bool await_resume() override { return _result; }
+
+    private:
+    std::string _fileName;
+    std::string _data;
+    bool _result;
+  };
 }  // namespace CoffeeMaker
 
 #endif

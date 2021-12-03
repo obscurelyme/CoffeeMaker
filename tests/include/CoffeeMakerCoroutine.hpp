@@ -9,6 +9,7 @@ class CoffeeMakerCoroutine : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(CoffeeMakerCoroutine);
   CPPUNIT_TEST(testCoroutineCreation);
   CPPUNIT_TEST(testCoroutineAwaiter);
+  CPPUNIT_TEST(testCoroutineReadFileAwaiter);
   CPPUNIT_TEST_SUITE_END();
 
   public:
@@ -16,6 +17,7 @@ class CoffeeMakerCoroutine : public CppUnit::TestFixture {
   void tearDown();
   void testCoroutineCreation();
   void testCoroutineAwaiter();
+  void testCoroutineReadFileAwaiter();
 };
 
 #endif
