@@ -43,7 +43,7 @@ void CoffeeMakerCoroutine::testCoroutineAwaiter() {
     std::cout << "after awaiter" << std::endl;
   };
 
-  Co myCoro = c();
+  c();
   std::cout << "Return to caller\n";
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
   std::cout << "Test complete\n";
@@ -62,7 +62,7 @@ void CoffeeMakerCoroutine::testCoroutineReadFileAwaiter() {
     result = text;
   };
 
-  Co myCoro = c();
+  c();
   std::cout << "Return to caller\n";
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   std::cout << "Test complete\n";
