@@ -62,7 +62,7 @@ jobs:
         with:
           path: /home/runner/.cache/vcpkg
           key: vcpkg-archives-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
-      - name: Configure
+      - name: Install Tools
         run: |
           sudo apt-get update
           sudo apt-get upgrade
