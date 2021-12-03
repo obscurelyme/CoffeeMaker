@@ -108,7 +108,10 @@ namespace CoffeeMaker {
 #endif
 
 #ifdef COROUTINE_EXPERIMENTAL_SUPPORT
+#include <chrono>
 #include <experimental/coroutine>
+#include <iostream>
+#include <thread>
 
 namespace CoffeeMaker {
 
@@ -125,7 +128,7 @@ namespace CoffeeMaker {
       Coroutine get_return_object() {
         return Coroutine{std::experimental::coroutine_handle<promise_type>::from_promise(*this)};
       }
-      void yield_value() { Suspend{}; }
+      Suspend yield_value() { return {}; }
       Never initial_suspend() { return {}; }
       Never final_suspend() noexcept { return {}; }
       void unhandled_exception() {}
@@ -169,7 +172,7 @@ namespace CoffeeMaker {
         // do expensive task...
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         std::cout << "await resuming" << std::endl;
-        handle.resume();
+        static_cast<std::experimental::coroutine_handle<Coroutine::promise_type>>(handle).resume();
       }).detach();
     }
     int await_resume() {
@@ -188,12 +191,12 @@ namespace CoffeeMaker {
 
     bool await_ready() { return false; }
     void await_suspend(std::experimental::coroutine_handle<Coroutine::promise_type> handle) {
-      std::thread([handle, this] {
+      std::thread([this, handle] {
         while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - _clockStart)
                    .count() < _duration) {
           std::this_thread::sleep_for(std::chrono::milliseconds(16));
         }
-        handle.resume();
+        static_cast<std::experimental::coroutine_handle<Coroutine::promise_type>>(handle).resume();
       }).detach();
     }
     void await_resume() {}

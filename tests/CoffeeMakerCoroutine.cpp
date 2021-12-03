@@ -34,8 +34,8 @@ void CoffeeMakerCoroutine::testCoroutineCreation() {
 
 void CoffeeMakerCoroutine::testCoroutineAwaiter() {
   using Co = CoffeeMaker::Coroutine;
-  using Awaiter = CoffeeMaker::Awaiter;
-  using Suspend = CoffeeMaker::Suspend;
+  // using Awaiter = CoffeeMaker::Awaiter;
+  // using Suspend = CoffeeMaker::Suspend;
 
   auto c = []() -> Co {
     std::cout << "before awaiter" << std::endl;
