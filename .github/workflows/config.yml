@@ -85,15 +85,25 @@ jobs:
         with:
           path: /home/runner/.cache/vcpkg
           key: vcpkg-archives-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
-      - name: Configure
+      - name: Install Tools
         run: |
           sudo apt-get update
           sudo apt-get upgrade
           sudo apt-get install make
           sudo apt-get install yasm
+          sudo apt install gcc-10 g++-10
+      - name: Configure
+        run: |
           bash .github/scripts/linux/configure.sh
+        env:
+          CC: gcc-10
+          CXX: g++-10
       - name: Build
-        run: bash .github/scripts/linux/build.sh
+        run: |
+          bash .github/scripts/linux/build.sh
+        env:
+          CC: gcc-10
+          CXX: g++-10
       - name: Test
         run: |
           chmod +x ./build/CoffeeMakerUnitTests

@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16.0)
 
+set(VCPKG_FEATURE_FLAGS "versions")
 set(VCPKG_MANIFEST_MODE ON)
 # comment here.
 
@@ -72,7 +73,8 @@ set(COFFEEMAKER_ROOT_SOURCES
   src/Math.cpp
   src/Sprite.cpp
   src/Spline.cpp
-  src/Audio.cpp)
+  src/Audio.cpp
+  src/Coroutine.cpp)
 set(COFFEEMAKER_PRIMITIVE_SOURCES src/Primitives/Rect.cpp src/Primitives/Line.cpp)
 set(COFFEEMAKER_WIDGET_SOURCES src/Widgets/Button.cpp src/Widgets/UIComponent.cpp src/Widgets/View.cpp src/Widgets/Text.cpp)
 set(COFFEEMAKER_SOURCES ${COFFEEMAKER_ROOT_SOURCES} ${COFFEEMAKER_PRIMITIVE_SOURCES} ${COFFEEMAKER_WIDGET_SOURCES} ${APP_RESOURCES})
@@ -161,6 +163,7 @@ set(COFFEEMAKER_TEST_SOURCES
   tests/CoffeeMakerBSpline.cpp
   tests/UCIEchelon.cpp
   tests/CoffeeMakerMath.cpp
+  tests/CoffeeMakerCoroutine.cpp
   # tests/CoffeeMakerShapesRect.cpp
   # tests/CoffeeMakerTextureTest.cpp
   # tests/CoffeeMakerUtilities.cpp
@@ -230,4 +233,18 @@ else()
   target_compile_options(CoffeeMakerUnitTests PRIVATE -Wall -Wextra -Wpedantic -Werror)
   target_compile_options(main PRIVATE -Wall -Wextra -Wpedantic -Werror)
   # target_link_options(main PRIVATE -fsanitize=address)
+endif()
+
+# Set Coroutine Support
+if (MSVC)
+  message("Compiler is MSVC and engine will use <coroutine> headers")
+  add_compile_definitions(COROUTINE_SUPPORT)
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+  message("Compiler is GNU and engine will use <coroutine> headers")
+  target_compile_options(main PRIVATE -fcoroutines)
+  target_compile_options(CoffeeMakerUnitTests PRIVATE -fcoroutines)
+  add_compile_definitions(COROUTINE_SUPPORT)
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "AppleClang")
+  message("Compiler is Clang and engine will use <experimental/coroutine> headers")
+  add_compile_definitions(COROUTINE_EXPERIMENTAL_SUPPORT)
 endif()
