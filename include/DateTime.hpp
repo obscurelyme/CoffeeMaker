@@ -19,14 +19,36 @@ namespace CoffeeMaker {
      *
      * @return std::chrono::system_clock::time_point
      */
-    std::chrono::system_clock::time_point Now();
+    inline auto Now() { return std::chrono::system_clock::now(); }
 
     /**
      * @brief Returns a time_point, in milliseconds, indicating the current system time.
      *
      * @return std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds>
      */
-    std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> NowMs();
+    inline auto NowMs() {
+      return std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
+    }
+
+    /**
+     * @brief Convert a given time point into millisecond precision.
+     *
+     * @param timePoint
+     * @return auto
+     */
+    inline auto ToMilliseconds(std::chrono::system_clock::time_point timePoint) {
+      return std::chrono::time_point_cast<std::chrono::milliseconds>(timePoint);
+    }
+
+    /**
+     * @brief Convert a given time point into microsecond precision.
+     *
+     * @param timePoint
+     * @return auto
+     */
+    inline auto ToMicroseconds(std::chrono::system_clock::time_point timePoint) {
+      return std::chrono::time_point_cast<std::chrono::microseconds>(timePoint);
+    }
 
     /**
      * @brief Formats a given std::chrono::time_point to a provided formatted string

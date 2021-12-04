@@ -165,6 +165,7 @@ set(COFFEEMAKER_TEST_SOURCES
   tests/UCIEchelon.cpp
   tests/CoffeeMakerMath.cpp
   tests/CoffeeMakerCoroutine.cpp
+  tests/CoffeeMakerDateTime.cpp
   # tests/CoffeeMakerShapesRect.cpp
   # tests/CoffeeMakerTextureTest.cpp
   # tests/CoffeeMakerUtilities.cpp
