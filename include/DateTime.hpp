@@ -62,7 +62,7 @@ namespace CoffeeMaker {
     template <typename ClockType, typename Precision>
     std::string Format(const std::string& fmt, std::chrono::time_point<ClockType, Precision> time) {
       auto n = std::chrono::system_clock::to_time_t(time);
-      return fmt::format(fmt, fmt::localtime(n));
+      return fmt::format(fmt::runtime(fmt), fmt::localtime(n));
     }
 
     /**
