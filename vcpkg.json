@@ -46,6 +46,14 @@
   "builtin-baseline": "b3cfaaf1bba70febd07c2f672ae590dc5d914180",
   "overrides": [
     {
+      "name": "fmt",
+      "version": "8.0.1"
+    },
+    {
+      "name": "spdlog",
+      "version": "1.9.2"
+    },
+    {
       "name": "sdl2",
       "version": "2.0.16#2"
     },

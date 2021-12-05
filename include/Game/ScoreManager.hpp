@@ -37,10 +37,10 @@ class ScoreManager : public CoffeeMaker::IUserEventListener {
   private:
   static ScoreManager* _instance;
   static unsigned int _incrementAmount;
-  CoffeeMaker::File _scoreFile;
 
   unsigned int _score;
   HighScores _highScores;
+  CoffeeMaker::File _scoreFile;
 };
 
 #endif
