@@ -16,6 +16,7 @@ void UCIScoreManager::tearDown() {
 
 void UCIScoreManager::testScoreManagerInit() {
   ScoreManager::Init();
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   ScoreManager::Destroy();
 }
 
@@ -26,6 +27,7 @@ void UCIScoreManager::testScoreManagerLoadHighScores() {
   unsigned int actualScore = ScoreManager::GetScore();
 
   CPPUNIT_ASSERT_EQUAL(expectedScore, actualScore);
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   ScoreManager::Destroy();
 }
 
@@ -37,6 +39,7 @@ void UCIScoreManager::testScoreManagerCurrentScorePlacementNoPlacement() {
   int actualPlacement = ScoreManager::CurrentScorePlacement();
 
   CPPUNIT_ASSERT_EQUAL(expectedPlacement, actualPlacement);
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   ScoreManager::Destroy();
 }
 
@@ -48,6 +51,7 @@ void UCIScoreManager::testScoreManagerCurrentScorePlacementThirdPlacement() {
   int actualPlacement = ScoreManager::CurrentScorePlacement();
 
   CPPUNIT_ASSERT_EQUAL(expectedPlacement, actualPlacement);
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   ScoreManager::Destroy();
 }
 
@@ -59,6 +63,7 @@ void UCIScoreManager::testScoreManagerCurrentScorePlacementSecondPlacement() {
   int actualPlacement = ScoreManager::CurrentScorePlacement();
 
   CPPUNIT_ASSERT_EQUAL(expectedPlacement, actualPlacement);
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   ScoreManager::Destroy();
 }
 
@@ -70,6 +75,7 @@ void UCIScoreManager::testScoreManagerCurrentScorePlacementFirstPlacement() {
   int actualPlacement = ScoreManager::CurrentScorePlacement();
 
   CPPUNIT_ASSERT_EQUAL(expectedPlacement, actualPlacement);
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   ScoreManager::Destroy();
 }
 
@@ -92,6 +98,7 @@ void UCIScoreManager::testScoreManagerListensToUserEvent() {
   int actualScore = ScoreManager::GetScore();
 
   CPPUNIT_ASSERT_EQUAL(expectedScore, actualScore);
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   ScoreManager::Destroy();
 }
 
@@ -114,6 +121,7 @@ void UCIScoreManager::testScoreManagerListensToUserEventWithMultiplier() {
   int actualScore = ScoreManager::GetScore();
 
   CPPUNIT_ASSERT_EQUAL(expectedScore, actualScore);
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   ScoreManager::Destroy();
 }
 

@@ -1,7 +1,9 @@
 #ifndef _game_score_hpp
 #define _game_score_hpp
 
+#include "Coroutine.hpp"
 #include "Event.hpp"
+#include "File.hpp"
 #include "Utilities.hpp"
 
 struct HighScores {
@@ -27,10 +29,12 @@ class ScoreManager : public CoffeeMaker::IUserEventListener {
   protected:
   ScoreManager();
   ~ScoreManager();
+  CoffeeMaker::Coroutine LoadScores();
 
   private:
   static ScoreManager* _instance;
   static unsigned int _incrementAmount;
+  CoffeeMaker::File _scoreFile;
 
   unsigned int _score;
   HighScores _highScores;

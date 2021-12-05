@@ -2,6 +2,8 @@
 
 #include <functional>
 
+#include "Utilities.hpp"
+
 using namespace CoffeeMaker;
 
 Logger *Logger::_logger = nullptr;
@@ -19,7 +21,8 @@ void Logger::Destroy() {
 }
 
 Logger::Logger() {
-  _fileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/debug.txt", true);
+  _fileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(
+      CoffeeMaker::Utilities::BaseDirectory() + "logs/debug.txt", true);
   _fileSink->set_level(spdlog::level::trace);
 
   _consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();

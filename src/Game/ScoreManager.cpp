@@ -1,6 +1,9 @@
 #include "Game/ScoreManager.hpp"
 
+#include "Coroutine.hpp"
+#include "File.hpp"
 #include "Game/Events.hpp"
+#include "Logger.hpp"
 
 ScoreManager* ScoreManager::_instance = nullptr;
 unsigned int ScoreManager::_incrementAmount = 10;
@@ -12,8 +15,11 @@ ScoreManager::~ScoreManager() { _instance = nullptr; }
 void ScoreManager::Init() {
   if (_instance == nullptr) {
     _instance = new ScoreManager();
+    _instance->LoadScores();
   }
 }
+
+CoffeeMaker::Coroutine ScoreManager::LoadScores() { _scoreFile = co_await CoffeeMaker::ReadFileAwaiter("scores.txt"); }
 
 void ScoreManager::ResetScore() { _instance->_score = 0; }
 
