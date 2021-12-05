@@ -1,5 +1,7 @@
 #include "Game/Scenes/HighScoreScene.hpp"
 
+#include <string>
+
 #include "Event.hpp"
 #include "Game/Scene.hpp"
 #include "Game/ScoreManager.hpp"
@@ -18,29 +20,48 @@ void HighScoreScene::Init() {
   using Text = CoffeeMaker::Widgets::Text;
   using Button = CoffeeMaker::Button;
   using View = CoffeeMaker::Widgets::View;
+  HighScores highScores = ScoreManager::GetHighScores();
+
   _view = CreateScope<View>(WIDTH, HEIGHT, CoffeeMaker::UIProperties::HorizontalAlignment::Centered,
                             CoffeeMaker::UIProperties::VerticalAlignment::Centered);
   Ref<Text> _firstPlaceHighScoreLabel = CreateRef<Text>("Top score");
   _firstPlaceHighScoreLabel->SetFont("Sarpanch/Sarpanch-Bold");
   _firstPlaceHighScoreLabel->SetMargins(CoffeeMaker::Margins{.top = 0, .bottom = 0, .left = 0, .right = 0});
+  Ref<Text> _firstPlaceScore = CreateRef<Text>(std::to_string(highScores.firstPlace));
+  _firstPlaceScore->SetFont("Sarpanch/Sarpanch-Regular");
+  _firstPlaceScore->SetMargins(CoffeeMaker::Margins{.top = 20, .bottom = 0, .left = 8, .right = 0});
 
   Ref<Text> _secondPlaceHighScoreLabel = CreateRef<Text>("2nd");
   _secondPlaceHighScoreLabel->SetFont("Sarpanch/Sarpanch-Bold");
   _secondPlaceHighScoreLabel->SetMargins(CoffeeMaker::Margins{.top = 50, .bottom = 0, .left = 0, .right = 0});
+  Ref<Text> _secondPlaceScore = CreateRef<Text>(std::to_string(highScores.secondPlace));
+  _secondPlaceScore->SetFont("Sarpanch/Sarpanch-Regular");
+  _secondPlaceScore->SetMargins(CoffeeMaker::Margins{.top = 70, .bottom = 0, .left = 8, .right = 0});
 
   Ref<Text> _thirdPlaceHighScoreLabel = CreateRef<Text>("3rd");
   _thirdPlaceHighScoreLabel->SetFont("Sarpanch/Sarpanch-Bold");
   _thirdPlaceHighScoreLabel->SetMargins(CoffeeMaker::Margins{.top = 100, .bottom = 0, .left = 0, .right = 0});
+  Ref<Text> _thirdPlaceScore = CreateRef<Text>(std::to_string(highScores.thirdPlace));
+  _thirdPlaceScore->SetFont("Sarpanch/Sarpanch-Regular");
+  _thirdPlaceScore->SetMargins(CoffeeMaker::Margins{.top = 120, .bottom = 0, .left = 8, .right = 0});
 
   Ref<Text> _currentSessionPlaceHighScoreLabel = CreateRef<Text>("Your score");
   _currentSessionPlaceHighScoreLabel->SetFont("Sarpanch/Sarpanch-Bold");
   _currentSessionPlaceHighScoreLabel->SetHorizontalAlignment(CoffeeMaker::UIProperties::HorizontalAlignment::Right);
   _currentSessionPlaceHighScoreLabel->SetMargins(CoffeeMaker::Margins{.top = 0, .bottom = 0, .left = -50, .right = 0});
+  Ref<Text> _currentSessionPlaceScore = CreateRef<Text>(std::to_string(ScoreManager::GetScore()));
+  _currentSessionPlaceScore->SetFont("Sarpanch/Sarpanch-Regular");
+  _currentSessionPlaceScore->SetHorizontalAlignment(CoffeeMaker::UIProperties::HorizontalAlignment::Right);
+  _currentSessionPlaceScore->SetMargins(CoffeeMaker::Margins{.top = 20, .bottom = 0, .left = -50, .right = 0});
 
   _view->AppendChild(_firstPlaceHighScoreLabel);
   _view->AppendChild(_secondPlaceHighScoreLabel);
   _view->AppendChild(_thirdPlaceHighScoreLabel);
+  _view->AppendChild(_firstPlaceScore);
+  _view->AppendChild(_secondPlaceScore);
+  _view->AppendChild(_thirdPlaceScore);
   _view->AppendChild(_currentSessionPlaceHighScoreLabel);
+  _view->AppendChild(_currentSessionPlaceScore);
 
   Ref<Button> returnToMainMenuButton = CreateRef<Button>("button.png", "button.png");
   Ref<Text> returnToMainMenuButtonLabel = CreateRef<Text>("Main Menu");
@@ -70,7 +91,6 @@ void HighScoreScene::Init() {
   _view->AppendChild(returnToMainMenuButton);
   _view->AppendChild(playAgainButton);
   _loaded = true;
-  CoffeeMaker::Logger::Debug("Your Score: {}", ScoreManager::GetScore());
 }
 
 void HighScoreScene::Update(float) {}

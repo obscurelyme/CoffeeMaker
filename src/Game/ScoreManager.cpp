@@ -26,7 +26,10 @@ void ScoreManager::Init() {
   }
 }
 
-CoffeeMaker::Coroutine ScoreManager::LoadScores() { _scoreFile = co_await CoffeeMaker::ReadFileAwaiter("scores.txt"); }
+CoffeeMaker::Coroutine ScoreManager::LoadScores() {
+  _scoreFile = co_await CoffeeMaker::ReadFileAwaiter("scores.txt");
+  ScoreManager::LoadHighScores();
+}
 
 CoffeeMaker::Coroutine ScoreManager::SaveScores() {
   std::stringstream scoreStr;
