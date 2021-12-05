@@ -23,8 +23,8 @@ namespace CoffeeMaker {
     public:
     class promise_type {
       public:
-      promise_type() { std::cout << "promise_type created" << std::endl; }
-      ~promise_type() { std::cout << "promise_type destroyed" << std::endl; }
+      promise_type() {}
+      ~promise_type() {}
 
       Coroutine get_return_object() { return Coroutine{std::coroutine_handle<promise_type>::from_promise(*this)}; }
       void yield_value() { Suspend{}; }
@@ -136,6 +136,7 @@ namespace CoffeeMaker {
           free(_file.data);
         }
         _file.data[nb_read_total] = '\0';
+        _file.loaded = true;
         handle.resume();
       }).detach();
     }
@@ -192,8 +193,8 @@ namespace CoffeeMaker {
     public:
     class promise_type {
       public:
-      promise_type() { std::cout << "promise_type created" << std::endl; }
-      ~promise_type() { std::cout << "promise_type destroyed" << std::endl; }
+      promise_type() {}
+      ~promise_type() {}
 
       Coroutine get_return_object() {
         return Coroutine{std::experimental::coroutine_handle<promise_type>::from_promise(*this)};
@@ -305,6 +306,7 @@ namespace CoffeeMaker {
           free(_file.data);
         }
         _file.data[nb_read_total] = '\0';
+        _file.loaded = true;
         static_cast<std::experimental::coroutine_handle<Coroutine::promise_type>>(handle).resume();
       }).detach();
     }

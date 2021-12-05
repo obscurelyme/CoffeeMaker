@@ -8,6 +8,7 @@
 class UCIScoreManager : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(UCIScoreManager);
   CPPUNIT_TEST(testScoreManagerInit);
+  CPPUNIT_TEST(testScoreManagerWriteHighScores);
   CPPUNIT_TEST(testScoreManagerLoadHighScores);
   CPPUNIT_TEST(testScoreManagerCurrentScorePlacementNoPlacement);
   CPPUNIT_TEST(testScoreManagerCurrentScorePlacementThirdPlacement);
@@ -22,6 +23,7 @@ class UCIScoreManager : public CppUnit::TestFixture {
   void tearDown();
 
   void testScoreManagerInit();
+  void testScoreManagerWriteHighScores();
   void testScoreManagerLoadHighScores();
   void testScoreManagerCurrentScorePlacementNoPlacement();
   void testScoreManagerCurrentScorePlacementThirdPlacement();

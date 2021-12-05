@@ -18,6 +18,8 @@ class ScoreManager : public CoffeeMaker::IUserEventListener {
 
   static void Init();
   static void LoadHighScores();
+  static void SaveHighScores();
+  static HighScores GetHighScores();
   static int CurrentScorePlacement();
   static void Destroy();
   static void IncrementScore(unsigned int pointsToAdd);
@@ -30,6 +32,7 @@ class ScoreManager : public CoffeeMaker::IUserEventListener {
   ScoreManager();
   ~ScoreManager();
   CoffeeMaker::Coroutine LoadScores();
+  CoffeeMaker::Coroutine SaveScores();
 
   private:
   static ScoreManager* _instance;
