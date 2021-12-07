@@ -30,15 +30,6 @@ if(APPLE OR LINUX_PLATFORM)
 	set(THREADS_PREFER_PTHREAD_FLAG ON)
 endif()
 
-## Set tinysplinecxx_DIR for all platforms due to vcpkg limitations
-if(APPLE)
-  set(tinysplinecxx_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed/x64-osx/share/tinyspline")
-elseif(WIN32)
-  set(tinysplinecxx_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed/x64-windows/share/tinyspline")
-elseif(LINUX_PLATFORM)
-  set(tinysplinecxx_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed/x64-linux/share/tinyspline")
-endif()
-
 find_package(sdl2-image CONFIG REQUIRED)
 find_package(sdl2-ttf CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)

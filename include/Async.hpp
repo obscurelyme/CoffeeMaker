@@ -25,6 +25,59 @@ namespace CoffeeMaker {
     using Function = std::function<T(Args... args)>;
 
     /**
+     * @brief Basic Async Task utility that wraps std::packaged_task
+     *
+     * @tparam T
+     * @tparam Args
+     */
+    template <typename T, typename... Args>
+    class Task;
+
+    template <typename T, typename... Args>
+    class Task<T(Args...)> {
+      public:
+      explicit Task(std::function<T(Args...)> fp) : _value(nullptr) {
+        _packagedTask = new std::packaged_task<T(Args...)>(fp);
+        _future = _packagedTask->get_future();
+        _thread = new std::thread(std::move(*_packagedTask));
+        std::cout << "Task started!\n";
+      }
+
+      ~Task() {
+        Wait();
+        delete _packagedTask;
+      }
+
+      /**
+       * @brief Blocks the calling thread until the task completes its work.
+       *
+       * @return Task*
+       */
+      Task* Wait() {
+        if (_thread != nullptr && _thread->joinable()) {
+          _thread->join();
+          delete _thread;
+          _thread = nullptr;
+          _value = _future.get();
+        }
+        return this;
+      }
+
+      /**
+       * @brief Return the value as a result of the task.
+       *
+       * @return T
+       */
+      T Get() { return _value; }
+
+      private:
+      std::packaged_task<T(Args...)>* _packagedTask;
+      std::future<T> _future;
+      std::thread* _thread;
+      T _value;
+    };
+
+    /**
      * @brief Runs a given Function on another thread
      *
      * @tparam T Return value type of the Function
@@ -46,7 +99,8 @@ namespace CoffeeMaker {
           _name(name),
           _running(false),
           _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
-          _thread(nullptr) {
+          _thread(nullptr),
+          _shouldKill(false) {
         _timeoutMutex = new std::mutex();
       }
       TimeoutTask(std::function<void(void)> cb, int duration) :
@@ -54,7 +108,8 @@ namespace CoffeeMaker {
           _name("UNKNOWN_TIMEOUT_TASK"),
           _running(false),
           _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
-          _thread(nullptr) {
+          _thread(nullptr),
+          _shouldKill(false) {
         _timeoutMutex = new std::mutex();
       }
 
@@ -147,7 +202,8 @@ namespace CoffeeMaker {
           _running(false),
           _timer(CreateScope<CoffeeMaker::StopWatch>(duration)),
           _mutex(new std::mutex()),
-          _thread(nullptr) {}
+          _thread(nullptr),
+          _shouldKill(false) {}
 
       ~IntervalTask() {
         Cancel();

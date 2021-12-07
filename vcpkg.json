@@ -1,6 +1,6 @@
 {
   "name": "coffeemaker",
-  "version-string": "0.1.0",
+  "version-string": "0.0.20.3-alpha",
   "dependencies": [
     "fmt",
     "spdlog",
