@@ -9,7 +9,6 @@
 #include <string>
 #include <thread>
 
-#include "Event.hpp"
 #include "File.hpp"
 
 #ifdef COROUTINE_SUPPORT
@@ -141,10 +140,7 @@ namespace CoffeeMaker {
         handle.resume();
       }).detach();
     }
-    CoffeeMaker::File await_resume() override {
-      CoffeeMaker::PushEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_FILE_READ, &_file);
-      return _file;
-    }
+    CoffeeMaker::File await_resume() override { return _file; }
 
     private:
     std::string _fileName;
@@ -174,10 +170,7 @@ namespace CoffeeMaker {
         handle.resume();
       }).detach();
     }
-    bool await_resume() override {
-      CoffeeMaker::PushEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_FILE_WRITTEN);
-      return _result;
-    }
+    bool await_resume() override { return _result; }
 
     private:
     std::string _fileName;

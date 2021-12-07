@@ -131,16 +131,6 @@ void HighScoreScene::HandlePlayAgain() { SceneManager::LoadScene(1); }
 
 void HighScoreScene::HandleMainMenu() { SceneManager::LoadScene(0); }
 
-void HighScoreScene::OnSDLUserEvent(const SDL_UserEvent& event) {
-  if (event.type == SDL_USEREVENT && event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_FILE_READ) {
-    // reload the high scores...
-  }
-
-  if (event.type == SDL_USEREVENT && event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_FILE_WRITTEN) {
-    // tell the user that the scores were saved...
-  }
-}
-
 std::string HighScoreScene::MarkNewHighScore(int place) {
   return (ScoreManager::CurrentScorePlacement() == place ? "*" : "");
 }

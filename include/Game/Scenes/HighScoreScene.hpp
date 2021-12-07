@@ -17,7 +17,7 @@ class HighScoreScene : public Scene {
   void Pause() override;
   void Unpause() override;
 
-  void OnSDLUserEvent(const SDL_UserEvent&) override;
+  void OnSDLUserEvent(const SDL_UserEvent&) override{};
 
   private:
   void HandlePlayAgain();
