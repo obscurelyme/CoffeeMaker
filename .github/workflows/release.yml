@@ -70,20 +70,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get upgrade
-          sudo apt-get install make
-          sudo apt-get install yasm
-          sudo apt install gcc-10 g++-10
+          sudo apt install make yasm gcc-11 g++-11
+          bash .github/scripts/linux/install-sdl-dependencies.sh
       - name: Configure
         run: bash .github/scripts/linux/configure.sh
-        env:
-          CC: gcc-10
-          CXX: g++-10
       - name: Build
         run: |
           bash .github/scripts/linux/build.sh
-        env:
-          CC: gcc-10
-          CXX: g++-10
       - name: Package
         run: bash .github/scripts/linux/package.sh
       - name: Store Artifact
