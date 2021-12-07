@@ -21,5 +21,6 @@ jobs:
 
       - name: Sync from AWS
         run: |
-          aws s3 sync "${{ secrets.S3_BUCKET_NAME }}/$GITHUB_SHA" ./release
-          ls -la ./release
+          echo $GITHUB_SHA
+          aws s3 sync "${{ secrets.S3_BUCKET_NAME }}/ad4001bbb13b3277806addf7126b98afd195650d" ./release
+          ls ./release
