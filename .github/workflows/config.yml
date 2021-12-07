@@ -126,8 +126,8 @@ jobs:
       - name: Login to AWS
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.JEVES_AWS_ACCESS_TOKEN }}
-          aws-secret-access-key: ${{ secrets.JEVES_AWS_ACCESS_SECRET }}
+          aws-access-key-id: ${{ secrets.BUTLER_AWS_ACCESS_TOKEN }}
+          aws-secret-access-key: ${{ secrets.BUTLER_AWS_SECRET_ACCESS_TOKEN }}
           aws-region: us-west-2
 
       - name: Download Win Artifacts
