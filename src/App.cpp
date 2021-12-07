@@ -67,6 +67,7 @@ int main(int argc, char** argv) {
 
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1) {
     CM_LOGGER_CRITICAL("Could not initialize SDL2!");
+    CM_LOGGER_CRITICAL("Reason: {}", SDL_GetError());
     exit(1);
   }
 
