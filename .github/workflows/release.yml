@@ -141,6 +141,6 @@ jobs:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
         run: |
           bash .github/scripts/install-butler.sh
-          butler push ultra-cosmo-invaders-win.zip ${{ secrets.ITCH_IO_GAME }}:windows --userversion="$GITHUB_REF_NAME"
-          butler push ultra-cosmo-invaders-osx.tar.gz ${{ secrets.ITCH_IO_GAME }}:osx --userversion="$GITHUB_REF_NAME"
-          butler push ultra-cosmo-invaders-linux.tar.gz ${{ secrets.ITCH_IO_GAME }}:linux --userversion="$GITHUB_REF_NAME"
+          ./butler push ultra-cosmo-invaders-win.zip ${{ secrets.ITCH_IO_GAME }}:windows --userversion="$GITHUB_REF_NAME"
+          ./butler push ultra-cosmo-invaders-osx.tar.gz ${{ secrets.ITCH_IO_GAME }}:osx --userversion="$GITHUB_REF_NAME"
+          ./butler push ultra-cosmo-invaders-linux.tar.gz ${{ secrets.ITCH_IO_GAME }}:linux --userversion="$GITHUB_REF_NAME"
