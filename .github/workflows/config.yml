@@ -148,6 +148,6 @@ jobs:
       - name: Upload to AWS S3
         if: ${{ success() }}
         run: |
-          aws s3 cp ultra-cosmo-invaders-win.zip "s3://ultra-cosmo-invaders/$GITHUB_SHA/ultra-cosmo-invaders.zip"
-          aws s3 cp ultra-cosmo-invaders-osx.tar.gz "s3://ultra-cosmo-invaders/$GITHUB_SHA/ultra-cosmo-invaders-osx.tar.gz"
-          aws s3 cp ultra-cosmo-invaders-linux.tar.gz "s3://ultra-cosmo-invaders/$GITHUB_SHA/ultra-cosmo-invaders-linux.tar.gz"
+          aws s3 cp ultra-cosmo-invaders-win.zip "s3://ultra-cosmo-invaders/master/$GITHUB_SHA/ultra-cosmo-invaders.zip"
+          aws s3 cp ultra-cosmo-invaders-osx.tar.gz "s3://ultra-cosmo-invaders/master/$GITHUB_SHA/ultra-cosmo-invaders-osx.tar.gz"
+          aws s3 cp ultra-cosmo-invaders-linux.tar.gz "s3://ultra-cosmo-invaders/master/$GITHUB_SHA/ultra-cosmo-invaders-linux.tar.gz"
