@@ -25,6 +25,7 @@ class ScoreManager : public CoffeeMaker::IUserEventListener {
   static void IncrementScore(unsigned int pointsToAdd);
   static unsigned int GetScore();
   static void ResetScore();
+  static void SetNewHighScore(unsigned int pos, unsigned int score);
 
   void OnSDLUserEvent(const SDL_UserEvent& event) override;
 

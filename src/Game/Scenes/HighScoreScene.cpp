@@ -23,6 +23,8 @@ void HighScoreScene::Init() {
   using Text = CoffeeMaker::Widgets::Text;
   using Button = CoffeeMaker::Button;
   using View = CoffeeMaker::Widgets::View;
+  ScoreManager::SetNewHighScore(static_cast<unsigned int>(ScoreManager::CurrentScorePlacement()),
+                                ScoreManager::GetScore());
   HighScores highScores = ScoreManager::GetHighScores();
 
   _view = CreateScope<View>(WIDTH, HEIGHT, CoffeeMaker::UIProperties::HorizontalAlignment::Centered,
@@ -31,7 +33,7 @@ void HighScoreScene::Init() {
   _firstPlaceHighScoreLabel->SetFont("Sarpanch/Sarpanch-Bold");
   _firstPlaceHighScoreLabel->SetColor(SDL_Color{.r = 255, .g = 215, .b = 0, .a = 255});
   _firstPlaceHighScoreLabel->SetMargins(CoffeeMaker::Margins{.top = 0, .bottom = 0, .left = 0, .right = 0});
-  Ref<Text> _firstPlaceScore = CreateRef<Text>(std::to_string(highScores.firstPlace));
+  Ref<Text> _firstPlaceScore = CreateRef<Text>(std::to_string(highScores.firstPlace) + MarkNewHighScore(1));
   _firstPlaceScore->SetFont("Sarpanch/Sarpanch-Regular");
   _firstPlaceScore->SetMargins(CoffeeMaker::Margins{.top = 20, .bottom = 0, .left = 8, .right = 0});
   _firstPlaceScore->SetColor(CoffeeMaker::Colors::White);  // Gold
@@ -40,7 +42,7 @@ void HighScoreScene::Init() {
   _secondPlaceHighScoreLabel->SetFont("Sarpanch/Sarpanch-Bold");
   _secondPlaceHighScoreLabel->SetMargins(CoffeeMaker::Margins{.top = 50, .bottom = 0, .left = 0, .right = 0});
   _secondPlaceHighScoreLabel->SetColor(SDL_Color{.r = 192, .g = 192, .b = 192, .a = 255});
-  Ref<Text> _secondPlaceScore = CreateRef<Text>(std::to_string(highScores.secondPlace));
+  Ref<Text> _secondPlaceScore = CreateRef<Text>(std::to_string(highScores.secondPlace) + MarkNewHighScore(2));
   _secondPlaceScore->SetFont("Sarpanch/Sarpanch-Regular");
   _secondPlaceScore->SetMargins(CoffeeMaker::Margins{.top = 70, .bottom = 0, .left = 8, .right = 0});
   _secondPlaceScore->SetColor(CoffeeMaker::Colors::White);  // Silver
@@ -49,7 +51,7 @@ void HighScoreScene::Init() {
   _thirdPlaceHighScoreLabel->SetFont("Sarpanch/Sarpanch-Bold");
   _thirdPlaceHighScoreLabel->SetMargins(CoffeeMaker::Margins{.top = 100, .bottom = 0, .left = 0, .right = 0});
   _thirdPlaceHighScoreLabel->SetColor(SDL_Color{.r = 205, .g = 127, .b = 50, .a = 255});
-  Ref<Text> _thirdPlaceScore = CreateRef<Text>(std::to_string(highScores.thirdPlace));
+  Ref<Text> _thirdPlaceScore = CreateRef<Text>(std::to_string(highScores.thirdPlace) + MarkNewHighScore(3));
   _thirdPlaceScore->SetFont("Sarpanch/Sarpanch-Regular");
   _thirdPlaceScore->SetMargins(CoffeeMaker::Margins{.top = 120, .bottom = 0, .left = 8, .right = 0});
   _thirdPlaceScore->SetColor(CoffeeMaker::Colors::White);  // Bronze
@@ -104,6 +106,8 @@ void HighScoreScene::Init() {
   _view->AppendChild(returnToMainMenuButton);
   _view->AppendChild(playAgainButton);
   _loaded = true;
+
+  ScoreManager::SaveHighScores();
 }
 
 void HighScoreScene::Update(float) {}
@@ -126,3 +130,17 @@ void HighScoreScene::Unpause() {}
 void HighScoreScene::HandlePlayAgain() { SceneManager::LoadScene(1); }
 
 void HighScoreScene::HandleMainMenu() { SceneManager::LoadScene(0); }
+
+void HighScoreScene::OnSDLUserEvent(const SDL_UserEvent& event) {
+  if (event.type == SDL_USEREVENT && event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_FILE_READ) {
+    // reload the high scores...
+  }
+
+  if (event.type == SDL_USEREVENT && event.code == CoffeeMaker::ApplicationEvents::COFFEEMAKER_FILE_WRITTEN) {
+    // tell the user that the scores were saved...
+  }
+}
+
+std::string HighScoreScene::MarkNewHighScore(int place) {
+  return (ScoreManager::CurrentScorePlacement() == place ? "*" : "");
+}

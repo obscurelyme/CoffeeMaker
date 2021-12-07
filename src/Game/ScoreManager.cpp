@@ -109,3 +109,22 @@ void ScoreManager::OnSDLUserEvent(const SDL_UserEvent& event) {
     _score += _incrementAmount;
   }
 }
+
+void ScoreManager::SetNewHighScore(unsigned int pos, unsigned int score) {
+  switch (pos) {
+    case 1:
+      _instance->_highScores.thirdPlace = _instance->_highScores.secondPlace;
+      _instance->_highScores.secondPlace = _instance->_highScores.firstPlace;
+      _instance->_highScores.firstPlace = score;
+      break;
+    case 2:
+      _instance->_highScores.thirdPlace = _instance->_highScores.secondPlace;
+      _instance->_highScores.secondPlace = score;
+      break;
+    case 3:
+      _instance->_highScores.thirdPlace = score;
+      break;
+    default:
+      break;
+  }
+}
