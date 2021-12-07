@@ -137,7 +137,8 @@ jobs:
             ultra-cosmo-invaders-linux.tar.gz
 
       - name: Release to Itch.io
-        env: BUTLER_API_KEY=${{ secrets.BUTLER_API_KEY }}
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
         run: |
           bash .github/scripts/install-butler.sh
           butler push ultra-cosmo-invaders-win.zip ${{ secrets.ITCH_IO_GAME }}:windows --userversion="$GITHUB_REF_NAME"
