@@ -6,7 +6,7 @@
 ## does not work, and there is quite little to go on.                            #
 ###################################################################################
 
-sudo apt-get install build-essential git make cmake autoconf automake \
+sudo apt-get install -y build-essential git make cmake autoconf automake \
 libtool pkg-config libasound2-dev libpulse-dev libaudio-dev libjack-dev \
 libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev \
 libxinerama-dev libxxf86vm-dev libxss-dev libgl1-mesa-dev libdbus-1-dev \
