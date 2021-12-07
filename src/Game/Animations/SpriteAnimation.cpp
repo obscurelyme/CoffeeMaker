@@ -4,10 +4,6 @@ int Animations::SpriteAnimation::_uid = 0;
 std::vector<Animations::SpriteAnimation*> Animations::SpriteAnimation::_animations = {};
 
 void Animations::SpriteAnimation::ProcessSpriteAnimations() {
-  // const size_t count = _animations.size();
-  // for (size_t i = 0; i < count; i++) {
-  //   _animations[i]->Update();
-  // }
   for (auto& animation : _animations) {
     animation->Update();
   }

@@ -136,8 +136,6 @@ void Button::OnMouseleave() {
 }
 
 void Button::Render() {
-  // clientRect.x = UIComponent::DeriveXPosition() + static_cast<int>(_marginLeft);
-  // clientRect.y = UIComponent::DeriveYPosition() + static_cast<int>(_marginTop);
   if (_type == ButtonType::Textured) {
     _currentTexture->Render(clientRect.y, clientRect.x, clientRect.h, clientRect.w);
   } else {
