@@ -10,7 +10,7 @@ on:
       - "bugfix/**"
 jobs:
   macos-feature-build:
-    timeout-minutes: 15
+    timeout-minutes: 30
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -34,7 +34,7 @@ jobs:
           ./build/CoffeeMakerUnitTests
 
   windows-feature-build:
-    timeout-minutes: 15
+    timeout-minutes: 30
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -52,7 +52,7 @@ jobs:
         run: ./build/Debug/CoffeeMakerUnitTests.exe
 
   linux-feature-build:
-    timeout-minutes: 15
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
