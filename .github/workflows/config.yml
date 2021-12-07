@@ -124,41 +124,41 @@ jobs:
   #         name: ultra-cosmo-invaders-linux
   #         path: ultra-cosmo-invaders-linux.tar.gz
 
-  deploy:
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    if: contains('refs/heads/master', github.ref)
-    needs: [macos-build, windows-build, linux-build]
+  # deploy:
+  #   timeout-minutes: 10
+  #   runs-on: ubuntu-latest
+  #   if: contains('refs/heads/master', github.ref)
+  #   needs: [macos-build, windows-build, linux-build]
 
-    steps:
-      - name: Login to AWS
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.JEVES_AWS_ACCESS_TOKEN }}
-          aws-secret-access-key: ${{ secrets.JEVES_AWS_ACCESS_SECRET }}
-          aws-region: us-west-2
+  #   steps:
+  #     - name: Login to AWS
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.JEVES_AWS_ACCESS_TOKEN }}
+  #         aws-secret-access-key: ${{ secrets.JEVES_AWS_ACCESS_SECRET }}
+  #         aws-region: us-west-2
 
-      - name: Download Win Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: ultra-cosmo-invaders-win
-          path: ultra-cosmo-invaders-win.zip
+  #     - name: Download Win Artifacts
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: ultra-cosmo-invaders-win
+  #         path: ultra-cosmo-invaders-win.zip
 
-      - name: Download OSX Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: ultra-cosmo-invaders-osx
-          path: ultra-cosmo-invaders-osx.tar.gz
+  #     - name: Download OSX Artifacts
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: ultra-cosmo-invaders-osx
+  #         path: ultra-cosmo-invaders-osx.tar.gz
 
-      - name: Download Linux Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: ultra-cosmo-invaders-linux
-          path: ultra-cosmo-invaders-linux.tar.gz
+  #     - name: Download Linux Artifacts
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: ultra-cosmo-invaders-linux
+  #         path: ultra-cosmo-invaders-linux.tar.gz
 
-      - name: Upload to AWS S3
-        if: ${{ success() }}
-        run: |
-          aws s3 cp .\ultra-cosmo-invaders-win.zip "s3://ultra-cosmo-invaders/$GITHUB_SHA/ultra-cosmo-invaders.zip"
-          aws s3 cp .\ultra-cosmo-invaders-osx.tar.gz "s3://ultra-cosmo-invaders/$GITHUB_SHA/ultra-cosmo-invaders-osx.tar.gz"
-          aws s3 cp .\ultra-cosmo-invaders-linux.tar.gz "s3://ultra-cosmo-invaders/$GITHUB_SHA/ultra-cosmo-invaders-linux.tar.gz"
+  #     - name: Upload to AWS S3
+  #       if: ${{ success() }}
+  #       run: |
+  #         aws s3 cp .\ultra-cosmo-invaders-win.zip "s3://ultra-cosmo-invaders/$GITHUB_SHA/ultra-cosmo-invaders.zip"
+  #         aws s3 cp .\ultra-cosmo-invaders-osx.tar.gz "s3://ultra-cosmo-invaders/$GITHUB_SHA/ultra-cosmo-invaders-osx.tar.gz"
+  #         aws s3 cp .\ultra-cosmo-invaders-linux.tar.gz "s3://ultra-cosmo-invaders/$GITHUB_SHA/ultra-cosmo-invaders-linux.tar.gz"
