@@ -7,6 +7,7 @@
 #include <filesystem>
 
 #include "Coroutine.hpp"
+#include "File.hpp"
 
 void CoffeeMakerCoroutine::setUp() {
   // TODO: Implement set up logic...
@@ -57,9 +58,9 @@ void CoffeeMakerCoroutine::testCoroutineReadFileAwaiter() {
   auto c = [&result, &expectedString]() -> Co {
     std::cout << "before awaiter" << std::endl;
     co_await CoffeeMaker::WriteFileAwaiter{"testfile.txt", expectedString};
-    std::string text = co_await CoffeeMaker::ReadFileAwaiter{"testfile.txt"};
-    std::cout << "after awaiter: " << text << std::endl;
-    result = text;
+    CoffeeMaker::File file = co_await CoffeeMaker::ReadFileAwaiter{"testfile.txt"};
+    std::cout << "after awaiter: " << file.data << std::endl;
+    result = file.data;
   };
 
   c();

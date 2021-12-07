@@ -8,6 +8,7 @@
 #include "Event.hpp"
 #include "Game/Events.hpp"
 #include "Game/Scene.hpp"
+#include "Game/ScoreManager.hpp"
 #include "InputManager.hpp"
 #include "Logger.hpp"
 #include "Math.hpp"
@@ -105,8 +106,7 @@ void Player::HandleDestroy(Collider* collider) {
   _collider->active = false;
   _active = false;
   if (_lives - 1 == 0) {
-    // TODO: timeout here and then boot to main menu
-    SceneManager::LoadScene(0);
+    CoffeeMaker::PushUserEvent(UCI::Events::PLAYER_LOST_GAME);
     return;
   }
   _lives--;
@@ -277,6 +277,13 @@ void Player::OnSDLUserEvent(const SDL_UserEvent& event) {
 
   if (event.type == UCI::Events::PLAYER_DESTROYED) {
     _destroyed = true;
+    _destroyedAnimation->SetPosition(CoffeeMaker::Math::Vector2D{_clientRect.x, _clientRect.y});
+    _destroyedAnimation->Start();
+  }
+
+  if (event.type == UCI::Events::PLAYER_LOST_GAME) {
+    _destroyed = true;
+    _destroyedAnimation->OnComplete([] { CoffeeMaker::PushUserEvent(UCI::LOAD_NEW_SCENE, 2); });
     _destroyedAnimation->SetPosition(CoffeeMaker::Math::Vector2D{_clientRect.x, _clientRect.y});
     _destroyedAnimation->Start();
   }

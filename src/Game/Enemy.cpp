@@ -33,22 +33,22 @@ Enemy::Enemy() :
     // TIMEOUTS AND INTERVALS
     _fireMissileTask(CreateScope<CoffeeMaker::Async::IntervalTask>(
         [this] {
-          CoffeeMaker::Logger::Trace(fmt::format("[ENEMY_EVENT][ENEMY_FIRE_MISSILE] - Enemy ID: {}", _id));
-          CoffeeMaker::PushEvent(UCI::Events::ENEMY_FIRE_MISSILE, this);
+          CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_FIRE_MISSILE] - Enemy ID: {}", _id);
+          CoffeeMaker::PushUserEvent(UCI::Events::ENEMY_FIRE_MISSILE, -1, this);
         },
         3000)),
     _exitTimeoutTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[ENEMY][EXIT-TIMEOUT-TASK] - " + _id,
         [this] {
-          CoffeeMaker::Logger::Trace(fmt::format("[ENEMY_EVENT][EXIT-TIMEOUT-TASK] - Enemy ID: {}", _id));
-          CoffeeMaker::PushEvent(UCI::Events::ENEMY_BEGIN_EXIT, this);
+          CoffeeMaker::Logger::Trace("[ENEMY_EVENT][EXIT-TIMEOUT-TASK] - Enemy ID: {}", _id);
+          CoffeeMaker::PushUserEvent(UCI::Events::ENEMY_BEGIN_EXIT, -1, this);
         },
         12000)),
     _respawnTimeoutTask(CreateScope<CoffeeMaker::Async::TimeoutTask>(
         "[ENEMY][RESPAWN-TIMEOUT-TASK] - " + _id,
         [this] {
-          CoffeeMaker::Logger::Trace(fmt::format("[ENEMY_EVENT][RESPAWN-TIMEOUT-TASK] - Enemy ID: {}", _id));
-          CoffeeMaker::PushEvent(UCI::Events::ENEMY_COMPLETE_EXIT, this);
+          CoffeeMaker::Logger::Trace("[ENEMY_EVENT][RESPAWN-TIMEOUT-TASK] - Enemy ID: {}", _id);
+          CoffeeMaker::PushUserEvent(UCI::Events::ENEMY_COMPLETE_EXIT, -1, this);
         },
         3000)),
 
@@ -66,6 +66,7 @@ Enemy::Enemy() :
   _sprite->clientRect.h = 48;
   _entranceSpline2->OnComplete([this](void*) {
     CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_ENTRANCE_SPLINE] Complete Enemy ID: {}", _id);
+    CoffeeMaker::Logger::Trace("[ENEMY][STATE_CHANGE][State=StrafingLeft] - {}", _id);
     _state = Enemy::State::StrafingLeft;
     _fireMissileTask->Start();
     _exitTimeoutTask->Start();
@@ -73,6 +74,7 @@ Enemy::Enemy() :
   _exitSpline->OnComplete([this](void*) {
     CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_EXIT_SPLINE] Complete Enemy ID: {}", _id);
     _active = false;
+    CoffeeMaker::Logger::Trace("[ENEMY][STATE_CHANGE][State=Idle] - {}", _id);
     _state = Enemy::State::Idle;
     _respawnTimeoutTask->Start();
   });
@@ -88,8 +90,8 @@ Enemy::Enemy() :
   _currentProjectile = 0;
 
   _destroyedAnimation->OnComplete([this] {
-    CoffeeMaker::Logger::Trace(
-        fmt::format(fmt::runtime("[ENEMY_EVENT][ENEMY_DESTROYED_ANIMATION] Complete Enemy ID: {}"), _id));
+    CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_DESTROYED_ANIMATION] Complete Enemy ID: {}", _id);
+    CoffeeMaker::Logger::Trace("[ENEMY][STATE_CHANGE][State=Idle] - {}", _id);
     _state = Enemy::State::Idle;
     _respawnTimeoutTask->Start();
   });
@@ -138,18 +140,6 @@ void Enemy::Update(float deltaTime) {
   using Pt2 = CoffeeMaker::Math::Point2D;
 
   switch (_state) {
-    // case Enemy::State::WillExit_StrafeLeft: {
-    //   MoveLeft(deltaTime);
-    //   if (_position.x <= 400) {
-    //     _state = Enemy::State::Exiting;
-    //   }
-    // } break;
-    // case Enemy::State::WillExit_StrafeRight: {
-    //   MoveRight(deltaTime);
-    //   if (_position.x >= 400) {
-    //     _state = Enemy::State::Exiting;
-    //   }
-    // } break;
     case Enemy::State::StrafingLeft: {
       _rotation = 180;
       if (_position.x > 100 - _sprite->clientRect.w) {
@@ -173,7 +163,6 @@ void Enemy::Update(float deltaTime) {
 
       Pt2 pt = _entranceSpline2->CurrentPosition();
       Vec2 currentPos{pt.x, pt.y};
-      // Vec2 currentPos = _entranceSpline->Position();
 
       _rotation = CoffeeMaker::Math::rad2deg(_position.LookAt(currentPos)) + 90;
       _position = currentPos;
@@ -203,6 +192,7 @@ void Enemy::Update(float deltaTime) {
 }
 
 void Enemy::Spawn() {
+  CoffeeMaker::Logger::Trace("[ENEMY][STATE_CHANGE][State=Entering] - {}", _id);
   _state = Enemy::State::Entering;
   _collider->active = false;
   _collider->Update(_sprite->clientRect);
@@ -215,14 +205,14 @@ bool Enemy::IsActive() const { return _active; }
 void Enemy::OnCollision(Collider* collider) {
   if (_collider->active) {
     if (collider->GetType() == Collider::Type::Projectile && _collider->active) {
-      CoffeeMaker::PushEvent(UCI::Events::ENEMY_DESTROYED, this);
+      CoffeeMaker::PushUserEvent(UCI::Events::ENEMY_DESTROYED, -1, this);
       CoffeeMaker::PushUserEvent(UCI::Events::PLAYER_INCREMENT_SCORE);
       return;
     }
 
     if (collider->GetType() == Collider::Type::Player && _collider->active) {
       _impactSound->Play();
-      CoffeeMaker::PushEvent(UCI::Events::ENEMY_DESTROYED, this);
+      CoffeeMaker::PushUserEvent(UCI::Events::ENEMY_DESTROYED, -1, this);
       return;
     }
   }
@@ -256,53 +246,55 @@ void Enemy::Fire() {
 void Enemy::SetAggressionState(AggressionState state) { _aggression = state; }
 
 void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
-  if (event.code == UCI::Events::ENEMY_DESTROYED && event.data1 == this) {
-    CoffeeMaker::Logger::Trace(fmt::format("[ENEMY_EVENT][ENEMY_DESTROYED]: Enemy ID: {}", _id));
+  if (event.type == UCI::Events::ENEMY_DESTROYED && event.data1 == this) {
+    CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_DESTROYED]: Enemy ID: {}", _id);
     using Vec2 = CoffeeMaker::Math::Vector2D;
     _fireMissileTask->Cancel();
     _exitTimeoutTask->Cancel();
     _active = false;
     _collider->active = false;
+    CoffeeMaker::Logger::Trace("[ENEMY][STATE_CHANGE][State=Destroyed] - {}", _id);
     _state = State::Destroyed;
     _destroyedAnimation->SetPosition(Vec2{_position.x, _position.y});
     _destroyedAnimation->Start();
     return;
   }
-  if (event.code == UCI::Events::ENEMY_SPAWNED && event.data1 == this) {
-    CoffeeMaker::Logger::Trace(fmt::format("[ENEMY_EVENT][ENEMY_SPAWNED]: Enemy ID: {}", _id));
+  if (event.type == UCI::Events::ENEMY_SPAWNED && event.data1 == this) {
+    CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_SPAWNED]: Enemy ID: {}", _id);
     _entranceSpline2->Reset();
     _exitSpline->Reset();
     Spawn();
     return;
   }
-  if (event.code == UCI::Events::ENEMY_FIRE_MISSILE && event.data1 == this) {
-    CoffeeMaker::Logger::Trace(fmt::format("[ENEMY_EVENT][ENEMY_FIRE_MISSILE]: Enemy ID: {}", _id));
+  if (event.type == UCI::Events::ENEMY_FIRE_MISSILE && event.data1 == this) {
+    CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_FIRE_MISSILE]: Enemy ID: {}", _id);
     if (_aggression == Enemy::AggressionState::Active) {
       Fire();
     }
     return;
   }
-  if (event.code == UCI::Events::ENEMY_BEGIN_EXIT && event.data1 == this) {
-    CoffeeMaker::Logger::Trace(fmt::format("[ENEMY_EVENT][ENEMY_BEGIN_EXIT]: Enemy ID: {}", _id));
+  if (event.type == UCI::Events::ENEMY_BEGIN_EXIT && event.data1 == this) {
+    CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_BEGIN_EXIT]: Enemy ID: {}", _id);
+    CoffeeMaker::Logger::Trace("[ENEMY][STATE_CHANGE][State=Exiting] - {}", _id);
     _state = State::Exiting;
     _fireMissileTask->Cancel();
     return;
   }
-  if (event.code == UCI::Events::ENEMY_COMPLETE_EXIT && event.data1 == this) {
+  if (event.type == UCI::Events::ENEMY_COMPLETE_EXIT && event.data1 == this) {
     // NOTE: Does the same thing as Spawned right now
-    CoffeeMaker::Logger::Trace(fmt::format("[ENEMY_EVENT][ENEMY_COMPLETE_EXIT]: Enemy ID: {}", _id));
+    CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_COMPLETE_EXIT]: Enemy ID: {}", _id);
     _entranceSpline2->Reset();
     _exitSpline->Reset();
     Spawn();
   }
-  if (event.type == UCI::Events::PLAYER_DESTROYED) {
-    CoffeeMaker::Logger::Trace(
-        fmt::format("[ENEMY_EVENT][ENEMY_AGGRESSION_STATE_CHANGED]: Enemy [ id={}, aggression=Passive ]", _id));
+  if (event.type == UCI::Events::PLAYER_DESTROYED || event.type == UCI::Events::PLAYER_LOST_GAME) {
+    CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_AGGRESSION_STATE_CHANGED]: Enemy [ id={}, aggression=Passive ]",
+                               _id);
     _aggression = Enemy::AggressionState::Passive;
   }
   if (event.type == UCI::Events::PLAYER_COMPLETE_SPAWN) {
-    CoffeeMaker::Logger::Trace(
-        fmt::format("[ENEMY_EVENT][ENEMY_AGGRESSION_STATE_CHANGED]: Enemy [ id={}, aggression=Active ]", _id));
+    CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_AGGRESSION_STATE_CHANGED]: Enemy [ id={}, aggression=Active ]",
+                               _id);
     _aggression = Enemy::AggressionState::Active;
   }
 }
@@ -317,7 +309,8 @@ EchelonEnemy::EchelonEnemy() {
       "[ENEMY][EXIT-TIMEOUT-TASK] - " + _id,
       [this] {
         _echelonState = EchelonItem::EchelonState::Solo;
-        CoffeeMaker::PushEvent(UCI::Events::ENEMY_BEGIN_EXIT, this);
+        CoffeeMaker::PushUserEvent(UCI::Events::ENEMY_BEGIN_EXIT, -1, this);
+        CoffeeMaker::Logger::Trace("[ENEMY_EVENT][EXIT-TIMEOUT-TASK] - Enemy ID: {}", _id);
       },
       12000);
 }
@@ -370,8 +363,10 @@ void EchelonEnemy::SetEchelonPosition(const Vec2& echelonPosition) {
 float EchelonEnemy::GetEchelonSpace() { return _sprite->clientRect.w; }
 
 void EchelonEnemy::OnSDLUserEvent(const SDL_UserEvent& event) {
-  if (event.code == UCI::Events::ENEMY_DESTROYED && event.data1 == this) {
-    _echelonState = EchelonItem::EchelonState::Solo;
+  if (event.type == UCI::Events::ENEMY_DESTROYED) {
+    if (event.data1 == this) {
+      _echelonState = EchelonItem::EchelonState::Solo;
+    }
   }
 
   Enemy::OnSDLUserEvent(event);
@@ -384,13 +379,6 @@ Drone::Drone() {
     _fireMissileTask->Start();
     _exitTimeoutTask->Start();
   });
-  // _exitTimeoutTask = CreateScope<CoffeeMaker::Async::TimeoutTask>(
-  //     "[ENEMY][EXIT-TIMEOUT-TASK] - " + _id,
-  //     [this] {
-  //       _echelonState = EchelonItem::EchelonState::Solo;
-  //       CoffeeMaker::PushEvent(UCI::Events::ENEMY_BEGIN_EXIT, this);
-  //     },
-  //     12000);
 }
 
 Drone::~Drone() {}

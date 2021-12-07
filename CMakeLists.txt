@@ -101,13 +101,15 @@ set(GAME_SOURCES
   src/Game/PowerUps/BasePowerUp.cpp
   src/Game/Echelon.cpp
   src/Game/Scenes/TestEchelon.cpp
-  src/Game/Events.cpp)
+  src/Game/Scenes/HighScoreScene.cpp
+  src/Game/Events.cpp
+  src/Game/ScoreManager.cpp)
 
 set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SOURCES})
 
 add_executable(main ${COFFEEMAKER_EXE_SOURCES})
 target_include_directories(main PRIVATE include)
-target_link_libraries(main PRIVATE fmt::fmt-header-only spdlog::spdlog spdlog::spdlog_header_only glm::glm)
+target_link_libraries(main PRIVATE fmt::fmt spdlog::spdlog spdlog::spdlog_header_only glm::glm)
 target_link_libraries(main PRIVATE tinyspline::tinyspline tinysplinecxx::tinysplinecxx)
 target_link_libraries(main PRIVATE argparse::argparse)
 
@@ -166,6 +168,7 @@ set(COFFEEMAKER_TEST_SOURCES
   tests/CoffeeMakerMath.cpp
   tests/CoffeeMakerCoroutine.cpp
   tests/CoffeeMakerDateTime.cpp
+  tests/UCIScoreManager.cpp
   # tests/CoffeeMakerShapesRect.cpp
   # tests/CoffeeMakerTextureTest.cpp
   # tests/CoffeeMakerUtilities.cpp

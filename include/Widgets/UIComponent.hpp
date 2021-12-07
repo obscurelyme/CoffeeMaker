@@ -10,10 +10,18 @@
 #include "Properties.hpp"
 
 namespace CoffeeMaker {
+
+  struct Margins {
+    float top;
+    float bottom;
+    float left;
+    float right;
+  };
+
   class UIComponent {
     public:
     UIComponent();
-    explicit UIComponent(const SDL_Rect clientRect);
+    explicit UIComponent(const SDL_Rect& clientRect);
     virtual ~UIComponent();
 
     /**
@@ -32,6 +40,7 @@ namespace CoffeeMaker {
     virtual std::string ID() const;
     void SetHorizontalAlignment(CoffeeMaker::UIProperties::HorizontalAlignment xAlign);
     void SetVerticalAlignment(CoffeeMaker::UIProperties::VerticalAlignment yAlign);
+    void SetMargins(const Margins& margins);
 
     SDL_Rect viewport;
     SDL_Rect clientRect;
@@ -52,6 +61,12 @@ namespace CoffeeMaker {
     private:
     static bool _debugRendering;
     static int _uid;
+
+    protected:
+    float _marginTop;
+    float _marginBottom;
+    float _marginLeft;
+    float _marginRight;
   };
 }  // namespace CoffeeMaker
 

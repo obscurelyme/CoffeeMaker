@@ -8,6 +8,7 @@
 #include "Event.hpp"
 #include "Game/Collider.hpp"
 #include "Game/Events.hpp"
+#include "Game/ScoreManager.hpp"
 #include "InputManager.hpp"
 
 void MainScene::Render() {
@@ -76,6 +77,7 @@ void MainScene::Update(float deltaTime) {
 }
 
 void MainScene::Init() {
+  ScoreManager::ResetScore();
   _music = CoffeeMaker::Audio::LoadMusic("music/AsTheWorldTurns.ogg");
   CoffeeMaker::Audio::PlayMusic(_music);
   SDL_ShowCursor(SDL_DISABLE);
@@ -129,15 +131,20 @@ void MainScene::Destroy() {
 
 MainScene::MainScene() :
     _enemySpawnTask(CreateScope<CoffeeMaker::Async::IntervalTask>(
-        [] { CoffeeMaker::PushEvent(UCI::Events::ENEMY_INITIAL_INTERVAL_SPAWN); }, 500)) {}
+        [] { CoffeeMaker::PushUserEvent(UCI::Events::ENEMY_INITIAL_INTERVAL_SPAWN); }, 500)) {}
 
 void MainScene::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (_loaded) {
-    switch (event.code) {
+    switch (event.type) {
       case UCI::Events::ENEMY_INITIAL_INTERVAL_SPAWN: {
-        CoffeeMaker::PushEvent(UCI::Events::ENEMY_SPAWNED, _enemies[_currentSpawn++]);
+        CoffeeMaker::PushUserEvent(UCI::Events::ENEMY_SPAWNED, -1, _enemies[_currentSpawn++]);
         if (_currentSpawn == MAX_ENEMIES) {
           _enemySpawnTask->Cancel();
+        }
+      } break;
+      case UCI::Events::LOAD_NEW_SCENE: {
+        if (event.code == 2) {
+          SceneManager::LoadScene(event.code);
         }
       } break;
     }

@@ -29,7 +29,7 @@ namespace CoffeeMaker {
 
     private:
     unsigned int _id;
-    size_t _index;
+    // size_t _index;
     static unsigned int _uid;
     static std::vector<IUserEventListener*> _listeners;
     static void ProcessUserEvent(const SDL_UserEvent& event);

@@ -32,7 +32,6 @@ class MainScene : public Scene {
 
   private:
   static const unsigned int MAX_ENEMIES = 10;
-  static std::mutex _enemyMutex;
 
   Tiles* _backgroundTiles;
   Player* _player;

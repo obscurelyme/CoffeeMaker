@@ -9,6 +9,8 @@
 #include <string>
 #include <thread>
 
+#include "File.hpp"
+
 #ifdef COROUTINE_SUPPORT
 #include <coroutine>
 
@@ -21,8 +23,8 @@ namespace CoffeeMaker {
     public:
     class promise_type {
       public:
-      promise_type() { std::cout << "promise_type created" << std::endl; }
-      ~promise_type() { std::cout << "promise_type destroyed" << std::endl; }
+      promise_type() {}
+      ~promise_type() {}
 
       Coroutine get_return_object() { return Coroutine{std::coroutine_handle<promise_type>::from_promise(*this)}; }
       void yield_value() { Suspend{}; }
@@ -105,9 +107,10 @@ namespace CoffeeMaker {
 
   class HttpAwaiter;
 
-  class ReadFileAwaiter : public IAwaiter<std::string> {
+  class ReadFileAwaiter : public IAwaiter<CoffeeMaker::File> {
     public:
-    explicit ReadFileAwaiter(const std::string& fileName) : _fileName(fileName), _result(nullptr), _str("") {}
+    explicit ReadFileAwaiter(const std::string& fileName) :
+        _fileName(fileName), _file(CoffeeMaker::File{.name = fileName, .loaded = false, .data = nullptr}) {}
     ~ReadFileAwaiter() {}
 
     bool await_ready() override { return false; }
@@ -115,13 +118,12 @@ namespace CoffeeMaker {
       std::thread([handle, this] {
         SDL_RWops* file = SDL_RWFromFile(_fileName.c_str(), "r");
         if (file == NULL) {
-          _str = std::string{"Could not read file!"};
           handle.resume();
           return;
         }
         Sint64 resultSize = SDL_RWsize(file);
-        _result = (char*)malloc(resultSize + 1);
-        char* buf = _result;
+        _file.data = (char*)malloc(resultSize + 1);
+        char* buf = _file.data;
         Sint64 nb_read_total = 0;
         Sint64 nb_read = 1;
         while (nb_read_total < resultSize && nb_read != 0) {
@@ -131,19 +133,18 @@ namespace CoffeeMaker {
         }
         SDL_RWclose(file);
         if (nb_read_total != resultSize) {
-          free(_result);
+          free(_file.data);
         }
-        _result[nb_read_total] = '\0';
-        _str = std::string{_result};
+        _file.data[nb_read_total] = '\0';
+        _file.loaded = true;
         handle.resume();
       }).detach();
     }
-    std::string await_resume() override { return _str; }
+    CoffeeMaker::File await_resume() override { return _file; }
 
     private:
     std::string _fileName;
-    char* _result;
-    std::string _str;
+    CoffeeMaker::File _file;
   };
 
   class WriteFileAwaiter : public IAwaiter<bool> {
@@ -192,8 +193,8 @@ namespace CoffeeMaker {
     public:
     class promise_type {
       public:
-      promise_type() { std::cout << "promise_type created" << std::endl; }
-      ~promise_type() { std::cout << "promise_type destroyed" << std::endl; }
+      promise_type() {}
+      ~promise_type() {}
 
       Coroutine get_return_object() {
         return Coroutine{std::experimental::coroutine_handle<promise_type>::from_promise(*this)};
@@ -276,9 +277,10 @@ namespace CoffeeMaker {
     int _duration;
   };
 
-  class ReadFileAwaiter : public IAwaiter<std::string> {
+  class ReadFileAwaiter : public IAwaiter<CoffeeMaker::File> {
     public:
-    explicit ReadFileAwaiter(const std::string& fileName) : _fileName(fileName), _result(nullptr), _str("") {}
+    explicit ReadFileAwaiter(const std::string& fileName) :
+        _fileName(fileName), _file(CoffeeMaker::File{.name = fileName, .loaded = false, .data = nullptr}) {}
     ~ReadFileAwaiter() {}
 
     bool await_ready() override { return false; }
@@ -286,13 +288,12 @@ namespace CoffeeMaker {
       std::thread([handle, this] {
         SDL_RWops* file = SDL_RWFromFile(_fileName.c_str(), "r");
         if (file == NULL) {
-          _str = std::string{"Could not read file!"};
           static_cast<std::experimental::coroutine_handle<Coroutine::promise_type>>(handle).resume();
           return;
         }
         Sint64 resultSize = SDL_RWsize(file);
-        _result = (char*)malloc(resultSize + 1);
-        char* buf = _result;
+        _file.data = (char*)malloc(resultSize + 1);
+        char* buf = _file.data;
         Sint64 nb_read_total = 0;
         Sint64 nb_read = 1;
         while (nb_read_total < resultSize && nb_read != 0) {
@@ -302,19 +303,18 @@ namespace CoffeeMaker {
         }
         SDL_RWclose(file);
         if (nb_read_total != resultSize) {
-          free(_result);
+          free(_file.data);
         }
-        _result[nb_read_total] = '\0';
-        _str = std::string{_result};
+        _file.data[nb_read_total] = '\0';
+        _file.loaded = true;
         static_cast<std::experimental::coroutine_handle<Coroutine::promise_type>>(handle).resume();
       }).detach();
     }
-    std::string await_resume() override { return _str; }
+    CoffeeMaker::File await_resume() override { return _file; }
 
     private:
     std::string _fileName;
-    char* _result;
-    std::string _str;
+    CoffeeMaker::File _file;
   };
 
   class WriteFileAwaiter : public IAwaiter<bool> {

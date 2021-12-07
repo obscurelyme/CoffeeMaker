@@ -4,7 +4,7 @@ int Animations::SpriteAnimation::_uid = 0;
 std::vector<Animations::SpriteAnimation*> Animations::SpriteAnimation::_animations = {};
 
 void Animations::SpriteAnimation::ProcessSpriteAnimations() {
-  for (auto animation : _animations) {
+  for (auto& animation : _animations) {
     animation->Update();
   }
 }

@@ -28,6 +28,7 @@
 #include "Game/Events.hpp"
 #include "Game/Scene.hpp"
 #include "Game/Scenes/All.hpp"
+#include "Game/ScoreManager.hpp"
 #include "InputManager.hpp"
 #include "Logger.hpp"
 #include "Math.hpp"
@@ -92,15 +93,16 @@ int main(int argc, char** argv) {
   CoffeeMaker::FontManager::Init();
   CoffeeMaker::FontManager::LoadFont("Sarpanch/Sarpanch-Regular");
   CoffeeMaker::FontManager::LoadFont("Sarpanch/Sarpanch-Bold");
-  // SDL_SetWindowIcon(win);
   CoffeeMaker::Timer globalTimer;
   CoffeeMaker::FPS fpsCounter;
 
   CM_LOGGER_INFO("Display count: {}", win.DisplayCount());
   CM_LOGGER_INFO("Current Window DPI {}", win.GetScreenDPI().toString());
 
+  ScoreManager::Init();
   SceneManager::AddScene(new TitleScene());
   SceneManager::AddScene(new MainScene());
+  SceneManager::AddScene(new HighScoreScene());
   // SceneManager::AddScene(new TestBedScene());
   // SceneManager::AddScene(new TestAnimations());
   // SceneManager::AddScene(new TestEchelonScene());
@@ -183,6 +185,7 @@ int main(int argc, char** argv) {
     }
   }
 
+  ScoreManager::Destroy();
   CoffeeMaker::Audio::StopMusic();
   CoffeeMaker::Audio::Quit();
   SceneManager::DestroyAllScenes();

@@ -6,6 +6,7 @@
 namespace UCI {
   enum Events {
     FIRST_EVENT = SDL_USEREVENT,
+
     INIT,
     // Player Events ////////////////////////////////////////////////////////////
     PLAYER_LOST_LIFE,
@@ -17,6 +18,7 @@ namespace UCI {
     PLAYER_DESTROYED,
     PLAYER_FIRE_DELAY_START,
     PLAYER_FIRE_DELAY_END,
+    PLAYER_LOST_GAME,
     // Player Power up Events //////////////////////////////////////////////////
     PLAYER_POWER_UP_GAINED,
     PLAYER_POWER_UP_USED,
@@ -34,6 +36,8 @@ namespace UCI {
     // User Interface Events ///////////////////////////////////////////////////
     SHOW_MENU,
     HEADS_UP_DISPLAY_INCREMENT_TIMER,
+    // Level Events ////////////////////////////////////////////////////////////
+    LOAD_NEW_SCENE,
 
     LAST_EVENT
   };
