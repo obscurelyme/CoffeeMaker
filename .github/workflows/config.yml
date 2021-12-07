@@ -18,103 +18,111 @@ on:
       - master
       - "hotfix/**"
 jobs:
-  macos-build:
-    timeout-minutes: 30
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        id: cache
-        with:
-          path: /Users/runner/.cache/vcpkg
-          key: vcpkg-archives-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
-      - name: Configure
-        run: |
-          brew install make
-          brew install ninja
-          brew install autoconf automake libtool yasm
-          bash .github/scripts/osx/configure.sh
-      - name: Build
-        run: bash .github/scripts/osx/build.sh
-      - name: Test
-        run: |
-          chmod +x ./build/CoffeeMakerUnitTests
-          ./build/CoffeeMakerUnitTests
-      - name: Package
-        run: bash .github/scripts/osx/package.sh
-      - name: Store Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ultra-cosmo-invaders-osx
-          path: ultra-cosmo-invaders-osx.tar.gz
-
-  windows-build:
-    timeout-minutes: 30
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        id: cache
-        with:
-          path: C:\Users\runneradmin\AppData\Local\vcpkg
-          key: vcpkg-archives-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
-      - name: Configure
-        run: .github/scripts/win/configure.bat
-      - name: Build
-        run: .github/scripts/win/build.bat
-      - name: Test
-        run: ./build/Debug/CoffeeMakerUnitTests.exe
-      - name: Package
-        run: .github/scripts/win/package.bat
-      - name: Store Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ultra-cosmo-invaders-win
-          path: ultra-cosmo-invaders-win.zip
-
-  linux-build:
-    timeout-minutes: 30
+  test-this:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        id: cache
-        with:
-          path: /home/runner/.cache/vcpkg
-          key: vcpkg-archives-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
-      - name: Install Tools
+      - name: Echo Github SHA
         run: |
-          sudo apt-get update
-          sudo apt-get upgrade
-          sudo apt-get install make
-          sudo apt-get install yasm
-          sudo apt install gcc-10 g++-10
-      - name: Configure
-        run: |
-          bash .github/scripts/linux/configure.sh
-        env:
-          CC: gcc-10
-          CXX: g++-10
-      - name: Build
-        run: |
-          bash .github/scripts/linux/build.sh
-        env:
-          CC: gcc-10
-          CXX: g++-10
-      - name: Test
-        run: |
-          chmod +x ./build/CoffeeMakerUnitTests
-          ./build/CoffeeMakerUnitTests
-      - name: Package
-        run: bash .github/scripts/linux/package.sh
-      - name: Store Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ultra-cosmo-invaders-linux
-          path: ultra-cosmo-invaders-linux.tar.gz
+          pwd
+          echo "./folder/folder2/$GITHUB_SHA"
+
+  # macos-build:
+  #   timeout-minutes: 30
+  #   runs-on: macos-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - uses: actions/cache@v2
+  #       id: cache
+  #       with:
+  #         path: /Users/runner/.cache/vcpkg
+  #         key: vcpkg-archives-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+  #     - name: Configure
+  #       run: |
+  #         brew install make
+  #         brew install ninja
+  #         brew install autoconf automake libtool yasm
+  #         bash .github/scripts/osx/configure.sh
+  #     - name: Build
+  #       run: bash .github/scripts/osx/build.sh
+  #     - name: Test
+  #       run: |
+  #         chmod +x ./build/CoffeeMakerUnitTests
+  #         ./build/CoffeeMakerUnitTests
+  #     - name: Package
+  #       run: bash .github/scripts/osx/package.sh
+  #     - name: Store Artifact
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: ultra-cosmo-invaders-osx
+  #         path: ultra-cosmo-invaders-osx.tar.gz
+
+  # windows-build:
+  #   timeout-minutes: 30
+  #   runs-on: windows-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - uses: actions/cache@v2
+  #       id: cache
+  #       with:
+  #         path: C:\Users\runneradmin\AppData\Local\vcpkg
+  #         key: vcpkg-archives-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+  #     - name: Configure
+  #       run: .github/scripts/win/configure.bat
+  #     - name: Build
+  #       run: .github/scripts/win/build.bat
+  #     - name: Test
+  #       run: ./build/Debug/CoffeeMakerUnitTests.exe
+  #     - name: Package
+  #       run: .github/scripts/win/package.bat
+  #     - name: Store Artifact
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: ultra-cosmo-invaders-win
+  #         path: ultra-cosmo-invaders-win.zip
+
+  # linux-build:
+  #   timeout-minutes: 30
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - uses: actions/cache@v2
+  #       id: cache
+  #       with:
+  #         path: /home/runner/.cache/vcpkg
+  #         key: vcpkg-archives-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+  #     - name: Install Tools
+  #       run: |
+  #         sudo apt-get update
+  #         sudo apt-get upgrade
+  #         sudo apt-get install make
+  #         sudo apt-get install yasm
+  #         sudo apt install gcc-10 g++-10
+  #     - name: Configure
+  #       run: |
+  #         bash .github/scripts/linux/configure.sh
+  #       env:
+  #         CC: gcc-10
+  #         CXX: g++-10
+  #     - name: Build
+  #       run: |
+  #         bash .github/scripts/linux/build.sh
+  #       env:
+  #         CC: gcc-10
+  #         CXX: g++-10
+  #     - name: Test
+  #       run: |
+  #         chmod +x ./build/CoffeeMakerUnitTests
+  #         ./build/CoffeeMakerUnitTests
+  #     - name: Package
+  #       run: bash .github/scripts/linux/package.sh
+  #     - name: Store Artifact
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: ultra-cosmo-invaders-linux
+  #         path: ultra-cosmo-invaders-linux.tar.gz
 
   deploy:
     timeout-minutes: 10
