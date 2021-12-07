@@ -3,6 +3,8 @@ on:
   push:
     tags:
       - "*"
+    branch:
+      - master
 
 jobs:
   release:
@@ -18,3 +20,4 @@ jobs:
       - name: Sync from AWS
         run: |
           aws s3 sync "${{ secrets.S3_BUCKET_NAME }}/$GITHUB_SHA" ./release
+          ls la ./release
