@@ -8,11 +8,6 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup
-        id: release_setup
-        run: |
-          echo "::set-output commit=$(git rev-parse HEAD)"
-
       - name: Login to AWS
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -20,6 +15,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.BUTLER_AWS_SECRET_ACCESS_TOKEN }}
           aws-region: us-west-2
 
-      - name: Do a thing
+      - name: Sync from AWS
         run: |
-          echo Commit was ${{ steps.release_setup.outputs.commit }}
+          aws s3 sync "${{ secrets.S3_BUCKET_NAME }}/$GITHUB_SHA" ./release
