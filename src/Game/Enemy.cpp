@@ -27,7 +27,6 @@ Enemy::Enemy() :
     _currentProjectile(0),
     _collider(nullptr),
     _sprite(CreateScope<CoffeeMaker::Sprite>("EnemyV1.png")),
-    _entranceSpline(CreateScope<Animations::EnemyEntrance>()),
     _entranceSpline2(CreateScope<Animations::EnemyEntrance001>()),
     _exitSpline(CreateScope<Animations::EnemyExit>()),
     // TIMEOUTS AND INTERVALS

@@ -52,3 +52,7 @@ bool Renderer::Exists() { return _renderer != nullptr; }
 int Renderer::GetOutputWidth() { return _width; }
 
 int Renderer::GetOutputHeight() { return _height; }
+
+float Renderer::GetOutputWidthF() { return static_cast<float>(_width); }
+
+float Renderer::GetOutputHeightF() { return static_cast<float>(_height); }

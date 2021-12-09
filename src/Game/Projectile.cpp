@@ -10,7 +10,7 @@ Ref<CoffeeMaker::Texture> Projectile::_texture = nullptr;
 Ref<CoffeeMaker::AudioElement> Projectile::_fireSound = nullptr;
 Ref<CoffeeMaker::AudioElement> Projectile::_impactSound = nullptr;
 
-Projectile::Projectile() : _fired(false), _rotation(0) {
+Projectile::Projectile() : _fired(false), _rotation(0), _speed(500.0f) {
   if (Projectile::_texture == nullptr) {
     _texture = CreateRef<CoffeeMaker::Texture>("StandardMissile.png");
   }
@@ -20,8 +20,8 @@ Projectile::Projectile() : _fired(false), _rotation(0) {
   if (Projectile::_impactSound == nullptr) {
     _impactSound = CreateRef<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg");
   }
-  _clientRect.w = 16;
-  _clientRect.h = 16;
+  _clientRect.w = 16 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
+  _clientRect.h = 16 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   collider = new Collider(Collider::Type::Projectile, false);
   collider->clientRect.w = 16 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   collider->clientRect.h = 16 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
@@ -58,8 +58,8 @@ void Projectile::Render() {
 
 void Projectile::Update(float deltaTime) {
   if (_fired) {
-    _clientRect.x += _movement.x * 300 * deltaTime;
-    _clientRect.y += _movement.y * 300 * deltaTime;
+    _clientRect.x += _movement.x * _speed * CoffeeMaker::Renderer::DynamicResolutionDownScale() * deltaTime;
+    _clientRect.y += _movement.y * _speed * CoffeeMaker::Renderer::DynamicResolutionDownScale() * deltaTime;
 
     // NOTE: probably want this separated out
     collider->Update(_clientRect);

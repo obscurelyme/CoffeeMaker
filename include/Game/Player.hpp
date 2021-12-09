@@ -69,7 +69,7 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   bool _destroyed;
   unsigned int _lives;
   glm::vec2 _direction{1.0f, 0.0f};
-  int _speed = 225 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
+  float _speed = 350.0f * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   Scope<UCI::Animations::ExplodeSpriteAnimation> _destroyedAnimation;
   Scope<CoffeeMaker::Async::TimeoutTask> _asyncRespawnTask;
   Scope<CoffeeMaker::Async::TimeoutTask> _asyncImmunityTask;

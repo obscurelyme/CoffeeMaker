@@ -43,6 +43,10 @@ Echelon::Echelon(float width, float height, float spacing, float speed, const st
   if (_rightBoundary == 0.0f) {
     _rightBoundary = CoffeeMaker::Renderer::GetOutputWidth() - 50.0f;
   }
+  _speed *= CoffeeMaker::Renderer::DynamicResolutionDownScale();
+  _spacing *= CoffeeMaker::Renderer::DynamicResolutionDownScale();
+  _width *= CoffeeMaker::Renderer::DynamicResolutionDownScale();
+  _height *= CoffeeMaker::Renderer::DynamicResolutionDownScale();
   _enemies.fill(nullptr);
 }
 

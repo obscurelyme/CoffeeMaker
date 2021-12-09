@@ -59,7 +59,6 @@ class Enemy : public Entity, public CoffeeMaker::IUserEventListener {
   std::vector<Projectile*> _projectiles;
   Scope<CoffeeMaker::Sprite> _sprite;
   CoffeeMaker::Math::Vector2D _position;
-  Scope<Animations::BaseSplineAnimation> _entranceSpline;
   Scope<Animations::EnemyEntrance001> _entranceSpline2;
   Scope<Animations::EnemyExit> _exitSpline;
   Scope<CoffeeMaker::Async::IntervalTask> _fireMissileTask;

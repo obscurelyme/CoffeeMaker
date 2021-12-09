@@ -43,6 +43,18 @@ namespace CoffeeMaker {
      * @return int
      */
     static int GetOutputWidth();
+    /**
+     * @brief Returns the entire available render height. Scales accordingly to High DPI modes
+     *
+     * @return int
+     */
+    static float GetOutputHeightF();
+    /**
+     * @brief Returns the entire available render width. Scales accordingly to High DPI modes
+     *
+     * @return int
+     */
+    static float GetOutputWidthF();
 
     /**
      * @brief Return a scaler based on Renderer Output Width size starting with 1.0f as 800px width

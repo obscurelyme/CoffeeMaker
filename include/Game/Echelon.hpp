@@ -54,7 +54,7 @@ class Echelon : public CoffeeMaker::IUserEventListener {
   public:
   friend class EchelonItem;
 
-  Echelon(float width, float height, float spacing = 0.0f, float speed = 150.0f,
+  Echelon(float width, float height, float spacing = 0.0f, float speed = 325.0f,
           const std::string &name = "Unknown Echelon");
   ~Echelon();
 

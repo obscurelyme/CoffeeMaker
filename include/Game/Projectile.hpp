@@ -53,6 +53,7 @@ class Projectile {
   float _endY;
   glm::vec2 _movement;
   Collider* collider;
+  float _speed;
 };
 
 #endif
