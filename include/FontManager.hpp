@@ -15,6 +15,13 @@ namespace CoffeeMaker {
 
   class FontManager {
     public:
+    enum FontSize {
+      FontSizeSmall = 16,
+      FontSizeRegular = 18,
+      FontSizeMedium = 24,
+      FontSizeLarge = 32,
+      FontSizeXLarge = 48
+    };
     ~FontManager() = default;
     /**
      * Load a font within the /assets/font directory
@@ -23,6 +30,7 @@ namespace CoffeeMaker {
     static void Init();
     static void Destroy();
     static TTF_Font* UseFont(const std::string& fontName);
+    static TTF_Font* UseFont(const std::string& fontName, FontSize size);
 
     private:
     FontManager();

@@ -47,7 +47,7 @@ void CoffeeMaker::Audio::FreeMusic(Mix_Music* music) {
 void CoffeeMaker::Audio::PlayMusic(Mix_Music* music) {
   if (music != nullptr) {
     Mix_PlayMusic(music, -1);
-    CM_LOGGER_INFO("Current Volume {}", Mix_VolumeMusic(35));
+    CM_LOGGER_INFO("Current Volume {}", Mix_VolumeMusic(0));
   }
 }
 
@@ -74,7 +74,7 @@ void CoffeeMaker::AudioElement::Play() {
     if (Mix_Playing(_channel)) {
       Mix_PlayChannel(-1, _chunk, 0);
     }
-    Mix_VolumeChunk(_chunk, 65);
+    Mix_VolumeChunk(_chunk, 0);
     _channel = Mix_PlayChannel(_channel, _chunk, 0);
   }
 }
