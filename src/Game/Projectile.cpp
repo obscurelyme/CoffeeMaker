@@ -23,8 +23,8 @@ Projectile::Projectile() : _fired(false), _rotation(0) {
   _clientRect.w = 16;
   _clientRect.h = 16;
   collider = new Collider(Collider::Type::Projectile, false);
-  collider->clientRect.w = 16;
-  collider->clientRect.h = 16;
+  collider->clientRect.w = 16 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
+  collider->clientRect.h = 16 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   collider->clientRect.x = _clientRect.x;
   collider->clientRect.y = _clientRect.y;
   collider->OnCollide(std::bind(&Projectile::OnHit, this, std::placeholders::_1));
@@ -118,7 +118,6 @@ void Projectile::Reload() {
 bool Projectile::IsFired() const { return _fired; }
 
 bool Projectile::IsOffScreen() const {
-  // TODO: screen width and height should be dynamic
-  return _clientRect.x + _clientRect.w <= 0 || _clientRect.x >= 800 || _clientRect.y + _clientRect.h <= 0 ||
-         _clientRect.y >= 600;
+  return _clientRect.x + _clientRect.w <= 0 || _clientRect.x >= CoffeeMaker::Renderer::GetOutputWidth() ||
+         _clientRect.y + _clientRect.h <= 0 || _clientRect.y >= CoffeeMaker::Renderer::GetOutputHeight();
 }

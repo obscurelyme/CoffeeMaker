@@ -207,14 +207,14 @@ bool Player::IsOffScreenRight() { return _clientRect.x >= 800; }
 void Player::HandlePowerUpGained(Sint32 event) {
   if (event == UCI::PowerUp::PowerUpType::Warp) {
     CoffeeMaker::Logger::Debug("[PLAYER_EVENT][PLAYER_POWER_UP_GAINED][WARP]");
-    _speed = 750;
+    _speed = 750 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   }
 }
 
 void Player::HandlePowerUpLost(Sint32 event) {
   if (event == UCI::PowerUp::PowerUpType::Warp) {
     CoffeeMaker::Logger::Debug("[PLAYER_EVENT][PLAYER_POWER_UP_LOST][WARP]");
-    _speed = 225;
+    _speed = 225 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   }
 }
 

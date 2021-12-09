@@ -49,7 +49,9 @@ namespace CoffeeMaker {
      *
      * @return float
      */
-    static float DynamicResolutionScale() { return GetOutputWidth() / 800.0f; };
+    static float DynamicResolutionUpScale() { return GetOutputWidth() / 1792.0f; };
+
+    static float DynamicResolutionDownScale() { return GetOutputWidth() / 1792.0f; };
 
     private:
     static SDL_Renderer *_renderer;

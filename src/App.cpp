@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
   CoffeeMaker::Audio::Init();
   CoffeeMaker::Texture::SetTextureDirectory();
 
-  CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 800, 600, false);
+  CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 1792, 1120, true);
   CoffeeMaker::Renderer renderer;
 
   std::string basePath = CoffeeMaker::Utilities::BaseDirectory();

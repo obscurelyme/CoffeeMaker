@@ -56,8 +56,8 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};
   SDL_FRect _clientRect{.x = 0,
                         .y = 0,
-                        .w = 48 * CoffeeMaker::Renderer::DynamicResolutionScale(),
-                        .h = 48 * CoffeeMaker::Renderer::DynamicResolutionScale()};
+                        .w = 48 * CoffeeMaker::Renderer::DynamicResolutionDownScale(),
+                        .h = 48 * CoffeeMaker::Renderer::DynamicResolutionDownScale()};
 
   bool _isImmune;
   double _rotation;
@@ -69,7 +69,7 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   bool _destroyed;
   unsigned int _lives;
   glm::vec2 _direction{1.0f, 0.0f};
-  int _speed = 225 * CoffeeMaker::Renderer::DynamicResolutionScale();
+  int _speed = 225 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   Scope<UCI::Animations::ExplodeSpriteAnimation> _destroyedAnimation;
   Scope<CoffeeMaker::Async::TimeoutTask> _asyncRespawnTask;
   Scope<CoffeeMaker::Async::TimeoutTask> _asyncImmunityTask;

@@ -62,8 +62,8 @@ Enemy::Enemy() :
 
   _sprite->clientRect.x = _position.x;
   _sprite->clientRect.y = _position.y;
-  _sprite->clientRect.w = 48 * CoffeeMaker::Renderer::DynamicResolutionScale();
-  _sprite->clientRect.h = 48 * CoffeeMaker::Renderer::DynamicResolutionScale();
+  _sprite->clientRect.w = 48 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
+  _sprite->clientRect.h = 48 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   _entranceSpline2->OnComplete([this](void*) {
     CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_ENTRANCE_SPLINE] Complete Enemy ID: {}", _id);
     CoffeeMaker::Logger::Trace("[ENEMY][STATE_CHANGE][State=StrafingLeft] - {}", _id);
