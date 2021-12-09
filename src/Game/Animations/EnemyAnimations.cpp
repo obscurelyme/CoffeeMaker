@@ -90,6 +90,10 @@ void Animations::SplineAnimation::OnStart(std::function<void(void *)> fn) { _sta
 
 void Animations::SplineAnimation::OnComplete(std::function<void(void *)> fn) { _completeListeners.push_back(fn); }
 
+//------------------------------------------------------------------------------------------
+//----- EnemyEntrance001 -------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
 Scope<CoffeeMaker::BSpline> Animations::EnemyEntrance001::_bSpline = nullptr;
 Scope<CoffeeMaker::BSpline> Animations::EnemyEntrance001::_bSplineInverted = nullptr;
 
@@ -150,3 +154,70 @@ void Animations::EnemyEntrance001::SetFinalPosition(const CoffeeMaker::Math::Poi
 }
 
 CoffeeMaker::Math::Point2D Animations::EnemyEntrance001::CurrentPosition() { return _currentPoint; }
+
+//------------------------------------------------------------------------------------------
+//----- EnemyExite001 ----------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+Scope<CoffeeMaker::BSpline> Animations::EnemyExit001::_bSpline = nullptr;
+Scope<CoffeeMaker::BSpline> Animations::EnemyExit001::_bSplineInverted = nullptr;
+
+void Animations::EnemyExit001::LoadBSpline() {
+  using Pt2 = CoffeeMaker::Math::Point2D;
+  _bSpline = CreateScope<CoffeeMaker::BSpline>();
+  _bSpline->Load("splines/exit001.spline");
+  _bSpline->RemapControlPoints();
+  _bSplineInverted = CreateScope<CoffeeMaker::BSpline>(_bSpline->NumControlPoints());
+  _bSplineInverted->SetControlPoints(_bSpline->InvertControlPoints());
+}
+
+Animations::EnemyExit001::EnemyExit001(float duration) :
+    _inverted(false), _knot(0.0f), _currentTime(0.0f), _duration(duration) {
+  if (_bSpline == nullptr) {
+    LoadBSpline();
+  }
+}
+
+Animations::EnemyExit001::EnemyExit001(bool inverted, float duration) :
+    _inverted(inverted), _knot(0.0f), _currentTime(0.0f), _duration(duration) {
+  if (_bSplineInverted == nullptr) {
+    LoadBSpline();
+  }
+}
+
+void Animations::EnemyExit001::Reset() {
+  _knot = 0.0f;
+  _currentTime = 0.0f;
+  if (_inverted) {
+    _currentPoint = _bSplineInverted->Point2DAtKnot(_knot);
+  } else {
+    _currentPoint = _bSpline->Point2DAtKnot(_knot);
+  }
+}
+
+void Animations::EnemyExit001::Update(float deltaTime) {
+  _currentTime += deltaTime;
+  _knot = _currentTime / _duration;
+  if (_inverted) {
+    _currentPoint = _bSplineInverted->Point2DAtKnot(_knot);
+  } else {
+    _currentPoint = _bSpline->Point2DAtKnot(_knot);
+  }
+  if (_knot >= 1.0f) {
+    for (auto f : _completeListeners) {
+      f(nullptr);
+    }
+  }
+}
+
+CoffeeMaker::Math::Point2D Animations::EnemyExit001::CurrentPosition() { return _currentPoint; }
+
+void Animations::EnemyExit001::SetFirstPosition(const CoffeeMaker::Math::Point2D &pos) {
+  if (_inverted) {
+    _bSplineInverted->SetControlPointAt(0, pos);
+  } else {
+    _bSpline->SetControlPointAt(0, pos);
+  }
+}
+
+void Animations::EnemyExit001::Invert(bool invert) { _inverted = invert; }
