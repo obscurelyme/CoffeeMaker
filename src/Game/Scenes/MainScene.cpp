@@ -10,6 +10,7 @@
 #include "Game/Events.hpp"
 #include "Game/ScoreManager.hpp"
 #include "InputManager.hpp"
+#include "Renderer.hpp"
 
 void MainScene::Render() {
   _backgroundTiles->Render();
@@ -84,7 +85,8 @@ void MainScene::Init() {
   _hud = new HeadsUpDisplay();
   _menu = new Menu();
   _menu->Init();
-  _backgroundTiles = new Tiles("space.png", 800, 600);
+  _backgroundTiles =
+      new Tiles("space.png", CoffeeMaker::Renderer::GetOutputWidth(), CoffeeMaker::Renderer::GetOutputHeight());
   _player = new Player();
   _frontEchelon = new Echelon(300.0f, 50.0f, 5.0f);
   _backEchelon = new Echelon(300.0f, 50.0f, 5.0f);

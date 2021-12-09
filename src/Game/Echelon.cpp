@@ -1,7 +1,9 @@
 #include "Game/Echelon.hpp"
 
-float Echelon::_rightBoundary = 750;
-float Echelon::_leftBoundary = 50;
+#include "Renderer.hpp"
+
+float Echelon::_rightBoundary = 0.0f;
+float Echelon::_leftBoundary = 50.0f;
 unsigned int Echelon::_uid = 0;
 
 EchelonItem::EchelonItem() :
@@ -38,6 +40,9 @@ Echelon::Echelon(float width, float height, float spacing, float speed, const st
     _id("Echelon-" + std::to_string(++_uid)),
     _name(name),
     _currentIndex(0) {
+  if (_rightBoundary == 0.0f) {
+    _rightBoundary = CoffeeMaker::Renderer::GetOutputWidth() - 50.0f;
+  }
   _enemies.fill(nullptr);
 }
 

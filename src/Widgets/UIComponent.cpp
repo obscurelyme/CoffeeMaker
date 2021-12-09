@@ -6,7 +6,7 @@
 using namespace CoffeeMaker;
 using namespace CoffeeMaker::UIProperties;
 
-bool UIComponent::_debugRendering = false;
+bool UIComponent::_debugRendering = true;
 int UIComponent::_uid = 0;
 
 UIComponent::~UIComponent() {

@@ -144,7 +144,7 @@ void Player::Update(float deltaTime) {
 
     if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_RIGHT)) {
       // strafe right
-      _clientRect.x = std::min(_clientRect.x + deltaTime * _speed, 702.0f);
+      _clientRect.x = std::min(_clientRect.x + deltaTime * _speed, CoffeeMaker::Renderer::GetOutputWidth() - 50.0f);
       _rotation += 8;
     }
 

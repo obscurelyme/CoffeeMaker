@@ -33,7 +33,7 @@ HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
   score->SetFont("Sarpanch/Sarpanch-Regular");
   time->SetFont("Sarpanch/Sarpanch-Regular");
   playerHealth->SetFont("Sarpanch/Sarpanch-Regular");
-  hudView = std::make_unique<View>(800, 50);
+  hudView = std::make_unique<View>(0.9f, 50, HorizontalAlignment::Centered);
   score->SetColor(CoffeeMaker::Colors::Yellow);
   time->SetColor(CoffeeMaker::Colors::Yellow);
   playerHealth->SetColor(CoffeeMaker::Colors::Yellow);

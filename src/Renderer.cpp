@@ -1,5 +1,6 @@
 #include "Renderer.hpp"
 
+#include "Logger.hpp"
 #include "Window.hpp"
 
 using namespace CoffeeMaker;
@@ -7,11 +8,18 @@ using namespace CoffeeMaker;
 SDL_Renderer *Renderer::_renderer = nullptr;
 
 Uint32 Renderer::_numDrawCalls = 0;
+int Renderer::_width = 0;
+int Renderer::_height = 0;
 
 Renderer::Renderer() {
   if (_renderer == nullptr) {
     _renderer = SDL_CreateRenderer(GlobalWindow::Instance()->Handle(), -1,
                                    SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_GetRendererOutputSize(_renderer, &_width, &_height);
+    SDL_Rect vp;
+    SDL_RenderGetViewport(Renderer::Instance(), &vp);
+    CM_LOGGER_INFO("Renderer created with output size: ({}, {})", _width, _height);
+    CM_LOGGER_INFO("Renderer current viewport size: ({}, {})", vp.w, vp.h);
   }
 }
 
@@ -40,3 +48,7 @@ Uint32 Renderer::DrawCalls() { return _numDrawCalls; }
 void Renderer::IncDrawCalls() { _numDrawCalls++; }
 
 bool Renderer::Exists() { return _renderer != nullptr; }
+
+int Renderer::GetOutputWidth() { return _width; }
+
+int Renderer::GetOutputHeight() { return _height; }

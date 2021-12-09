@@ -31,10 +31,31 @@ namespace CoffeeMaker {
      */
     static Uint32 DrawCalls();
     static void IncDrawCalls();
+    /**
+     * @brief Returns the entire available render height. Scales accordingly to High DPI modes
+     *
+     * @return int
+     */
+    static int GetOutputHeight();
+    /**
+     * @brief Returns the entire available render width. Scales accordingly to High DPI modes
+     *
+     * @return int
+     */
+    static int GetOutputWidth();
+
+    /**
+     * @brief Return a scaler based on Renderer Output Width size starting with 1.0f as 800px width
+     *
+     * @return float
+     */
+    static float DynamicResolutionScale() { return GetOutputWidth() / 800.0f; };
 
     private:
     static SDL_Renderer *_renderer;
     static Uint32 _numDrawCalls;
+    static int _width;
+    static int _height;
   };
 
   class GlobalRenderer {
