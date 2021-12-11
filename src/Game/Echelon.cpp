@@ -1,7 +1,5 @@
 #include "Game/Echelon.hpp"
 
-#include "Renderer.hpp"
-
 float Echelon::_rightBoundary = 0.0f;
 float Echelon::_leftBoundary = 50.0f;
 unsigned int Echelon::_uid = 0;
@@ -29,7 +27,8 @@ bool EchelonItem::IsInEchelon() const { return _echelon != nullptr; }
 
 bool EchelonItem::IsSynced() const { return _echelonState == EchelonItem::EchelonState::Synced; }
 
-Echelon::Echelon(float width, float height, float spacing, float speed, const std::string& name) :
+Echelon::Echelon(float width, float height, int renderOutputWidth, float spacing, float speed, const std::string& name,
+                 float scale) :
     _height(height),
     _width(width),
     _spacing(spacing),
@@ -41,13 +40,14 @@ Echelon::Echelon(float width, float height, float spacing, float speed, const st
     _name(name),
     _currentIndex(0) {
   if (_rightBoundary == 0.0f) {
-    _rightBoundary = CoffeeMaker::Renderer::GetOutputWidth() - 50.0f;
+    _rightBoundary = renderOutputWidth - 50.0f;
   }
-  _speed *= CoffeeMaker::Renderer::DynamicResolutionDownScale();
-  _spacing *= CoffeeMaker::Renderer::DynamicResolutionDownScale();
-  _width *= CoffeeMaker::Renderer::DynamicResolutionDownScale();
-  _height *= CoffeeMaker::Renderer::DynamicResolutionDownScale();
+  _speed *= scale;
+  _spacing *= scale;
+  _width *= scale;
+  _height *= scale;
   _enemies.fill(nullptr);
+  _debugRect = SDL_FRect{.x = 0.0f, .y = 0.0f, .w = _width, .h = _height};
 }
 
 Echelon::~Echelon() {
@@ -83,12 +83,16 @@ void Echelon::Update(float deltaTime) {
   switch (_movementState) {
     case Echelon::MovementState::ShiftingLeft: {
       _position += CoffeeMaker::Math::Vector2D::Left() * deltaTime * _speed;
+      _debugRect.x = _position.x;
+      _debugRect.y = _position.y;
       if (HitLeftBoundary()) {
         _movementState = Echelon::MovementState::ShiftingRight;
       }
     } break;
     case Echelon::MovementState::ShiftingRight: {
       _position += CoffeeMaker::Math::Vector2D::Right() * deltaTime * _speed;
+      _debugRect.x = _position.x;
+      _debugRect.y = _position.y;
       if (HitRightBoundary()) {
         _movementState = Echelon::MovementState::ShiftingLeft;
       }

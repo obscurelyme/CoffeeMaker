@@ -7,9 +7,9 @@
 
 TestEchelonScene::TestEchelonScene() :
     _backgroundTiles(CreateScope<Tiles>("space.png", 800, 600)),
-    _echelon(CreateScope<Echelon>(400.0f, 50.0f, 20.0f, 150.0f, "TEST_ECHELON_1")),
-    _echelon2(CreateScope<Echelon>(400.0f, 50.0f, 20.0f, 200.0f, "TEST_ECHELON_2")),
-    _echelon3(CreateScope<Echelon>(400.0f, 50.0f, 20.0f, 100.0f, "TEST_ECHELON_3")),
+    _echelon(CreateScope<Echelon>(400.0f, 50.0f, 800, 20.0f, 150.0f, "TEST_ECHELON_1")),
+    _echelon2(CreateScope<Echelon>(400.0f, 50.0f, 800, 20.0f, 200.0f, "TEST_ECHELON_2")),
+    _echelon3(CreateScope<Echelon>(400.0f, 50.0f, 800, 20.0f, 100.0f, "TEST_ECHELON_3")),
     _enemies({}),
     _player(nullptr),
     _currentSpawnIndex(0) {

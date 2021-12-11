@@ -15,13 +15,13 @@ void UCIEchelon::tearDown() {
 }
 
 void UCIEchelon::testCreateEchelon() {
-  Echelon e{400.0f, 48.0f, 2.0f, 1.0f, "TEST_ECHELON"};
+  Echelon e{400.0f, 48.0f, 800, 2.0f, 1.0f, "TEST_ECHELON"};
   CPPUNIT_ASSERT_EQUAL(true, true);
 }
 
 void UCIEchelon::testCreateIEchelonItem() {
   using Vec2 = CoffeeMaker::Math::Vector2D;
-  Echelon e{400.0f, 48.0f, 2.0f, 1.0f, "TEST_ECHELON"};
+  Echelon e{400.0f, 48.0f, 800, 2.0f, 1.0f, "TEST_ECHELON", 1.0f};
   EchelonTester::EchelonImpl impl1{50.0f};
   EchelonTester::EchelonImpl impl2{50.0f};
   EchelonTester::EchelonImpl impl3{50.0f};
@@ -65,7 +65,7 @@ void UCIEchelon::testCreateIEchelonItem() {
 
 void UCIEchelon::testRemoveIEchelonItem() {
   using Vec2 = CoffeeMaker::Math::Vector2D;
-  Echelon e{400.0f, 48.0f, 2.0f, 1.0f, "TEST_ECHELON"};
+  Echelon e{400.0f, 48.0f, 800, 2.0f, 1.0f, "TEST_ECHELON", 1.0f};
   EchelonTester::EchelonImpl impl1{50.0f};
   EchelonTester::EchelonImpl impl2{50.0f};
   EchelonTester::EchelonImpl impl3{50.0f};
@@ -115,7 +115,7 @@ void UCIEchelon::testRemoveIEchelonItem() {
 
 void UCIEchelon::testDesyncedIEchelonItem() {
   using Vec2 = CoffeeMaker::Math::Vector2D;
-  Echelon e{400.0f, 48.0f, 2.0f, 1.0f, "TEST_ECHELON"};
+  Echelon e{400.0f, 48.0f, 800, 2.0f, 1.0f, "TEST_ECHELON", 1.0f};
   EchelonTester::EchelonImpl impl1{50.0f};
   EchelonTester::EchelonImpl impl2{50.0f};
   EchelonTester::EchelonImpl impl3{50.0f};
@@ -165,7 +165,7 @@ void UCIEchelon::testDesyncedIEchelonItem() {
 
 void UCIEchelon::testResyncedIEchelonItem() {
   using Vec2 = CoffeeMaker::Math::Vector2D;
-  Echelon e{400.0f, 48.0f, 2.0f, 1.0f, "TEST_ECHELON"};
+  Echelon e{400.0f, 48.0f, 800, 2.0f, 1.0f, "TEST_ECHELON", 1.0f};
   EchelonTester::EchelonImpl impl1{50.0f};
   EchelonTester::EchelonImpl impl2{50.0f};
   EchelonTester::EchelonImpl impl3{50.0f};

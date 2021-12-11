@@ -6,8 +6,10 @@
 #include <array>
 #include <string>
 
+#include "Color.hpp"
 #include "Event.hpp"
 #include "Math.hpp"
+#include "Renderer.hpp"
 
 class Echelon;
 
@@ -54,8 +56,9 @@ class Echelon : public CoffeeMaker::IUserEventListener {
   public:
   friend class EchelonItem;
 
-  Echelon(float width, float height, float spacing = 0.0f, float speed = 325.0f,
-          const std::string &name = "Unknown Echelon");
+  Echelon(float width, float height, int renderOutputWidth, float spacing = 0.0f, float speed = 325.0f,
+          const std::string &name = "Unknown Echelon",
+          float scale = CoffeeMaker::Renderer::DynamicResolutionDownScale());
   ~Echelon();
 
   void Add(EchelonItem *);
@@ -71,6 +74,12 @@ class Echelon : public CoffeeMaker::IUserEventListener {
 
   void Update(float);
   void OnSDLUserEvent(const SDL_UserEvent &);
+
+  void Render() {
+    SDL_Color yellow = CoffeeMaker::Colors::Yellow;
+    SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), yellow.r, yellow.g, yellow.b, yellow.a);
+    SDL_RenderDrawRectF(CoffeeMaker::Renderer::Instance(), &_debugRect);
+  }
 
   private:
   static float _rightBoundary;
@@ -91,6 +100,7 @@ class Echelon : public CoffeeMaker::IUserEventListener {
   std::string _id;
   std::string _name;
   unsigned int _currentIndex;
+  SDL_FRect _debugRect;
 };
 
 #endif

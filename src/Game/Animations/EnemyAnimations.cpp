@@ -98,7 +98,6 @@ Scope<CoffeeMaker::BSpline> Animations::EnemyEntrance001::_bSpline = nullptr;
 Scope<CoffeeMaker::BSpline> Animations::EnemyEntrance001::_bSplineInverted = nullptr;
 
 void Animations::EnemyEntrance001::LoadBSpline() {
-  using Pt2 = CoffeeMaker::Math::Point2D;
   _bSpline = CreateScope<CoffeeMaker::BSpline>();
   _bSpline->Load("splines/entrance001.spline");
   _bSpline->RemapControlPoints();
@@ -163,7 +162,6 @@ Scope<CoffeeMaker::BSpline> Animations::EnemyExit001::_bSpline = nullptr;
 Scope<CoffeeMaker::BSpline> Animations::EnemyExit001::_bSplineInverted = nullptr;
 
 void Animations::EnemyExit001::LoadBSpline() {
-  using Pt2 = CoffeeMaker::Math::Point2D;
   _bSpline = CreateScope<CoffeeMaker::BSpline>();
   _bSpline->Load("splines/exit001.spline");
   _bSpline->RemapControlPoints();
