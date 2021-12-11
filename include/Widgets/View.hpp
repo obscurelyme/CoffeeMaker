@@ -17,6 +17,12 @@ namespace CoffeeMaker {
       View();
       View(int width, int height, HorizontalAlignment xAlign = HorizontalAlignment::Left,
            VerticalAlignment yAlign = VerticalAlignment::Top, int spacing = 0);
+      View(float widthPercent, float heightPercent, HorizontalAlignment xAlign = HorizontalAlignment::Left,
+           VerticalAlignment yAlign = VerticalAlignment::Top, int spacing = 0);
+      View(float widthPercent, int heightPercent, HorizontalAlignment xAlign = HorizontalAlignment::Left,
+           VerticalAlignment yAlign = VerticalAlignment::Top, int spacing = 0);
+      View(int widthPercent, float heightPercent, HorizontalAlignment xAlign = HorizontalAlignment::Left,
+           VerticalAlignment yAlign = VerticalAlignment::Top, int spacing = 0);
       ~View() = default;
 
       void Render();

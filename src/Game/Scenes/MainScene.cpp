@@ -10,6 +10,7 @@
 #include "Game/Events.hpp"
 #include "Game/ScoreManager.hpp"
 #include "InputManager.hpp"
+#include "Renderer.hpp"
 
 void MainScene::Render() {
   _backgroundTiles->Render();
@@ -23,6 +24,8 @@ void MainScene::Render() {
 
   _hud->Render();
   _menu->Render();
+  _frontEchelon->Render();
+  _backEchelon->Render();
 }
 
 void MainScene::Pause() {
@@ -84,12 +87,15 @@ void MainScene::Init() {
   _hud = new HeadsUpDisplay();
   _menu = new Menu();
   _menu->Init();
-  _backgroundTiles = new Tiles("space.png", 800, 600);
+  _backgroundTiles =
+      new Tiles("space.png", CoffeeMaker::Renderer::GetOutputWidth(), CoffeeMaker::Renderer::GetOutputHeight());
   _player = new Player();
-  _frontEchelon = new Echelon(300.0f, 50.0f, 5.0f);
-  _backEchelon = new Echelon(300.0f, 50.0f, 5.0f);
-  _frontEchelon->SetPosition(CoffeeMaker::Math::Vector2D{50.0f, 150.0f});
-  _backEchelon->SetPosition(CoffeeMaker::Math::Vector2D{50.0f, 100.0f});
+  _frontEchelon = new Echelon(300.0f, 50.0f, CoffeeMaker::Renderer::GetOutputWidth(), 15.0f);
+  _backEchelon = new Echelon(300.0f, 50.0f, CoffeeMaker::Renderer::GetOutputWidth(), 15.0f);
+  _frontEchelon->SetPosition(
+      CoffeeMaker::Math::Vector2D{50.0f, 175.0f * CoffeeMaker::Renderer::DynamicResolutionDownScale()});
+  _backEchelon->SetPosition(
+      CoffeeMaker::Math::Vector2D{50.0f, 100.0f * CoffeeMaker::Renderer::DynamicResolutionDownScale()});
 
   for (unsigned int i = 0; i < MAX_ENEMIES; i++) {
     if (i < MAX_ENEMIES / 2) {

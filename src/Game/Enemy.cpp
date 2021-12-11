@@ -27,9 +27,8 @@ Enemy::Enemy() :
     _currentProjectile(0),
     _collider(nullptr),
     _sprite(CreateScope<CoffeeMaker::Sprite>("EnemyV1.png")),
-    _entranceSpline(CreateScope<Animations::EnemyEntrance>()),
     _entranceSpline2(CreateScope<Animations::EnemyEntrance001>()),
-    _exitSpline(CreateScope<Animations::EnemyExit>()),
+    _exitSpline(CreateScope<Animations::EnemyExit001>()),
     // TIMEOUTS AND INTERVALS
     _fireMissileTask(CreateScope<CoffeeMaker::Async::IntervalTask>(
         [this] {
@@ -62,8 +61,8 @@ Enemy::Enemy() :
 
   _sprite->clientRect.x = _position.x;
   _sprite->clientRect.y = _position.y;
-  _sprite->clientRect.w = 48;
-  _sprite->clientRect.h = 48;
+  _sprite->clientRect.w = 48 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
+  _sprite->clientRect.h = 48 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   _entranceSpline2->OnComplete([this](void*) {
     CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_ENTRANCE_SPLINE] Complete Enemy ID: {}", _id);
     CoffeeMaker::Logger::Trace("[ENEMY][STATE_CHANGE][State=StrafingLeft] - {}", _id);
@@ -172,7 +171,8 @@ void Enemy::Update(float deltaTime) {
         _exitSpline->Update(deltaTime);
       }
 
-      Vec2 currentPos = _exitSpline->Position();
+      Pt2 pt = _exitSpline->CurrentPosition();
+      Vec2 currentPos{pt.x, pt.y};
 
       _rotation = CoffeeMaker::Math::rad2deg(_position.LookAt(currentPos)) + 90;
       _position = currentPos;
@@ -274,9 +274,12 @@ void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
     return;
   }
   if (event.type == UCI::Events::ENEMY_BEGIN_EXIT && event.data1 == this) {
+    using Pt2 = CoffeeMaker::Math::Point2D;
     CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_BEGIN_EXIT]: Enemy ID: {}", _id);
     CoffeeMaker::Logger::Trace("[ENEMY][STATE_CHANGE][State=Exiting] - {}", _id);
     _state = State::Exiting;
+    _exitSpline->Invert(_position.x >= CoffeeMaker::Renderer::GetOutputWidthF() / 2);
+    _exitSpline->SetFirstPosition(Pt2{.x = _position.x, .y = _position.y});
     _fireMissileTask->Cancel();
     return;
   }

@@ -7,6 +7,7 @@
 #include <string>
 
 #include "Color.hpp"
+#include "FontManager.hpp"
 #include "Renderer.hpp"
 #include "Widgets/UIComponent.hpp"
 
@@ -23,6 +24,7 @@ namespace CoffeeMaker {
       std::string ID() const override;
 
       void SetFont(const std::string &fontName);
+      void SetFont(const std::string &fontName, CoffeeMaker::FontManager::FontSize size);
       void SetFont(TTF_Font *f);
       void SetText(const std::string &textContent);
       void SetColor(const SDL_Color &color);

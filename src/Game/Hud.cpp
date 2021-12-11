@@ -6,8 +6,10 @@
 
 #include "Color.hpp"
 #include "Event.hpp"
+#include "FontManager.hpp"
 #include "Game/Events.hpp"
 #include "Logger.hpp"
+#include "Renderer.hpp"
 #include "Widgets/Properties.hpp"
 
 using namespace CoffeeMaker::Widgets;
@@ -27,13 +29,23 @@ class IntervalFunction {
 };
 
 HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
+  using FontSize = CoffeeMaker::FontManager::FontSize;
+
   score = std::make_shared<Text>("Score: 0");
   time = std::make_shared<Text>("Time: 0:00");
   playerHealth = std::make_shared<Text>("Lives: " + std::to_string(_life));
-  score->SetFont("Sarpanch/Sarpanch-Regular");
-  time->SetFont("Sarpanch/Sarpanch-Regular");
-  playerHealth->SetFont("Sarpanch/Sarpanch-Regular");
-  hudView = std::make_unique<View>(800, 50);
+
+  if (CoffeeMaker::Renderer::GetOutputWidth() >= 1920) {
+    score->SetFont("Sarpanch/Sarpanch-Regular", FontSize::FontSizeLarge);
+    time->SetFont("Sarpanch/Sarpanch-Regular", FontSize::FontSizeLarge);
+    playerHealth->SetFont("Sarpanch/Sarpanch-Regular", FontSize::FontSizeLarge);
+  } else {
+    score->SetFont("Sarpanch/Sarpanch-Regular");
+    time->SetFont("Sarpanch/Sarpanch-Regular");
+    playerHealth->SetFont("Sarpanch/Sarpanch-Regular");
+  }
+
+  hudView = std::make_unique<View>(0.9f, 50, HorizontalAlignment::Centered);
   score->SetColor(CoffeeMaker::Colors::Yellow);
   time->SetColor(CoffeeMaker::Colors::Yellow);
   playerHealth->SetColor(CoffeeMaker::Colors::Yellow);

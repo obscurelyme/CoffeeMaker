@@ -10,7 +10,7 @@ Ref<CoffeeMaker::Texture> Projectile::_texture = nullptr;
 Ref<CoffeeMaker::AudioElement> Projectile::_fireSound = nullptr;
 Ref<CoffeeMaker::AudioElement> Projectile::_impactSound = nullptr;
 
-Projectile::Projectile() : _fired(false), _rotation(0) {
+Projectile::Projectile() : _fired(false), _rotation(0), _speed(500.0f) {
   if (Projectile::_texture == nullptr) {
     _texture = CreateRef<CoffeeMaker::Texture>("StandardMissile.png");
   }
@@ -20,11 +20,11 @@ Projectile::Projectile() : _fired(false), _rotation(0) {
   if (Projectile::_impactSound == nullptr) {
     _impactSound = CreateRef<CoffeeMaker::AudioElement>("effects/ProjectileImpact.ogg");
   }
-  _clientRect.w = 16;
-  _clientRect.h = 16;
+  _clientRect.w = 16 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
+  _clientRect.h = 16 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   collider = new Collider(Collider::Type::Projectile, false);
-  collider->clientRect.w = 16;
-  collider->clientRect.h = 16;
+  collider->clientRect.w = 16 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
+  collider->clientRect.h = 16 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   collider->clientRect.x = _clientRect.x;
   collider->clientRect.y = _clientRect.y;
   collider->OnCollide(std::bind(&Projectile::OnHit, this, std::placeholders::_1));
@@ -58,8 +58,8 @@ void Projectile::Render() {
 
 void Projectile::Update(float deltaTime) {
   if (_fired) {
-    _clientRect.x += _movement.x * 300 * deltaTime;
-    _clientRect.y += _movement.y * 300 * deltaTime;
+    _clientRect.x += _movement.x * _speed * CoffeeMaker::Renderer::DynamicResolutionDownScale() * deltaTime;
+    _clientRect.y += _movement.y * _speed * CoffeeMaker::Renderer::DynamicResolutionDownScale() * deltaTime;
 
     // NOTE: probably want this separated out
     collider->Update(_clientRect);
@@ -118,7 +118,6 @@ void Projectile::Reload() {
 bool Projectile::IsFired() const { return _fired; }
 
 bool Projectile::IsOffScreen() const {
-  // TODO: screen width and height should be dynamic
-  return _clientRect.x + _clientRect.w <= 0 || _clientRect.x >= 800 || _clientRect.y + _clientRect.h <= 0 ||
-         _clientRect.y >= 600;
+  return _clientRect.x + _clientRect.w <= 0 || _clientRect.x >= CoffeeMaker::Renderer::GetOutputWidth() ||
+         _clientRect.y + _clientRect.h <= 0 || _clientRect.y >= CoffeeMaker::Renderer::GetOutputHeight();
 }

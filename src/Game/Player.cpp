@@ -144,7 +144,7 @@ void Player::Update(float deltaTime) {
 
     if (CoffeeMaker::InputManager::IsKeyDown(SDL_SCANCODE_RIGHT)) {
       // strafe right
-      _clientRect.x = std::min(_clientRect.x + deltaTime * _speed, 702.0f);
+      _clientRect.x = std::min(_clientRect.x + deltaTime * _speed, CoffeeMaker::Renderer::GetOutputWidth() - 50.0f);
       _rotation += 8;
     }
 
@@ -207,14 +207,14 @@ bool Player::IsOffScreenRight() { return _clientRect.x >= 800; }
 void Player::HandlePowerUpGained(Sint32 event) {
   if (event == UCI::PowerUp::PowerUpType::Warp) {
     CoffeeMaker::Logger::Debug("[PLAYER_EVENT][PLAYER_POWER_UP_GAINED][WARP]");
-    _speed = 750;
+    _speed = 1800.0f * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   }
 }
 
 void Player::HandlePowerUpLost(Sint32 event) {
   if (event == UCI::PowerUp::PowerUpType::Warp) {
     CoffeeMaker::Logger::Debug("[PLAYER_EVENT][PLAYER_POWER_UP_LOST][WARP]");
-    _speed = 225;
+    _speed = 350.0f * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   }
 }
 

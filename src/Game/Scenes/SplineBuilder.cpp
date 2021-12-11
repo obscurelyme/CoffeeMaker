@@ -37,10 +37,15 @@ void SplineBuilder::Update(float) {
     v->Update();
   }
 
+  if (CoffeeMaker::InputManager::IsKeyHeld(SDL_SCANCODE_ESCAPE)) {
+    CoffeeMaker::PushCoffeeMakerEvent(CoffeeMaker::ApplicationEvents::COFFEEMAKER_GAME_QUIT);
+  }
+
   if (CoffeeMaker::InputManager::IsKeyPressed(SDL_SCANCODE_C)) {
     // clear the points
     _bSplineControlPoints.clear();
     _bSplineCurvePoints.clear();
+    _bSpline = CreateScope<CoffeeMaker::BSpline>();
     _current = 0;
   }
 
@@ -61,8 +66,19 @@ void SplineBuilder::Update(float) {
 }
 
 void SplineBuilder::Init() {
-  // _bSpline->Load("assets/DroneEntrance1.spline");
-  // _bSpline->GenerateCurves();
+  _bSpline = CreateScope<CoffeeMaker::BSpline>();
+  Scope<CoffeeMaker::BSpline> _bSplineInverted;
+  _bSpline->Load("splines/flyby.spline");
+  _bSpline->RemapControlPoints();
+  _bSpline->GenerateCurves();
+  _bSplineInverted = CreateScope<CoffeeMaker::BSpline>(_bSpline->NumControlPoints());
+  _bSplineInverted->SetControlPoints(_bSpline->InvertControlPoints());
+  _bSplineInverted->GenerateCurves();
+
+  _bSplineCurvePoints = _bSpline->GetPoints();
+  for (auto p : _bSplineInverted->GetPoints()) {
+    _bSplineCurvePoints.emplace_back(p);
+  }
 }
 void SplineBuilder::Destroy() {}
 void SplineBuilder::Pause() {}

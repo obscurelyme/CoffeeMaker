@@ -66,6 +66,15 @@ namespace CoffeeMaker {
 
     std::vector<tinyspline::real> GetKnots() const { return _tinysplineBSpline->knots(); }
 
+    /**
+     * @brief Remaps the current control points to equivalent control points on the given
+     * width and height of a supposed screen.
+     *
+     * @param width
+     * @param height
+     */
+    void RemapControlPoints();
+
     private:
     std::vector<CoffeeMaker::Math::Point2D> _cache;
     Scope<tinyspline::BSpline> _tinysplineBSpline;

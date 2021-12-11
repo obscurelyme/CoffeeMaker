@@ -15,6 +15,7 @@
 #include "Math.hpp"
 #include "PowerUps/BasePowerUp.hpp"
 #include "Projectile.hpp"
+#include "Renderer.hpp"
 #include "Texture.hpp"
 #include "Timer.hpp"
 #include "Utilities.hpp"
@@ -53,7 +54,10 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
 
   CoffeeMaker::Texture _texture{"PlayerV1.png", true};
   SDL_Rect _clipRect{.x = 0, .y = 0, .w = 32, .h = 32};
-  SDL_FRect _clientRect{.x = 0, .y = 0, .w = 48, .h = 48};
+  SDL_FRect _clientRect{.x = 0,
+                        .y = 0,
+                        .w = 48 * CoffeeMaker::Renderer::DynamicResolutionDownScale(),
+                        .h = 48 * CoffeeMaker::Renderer::DynamicResolutionDownScale()};
 
   bool _isImmune;
   double _rotation;
@@ -65,7 +69,7 @@ class Player : public Entity, public CoffeeMaker::IUserEventListener {
   bool _destroyed;
   unsigned int _lives;
   glm::vec2 _direction{1.0f, 0.0f};
-  int _speed = 225;
+  float _speed = 350.0f * CoffeeMaker::Renderer::DynamicResolutionDownScale();
   Scope<UCI::Animations::ExplodeSpriteAnimation> _destroyedAnimation;
   Scope<CoffeeMaker::Async::TimeoutTask> _asyncRespawnTask;
   Scope<CoffeeMaker::Async::TimeoutTask> _asyncImmunityTask;

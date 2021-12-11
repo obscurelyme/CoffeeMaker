@@ -1,6 +1,7 @@
 #include "Game/Animations/EnemyAnimations.hpp"
 
 #include "Logger.hpp"
+#include "Renderer.hpp"
 
 //------------------------------------------------------------------------------------------
 //----- BaseSplineAnimation ----------------------------------------------------------------
@@ -89,44 +90,17 @@ void Animations::SplineAnimation::OnStart(std::function<void(void *)> fn) { _sta
 
 void Animations::SplineAnimation::OnComplete(std::function<void(void *)> fn) { _completeListeners.push_back(fn); }
 
+//------------------------------------------------------------------------------------------
+//----- EnemyEntrance001 -------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
 Scope<CoffeeMaker::BSpline> Animations::EnemyEntrance001::_bSpline = nullptr;
 Scope<CoffeeMaker::BSpline> Animations::EnemyEntrance001::_bSplineInverted = nullptr;
 
 void Animations::EnemyEntrance001::LoadBSpline() {
-  using Pt2 = CoffeeMaker::Math::Point2D;
   _bSpline = CreateScope<CoffeeMaker::BSpline>();
-
-  _bSpline->AddControlPoint(Pt2{.x = 0, .y = 0});
-  _bSpline->AddControlPoint(Pt2{.x = 28, .y = 111});
-  _bSpline->AddControlPoint(Pt2{.x = 50, .y = 220});
-  _bSpline->AddControlPoint(Pt2{.x = 80, .y = 327});
-  _bSpline->AddControlPoint(Pt2{.x = 117, .y = 421});
-  _bSpline->AddControlPoint(Pt2{.x = 189, .y = 446});
-  _bSpline->AddControlPoint(Pt2{.x = 249, .y = 408});
-  _bSpline->AddControlPoint(Pt2{.x = 263, .y = 362});
-  _bSpline->AddControlPoint(Pt2{.x = 266, .y = 287});
-  _bSpline->AddControlPoint(Pt2{.x = 179, .y = 252});
-  _bSpline->AddControlPoint(Pt2{.x = 134, .y = 273});
-  _bSpline->AddControlPoint(Pt2{.x = 109, .y = 318});
-  _bSpline->AddControlPoint(Pt2{.x = 110, .y = 358});
-  _bSpline->AddControlPoint(Pt2{.x = 122, .y = 392});
-  _bSpline->AddControlPoint(Pt2{.x = 151, .y = 417});
-  _bSpline->AddControlPoint(Pt2{.x = 230, .y = 405});
-  _bSpline->AddControlPoint(Pt2{.x = 273, .y = 347});
-  _bSpline->AddControlPoint(Pt2{.x = 298, .y = 295});
-  _bSpline->AddControlPoint(Pt2{.x = 297, .y = 235});
-  _bSpline->AddControlPoint(Pt2{.x = 263, .y = 195});
-  _bSpline->AddControlPoint(Pt2{.x = 196, .y = 181});
-  _bSpline->AddControlPoint(Pt2{.x = 150, .y = 228});
-  _bSpline->AddControlPoint(Pt2{.x = 152, .y = 299});
-  _bSpline->AddControlPoint(Pt2{.x = 174, .y = 329});
-  _bSpline->AddControlPoint(Pt2{.x = 246, .y = 336});
-  _bSpline->AddControlPoint(Pt2{.x = 308, .y = 288});
-  _bSpline->AddControlPoint(Pt2{.x = 344, .y = 225});
-  _bSpline->AddControlPoint(Pt2{.x = 366, .y = 171});
-  _bSpline->AddControlPoint(Pt2{.x = 403, .y = 93});
-  _bSpline->AddControlPoint(Pt2{.x = 421, .y = 63});
-
+  _bSpline->Load("splines/entrance001.spline");
+  _bSpline->RemapControlPoints();
   _bSplineInverted = CreateScope<CoffeeMaker::BSpline>(_bSpline->NumControlPoints());
   _bSplineInverted->SetControlPoints(_bSpline->InvertControlPoints());
 }
@@ -179,3 +153,69 @@ void Animations::EnemyEntrance001::SetFinalPosition(const CoffeeMaker::Math::Poi
 }
 
 CoffeeMaker::Math::Point2D Animations::EnemyEntrance001::CurrentPosition() { return _currentPoint; }
+
+//------------------------------------------------------------------------------------------
+//----- EnemyExite001 ----------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+Scope<CoffeeMaker::BSpline> Animations::EnemyExit001::_bSpline = nullptr;
+Scope<CoffeeMaker::BSpline> Animations::EnemyExit001::_bSplineInverted = nullptr;
+
+void Animations::EnemyExit001::LoadBSpline() {
+  _bSpline = CreateScope<CoffeeMaker::BSpline>();
+  _bSpline->Load("splines/exit001.spline");
+  _bSpline->RemapControlPoints();
+  _bSplineInverted = CreateScope<CoffeeMaker::BSpline>(_bSpline->NumControlPoints());
+  _bSplineInverted->SetControlPoints(_bSpline->InvertControlPoints());
+}
+
+Animations::EnemyExit001::EnemyExit001(float duration) :
+    _inverted(false), _knot(0.0f), _currentTime(0.0f), _duration(duration) {
+  if (_bSpline == nullptr) {
+    LoadBSpline();
+  }
+}
+
+Animations::EnemyExit001::EnemyExit001(bool inverted, float duration) :
+    _inverted(inverted), _knot(0.0f), _currentTime(0.0f), _duration(duration) {
+  if (_bSplineInverted == nullptr) {
+    LoadBSpline();
+  }
+}
+
+void Animations::EnemyExit001::Reset() {
+  _knot = 0.0f;
+  _currentTime = 0.0f;
+  if (_inverted) {
+    _currentPoint = _bSplineInverted->Point2DAtKnot(_knot);
+  } else {
+    _currentPoint = _bSpline->Point2DAtKnot(_knot);
+  }
+}
+
+void Animations::EnemyExit001::Update(float deltaTime) {
+  _currentTime += deltaTime;
+  _knot = _currentTime / _duration;
+  if (_inverted) {
+    _currentPoint = _bSplineInverted->Point2DAtKnot(_knot);
+  } else {
+    _currentPoint = _bSpline->Point2DAtKnot(_knot);
+  }
+  if (_knot >= 1.0f) {
+    for (auto f : _completeListeners) {
+      f(nullptr);
+    }
+  }
+}
+
+CoffeeMaker::Math::Point2D Animations::EnemyExit001::CurrentPosition() { return _currentPoint; }
+
+void Animations::EnemyExit001::SetFirstPosition(const CoffeeMaker::Math::Point2D &pos) {
+  if (_inverted) {
+    _bSplineInverted->SetControlPointAt(0, pos);
+  } else {
+    _bSpline->SetControlPointAt(0, pos);
+  }
+}
+
+void Animations::EnemyExit001::Invert(bool invert) { _inverted = invert; }

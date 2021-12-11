@@ -51,6 +51,17 @@ SDL_Event event;
 int main(int argc, char** argv) {
   argparse::ArgumentParser program("ultra-cosmo-invaders", "0.1.0");
   program.add_argument("-s", "--scene").default_value(0).help("load a specific scene").scan<'i', int>().nargs(1);
+  program.add_argument("-f", "--fullscreen").default_value(false).help("toggles fullscreen mode").implicit_value(true);
+  program.add_argument("-dw", "--display-width")
+      .default_value(1280)
+      .help("sets the display width")
+      .scan<'i', int>()
+      .nargs(1);
+  program.add_argument("-dh", "--display-height")
+      .default_value(720)
+      .help("sets the display height")
+      .scan<'i', int>()
+      .nargs(1);
 
   try {
     program.parse_args(argc, argv);
@@ -82,7 +93,12 @@ int main(int argc, char** argv) {
   CoffeeMaker::Audio::Init();
   CoffeeMaker::Texture::SetTextureDirectory();
 
-  CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 800, 600);
+  // CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 1920, 1080, true); // Linux
+  // CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 1792, 1120, true); // OSX
+  int width = program.get<int>("--display-width");
+  int height = program.get<int>("--display-height");
+  bool fullscreen = program.get<bool>("--fullscreen");
+  CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", width, height, fullscreen);  // Windows
   CoffeeMaker::Renderer renderer;
 
   std::string basePath = CoffeeMaker::Utilities::BaseDirectory();
@@ -107,7 +123,7 @@ int main(int argc, char** argv) {
   // SceneManager::AddScene(new TestBedScene());
   // SceneManager::AddScene(new TestAnimations());
   // SceneManager::AddScene(new TestEchelonScene());
-  // SceneManager::AddScene(new SplineBuilder());
+  SceneManager::AddScene(new SplineBuilder());
 
   CoffeeMaker::Logger::Debug("Loading scene at index...{}", program.get<int>("--scene"));
   if (!SceneManager::LoadScene(program.get<int>("--scene"))) {

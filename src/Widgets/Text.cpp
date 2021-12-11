@@ -69,6 +69,11 @@ void Text::SetFont(const std::string &fontName) {
   SetTextContentTexture();
 }
 
+void Text::SetFont(const std::string &fontName, CoffeeMaker::FontManager::FontSize size) {
+  _font = FontManager::UseFont(fontName, size);
+  SetTextContentTexture();
+}
+
 void Text::SetFont(TTF_Font *f) {
   _font = f;
   SetTextContentTexture();

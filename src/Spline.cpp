@@ -2,8 +2,13 @@
 
 #include <SDL2/SDL.h>
 
+#include <fstream>
+#include <iostream>
+
 #include "Color.hpp"
+#include "MessageBox.hpp"
 #include "Renderer.hpp"
+#include "Utilities.hpp"
 
 CoffeeMaker::BSpline::BSpline(size_t numControlPoints) :
     _cache({}), _tinysplineBSpline(CreateScope<tinyspline::BSpline>(numControlPoints)), _curves({}) {
@@ -15,8 +20,27 @@ CoffeeMaker::BSpline::BSpline(size_t numControlPoints) :
 CoffeeMaker::BSpline::~BSpline() = default;
 
 void CoffeeMaker::BSpline::Load(const std::string& filePath) {
-  tinyspline::BSpline tmp = tinyspline::BSpline::load(filePath);
-  _tinysplineBSpline = CreateScope<tinyspline::BSpline>(tmp);
+  std::string fullFilePath = CoffeeMaker::Utilities::AssetsDirectory() + "/" + filePath;
+  std::ifstream inf{fullFilePath};
+  if (!inf) {
+    CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("Error Reading File",
+                                                   "Could not read file: \"" + fullFilePath + "\"");
+  }
+
+  std::vector<tinyspline::real> pointsFromFile = {};
+  _cache.clear();
+  _curves.clear();
+
+  while (inf) {
+    std::string input;
+    inf >> input;
+    if (input != "") {
+      pointsFromFile.push_back(std::stod(input));
+    }
+  }
+
+  _tinysplineBSpline = CreateScope<tinyspline::BSpline>(pointsFromFile.size() / 2);
+  SetControlPoints(pointsFromFile);
 }
 
 void CoffeeMaker::BSpline::Save() const { _tinysplineBSpline->save("tmp.spline"); }
@@ -101,7 +125,7 @@ std::vector<CoffeeMaker::Math::Point2D> CoffeeMaker::BSpline::InvertControlPoint
 
   for (size_t i = 0; i < controlPoints.size(); i++) {
     invertedPoints.push_back(controlPoints[i]);
-    invertedPoints[i].x = 800 - invertedPoints[i].x;
+    invertedPoints[i].x = CoffeeMaker::Renderer::GetOutputWidth() - invertedPoints[i].x;
   }
 
   return invertedPoints;
@@ -119,6 +143,21 @@ void CoffeeMaker::BSpline::SetKnotAt(size_t index, tinyspline::real knot) {
   tinyspline::real clampedKnot = std::clamp(knot, 0.0, 1.0);
   std::vector<tinyspline::real> allKnots = _tinysplineBSpline->knots();
   _tinysplineBSpline->setKnotAt(index, clampedKnot);
+}
+
+void CoffeeMaker::BSpline::RemapControlPoints() {
+  using Pt2 = CoffeeMaker::Math::Point2D;
+  using namespace CoffeeMaker::Math;
+
+  std::vector<Pt2> remappedPoints = {};
+  std::vector<Pt2> currentPoints = GetControlPoints();
+  for (size_t i = 0; i < currentPoints.size(); i++) {
+    remappedPoints.push_back(
+        Pt2{.x = Remap(0.0f, 2560.0f, 0.0f, CoffeeMaker::Renderer::GetOutputWidthF(), currentPoints[i].x),
+            .y = Remap(0.0f, 1440.0f, 0.0f, CoffeeMaker::Renderer::GetOutputHeightF(), currentPoints[i].y)});
+  }
+
+  SetControlPoints(remappedPoints);
 }
 
 CoffeeMaker::Spline::Spline() :
