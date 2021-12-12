@@ -26,7 +26,7 @@ namespace CoffeeMaker {
 
     class Image {
       public:
-      Image(std::string filePath) :
+      explicit Image(std::string filePath) :
           filePath(fmt::format("{}/{}/{}", CoffeeMaker::Utilities::AssetsDirectory(), "images", filePath)),
           renderer(CoffeeMaker::Renderer::Instance()) {}
 

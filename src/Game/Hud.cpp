@@ -12,9 +12,6 @@
 #include "Renderer.hpp"
 #include "Widgets/Properties.hpp"
 
-using namespace CoffeeMaker::Widgets;
-using namespace CoffeeMaker::UIProperties;
-
 class IntervalFunction {
   public:
   explicit IntervalFunction(SDL_TimerCallback fn, Uint32 i) : interval(i), callback(fn) {}
@@ -29,11 +26,14 @@ class IntervalFunction {
 };
 
 HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
+  using Text = CoffeeMaker::Widgets::Text;
+  using View = CoffeeMaker::Widgets::View;
+  using namespace CoffeeMaker::UIProperties;
   using FontSize = CoffeeMaker::FontManager::FontSize;
 
-  score = std::make_shared<Text>("Score: 0");
-  time = std::make_shared<Text>("Time: 0:00");
-  playerHealth = std::make_shared<Text>("Lives: " + std::to_string(_life));
+  score = CreateRef<Text>("Score: 0");
+  time = CreateRef<Text>("Time: 0:00");
+  playerHealth = CreateRef<Text>("Lives: " + std::to_string(_life));
 
   if (CoffeeMaker::Renderer::GetOutputWidth() >= 1920) {
     score->SetFont("Sarpanch/Sarpanch-Regular", FontSize::FontSizeLarge);
@@ -45,7 +45,7 @@ HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
     playerHealth->SetFont("Sarpanch/Sarpanch-Regular");
   }
 
-  hudView = std::make_unique<View>(0.9f, 50, HorizontalAlignment::Centered);
+  hudView = CreateScope<View>(0.9f, 50, HorizontalAlignment::Centered);
   score->SetColor(CoffeeMaker::Colors::Yellow);
   time->SetColor(CoffeeMaker::Colors::Yellow);
   playerHealth->SetColor(CoffeeMaker::Colors::Yellow);
@@ -57,9 +57,14 @@ HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
   time->SetVerticalAlignment(VerticalAlignment::Centered);
   playerHealth->SetVerticalAlignment(VerticalAlignment::Centered);
 
+  bottomPanel = CreateRef<CoffeeMaker::Widgets::ScalableUISprite>("GlassPanel.png", 1000.0f, 50.0f, 14, 14);
+  bottomPanel->SetVerticalAlignment(VerticalAlignment::Bottom);
+  bottomPanel->SetHorizontalAlignment(HorizontalAlignment::Centered);
+
   hudView->AppendChild(score);
   hudView->AppendChild(time);
   hudView->AppendChild(playerHealth);
+  hudView->AppendChild(bottomPanel);
 
   _timer.Start();
   _timerId = SDL_AddTimer(1000, &HeadsUpDisplay::TimerInterval, this);
@@ -84,7 +89,10 @@ void HeadsUpDisplay::Update() {
   // time->SetText(_timer.toString());
 }
 
-void HeadsUpDisplay::Render() const { hudView->Render(); }
+void HeadsUpDisplay::Render() const {
+  hudView->Render();
+  bottomPanel->Render();
+}
 
 void HeadsUpDisplay::IncrementScore() {
   _score += 10;
