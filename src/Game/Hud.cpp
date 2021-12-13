@@ -66,7 +66,6 @@ HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
   hudView->AppendChild(score);
   hudView->AppendChild(time);
   hudView->AppendChild(playerHealth);
-  hudView->AppendChild(bottomPanel);
 
   _timer.Start();
   _timerId = SDL_AddTimer(1000, &HeadsUpDisplay::TimerInterval, this);
@@ -91,14 +90,7 @@ void HeadsUpDisplay::Update() {
   // time->SetText(_timer.toString());
 }
 
-void HeadsUpDisplay::Render() const {
-  hudView->Render();
-<<<<<<< HEAD
-  bottomPanel->Render();
-  == == == =
-  // bottomPanel->Render();
->>>>>>> ac29ff6c7c15cec6b9f9fa1f7858ca89e3fd6413
-}
+void HeadsUpDisplay::Render() const { hudView->Render(); }
 
 void HeadsUpDisplay::IncrementScore() {
   _score += 10;
