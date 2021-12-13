@@ -127,7 +127,8 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "xaver.clang-format"
   },
-  "clang-tidy.checks": ["clang-analyzer-*"],
+  "clang-tidy.lintOnSave": true,
+  "clang-tidy.checks": ["clang-analyzer-*", "modernize-*"],
   "clang-tidy.compilerArgs": [
     "-Ibuild/vcpkg_installed/x64-osx/include",
     "-Iinclude",
