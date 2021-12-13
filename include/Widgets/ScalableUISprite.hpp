@@ -16,14 +16,32 @@ namespace CoffeeMaker {
 
     class ScalableUISprite : public UIComponent {
       public:
-      ScalableUISprite(const std::string& filePath, float width, float height, int cornerClipX, int cornerClipY) :
+      ScalableUISprite(const std::string& filePath, float widthPercent, float heightPercent, int cornerClipX,
+                       int cornerClipY) :
+          _widthPercent(widthPercent),
+          _heightPercent(heightPercent),
+          _cornerClipX(cornerClipX),
+          _cornerClipY(cornerClipY),
+          _texture(CreateScope<CoffeeMaker::Texture>(filePath)) {
+        clientRect.w *= _widthPercent;
+        clientRect.h *= _heightPercent;
+        clientRect.x = 0;
+        clientRect.y = 0;
+
+        SetCornerClipRects();
+        SetCornerDestinationRects();
+        SetEdgeClipRects();
+        SetEdgeDestinationRects();
+        SetCenterClipRect();
+      }
+      ScalableUISprite(const std::string& filePath, int width, int height, int cornerClipX, int cornerClipY) :
           _width(width),
           _height(height),
           _cornerClipX(cornerClipX),
           _cornerClipY(cornerClipY),
           _texture(CreateScope<CoffeeMaker::Texture>(filePath)) {
-        clientRect.w = static_cast<int>(_width);
-        clientRect.h = static_cast<int>(_height);
+        clientRect.w = _width;
+        clientRect.h = _height;
         clientRect.x = 0;
         clientRect.y = 0;
 
@@ -119,6 +137,12 @@ namespace CoffeeMaker {
       void OnAppend() override {
         UIComponent::OnAppend();
 
+        if (_widthPercent >= 0.0f && _widthPercent <= 1.0f) {
+          clientRect.w = _parent->clientRect.w * _widthPercent;
+        }
+        if (_heightPercent >= 0.0f && _heightPercent <= 1.0f) {
+          clientRect.h = _parent->clientRect.h * _heightPercent;
+        }
         SetCornerDestinationRects();
         SetEdgeDestinationRects();
       }
@@ -211,8 +235,10 @@ namespace CoffeeMaker {
         _centerClip.w = _cornerClipTopRight.x - _cornerClipTopLeft.w;
       }
 
-      float _width;
-      float _height;
+      float _widthPercent{-1.0f};
+      float _heightPercent{-1.0f};
+      int _width;
+      int _height;
       int _cornerClipX;
       int _cornerClipY;
 

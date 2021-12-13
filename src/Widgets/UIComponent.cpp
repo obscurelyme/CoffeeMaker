@@ -55,8 +55,8 @@ void UIComponent::RepositionChildren() {
 }
 
 void UIComponent::CalcPosition() {
-  clientRect.x = UIComponent::DeriveXPosition() + static_cast<int>(_marginLeft);
-  clientRect.y = UIComponent::DeriveYPosition() + static_cast<int>(_marginTop);
+  clientRect.x = UIComponent::DeriveXPosition() + static_cast<int>(_marginLeft) - static_cast<int>(_marginRight);
+  clientRect.y = UIComponent::DeriveYPosition() + static_cast<int>(_marginTop) - static_cast<int>(_marginBottom);
   RepositionChildren();
 }
 
