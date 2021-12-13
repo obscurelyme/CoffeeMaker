@@ -44,7 +44,7 @@ class HeadsUpDisplay : public CoffeeMaker::IUserEventListener {
   Ref<CoffeeMaker::Widgets::Text> playerHealth;
   Ref<CoffeeMaker::Widgets::Text> time;
   Scope<CoffeeMaker::Widgets::View> hudView;
-  Ref<CoffeeMaker::Widgets::ScalableUISprite> bottomPanel;
+  Ref<CoffeeMaker::Widgets::ScalableUISprite> panel;
   CoffeeMaker::Timer _timer;
   SDL_TimerID _timerId;
 };

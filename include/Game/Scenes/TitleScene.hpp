@@ -6,10 +6,7 @@
 #include "Audio.hpp"
 #include "Game/Scene.hpp"
 #include "Utilities.hpp"
-#include "Widgets/Button.hpp"
-#include "Widgets/Text.hpp"
-#include "Widgets/UIComponent.hpp"
-#include "Widgets/View.hpp"
+#include "Widgets/All.hpp"
 
 class TitleScene : public Scene {
   public:
