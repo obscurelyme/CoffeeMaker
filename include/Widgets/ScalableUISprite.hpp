@@ -31,6 +31,7 @@ namespace CoffeeMaker {
         SetCornerDestinationRects();
         SetEdgeClipRects();
         SetEdgeDestinationRects();
+        SetCenterClipRect();
       }
       ~ScalableUISprite() = default;
 
@@ -60,6 +61,11 @@ namespace CoffeeMaker {
         _edgeDestRight.h = _edgeClipRight.h;
         _edgeDestRight.w = _edgeClipRight.w;
 
+        _centerDest.x = _centerClip.x;
+        _centerDest.y = _centerClip.y;
+        _centerDest.h = _centerClip.h;
+        _centerDest.w = _centerClip.w;
+
         int currentXOffset;
         int currentYOffset;
         for (int i = 0; i < _numTopTiles; i++) {
@@ -82,19 +88,29 @@ namespace CoffeeMaker {
           _edgeDestRight.y = _edgeDestLeft.y;
 
           if (i == _numLeftTiles - 1) {
-            // if (i == 0) {
-            //   // first and last
-            //   _edgeDestLeft.h = _cornerDestBottomLeft.y - _cornerDestTopLeft.y + _cornerDestTopLeft.h;
-            // } else {
-            //   // last in the sequence, we need the remaining height space and make a new destination rect based on
-            //   that. _edgeDestLeft.h = _cornerDestBottomLeft.y - _edgeDestLeft.y;
-            // }
             _edgeDestLeft.h = _cornerDestBottomLeft.y - _edgeDestLeft.y;
             _edgeDestRight.h = _edgeDestLeft.h;
           }
 
           _texture->Render(_edgeClipLeft, _edgeDestLeft);
           _texture->Render(_edgeClipRight, _edgeDestRight);
+        }
+
+        for (int i = 0, xOffset = 0; i < _numTopTiles; i++) {
+          xOffset = i * _centerDest.w;
+          _centerDest.x = xOffset + _cornerDestTopLeft.w + _cornerDestTopLeft.x;
+          if (i == _numTopTiles - 1) {
+            _centerDest.w = _cornerDestTopRight.x - _centerDest.x;
+          }
+
+          for (int j = 0, yOffset = 0; j < _numLeftTiles; j++) {
+            yOffset = j * _centerDest.h;
+            _centerDest.y = _cornerDestTopLeft.h + _cornerDestTopLeft.y + yOffset;
+            if (j == _numLeftTiles - 1) {
+              _centerDest.h = _cornerDestBottomLeft.y - _cornerDestTopLeft.h;
+            }
+            _texture->Render(_centerClip, _centerDest);
+          }
         }
 
         UIComponent::Render();
@@ -186,6 +202,13 @@ namespace CoffeeMaker {
         float cornerDestTopLeftHeight = static_cast<float>(_cornerDestTopLeft.h + _cornerDestTopLeft.y);
         _numLeftTiles = static_cast<int>(std::ceil((cornerDestBottomLeft - cornerDestTopLeftHeight) / edgeClipLeft));
         _numRightTiles = _numLeftTiles;
+      }
+
+      void SetCenterClipRect() {
+        _centerClip.x = _cornerClipTopLeft.w;
+        _centerClip.y = _cornerClipTopLeft.h;
+        _centerClip.h = _cornerClipBottomLeft.y - _cornerClipTopLeft.h;
+        _centerClip.w = _cornerClipTopRight.x - _cornerClipTopLeft.w;
       }
 
       float _width;
