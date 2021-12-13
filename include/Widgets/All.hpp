@@ -4,7 +4,9 @@
 #include "Widgets/Button.hpp"
 #include "Widgets/Image.hpp"
 #include "Widgets/Properties.hpp"
+#include "Widgets/ScalableUISprite.hpp"
 #include "Widgets/Text.hpp"
 #include "Widgets/UIComponent.hpp"
+#include "Widgets/View.hpp"
 
 #endif

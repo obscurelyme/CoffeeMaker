@@ -10,19 +10,18 @@
 
 namespace CoffeeMaker {
   namespace Widgets {
-    SDL_Surface *loadImageSurface(std::string filePath) {
-      SDL_Surface *surface = nullptr;
-      std::string resolvedPath = fmt::format("{}/{}/{}", CoffeeMaker::Utilities::AssetsDirectory(), "images", filePath);
-      SDL_Surface *loaded = IMG_Load(resolvedPath.c_str());
-      if (loaded == NULL) {
-        return nullptr;
-      }
+    // SDL_Surface *loadImageSurface(std::string filePath) {
+    //   SDL_Surface *surface = nullptr;
+    //   std::string resolvedPath = fmt::format("{}/{}/{}", CoffeeMaker::Utilities::AssetsDirectory(), "images",
+    //   filePath); SDL_Surface *loaded = IMG_Load(resolvedPath.c_str()); if (loaded == NULL) {
+    //     return nullptr;
+    //   }
 
-      surface = SDL_ConvertSurface(loaded, SDL_GetWindowSurface(GlobalWindow::Instance()->Handle())->format, 0);
-      SDL_FreeSurface(loaded);
+    //   surface = SDL_ConvertSurface(loaded, SDL_GetWindowSurface(GlobalWindow::Instance()->Handle())->format, 0);
+    //   SDL_FreeSurface(loaded);
 
-      return surface;
-    }
+    //   return surface;
+    // }
 
     class Image {
       public:

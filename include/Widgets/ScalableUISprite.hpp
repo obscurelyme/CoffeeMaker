@@ -58,7 +58,7 @@ namespace CoffeeMaker::Widgets {
       _texture->Render(_cornerClipBottomLeft, _cornerDestBottomLeft);
       _texture->Render(_cornerClipBottomRight, _cornerDestBottomRight);
 
-      _edgeDestTop.y = 0;
+      _edgeDestTop.y = _cornerDestTopLeft.y;
       _edgeDestTop.x = _cornerDestTopLeft.w + _cornerDestTopLeft.x;
       _edgeDestTop.h = _edgeClipTop.h;
       _edgeDestTop.w = _edgeClipTop.w;
@@ -77,11 +77,6 @@ namespace CoffeeMaker::Widgets {
       _edgeDestRight.y = _cornerDestTopRight.y + _cornerDestTopRight.h;
       _edgeDestRight.h = _edgeClipRight.h;
       _edgeDestRight.w = _edgeClipRight.w;
-
-      _centerDest.x = _centerClip.x;
-      _centerDest.y = _centerClip.y;
-      _centerDest.h = _centerClip.h;
-      _centerDest.w = _centerClip.w;
 
       int currentXOffset;
       int currentYOffset;
@@ -113,6 +108,11 @@ namespace CoffeeMaker::Widgets {
         _texture->Render(_edgeClipRight, _edgeDestRight);
       }
 
+      _centerDest.x = _centerClip.x;
+      _centerDest.y = _centerClip.y;
+      _centerDest.h = _centerClip.h;
+      _centerDest.w = _centerClip.w;
+
       for (int i = 0, xOffset = 0; i < _numTopTiles; i++) {
         xOffset = i * _centerDest.w;
         _centerDest.x = xOffset + _cornerDestTopLeft.w + _cornerDestTopLeft.x;
@@ -124,10 +124,13 @@ namespace CoffeeMaker::Widgets {
           yOffset = j * _centerDest.h;
           _centerDest.y = _cornerDestTopLeft.h + _cornerDestTopLeft.y + yOffset;
           if (j == _numLeftTiles - 1) {
-            _centerDest.h = _cornerDestBottomLeft.y - _cornerDestTopLeft.h;
+            _centerDest.h = _cornerDestBottomLeft.y - _centerDest.y;
           }
           _texture->Render(_centerClip, _centerDest);
         }
+
+        _centerDest.h = _centerClip.h;
+        _centerDest.w = _centerClip.w;
       }
 
       UIComponent::Render();
