@@ -23,8 +23,8 @@ namespace CoffeeMaker {
           _cornerClipX(cornerClipX),
           _cornerClipY(cornerClipY),
           _texture(CreateScope<CoffeeMaker::Texture>(filePath)) {
-        clientRect.w *= _widthPercent;
-        clientRect.h *= _heightPercent;
+        clientRect.w = static_cast<int>(clientRect.w * _widthPercent);
+        clientRect.h = static_cast<int>(clientRect.h * _heightPercent);
         clientRect.x = 0;
         clientRect.y = 0;
 
@@ -138,10 +138,10 @@ namespace CoffeeMaker {
         UIComponent::OnAppend();
 
         if (_widthPercent >= 0.0f && _widthPercent <= 1.0f) {
-          clientRect.w = _parent->clientRect.w * _widthPercent;
+          clientRect.w = static_cast<int>(_parent->clientRect.w * _widthPercent);
         }
         if (_heightPercent >= 0.0f && _heightPercent <= 1.0f) {
-          clientRect.h = _parent->clientRect.h * _heightPercent;
+          clientRect.h = static_cast<int>(_parent->clientRect.h * _heightPercent);
         }
         SetCornerDestinationRects();
         SetEdgeDestinationRects();

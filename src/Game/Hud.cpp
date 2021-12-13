@@ -52,13 +52,13 @@ HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
   playerHealth->SetColor(CoffeeMaker::Colors::Yellow);
 
   score->SetHorizontalAlignment(HorizontalAlignment::Centered);
-  time->SetMargins(Margins{.top = 0.0f, .left = 18.0f, .right = 0.0f, .bottom = 0.0f});
+  time->SetMargins(Margins{.top = 0.0f, .bottom = 0.0f, .left = 18.0f, .right = 0.0f});
   time->SetHorizontalAlignment(HorizontalAlignment::Left);
   playerHealth->SetHorizontalAlignment(HorizontalAlignment::Right);
   score->SetVerticalAlignment(VerticalAlignment::Centered);
   time->SetVerticalAlignment(VerticalAlignment::Centered);
   playerHealth->SetVerticalAlignment(VerticalAlignment::Centered);
-  playerHealth->SetMargins(Margins{.top = 0.0f, .left = 0.0f, .right = 18.0f, .bottom = 0.0f});
+  playerHealth->SetMargins(Margins{.top = 0.0f, .bottom = 0.0f, .left = 0.0f, .right = 18.0f});
 
   panel = CreateRef<CoffeeMaker::Widgets::ScalableUISprite>("GlassPanel.png", 1.0f, 1.0f, 14, 14);
 
