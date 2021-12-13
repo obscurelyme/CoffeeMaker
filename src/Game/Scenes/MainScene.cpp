@@ -24,8 +24,6 @@ void MainScene::Render() {
 
   _hud->Render();
   _menu->Render();
-  _frontEchelon->Render();
-  _backEchelon->Render();
 }
 
 void MainScene::Pause() {

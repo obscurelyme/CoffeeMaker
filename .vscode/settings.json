@@ -127,6 +127,15 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "xaver.clang-format"
   },
+  "clang-tidy.checks": ["clang-analyzer-*"],
+  "clang-tidy.compilerArgs": [
+    "-Ibuild/vcpkg_installed/x64-osx/include",
+    "-Iinclude",
+    "-std=c++20"
+  ],
+  "clang-tidy.blacklist": [
+    "build/vcpkg_installed/x64-osx/*"
+  ],
   "c-cpp-flylint.clang.enable": false,
   "c-cpp-flylint.flawfinder.enable": false,
   "c-cpp-flylint.lizard.enable": false,
