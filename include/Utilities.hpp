@@ -36,6 +36,7 @@ namespace CoffeeMaker {
 
   namespace Utilities {
     extern const char *_baseDir;
+    extern std::string _assetDir;
 
     void Init(const char *);
     const std::string BaseDirectory();
