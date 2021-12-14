@@ -40,6 +40,24 @@ namespace CoffeeMaker {
     virtual ScreenDPI SetScreenDPI() = 0;
   };
 
+  class UtilityWindow {
+    public:
+    UtilityWindow();
+    ~UtilityWindow();
+
+    int DisplayHeight() const;
+    int DisplayWidth() const;
+
+    private:
+    SDL_Window *_handle;
+    SDL_Rect _usableDisplayBounds;
+    SDL_Rect _displayBounds;
+
+    static std::string title;
+    static int width;
+    static int height;
+  };
+
   class BasicWindow : public IWindow {
     public:
     BasicWindow(std::string title, int width, int height, bool fullscreen);
@@ -57,7 +75,6 @@ namespace CoffeeMaker {
     SDL_Window *Handle() const;
     void ShowWindow() const;
     Uint32 GetID() const;
-    void SetOSXWindowedFullscreen();
 
     private:
     ScreenDPI SetScreenDPI();

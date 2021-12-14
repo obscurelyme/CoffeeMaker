@@ -44,11 +44,7 @@ BasicWindow::BasicWindow(std::string title, int width, int height, bool fullscre
   _dpiScale = _screenDpi.diagonal / ScreenDPI::BASE_DPI;
   SDL_GetDisplayBounds(SDL_GetWindowDisplayIndex(_window), &_screenBounds);
   SDL_GetDisplayUsableBounds(SDL_GetWindowDisplayIndex(_window), &_usableDisplayBounds);
-  CM_LOGGER_INFO("Display Bounds: ({},{}) Display Usable Bounds: ({},{})", _screenBounds.w, _screenBounds.h,
-                 _usableDisplayBounds.w, _usableDisplayBounds.h);
   CM_LOGGER_INFO("Display DPI Scale: {}", _dpiScale);
-  // SDL_SetWindowSize(_window, _usableDisplayBounds.w, _usableDisplayBounds.h);
-  // SDL_SetWindowPosition(_window, 0, 0);
   GlobalWindow::Set(this);
 }
 
@@ -107,18 +103,26 @@ void BasicWindow::ShowWindow() const { SDL_ShowWindow(_window); }
 
 Uint32 BasicWindow::GetID() const { return SDL_GetWindowID(_window); }
 
-void BasicWindow::SetOSXWindowedFullscreen() {
-  // int top = 0;
-  // int left = 0;
-  // int bottom = 0;
-  // int right = 0;
-  // int result = SDL_GetWindowBordersSize(_window, &top, &left, &bottom, &right);
-  // if (result == -1) {
-  //   CM_LOGGER_ERROR("Could not fetch window border size: {}", SDL_GetError());
-  // } else {
-  //   CM_LOGGER_INFO("Window Border Size: ({},{})", right - left, bottom - top);
-  // }
-  // SDL_SetWindowSize(_window, _usableDisplayBounds.w, _usableDisplayBounds.h - 18);
-  // SDL_SetWindowPosition(_window, 0, 0);
-  SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+std::string CoffeeMaker::UtilityWindow::title = "CoffeeMaker";
+int CoffeeMaker::UtilityWindow::width = 800;
+int CoffeeMaker::UtilityWindow::height = 600;
+
+CoffeeMaker::UtilityWindow::UtilityWindow() : _handle(nullptr) {
+  _handle = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,
+                             SDL_WINDOW_HIDDEN);
+  if (_handle == NULL) {
+    CM_LOGGER_CRITICAL("Could not create utility window.");
+  }
+  SDL_GetDisplayBounds(SDL_GetWindowDisplayIndex(_handle), &_displayBounds);
+  SDL_GetDisplayUsableBounds(SDL_GetWindowDisplayIndex(_handle), &_usableDisplayBounds);
+  CM_LOGGER_INFO("Display Usable Bounds: ({},{})", _usableDisplayBounds.w, _usableDisplayBounds.h);
+  CM_LOGGER_INFO("Display Bounds: ({},{})", _displayBounds.w, _displayBounds.h);
+  SDL_DestroyWindow(_handle);
+  _handle = nullptr;
 }
+
+CoffeeMaker::UtilityWindow::~UtilityWindow() {}
+
+int CoffeeMaker::UtilityWindow::DisplayHeight() const { return _displayBounds.h; }
+
+int CoffeeMaker::UtilityWindow::DisplayWidth() const { return _displayBounds.w; }

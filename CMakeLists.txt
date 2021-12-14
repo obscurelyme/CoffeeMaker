@@ -245,3 +245,9 @@ elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" OR ${CMAKE_CXX_COMPILER_ID} ST
   message("Compiler is Clang and engine will use <experimental/coroutine> headers")
   add_compile_definitions(COROUTINE_EXPERIMENTAL_SUPPORT)
 endif()
+
+if(COFFEEMAKER_RELEASE_BUILD)
+  message("Generated binary files for COFFEEMAKER_RELEASE_BUILD")
+  add_compile_definitions(COFFEEMAKER_RELEASE_BUILD)
+endif()
+

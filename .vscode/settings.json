@@ -118,10 +118,16 @@
     "source_location": "cpp",
     "__functional_03": "cpp",
     "coroutine": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "execution": "cpp",
+    "regex": "cpp",
+    "shared_mutex": "cpp",
+    "typeindex": "cpp",
+    "valarray": "cpp"
   },
   "cmake.configureSettings": {
-    "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"
+    "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
+    "COFFEEMAKER_RELEASE_BUILD": true
   },
   "[cpp]": {
     "editor.formatOnSave": true,
@@ -134,9 +140,7 @@
     "-Iinclude",
     "-std=c++20"
   ],
-  "clang-tidy.blacklist": [
-    "build/vcpkg_installed/x64-osx/*"
-  ],
+  "clang-tidy.blacklist": ["build/vcpkg_installed/x64-osx/*"],
   "c-cpp-flylint.clang.enable": false,
   "c-cpp-flylint.flawfinder.enable": false,
   "c-cpp-flylint.lizard.enable": false,

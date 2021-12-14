@@ -89,16 +89,28 @@ int main(int argc, char** argv) {
 
   // SDL_SetAssertionHandler(appHandler, nullptr);
 
+  CoffeeMaker::UtilityWindow utilWindow;
   CoffeeMaker::Utilities::Init(SDL_GetBasePath());
   CoffeeMaker::Audio::Init();
   CoffeeMaker::Texture::SetTextureDirectory();
 
   // CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 1920, 1080, true); // Linux
   // CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", 1792, 1120, true); // OSX
+  // int width = program.get<int>("--display-width");
+  // int height = program.get<int>("--display-height");
+  // bool fullscreen = program.get<bool>("--fullscreen");
+
+#ifdef COFFEEMAKER_RELEASE_BUILD
+  int width = utilWindow.DisplayWidth();
+  int height = utilWindow.DisplayHeight();
+  bool fullscreen = true;
+#else
   int width = program.get<int>("--display-width");
   int height = program.get<int>("--display-height");
   bool fullscreen = program.get<bool>("--fullscreen");
-  CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", width, height, fullscreen);  // Windows
+#endif
+
+  CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", width, height, fullscreen);
   CoffeeMaker::Renderer renderer;
 
   std::string basePath = CoffeeMaker::Utilities::BaseDirectory();

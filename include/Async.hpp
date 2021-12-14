@@ -40,7 +40,6 @@ namespace CoffeeMaker {
         _packagedTask = new std::packaged_task<T(Args...)>(fp);
         _future = _packagedTask->get_future();
         _thread = new std::thread(std::move(*_packagedTask));
-        std::cout << "Task started!\n";
       }
 
       ~Task() {
