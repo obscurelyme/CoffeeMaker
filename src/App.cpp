@@ -126,10 +126,14 @@ int main(int argc, char** argv) {
   SceneManager::AddScene(new TitleScene());
   SceneManager::AddScene(new MainScene());
   SceneManager::AddScene(new HighScoreScene());
+#ifndef COFFEEMAKER_RELEASE_BUILD
+  // Test scenes we want to expose during development but not in a release build.
+
   // SceneManager::AddScene(new TestBedScene());
   // SceneManager::AddScene(new TestAnimations());
   // SceneManager::AddScene(new TestEchelonScene());
   SceneManager::AddScene(new SplineBuilder());
+#endif
 
   CoffeeMaker::Logger::Debug("Loading scene at index...{}", program.get<int>("--scene"));
   if (!SceneManager::LoadScene(program.get<int>("--scene"))) {
