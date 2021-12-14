@@ -2,6 +2,8 @@
 
 #include <fmt/core.h>
 
+#include <string>
+
 #include "Logger.hpp"
 #include "MessageBox.hpp"
 #include "Utilities.hpp"
@@ -9,7 +11,7 @@
 void CoffeeMaker::Audio::Init() {
   CM_LOGGER_INFO("Mixer Version: {}", SDL_MIXER_COMPILEDVERSION);
   if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-    std::string msg = fmt::format(fmt::runtime("Could not Open Audio {}"), Mix_GetError());
+    std::string msg = fmt::format(fmt::runtime<std::string>("Could not Open Audio {}"), Mix_GetError());
     CM_LOGGER_CRITICAL(msg);
     CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("CoffeeMaker::Audio Error", msg);
     return;
@@ -18,7 +20,7 @@ void CoffeeMaker::Audio::Init() {
   int flags = MIX_INIT_MP3 | MIX_INIT_OGG;
   int initializedFlags = Mix_Init(flags);
   if ((initializedFlags & flags) != flags) {
-    std::string msg = fmt::format(fmt::runtime("Could not initialize SDL Mixer {}"), Mix_GetError());
+    std::string msg = fmt::format(fmt::runtime<std::string>("Could not initialize SDL Mixer {}"), Mix_GetError());
     CM_LOGGER_CRITICAL(msg);
     CoffeeMaker::MessageBox::ShowMessageBoxAndQuit("CoffeeMaker::Audio Error", msg);
   }
@@ -27,8 +29,8 @@ void CoffeeMaker::Audio::Init() {
 void CoffeeMaker::Audio::Quit() { Mix_CloseAudio(); }
 
 Mix_Music* CoffeeMaker::Audio::LoadMusic(const std::string& filename) {
-  std::string fullFilePath =
-      fmt::format(fmt::runtime("{}/audio/{}"), CoffeeMaker::Utilities::AssetsDirectory(), filename.c_str());
+  std::string fullFilePath = fmt::format(fmt::runtime<std::string>("{}/audio/{}"),
+                                         CoffeeMaker::Utilities::AssetsDirectory(), filename.c_str());
 
   Mix_Music* music = Mix_LoadMUS(fullFilePath.c_str());
   if (!music) {
@@ -47,15 +49,15 @@ void CoffeeMaker::Audio::FreeMusic(Mix_Music* music) {
 void CoffeeMaker::Audio::PlayMusic(Mix_Music* music) {
   if (music != nullptr) {
     Mix_PlayMusic(music, -1);
-    CM_LOGGER_INFO("Current Volume {}", Mix_VolumeMusic(0));
+    CM_LOGGER_INFO("Current Volume {}", Mix_VolumeMusic(35));
   }
 }
 
 void CoffeeMaker::Audio::StopMusic() { Mix_HaltMusic(); }
 
 CoffeeMaker::AudioElement::AudioElement(const std::string& filePath) : _chunk(nullptr), _channel(-1) {
-  std::string fp =
-      fmt::format(fmt::runtime("{}/audio/{}"), CoffeeMaker::Utilities::AssetsDirectory(), filePath.c_str());
+  std::string fp = fmt::format(fmt::runtime<std::string>("{}/audio/{}"), CoffeeMaker::Utilities::AssetsDirectory(),
+                               filePath.c_str());
   _chunk = Mix_LoadWAV(fp.c_str());
   if (_chunk == nullptr) {
     CM_LOGGER_CRITICAL("Could not load sound file for AudioElement {}", fp);
@@ -74,7 +76,7 @@ void CoffeeMaker::AudioElement::Play() {
     if (Mix_Playing(_channel)) {
       Mix_PlayChannel(-1, _chunk, 0);
     }
-    Mix_VolumeChunk(_chunk, 0);
+    Mix_VolumeChunk(_chunk, 50);
     _channel = Mix_PlayChannel(_channel, _chunk, 0);
   }
 }

@@ -2,6 +2,8 @@
 
 #include <SDL2/SDL_image.h>
 
+#include <string>
+
 #include "Logger.hpp"
 #include "MessageBox.hpp"
 #include "Renderer.hpp"
@@ -46,7 +48,8 @@ SDL_Texture *CoffeeMaker::createRectTextureFromSurface(int height, int width, co
 std::string Texture::_textureDirectory = "";
 
 void Texture::SetTextureDirectory() {
-  Texture::_textureDirectory = fmt::format(fmt::runtime("{}/{}"), CoffeeMaker::Utilities::AssetsDirectory(), "images");
+  Texture::_textureDirectory =
+      fmt::format(fmt::runtime<std::string>("{}/{}"), CoffeeMaker::Utilities::AssetsDirectory(), "images");
 }
 
 Texture::Texture() : _texture(nullptr), _color(Color()), _height(0), _width(0), _useColorKey(false) {}

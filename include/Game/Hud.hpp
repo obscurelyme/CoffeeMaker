@@ -8,6 +8,7 @@
 #include "Event.hpp"
 #include "Timer.hpp"
 #include "Utilities.hpp"
+#include "Widgets/ScalableUISprite.hpp"
 #include "Widgets/Text.hpp"
 #include "Widgets/View.hpp"
 
@@ -42,7 +43,8 @@ class HeadsUpDisplay : public CoffeeMaker::IUserEventListener {
   Ref<CoffeeMaker::Widgets::Text> score;
   Ref<CoffeeMaker::Widgets::Text> playerHealth;
   Ref<CoffeeMaker::Widgets::Text> time;
-  std::unique_ptr<CoffeeMaker::Widgets::View> hudView;
+  Scope<CoffeeMaker::Widgets::View> hudView;
+  Ref<CoffeeMaker::Widgets::ScalableUISprite> panel;
   CoffeeMaker::Timer _timer;
   SDL_TimerID _timerId;
 };
