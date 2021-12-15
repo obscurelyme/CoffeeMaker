@@ -16,6 +16,7 @@ class Tiles {
    * and the height/width of the loaded texture
    */
   Tiles(const std::string& filePath, int viewportWidth, int viewportHeight);
+  Tiles(const std::string& filePath, int viewportWidth, int viewportHeight, float speed);
   ~Tiles() = default;
 
   void Update(float deltaTime);

@@ -251,3 +251,10 @@ if(COFFEEMAKER_RELEASE_BUILD)
   add_compile_definitions(COFFEEMAKER_RELEASE_BUILD)
 endif()
 
+if(COFFEEMAKER_LICENSED_ASSETS)
+  message("Leveraging licensed assets for CoffeeMaker.\nNOTE: This setting is for core developers only.")
+  add_compile_definitions(COFFEEMAKER_LICENSED_ASSETS)
+else()
+  message("WARNING: licensed assets will not be used in this build of CoffeeMaker.\nIf this was NOT what you are expecting please reconfigure cmake with -DCOFFEEMAKER_LICENSED_ASSETS:BOOL=true")
+endif()
+

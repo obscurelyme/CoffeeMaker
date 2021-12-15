@@ -11,15 +11,14 @@
 #include "Renderer.hpp"
 
 void TitleScene::Render() {
-  SDL_SetRenderDrawColor(CoffeeMaker::Renderer::Instance(), _backgroundColor.r, _backgroundColor.g, _backgroundColor.b,
-                         _backgroundColor.a);
-  SDL_RenderClear(CoffeeMaker::Renderer::Instance());
+  _backgroundTiles->Render();
+
   for (auto& entity : _entities) {
     entity->Render();
   }
 }
 
-void TitleScene::Update(float) {}
+void TitleScene::Update(float deltaTime) { _backgroundTiles->Update(deltaTime); }
 
 void TitleScene::Pause() {}
 
@@ -29,7 +28,9 @@ void TitleScene::Init() {
   _music = CoffeeMaker::Audio::LoadMusic("music/CoolTrace.ogg");
   CoffeeMaker::Audio::PlayMusic(_music);
   SDL_ShowCursor(SDL_ENABLE);
-  _backgroundColor = CoffeeMaker::Color(0, 0, 0, 255);
+
+  _backgroundTiles = CreateScope<Tiles>("space.png", CoffeeMaker::Renderer::GetOutputWidth(),
+                                        CoffeeMaker::Renderer::GetOutputHeight(), 50.0f);
 
   Ref<CoffeeMaker::Widgets::View> _view =
       CreateRef<CoffeeMaker::Widgets::View>(400, 200, HorizontalAlignment::Centered, VerticalAlignment::Centered);
@@ -78,7 +79,6 @@ void TitleScene::Init() {
   _playButton->SetMargins(CoffeeMaker::Margins{.top = 0.0f, .bottom = 18.0f, .left = 18.0f, .right = 0.0f});
   _quitButton->SetMargins(CoffeeMaker::Margins{.top = 0.0f, .bottom = 18.0f, .left = 0.0f, .right = 18.0f});
 
-  // _entities.push_back(panel);
   _entities.push_back(_view);
   _loaded = true;
 }

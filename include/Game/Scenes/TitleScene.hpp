@@ -5,6 +5,7 @@
 
 #include "Audio.hpp"
 #include "Game/Scene.hpp"
+#include "Game/Tiles.hpp"
 #include "Utilities.hpp"
 #include "Widgets/All.hpp"
 
@@ -21,6 +22,7 @@ class TitleScene : public Scene {
   void Quit();
 
   private:
+  Scope<Tiles> _backgroundTiles;
   SDL_Color _backgroundColor;
   std::vector<Ref<CoffeeMaker::UIComponent>> _entities;
   CoffeeMaker::MusicTrack* _music;

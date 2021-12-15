@@ -10,8 +10,18 @@ Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight)
     _scrollSpeed(300.0f * CoffeeMaker::Renderer::DynamicResolutionDownScale()),
     _movement(0) {
   _texture.LoadFromFile(filePath);
-  _texture.SetWidth(_texture.Width() * 2);
-  _texture.SetHeight(_texture.Height() * 2);
+  _texture.SetWidth(_texture.Width());
+  _texture.SetHeight(_texture.Height());
+}
+
+Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight, float speed) :
+    _viewportWidth(viewportWidth),
+    _viewportHeight(viewportHeight),
+    _scrollSpeed(speed * CoffeeMaker::Renderer::DynamicResolutionDownScale()),
+    _movement(0) {
+  _texture.LoadFromFile(filePath);
+  _texture.SetWidth(_texture.Width());
+  _texture.SetHeight(_texture.Height());
 }
 
 void Tiles::Update(float deltaTime) { _movement += deltaTime * _scrollSpeed; }
