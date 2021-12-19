@@ -2,8 +2,9 @@
 #define _highscorescene_hpp
 
 #include "Game/Scene.hpp"
+#include "Game/Tiles.hpp"
 #include "Utilities.hpp"
-#include "Widgets/View.hpp"
+#include "Widgets/All.hpp"
 
 class HighScoreScene : public Scene {
   public:
@@ -24,6 +25,9 @@ class HighScoreScene : public Scene {
   void HandleMainMenu();
   std::string MarkNewHighScore(int place);
 
+  Scope<Tiles> _backgroundSmokeTiles;
+  Scope<Tiles> _backgroundSpaceTiles;
+  Scope<Tiles> _backgroundNebulaTiles;
   Scope<CoffeeMaker::Widgets::View> _view;
 
   static int WIDTH;
