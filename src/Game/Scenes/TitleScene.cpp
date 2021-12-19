@@ -44,6 +44,10 @@ void TitleScene::Init() {
   _backgroundNebulaTiles =
       CreateScope<Tiles>("SpaceNebula-Bottom.png", CoffeeMaker::Renderer::GetOutputWidth(),
                          CoffeeMaker::Renderer::GetOutputHeight(), 50.0f, Tiles::ScrollDirection::Horizontal);
+  float output = CoffeeMaker::Renderer::GetOutputHeightF();
+  if (output > _backgroundNebulaTiles->Height()) {
+    _backgroundNebulaTiles->SetYOffset(output - _backgroundNebulaTiles->Height());
+  }
 
   Ref<CoffeeMaker::Widgets::View> _view =
       CreateRef<CoffeeMaker::Widgets::View>(400, 200, HorizontalAlignment::Centered, VerticalAlignment::Centered);

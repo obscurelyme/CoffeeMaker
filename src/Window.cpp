@@ -32,10 +32,19 @@ std::string ScreenDPI::toString() {
 
 SDL_Window *BasicWindow::_window = nullptr;
 
-BasicWindow::BasicWindow(std::string title, int width, int height, bool fullscreen) {
+BasicWindow::BasicWindow(std::string title, int width, int height, bool fullscreen, bool hdpi) : _highDpiMode(hdpi) {
   int windowFlags = SDL_WINDOW_HIDDEN;
+
   if (fullscreen) {
     windowFlags = SDL_WINDOW_HIDDEN | SDL_WINDOW_FULLSCREEN_DESKTOP;
+  }
+
+  if (_highDpiMode) {
+    windowFlags = SDL_WINDOW_HIDDEN | SDL_WINDOW_ALLOW_HIGHDPI;
+  }
+
+  if (_highDpiMode && fullscreen) {
+    windowFlags = SDL_WINDOW_HIDDEN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_FULLSCREEN_DESKTOP;
   }
 
   _window =
@@ -69,8 +78,10 @@ ScreenDPI BasicWindow::SetScreenDPI() {
 ScreenDPI BasicWindow::GetScreenDPI() const { return _screenDpi; }
 
 float BasicWindow::DPIScale() const {
+  if (_highDpiMode) {
+    return _dpiScale;
+  }
   return 1.0f;
-  // _dpiScale;
 }
 
 SDL_DisplayMode BasicWindow::DisplayMode() const {
@@ -102,6 +113,8 @@ SDL_Window *BasicWindow::Handle() const { return _window; }
 void BasicWindow::ShowWindow() const { SDL_ShowWindow(_window); }
 
 Uint32 BasicWindow::GetID() const { return SDL_GetWindowID(_window); }
+
+bool BasicWindow::HighDPIMode() const { return _highDpiMode; }
 
 std::string CoffeeMaker::UtilityWindow::title = "CoffeeMaker";
 int CoffeeMaker::UtilityWindow::width = 800;

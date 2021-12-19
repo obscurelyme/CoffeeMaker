@@ -28,6 +28,8 @@ class Tiles {
   void SetXOffset(float x);
   void SetYOffset(float y);
   void PinToBottom();
+  int Height() const { return _texture.Height(); }
+  int Width() const { return _texture.Width(); }
 
   private:
   CoffeeMaker::Texture _texture;

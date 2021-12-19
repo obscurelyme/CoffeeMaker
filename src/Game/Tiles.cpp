@@ -74,7 +74,7 @@ void Tiles::Render() {
 
   for (int i = 0; i <= widthCount; i++) {
     for (int j = 0; j <= heightCount; j++) {
-      float yPos = (float)j * _texture.Height();
+      float yPos = (float)j * _texture.Height() + _yOffset;
       float xPos = (i * _texture.Width()) - _texture.Width() + _movement;
 
       if (i == 0 && xPos >= 0) {
