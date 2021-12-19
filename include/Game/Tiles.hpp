@@ -10,6 +10,7 @@
  */
 class Tiles {
   public:
+  enum ScrollDirection { Vertical, Horizontal };
   Tiles();
   /**
    * Construct the tiling based on the viewport width and height
@@ -17,10 +18,16 @@ class Tiles {
    */
   Tiles(const std::string& filePath, int viewportWidth, int viewportHeight);
   Tiles(const std::string& filePath, int viewportWidth, int viewportHeight, float speed);
+  Tiles(const std::string& filePath, int viewportWidth, int viewportHeight, float speed,
+        Tiles::ScrollDirection direction);
   ~Tiles() = default;
 
   void Update(float deltaTime);
   void Render();
+
+  void SetXOffset(float x);
+  void SetYOffset(float y);
+  void PinToBottom();
 
   private:
   CoffeeMaker::Texture _texture;
@@ -28,6 +35,9 @@ class Tiles {
   int _viewportHeight;
   float _scrollSpeed;
   float _movement;
+  ScrollDirection _direction;
+  float _xOffset;
+  float _yOffset;
 };
 
 #endif

@@ -60,7 +60,8 @@ Player::Player() :
   _clientRect.x = (vp.w - _clientRect.w) / 2;
   _clientRect.y = (vp.h - _clientRect.h) - 50;
   for (int i = 0; i < 25; i++) {
-    _projectiles.emplace_back(new Projectile());
+    _projectiles.emplace_back(
+        new Projectile(Collider::Type::Projectile, Projectile::Type::Friendly, Projectile::Size::Small));
   }
   _currentProjectile = 0;
   _collider->clientRect.h = _clientRect.h;

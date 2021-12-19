@@ -215,7 +215,7 @@ endif()
 
 if (APPLE OR LINUX_PLATFORM)
   message("Please run ${PROJECT_SOURCE_DIR}/scripts/post-build.sh if this is your first time configuring this project")
-  execute_process(COMMAND sh "${PROJECT_SOURCE_DIR}/scripts/post-build.sh")
+  # execute_process(COMMAND sh "${PROJECT_SOURCE_DIR}/scripts/post-build.sh")
 elseif (WIN32)
   message("Please run ${PROJECT_SOURCE_DIR}/scripts/post-build.bat if this is your first time configuring this project")
   # execute_process(COMMAND "${PROJECT_SOURCE_DIR}/scripts/post-build.bat")

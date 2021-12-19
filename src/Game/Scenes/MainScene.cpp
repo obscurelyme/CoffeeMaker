@@ -14,6 +14,7 @@
 
 void MainScene::Render() {
   _backgroundTiles->Render();
+  _backgroundSmokeTiles->Render();
   for (auto& entity : _entities) {
     entity->Render();
   }
@@ -62,6 +63,7 @@ void MainScene::Update(float deltaTime) {
   }
 
   _backgroundTiles->Update(deltaTime);
+  _backgroundSmokeTiles->Update(deltaTime);
 
   _backEchelon->Update(deltaTime);
   _frontEchelon->Update(deltaTime);
@@ -85,8 +87,10 @@ void MainScene::Init() {
   _hud = new HeadsUpDisplay();
   _menu = new Menu();
   _menu->Init();
-  _backgroundTiles =
-      new Tiles("space.png", CoffeeMaker::Renderer::GetOutputWidth(), CoffeeMaker::Renderer::GetOutputHeight());
+  _backgroundTiles = new Tiles("StarBackground-DarkBlue.png", CoffeeMaker::Renderer::GetOutputWidth(),
+                               CoffeeMaker::Renderer::GetOutputHeight(), 75.0f);
+  _backgroundSmokeTiles = CreateScope<Tiles>("SpaceSmoke.png", CoffeeMaker::Renderer::GetOutputWidth(),
+                                             CoffeeMaker::Renderer::GetOutputHeight(), 100.0f);
   _player = new Player();
   _frontEchelon = new Echelon(300.0f, 50.0f, CoffeeMaker::Renderer::GetOutputWidth(), 15.0f);
   _backEchelon = new Echelon(300.0f, 50.0f, CoffeeMaker::Renderer::GetOutputWidth(), 15.0f);

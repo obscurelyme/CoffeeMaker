@@ -11,14 +11,20 @@
 #include "Renderer.hpp"
 
 void TitleScene::Render() {
-  _backgroundTiles->Render();
+  _backgroundSpaceTiles->Render();
+  _backgroundSmokeTiles->Render();
+  _backgroundNebulaTiles->Render();
 
   for (auto& entity : _entities) {
     entity->Render();
   }
 }
 
-void TitleScene::Update(float deltaTime) { _backgroundTiles->Update(deltaTime); }
+void TitleScene::Update(float deltaTime) {
+  _backgroundSpaceTiles->Update(deltaTime);
+  _backgroundNebulaTiles->Update(deltaTime);
+  _backgroundSmokeTiles->Update(deltaTime);
+}
 
 void TitleScene::Pause() {}
 
@@ -29,8 +35,15 @@ void TitleScene::Init() {
   CoffeeMaker::Audio::PlayMusic(_music);
   SDL_ShowCursor(SDL_ENABLE);
 
-  _backgroundTiles = CreateScope<Tiles>("space.png", CoffeeMaker::Renderer::GetOutputWidth(),
-                                        CoffeeMaker::Renderer::GetOutputHeight(), 50.0f);
+  _backgroundSpaceTiles =
+      CreateScope<Tiles>("StarBackground-DarkBlue.png", CoffeeMaker::Renderer::GetOutputWidth(),
+                         CoffeeMaker::Renderer::GetOutputHeight(), 15.0f, Tiles::ScrollDirection::Horizontal);
+  _backgroundSmokeTiles =
+      CreateScope<Tiles>("SpaceSmoke.png", CoffeeMaker::Renderer::GetOutputWidth(),
+                         CoffeeMaker::Renderer::GetOutputHeight(), 25.0f, Tiles::ScrollDirection::Horizontal);
+  _backgroundNebulaTiles =
+      CreateScope<Tiles>("SpaceNebula-Bottom.png", CoffeeMaker::Renderer::GetOutputWidth(),
+                         CoffeeMaker::Renderer::GetOutputHeight(), 50.0f, Tiles::ScrollDirection::Horizontal);
 
   Ref<CoffeeMaker::Widgets::View> _view =
       CreateRef<CoffeeMaker::Widgets::View>(400, 200, HorizontalAlignment::Centered, VerticalAlignment::Centered);

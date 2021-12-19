@@ -22,7 +22,9 @@ class TitleScene : public Scene {
   void Quit();
 
   private:
-  Scope<Tiles> _backgroundTiles;
+  Scope<Tiles> _backgroundSmokeTiles;
+  Scope<Tiles> _backgroundSpaceTiles;
+  Scope<Tiles> _backgroundNebulaTiles;
   SDL_Color _backgroundColor;
   std::vector<Ref<CoffeeMaker::UIComponent>> _entities;
   CoffeeMaker::MusicTrack* _music;
