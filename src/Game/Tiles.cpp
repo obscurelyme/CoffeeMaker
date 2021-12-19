@@ -69,8 +69,8 @@ void Tiles::Render() {
     return;
   }
 
-  const int widthCount = std::ceil((float)_viewportWidth / (float)_texture.Width()) + 1;
-  const int heightCount = std::ceil((float)_viewportHeight / (float)_texture.Height()) + 1;
+  const int widthCount = static_cast<int>(std::ceil((float)_viewportWidth / (float)_texture.Width()) + 1);
+  const int heightCount = static_cast<int>(std::ceil((float)_viewportHeight / (float)_texture.Height()) + 1);
 
   for (int i = 0; i <= widthCount; i++) {
     for (int j = 0; j <= heightCount; j++) {
