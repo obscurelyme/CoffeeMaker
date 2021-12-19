@@ -49,9 +49,13 @@ SDL_Event event;
 // };
 
 int main(int argc, char** argv) {
-  argparse::ArgumentParser program("ultra-cosmo-invaders", "0.1.0");
+  argparse::ArgumentParser program("ultra-cosmo-invaders", "0.0.22-alpha");
   program.add_argument("-s", "--scene").default_value(0).help("load a specific scene").scan<'i', int>().nargs(1);
   program.add_argument("-f", "--fullscreen").default_value(false).help("toggles fullscreen mode").implicit_value(true);
+  program.add_argument("-fd", "--fullscreen-desktop")
+      .default_value(false)
+      .help("toggles fullscreen desktop mode")
+      .implicit_value(true);
   program.add_argument("-dw", "--display-width")
       .default_value(1280)
       .help("sets the display width")
@@ -62,6 +66,10 @@ int main(int argc, char** argv) {
       .help("sets the display height")
       .scan<'i', int>()
       .nargs(1);
+  program.add_argument("-p", "--high-dpi")
+      .default_value(false)
+      .help("sets the window to High DPI mode")
+      .implicit_value(true);
 
   try {
     program.parse_args(argc, argv);
@@ -102,9 +110,14 @@ int main(int argc, char** argv) {
   int width = program.get<int>("--display-width");
   int height = program.get<int>("--display-height");
   bool fullscreen = program.get<bool>("--fullscreen");
+  if (fullscreen) {
+    width = utilWindow.DisplayWidth();
+    height = utilWindow.DisplayHeight();
+  }
 #endif
+  bool highDpiMode = program.get<bool>("--high-dpi");
 
-  CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", width, height, fullscreen);
+  CoffeeMaker::BasicWindow win("Ultra Cosmo Invaders", width, height, fullscreen, highDpiMode);
   CoffeeMaker::Renderer renderer;
 
   std::string basePath = CoffeeMaker::Utilities::BaseDirectory();

@@ -60,7 +60,7 @@ namespace CoffeeMaker {
 
   class BasicWindow : public IWindow {
     public:
-    BasicWindow(std::string title, int width, int height, bool fullscreen);
+    BasicWindow(std::string title, int width, int height, bool fullscreen, bool hdpi);
     ~BasicWindow();
 
     int DisplayCount() const;
@@ -75,6 +75,7 @@ namespace CoffeeMaker {
     SDL_Window *Handle() const;
     void ShowWindow() const;
     Uint32 GetID() const;
+    bool HighDPIMode() const;
 
     private:
     ScreenDPI SetScreenDPI();
@@ -83,6 +84,7 @@ namespace CoffeeMaker {
     float _dpiScale;
     SDL_Rect _screenBounds;
     SDL_Rect _usableDisplayBounds;
+    bool _highDpiMode;
   };
 
   /**

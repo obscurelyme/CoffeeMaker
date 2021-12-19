@@ -85,7 +85,7 @@ class Echelon : public CoffeeMaker::IUserEventListener {
   static float _rightBoundary;
   static float _leftBoundary;
   static unsigned int _uid;
-  static const unsigned int ECHELON_SIZE = 5;
+  static const unsigned int ECHELON_SIZE = 6;
 
   bool HitRightBoundary() const;
   bool HitLeftBoundary() const;

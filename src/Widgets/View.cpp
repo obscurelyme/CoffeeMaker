@@ -1,6 +1,7 @@
 #include "Widgets/View.hpp"
 
 #include "Renderer.hpp"
+#include "Window.hpp"
 
 using namespace CoffeeMaker::Widgets;
 using namespace CoffeeMaker::UIProperties;

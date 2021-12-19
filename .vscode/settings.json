@@ -127,7 +127,8 @@
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
-    "COFFEEMAKER_RELEASE_BUILD": false
+    "COFFEEMAKER_RELEASE_BUILD": false,
+    "COFFEEMAKER_LICENSED_ASSETS": false
   },
   "[cpp]": {
     "editor.formatOnSave": true,

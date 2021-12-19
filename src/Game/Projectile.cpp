@@ -6,13 +6,21 @@
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
-Ref<CoffeeMaker::Texture> Projectile::_texture = nullptr;
+Ref<CoffeeMaker::Texture> Projectile::_standardMissile = nullptr;
+Ref<CoffeeMaker::Texture> Projectile::_laserSmallRed = nullptr;
+Ref<CoffeeMaker::Texture> Projectile::_laserSmallGreen = nullptr;
+Ref<CoffeeMaker::Texture> Projectile::_laserLargeRed = nullptr;
+Ref<CoffeeMaker::Texture> Projectile::_laserLargeGreen = nullptr;
 Ref<CoffeeMaker::AudioElement> Projectile::_fireSound = nullptr;
 Ref<CoffeeMaker::AudioElement> Projectile::_impactSound = nullptr;
 
 Projectile::Projectile() : _fired(false), _rotation(0), _speed(500.0f) {
-  if (Projectile::_texture == nullptr) {
-    _texture = CreateRef<CoffeeMaker::Texture>("StandardMissile.png");
+  if (Projectile::_standardMissile == nullptr) {
+    _standardMissile = CreateRef<CoffeeMaker::Texture>("StandardMissile.png");
+    _laserSmallRed = CreateRef<CoffeeMaker::Texture>("Laser-Small-Red.png");
+    _laserSmallGreen = CreateRef<CoffeeMaker::Texture>("Laser-Small-Green.png");
+    _laserLargeRed = CreateRef<CoffeeMaker::Texture>("Laser-Large-Red.png");
+    _laserLargeGreen = CreateRef<CoffeeMaker::Texture>("Laser-Large-Green.png");
   }
   if (Projectile::_fireSound == nullptr) {
     _fireSound = CreateRef<CoffeeMaker::AudioElement>("effects/StandardMissileFire.ogg");
@@ -31,6 +39,29 @@ Projectile::Projectile() : _fired(false), _rotation(0), _speed(500.0f) {
 }
 
 Projectile::Projectile(Collider::Type colliderType) : Projectile() { collider->SetType(colliderType); }
+
+Projectile::Projectile(Collider::Type colliderType, Projectile::Type type, Projectile::Size size) : Projectile() {
+  if (type == Projectile::Type::Friendly) {
+    // green laser
+    if (size == Projectile::Size::Small) {
+      // small laser
+      _texture = _laserSmallGreen;
+    } else if (size == Projectile::Size::Large) {
+      // large laser
+      _texture = _laserLargeGreen;
+    }
+  } else if (type == Projectile::Type::Hostile) {
+    // red laser
+    if (size == Projectile::Size::Small) {
+      // small laser
+      _texture = _laserSmallRed;
+    } else if (size == Projectile::Size::Large) {
+      // large laser
+      _texture = _laserLargeRed;
+    }
+  }
+  collider->SetType(colliderType);
+}
 
 Projectile::~Projectile() { delete collider; }
 

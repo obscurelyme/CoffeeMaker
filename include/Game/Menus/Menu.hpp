@@ -1,6 +1,8 @@
 #ifndef _menu_hpp
 #define _menu_hpp
 
+#include <SDL2/SDL.h>
+
 #include <memory>
 
 #include "Widgets/Button.hpp"
@@ -25,8 +27,13 @@ class Menu {
   void ReturnToTitleScene();
 
   private:
+  void RenderTransparentBackground();
+
   bool _active;
   std::unique_ptr<View> _view;
+  SDL_FRect _backgroundRect;
+  SDL_Color _backgroundColor;
+  SDL_Renderer* _renderer;
 };
 
 #endif

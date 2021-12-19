@@ -70,6 +70,7 @@ namespace CoffeeMaker {
     static Uint32 _numDrawCalls;
     static int _width;
     static int _height;
+    static SDL_BlendMode _blendMode;
   };
 
   class GlobalRenderer {

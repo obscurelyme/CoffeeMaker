@@ -13,8 +13,11 @@
 
 class Projectile {
   public:
+  enum class Type { Friendly, Hostile };
+  enum class Size { Large, Small };
   Projectile();
   explicit Projectile(Collider::Type colliderType);
+  Projectile(Collider::Type colliderType, Projectile::Type type, Projectile::Size size);
   ~Projectile();
 
   /**
@@ -43,9 +46,15 @@ class Projectile {
   bool IsFired() const;
 
   private:
-  static Ref<CoffeeMaker::Texture> _texture;
+  static Ref<CoffeeMaker::Texture> _laserSmallRed;
+  static Ref<CoffeeMaker::Texture> _laserSmallGreen;
+  static Ref<CoffeeMaker::Texture> _laserLargeRed;
+  static Ref<CoffeeMaker::Texture> _laserLargeGreen;
+  static Ref<CoffeeMaker::Texture> _standardMissile;
   static Ref<CoffeeMaker::AudioElement> _fireSound;
   static Ref<CoffeeMaker::AudioElement> _impactSound;
+
+  Ref<CoffeeMaker::Texture> _texture;
   bool _fired;
   SDL_FRect _clientRect;
   double _rotation;

@@ -84,7 +84,8 @@ Enemy::Enemy() :
   _collider->OnCollide(std::bind(&Enemy::OnCollision, this, std::placeholders::_1));
 
   for (int i = 0; i < 50; i++) {
-    _projectiles.emplace_back(new Projectile(Collider::Type::EnemyProjectile));
+    _projectiles.emplace_back(
+        new Projectile(Collider::Type::EnemyProjectile, Projectile::Type::Hostile, Projectile::Size::Small));
   }
   _currentProjectile = 0;
 

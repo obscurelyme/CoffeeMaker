@@ -31,8 +31,9 @@ class MainScene : public Scene {
   virtual void OnSDLUserEvent(const SDL_UserEvent& event) override;
 
   private:
-  static const unsigned int MAX_ENEMIES = 10;
+  static const unsigned int MAX_ENEMIES = 12;
 
+  Scope<Tiles> _backgroundSmokeTiles;
   Tiles* _backgroundTiles;
   Player* _player;
   std::array<EchelonEnemy*, MAX_ENEMIES> _enemies;
