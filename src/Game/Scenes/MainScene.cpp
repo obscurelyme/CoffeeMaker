@@ -92,8 +92,9 @@ void MainScene::Init() {
   _backgroundSmokeTiles = CreateScope<Tiles>("SpaceSmoke.png", CoffeeMaker::Renderer::GetOutputWidth(),
                                              CoffeeMaker::Renderer::GetOutputHeight(), 100.0f);
   _player = new Player();
-  _frontEchelon = new Echelon(300.0f, 50.0f, CoffeeMaker::Renderer::GetOutputWidth(), 15.0f);
-  _backEchelon = new Echelon(300.0f, 50.0f, CoffeeMaker::Renderer::GetOutputWidth(), 15.0f);
+  _frontEchelon = new Echelon(363.0f, 50.0f, CoffeeMaker::Renderer::GetOutputWidth(), 15.0f);
+  _backEchelon = new Echelon(363.0f, 50.0f, CoffeeMaker::Renderer::GetOutputWidth(), 15.0f);
+
   _frontEchelon->SetPosition(
       CoffeeMaker::Math::Vector2D{50.0f, 175.0f * CoffeeMaker::Renderer::DynamicResolutionDownScale()});
   _backEchelon->SetPosition(
@@ -139,7 +140,7 @@ void MainScene::Destroy() {
 
 MainScene::MainScene() :
     _enemySpawnTask(CreateScope<CoffeeMaker::Async::IntervalTask>(
-        [] { CoffeeMaker::PushUserEvent(UCI::Events::ENEMY_INITIAL_INTERVAL_SPAWN); }, 500)) {}
+        [] { CoffeeMaker::PushUserEvent(UCI::Events::ENEMY_INITIAL_INTERVAL_SPAWN); }, 300)) {}
 
 void MainScene::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (_loaded) {

@@ -10,17 +10,26 @@ Menu::Menu() : _active(false), _view(std::make_unique<View>()) {
   _view->clientRect.w = 200;
   _view->SetHorizontalAlignment(HorizontalAlignment::Centered);
   _view->SetVerticalAlignment(VerticalAlignment::Centered);
+  _renderer = CoffeeMaker::Renderer::Instance();
+  _backgroundRect = SDL_FRect{.x = 0.0f,
+                              .y = 0.0f,
+                              .w = CoffeeMaker::Renderer::GetOutputWidthF(),
+                              .h = CoffeeMaker::Renderer::GetOutputHeightF()};
+  _backgroundColor = CoffeeMaker::Colors::Black;
+  _backgroundColor.a = 100;
 }
 
 Menu::~Menu() {}
 
 void Menu::Init() {
-  // std::shared_ptr<Button> quit(new Button());
   std::shared_ptr<Button> returnToMain(new Button("button.png", "button.png"));
+  returnToMain->SetHorizontalAlignment(HorizontalAlignment::Centered);
+  returnToMain->SetVerticalAlignment(VerticalAlignment::Centered);
   std::shared_ptr<Text> returnToMainText(new Text("Main Menu"));
   returnToMainText->SetFont(FontManager::UseFont("Sarpanch/Sarpanch-Regular"));
   returnToMainText->SetColor(Color(255, 255, 255, 255));
-  // std::shared_ptr<Button> play(new Button());
+  returnToMainText->SetHorizontalAlignment(HorizontalAlignment::Centered);
+  returnToMainText->SetVerticalAlignment(VerticalAlignment::Centered);
 
   returnToMain->On(Button::ButtonEventType::OnClick, Delegate{std::bind(&Menu::ReturnToTitleScene, this)});
 
@@ -41,6 +50,14 @@ bool Menu::IsShown() { return _active; }
 
 void Menu::Render() {
   if (_active) {
+    RenderTransparentBackground();
     _view->Render();
   }
+}
+
+void Menu::RenderTransparentBackground() {
+  SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
+  SDL_SetRenderDrawColor(_renderer, _backgroundColor.r, _backgroundColor.g, _backgroundColor.b, _backgroundColor.a);
+  SDL_RenderFillRectF(_renderer, &_backgroundRect);
+  SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_NONE);
 }
