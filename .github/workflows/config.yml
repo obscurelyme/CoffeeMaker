@@ -41,6 +41,15 @@ jobs:
         run: |
           chmod +x ./build/CoffeeMakerUnitTests
           ./build/CoffeeMakerUnitTests
+      - name: Login to AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.BUTLER_AWS_ACCESS_TOKEN }}
+          aws-secret-access-key: ${{ secrets.BUTLER_AWS_SECRET_ACCESS_TOKEN }}
+          aws-region: us-west-2
+      - name: Downloading Licensed Assets
+        run: |
+          aws s3 sync s3://ultra-cosmo-invaders/licensed-assets/ ./licensed-assets
       - name: Package
         run: bash .github/scripts/osx/package.sh
       - name: Store Artifact
@@ -66,6 +75,15 @@ jobs:
         run: .github/scripts/win/build.bat
       - name: Test
         run: ./build/Debug/CoffeeMakerUnitTests.exe
+      - name: Login to AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.BUTLER_AWS_ACCESS_TOKEN }}
+          aws-secret-access-key: ${{ secrets.BUTLER_AWS_SECRET_ACCESS_TOKEN }}
+          aws-region: us-west-2
+      - name: Downloading Licensed Assets
+        run: |
+          aws s3 sync s3://ultra-cosmo-invaders/licensed-assets/ ./licensed-assets
       - name: Package
         run: .github/scripts/win/package.bat
       - name: Store Artifact
@@ -101,6 +119,15 @@ jobs:
         run: |
           chmod +x ./build/CoffeeMakerUnitTests
           ./build/CoffeeMakerUnitTests
+      - name: Login to AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.BUTLER_AWS_ACCESS_TOKEN }}
+          aws-secret-access-key: ${{ secrets.BUTLER_AWS_SECRET_ACCESS_TOKEN }}
+          aws-region: us-west-2
+      - name: Downloading Licensed Assets
+        run: |
+          aws s3 sync s3://ultra-cosmo-invaders/licensed-assets/ ./licensed-assets
       - name: Package
         run: bash .github/scripts/linux/package.sh
       - name: Store Artifact

@@ -24,6 +24,15 @@ jobs:
           bash .github/scripts/osx/configure.sh
       - name: Build
         run: bash .github/scripts/osx/build.sh
+      - name: Login to AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.BUTLER_AWS_ACCESS_TOKEN }}
+          aws-secret-access-key: ${{ secrets.BUTLER_AWS_SECRET_ACCESS_TOKEN }}
+          aws-region: us-west-2
+      - name: Downloading Licensed Assets
+        run: |
+          aws s3 sync s3://ultra-cosmo-invaders/licensed-assets/ ./licensed-assets
       - name: Package
         run: bash .github/scripts/osx/package.sh
       - name: Store Artifact
@@ -47,6 +56,15 @@ jobs:
         run: .github/scripts/win/configure.bat
       - name: Build
         run: .github/scripts/win/build.bat
+      - name: Login to AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.BUTLER_AWS_ACCESS_TOKEN }}
+          aws-secret-access-key: ${{ secrets.BUTLER_AWS_SECRET_ACCESS_TOKEN }}
+          aws-region: us-west-2
+      - name: Downloading Licensed Assets
+        run: |
+          aws s3 sync s3://ultra-cosmo-invaders/licensed-assets/ ./licensed-assets
       - name: Package
         run: .github/scripts/win/package.bat
       - name: Store Artifact
@@ -77,6 +95,15 @@ jobs:
       - name: Build
         run: |
           bash .github/scripts/linux/build.sh
+      - name: Login to AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.BUTLER_AWS_ACCESS_TOKEN }}
+          aws-secret-access-key: ${{ secrets.BUTLER_AWS_SECRET_ACCESS_TOKEN }}
+          aws-region: us-west-2
+      - name: Downloading Licensed Assets
+        run: |
+          aws s3 sync s3://ultra-cosmo-invaders/licensed-assets/ ./licensed-assets
       - name: Package
         run: bash .github/scripts/linux/package.sh
       - name: Store Artifact
