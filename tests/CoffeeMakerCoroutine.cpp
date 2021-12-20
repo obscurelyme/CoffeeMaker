@@ -20,10 +20,14 @@ void CoffeeMakerCoroutine::tearDown() {
 void CoffeeMakerCoroutine::testCoroutineCreation() {
   using Co = CoffeeMaker::Coroutine;
   int x = 0;
+  int expectedX = 2;
 
-  Co c = [&]() -> Co {
+  Co c = [&x]() -> Co {
+    std::cout << "1) Current: " << x << "\n";
     x++;
     co_await CoffeeMaker::Suspend{};
+    // NOTE: we need to do something with this or else in release builds the x will be optimized away.
+    std::cout << "2) Current: " << x << "\n";
     x++;
     std::cout << "returning...\n";
     co_return;
@@ -31,7 +35,7 @@ void CoffeeMakerCoroutine::testCoroutineCreation() {
 
   c.Resume();
 
-  CPPUNIT_ASSERT_EQUAL(2, x);
+  CPPUNIT_ASSERT_EQUAL(expectedX, x);
   std::cout << "test done...\n";
 }
 
