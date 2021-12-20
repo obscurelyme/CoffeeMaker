@@ -5,16 +5,19 @@
 #include "Logger.hpp"
 #include "Renderer.hpp"
 
-Tiles::Tiles() : _scrollSpeed(300.0f), _movement(0), _xOffset(0), _yOffset(0) {}
+Tiles::Tiles() :
+    _widthCount(0), _heightCount(0), _scrollSpeed(300.0f), _movement(0.0f), _xOffset(0.0f), _yOffset(0.0f) {}
 
 Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight) :
     _viewportWidth(viewportWidth),
     _viewportHeight(viewportHeight),
+    _widthCount(0),
+    _heightCount(0),
     _scrollSpeed(300.0f * CoffeeMaker::Renderer::DynamicResolutionDownScale()),
-    _movement(0),
+    _movement(0.0f),
     _direction(Tiles::ScrollDirection::Vertical),
-    _xOffset(0),
-    _yOffset(0) {
+    _xOffset(0.0f),
+    _yOffset(0.0f) {
   _texture.LoadFromFile(filePath);
 
   if (_direction == Tiles::ScrollDirection::Vertical) {
@@ -23,20 +26,20 @@ Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight)
   } else {
     _widthCount = _viewportWidth / _texture.Width() + 1;
     _heightCount = _viewportHeight / _texture.Height();
-    // _widthCount = static_cast<int>(std::ceil((float)_viewportWidth / (float)_texture.Width()) + 1);
-    // _heightCount = static_cast<int>(std::ceil((float)_viewportHeight / (float)_texture.Height()) + 1);
   }
-  CM_LOGGER_DEBUG("Tiles: {} - ({},{})", filePath, _widthCount, _heightCount);
+  CM_LOGGER_DEBUG("Tiles: {} - ({},{}) Offsets ({},{})", filePath, _widthCount, _heightCount, _xOffset, _yOffset);
 }
 
 Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight, float speed) :
     _viewportWidth(viewportWidth),
     _viewportHeight(viewportHeight),
+    _widthCount(0),
+    _heightCount(0),
     _scrollSpeed(speed * CoffeeMaker::Renderer::DynamicResolutionDownScale()),
-    _movement(0),
+    _movement(0.0f),
     _direction(Tiles::ScrollDirection::Vertical),
-    _xOffset(0),
-    _yOffset(0) {
+    _xOffset(0.0f),
+    _yOffset(0.0f) {
   _texture.LoadFromFile(filePath);
   if (_direction == Tiles::ScrollDirection::Vertical) {
     _widthCount = _viewportWidth / _texture.Width();
@@ -44,19 +47,21 @@ Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight,
   } else {
     _widthCount = _viewportWidth / _texture.Width() + 1;
     _heightCount = _viewportHeight / _texture.Height();
-    // _widthCount = static_cast<int>(std::ceil((float)_viewportWidth / (float)_texture.Width()) + 1);
-    // _heightCount = static_cast<int>(std::ceil((float)_viewportHeight / (float)_texture.Height()) + 1);
   }
-  CM_LOGGER_DEBUG("Tiles: {} - ({},{})", filePath, _widthCount, _heightCount);
+  CM_LOGGER_DEBUG("Tiles: {} - ({},{}) Offsets ({},{})", filePath, _widthCount, _heightCount, _xOffset, _yOffset);
 }
 
 Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight, float speed,
              Tiles::ScrollDirection direction) :
     _viewportWidth(viewportWidth),
     _viewportHeight(viewportHeight),
+    _widthCount(0),
+    _heightCount(0),
     _scrollSpeed(speed * CoffeeMaker::Renderer::DynamicResolutionDownScale()),
     _movement(0),
-    _direction(direction) {
+    _direction(direction),
+    _xOffset(0.0f),
+    _yOffset(0.0f) {
   _texture.LoadFromFile(filePath);
   if (_direction == Tiles::ScrollDirection::Vertical) {
     _widthCount = _viewportWidth / _texture.Width();
@@ -64,10 +69,8 @@ Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight,
   } else {
     _widthCount = _viewportWidth / _texture.Width() + 1;
     _heightCount = _viewportHeight / _texture.Height();
-    // _widthCount = static_cast<int>(std::ceil((float)_viewportWidth / (float)_texture.Width()) + 1);
-    // _heightCount = static_cast<int>(std::ceil((float)_viewportHeight / (float)_texture.Height()) + 1);
   }
-  CM_LOGGER_DEBUG("Tiles: {} - ({},{})", filePath, _widthCount, _heightCount);
+  CM_LOGGER_DEBUG("Tiles: {} - ({},{}) Offsets ({},{})", filePath, _widthCount, _heightCount, _xOffset, _yOffset);
 }
 
 void Tiles::Update(float deltaTime) { _movement += deltaTime * _scrollSpeed; }
