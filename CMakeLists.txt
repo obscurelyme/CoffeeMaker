@@ -5,8 +5,11 @@ set(VCPKG_MANIFEST_MODE ON)
 # comment here.
 
 if (WIN32)
-  # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
-  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
+  if (COFFEEMAKER_RELEASE_BUILD)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+  else()
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
+  endif()
 endif()
 
 if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
