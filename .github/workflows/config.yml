@@ -33,7 +33,7 @@ jobs:
         run: |
           brew install make
           brew install ninja
-          brew install autoconf automake libtool yasm
+          brew install autoconf automake libtool yasm llvm
           bash .github/scripts/osx/configure.sh
       - name: Build
         run: bash .github/scripts/osx/build.sh
