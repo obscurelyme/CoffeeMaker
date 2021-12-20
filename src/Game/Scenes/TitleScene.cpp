@@ -8,6 +8,7 @@
 #include "Color.hpp"
 #include "Event.hpp"
 #include "FontManager.hpp"
+#include "Logger.hpp"
 #include "Renderer.hpp"
 
 void TitleScene::Render() {
@@ -47,6 +48,7 @@ void TitleScene::Init() {
   float output = CoffeeMaker::Renderer::GetOutputHeightF();
   if (output > _backgroundNebulaTiles->Height()) {
     _backgroundNebulaTiles->SetYOffset(output - _backgroundNebulaTiles->Height());
+    CM_LOGGER_DEBUG("Y-Offset: {}", output - _backgroundNebulaTiles->Height());
   }
 
   Ref<CoffeeMaker::Widgets::View> _view =

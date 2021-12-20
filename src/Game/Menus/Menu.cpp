@@ -19,7 +19,13 @@ Menu::Menu() : _active(false), _view(std::make_unique<View>()) {
   _backgroundColor.a = 100;
 }
 
-Menu::~Menu() {}
+Menu::~Menu() {
+  _active = false;
+  int s = SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_NONE);
+  if (s != 0) {
+    CM_LOGGER_CRITICAL("Error setting SDL Draw Blend Mode to NONE in Menu Destructor: {}", SDL_GetError());
+  }
+}
 
 void Menu::Init() {
   std::shared_ptr<Button> returnToMain(new Button("button.png", "button.png"));
@@ -56,8 +62,16 @@ void Menu::Render() {
 }
 
 void Menu::RenderTransparentBackground() {
-  SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
+  int s = SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
+  if (s != 0) {
+    CM_LOGGER_CRITICAL("Error setting SDL Draw Blend Mode to BLEND: {}", SDL_GetError());
+  }
+
   SDL_SetRenderDrawColor(_renderer, _backgroundColor.r, _backgroundColor.g, _backgroundColor.b, _backgroundColor.a);
   SDL_RenderFillRectF(_renderer, &_backgroundRect);
-  SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_NONE);
+
+  s = SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_NONE);
+  if (s != 0) {
+    CM_LOGGER_CRITICAL("Error setting SDL Draw Blend Mode to NONE: {}", SDL_GetError());
+  }
 }

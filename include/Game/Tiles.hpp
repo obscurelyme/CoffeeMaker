@@ -35,6 +35,8 @@ class Tiles {
   CoffeeMaker::Texture _texture;
   int _viewportWidth;
   int _viewportHeight;
+  int _widthCount;
+  int _heightCount;
   float _scrollSpeed;
   float _movement;
   ScrollDirection _direction;
