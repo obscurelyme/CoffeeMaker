@@ -1,1 +1,1 @@
-cmake --build build --config Debug --target CoffeeMakerUnitTests
+cmake --build build --config Release --target CoffeeMakerUnitTests
