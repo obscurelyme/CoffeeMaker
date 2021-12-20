@@ -103,7 +103,7 @@ set(COFFEEMAKER_EXE_SOURCES ${COFFEEMAKER_MAIN} ${COFFEEMAKER_SOURCES} ${GAME_SO
 
 add_executable(main ${COFFEEMAKER_EXE_SOURCES})
 target_include_directories(main PRIVATE include)
-target_link_libraries(main PRIVATE fmt::fmt spdlog::spdlog spdlog::spdlog_header_only glm::glm)
+target_link_libraries(main PRIVATE fmt::fmt-header-only spdlog::spdlog spdlog::spdlog_header_only glm::glm)
 target_link_libraries(main PRIVATE tinyspline::tinyspline tinysplinecxx::tinysplinecxx)
 target_link_libraries(main PRIVATE argparse::argparse)
 
