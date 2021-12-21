@@ -10,6 +10,7 @@
 #include "Game/Events.hpp"
 #include "Game/ScoreManager.hpp"
 #include "InputManager.hpp"
+#include "Logger.hpp"
 #include "Renderer.hpp"
 
 void MainScene::Render() {
@@ -80,6 +81,7 @@ void MainScene::Update(float deltaTime) {
 }
 
 void MainScene::Init() {
+  CM_LOGGER_DEBUG("============== Initialize Main Scene ==================");
   ScoreManager::ResetScore();
   _music = CoffeeMaker::Audio::LoadMusic("music/AsTheWorldTurns.ogg");
   CoffeeMaker::Audio::PlayMusic(_music);
@@ -87,8 +89,8 @@ void MainScene::Init() {
   _hud = new HeadsUpDisplay();
   _menu = new Menu();
   _menu->Init();
-  _backgroundTiles = new Tiles("StarBackground-DarkBlue.png", CoffeeMaker::Renderer::GetOutputWidth(),
-                               CoffeeMaker::Renderer::GetOutputHeight(), 75.0f);
+  _backgroundTiles = CreateScope<Tiles>("StarBackground-DarkBlue.png", CoffeeMaker::Renderer::GetOutputWidth(),
+                                        CoffeeMaker::Renderer::GetOutputHeight(), 75.0f);
   _backgroundSmokeTiles = CreateScope<Tiles>("SpaceSmoke.png", CoffeeMaker::Renderer::GetOutputWidth(),
                                              CoffeeMaker::Renderer::GetOutputHeight(), 100.0f);
   _player = new Player();
@@ -115,6 +117,7 @@ void MainScene::Init() {
   _entities.push_back(_player);
   _loaded = true;
   _enemySpawnTask->Start();
+  CM_LOGGER_DEBUG("============== Initialized Main Scene Done ==================");
 }
 
 void MainScene::Destroy() {
@@ -131,7 +134,8 @@ void MainScene::Destroy() {
   delete _backEchelon;
   _enemies.fill(nullptr);
   Collider::ClearAllUnprocessedCollisions();
-  delete _backgroundTiles;
+  _backgroundTiles.reset();
+  _backgroundSmokeTiles.reset();
   delete _player;
   delete _menu;
   delete _hud;

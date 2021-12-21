@@ -34,7 +34,7 @@ class MainScene : public Scene {
   static const unsigned int MAX_ENEMIES = 12;
 
   Scope<Tiles> _backgroundSmokeTiles;
-  Tiles* _backgroundTiles;
+  Scope<Tiles> _backgroundTiles;
   Player* _player;
   std::array<EchelonEnemy*, MAX_ENEMIES> _enemies;
   std::vector<Entity*> _entities;

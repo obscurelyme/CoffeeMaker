@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "Logger.hpp"
 #include "Texture.hpp"
 
 /**
@@ -20,7 +21,7 @@ class Tiles {
   Tiles(const std::string& filePath, int viewportWidth, int viewportHeight, float speed);
   Tiles(const std::string& filePath, int viewportWidth, int viewportHeight, float speed,
         Tiles::ScrollDirection direction);
-  ~Tiles() = default;
+  ~Tiles() { CM_LOGGER_DEBUG("Tile Destroyed: {}", _name); };
 
   void Update(float deltaTime);
   void Render();
@@ -32,6 +33,7 @@ class Tiles {
   int Width() const { return _texture.Width(); }
 
   private:
+  std::string _name;
   CoffeeMaker::Texture _texture;
   int _viewportWidth;
   int _viewportHeight;

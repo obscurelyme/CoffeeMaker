@@ -6,9 +6,10 @@
 #include "Renderer.hpp"
 
 Tiles::Tiles() :
-    _widthCount(0), _heightCount(0), _scrollSpeed(300.0f), _movement(0.0f), _xOffset(0.0f), _yOffset(0.0f) {}
+    _name(""), _widthCount(0), _heightCount(0), _scrollSpeed(300.0f), _movement(0.0f), _xOffset(0.0f), _yOffset(0.0f) {}
 
 Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight) :
+    _name(filePath),
     _viewportWidth(viewportWidth),
     _viewportHeight(viewportHeight),
     _widthCount(0),
@@ -31,6 +32,7 @@ Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight)
 }
 
 Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight, float speed) :
+    _name(filePath),
     _viewportWidth(viewportWidth),
     _viewportHeight(viewportHeight),
     _widthCount(0),
@@ -53,6 +55,7 @@ Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight,
 
 Tiles::Tiles(const std::string& filePath, int viewportWidth, int viewportHeight, float speed,
              Tiles::ScrollDirection direction) :
+    _name(filePath),
     _viewportWidth(viewportWidth),
     _viewportHeight(viewportHeight),
     _widthCount(0),

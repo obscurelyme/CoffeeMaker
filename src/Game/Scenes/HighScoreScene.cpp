@@ -139,6 +139,9 @@ void HighScoreScene::Render() {
 }
 
 void HighScoreScene::Destroy() {
+  _backgroundNebulaTiles.reset();
+  _backgroundSmokeTiles.reset();
+  _backgroundSpaceTiles.reset();
   _view.reset();
   _loaded = false;
 }

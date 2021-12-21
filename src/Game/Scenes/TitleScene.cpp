@@ -106,6 +106,9 @@ void TitleScene::Destroy() {
   // Clear out entities
   CoffeeMaker::Audio::StopMusic();
   CoffeeMaker::Audio::FreeMusic(_music);
+  _backgroundNebulaTiles.reset();
+  _backgroundSmokeTiles.reset();
+  _backgroundSpaceTiles.reset();
   _music = nullptr;
   _entities.clear();
   _loaded = false;
