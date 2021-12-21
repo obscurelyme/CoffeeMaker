@@ -103,8 +103,12 @@ void MainScene::Init() {
       CoffeeMaker::Math::Vector2D{50.0f, 100.0f * CoffeeMaker::Renderer::DynamicResolutionDownScale()});
 
   for (unsigned int i = 0; i < MAX_ENEMIES; i++) {
-    if (i < MAX_ENEMIES / 2) {
+    if (i < MAX_ENEMIES / 2 - 1) {
       _enemies[i] = new EchelonEnemy();
+      _frontEchelon->Add(_enemies[i]);
+    } else if (i == (MAX_ENEMIES / 2) - 1) {
+      CM_LOGGER_DEBUG("Kamakase");
+      _enemies[i] = new Kamakase();
       _frontEchelon->Add(_enemies[i]);
     } else {
       _enemies[i] = new Drone();
@@ -112,6 +116,7 @@ void MainScene::Init() {
     }
 
     _enemies[i]->Init();
+    CM_LOGGER_DEBUG("Initialized Enemy: {}", i);
   }
 
   _entities.push_back(_player);

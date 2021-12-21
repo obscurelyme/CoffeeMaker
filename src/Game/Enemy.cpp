@@ -10,6 +10,7 @@
 #include "Game/Events.hpp"
 #include "Game/Player.hpp"
 #include "Game/Scene.hpp"
+#include "Game/ScoreManager.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
 #include "Utilities.hpp"
@@ -386,3 +387,35 @@ Drone::Drone() {
 }
 
 Drone::~Drone() {}
+
+Kamakase::Kamakase() : _lives(3) { _sprite = CreateScope<CoffeeMaker::Sprite>("Kamakase.png"); };
+
+Kamakase::~Kamakase() {}
+
+void Kamakase::OnCollision(Collider* collider) {
+  if (_collider->active) {
+    if (collider->GetType() == Collider::Type::Projectile && _collider->active) {
+      _lives--;
+      if (_lives == 0) {
+        CoffeeMaker::PushUserEvent(UCI::Events::ENEMY_DESTROYED, -1, this);
+        CoffeeMaker::PushUserEvent(UCI::Events::PLAYER_INCREMENT_SCORE, ScoreManager::Multiplier::Super);
+      }
+      return;
+    }
+
+    if (collider->GetType() == Collider::Type::Player && _collider->active) {
+      _impactSound->Play();
+      CoffeeMaker::PushUserEvent(UCI::Events::ENEMY_DESTROYED, -1, this);
+      return;
+    }
+  }
+}
+
+void Kamakase::OnSDLUserEvent(const SDL_UserEvent& event) {
+  if (event.type == UCI::Events::ENEMY_SPAWNED && event.data1 == this) {
+    _lives = 3;
+  }
+  if (event.data1 == this) {
+    Enemy::OnSDLUserEvent(event);
+  }
+}

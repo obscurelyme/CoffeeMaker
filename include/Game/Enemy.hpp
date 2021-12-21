@@ -90,4 +90,16 @@ class Drone : public EchelonEnemy {
   virtual ~Drone();
 };
 
+class Kamakase : public EchelonEnemy {
+  public:
+  Kamakase();
+  virtual ~Kamakase();
+
+  void OnCollision(Collider* collider) override;
+  void OnSDLUserEvent(const SDL_UserEvent& event) override;
+
+  private:
+  int _lives;
+};
+
 #endif
