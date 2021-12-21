@@ -8,6 +8,7 @@
 #include "Event.hpp"
 #include "FontManager.hpp"
 #include "Game/Events.hpp"
+#include "Game/ScoreManager.hpp"
 #include "Logger.hpp"
 #include "Renderer.hpp"
 #include "Widgets/Properties.hpp"
@@ -25,7 +26,7 @@ class IntervalFunction {
   SDL_TimerCallback callback;
 };
 
-HeadsUpDisplay::HeadsUpDisplay() : _score(0), _life(3) {
+HeadsUpDisplay::HeadsUpDisplay() : _life(3) {
   using Text = CoffeeMaker::Widgets::Text;
   using View = CoffeeMaker::Widgets::View;
   using namespace CoffeeMaker::UIProperties;
@@ -92,10 +93,7 @@ void HeadsUpDisplay::Update() {
 
 void HeadsUpDisplay::Render() const { hudView->Render(); }
 
-void HeadsUpDisplay::IncrementScore() {
-  _score += 10;
-  score->SetText("Score: " + std::to_string(_score));
-}
+void HeadsUpDisplay::IncrementScore() { score->SetText("Score: " + std::to_string(ScoreManager::GetScore())); }
 
 void HeadsUpDisplay::DecrementLife() {
   --_life;

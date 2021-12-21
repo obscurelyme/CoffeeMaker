@@ -14,7 +14,7 @@ struct HighScores {
 
 class ScoreManager : public CoffeeMaker::IUserEventListener {
   public:
-  enum Multiplier { Standard = -1, Super = 2, Extreme = 5 };
+  enum Multiplier { Standard = -1, Super = 3, Ultra = 5, Extreme = 10, Flagship = 50 };
 
   static void Init();
   static void LoadHighScores();

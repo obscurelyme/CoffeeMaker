@@ -442,6 +442,7 @@ void Kamakase::OnSDLUserEvent(const SDL_UserEvent& event) {
   }
   if (event.type == UCI::Events::ENEMY_DESTROYED && event.data1 == this) {
     _echelonState = EchelonItem::EchelonState::Solo;
+    _oscillationTimeout->Cancel();
   }
   Enemy::OnSDLUserEvent(event);
 }

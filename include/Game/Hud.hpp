@@ -37,7 +37,7 @@ class HeadsUpDisplay : public CoffeeMaker::IUserEventListener {
   static Uint32 TimerInterval(Uint32 interval, void* params);
 
   private:
-  unsigned int _score;
+  // unsigned int _score;
   unsigned int _life;
 
   Ref<CoffeeMaker::Widgets::Text> score;

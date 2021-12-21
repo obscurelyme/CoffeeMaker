@@ -177,7 +177,7 @@ void UCIScoreManager::testScoreManagerListensToUserEventWithMultiplier() {
   ScoreManager::Init();
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   ScoreManager::LoadHighScores();
-  int expectedScore = 20;
+  int expectedScore = 30;
 
   SDL_UserEvent userEvent{
       .type = UCI::Events::PLAYER_INCREMENT_SCORE,
