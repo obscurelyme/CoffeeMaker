@@ -249,6 +249,9 @@ void Enemy::SetAggressionState(AggressionState state) { _aggression = state; }
 
 void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (event.type == UCI::Events::ENEMY_DESTROYED && event.data1 == this) {
+    if (_id == "Enemy-6") {
+      // asdasd
+    }
     CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_DESTROYED]: Enemy ID: {}", _id);
     using Vec2 = CoffeeMaker::Math::Vector2D;
     _fireMissileTask->Cancel();
@@ -288,6 +291,9 @@ void Enemy::OnSDLUserEvent(const SDL_UserEvent& event) {
   if (event.type == UCI::Events::ENEMY_COMPLETE_EXIT && event.data1 == this) {
     // NOTE: Does the same thing as Spawned right now
     CoffeeMaker::Logger::Trace("[ENEMY_EVENT][ENEMY_COMPLETE_EXIT]: Enemy ID: {}", _id);
+    if (_id == "Enemy-6") {
+      // asdasd
+    }
     _entranceSpline2->Reset();
     _exitSpline->Reset();
     Spawn();
@@ -388,9 +394,24 @@ Drone::Drone() {
 
 Drone::~Drone() {}
 
-Kamakase::Kamakase() : _lives(3) { _sprite = CreateScope<CoffeeMaker::Sprite>("Kamakase.png"); };
+Kamakase::Kamakase() :
+    _hit(false),
+    _lives(3),
+    _oscillation(CreateScope<CoffeeMaker::Math::Oscillate>(128.0f, 255.0f, 0.016f)),
+    _oscillationTimeout(CreateScope<CoffeeMaker::Async::TimeoutTask>([this] { _oscillation->Stop(); }, 250)) {
+  _sprite = CreateScope<CoffeeMaker::Sprite>("Kamakase.png");
+  _sprite->clientRect.w = 48 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
+  _sprite->clientRect.h = 48 * CoffeeMaker::Renderer::DynamicResolutionDownScale();
+  _collider->clientRect.h = _sprite->clientRect.h;
+  _collider->clientRect.w = _sprite->clientRect.w;
+  _exitTimeoutTask->SetTimeoutDuration(36000);
+  _oscillation->OnEnd = [this] {
+    _hit = false;
+    _sprite->SetAlpha(255);
+  };
+};
 
-Kamakase::~Kamakase() {}
+Kamakase::~Kamakase() { _oscillationTimeout->Cancel(); }
 
 void Kamakase::OnCollision(Collider* collider) {
   if (_collider->active) {
@@ -399,6 +420,10 @@ void Kamakase::OnCollision(Collider* collider) {
       if (_lives == 0) {
         CoffeeMaker::PushUserEvent(UCI::Events::ENEMY_DESTROYED, -1, this);
         CoffeeMaker::PushUserEvent(UCI::Events::PLAYER_INCREMENT_SCORE, ScoreManager::Multiplier::Super);
+      } else {
+        _hit = true;
+        _oscillation->Start();
+        _oscillationTimeout->Start();
       }
       return;
     }
@@ -412,10 +437,11 @@ void Kamakase::OnCollision(Collider* collider) {
 }
 
 void Kamakase::OnSDLUserEvent(const SDL_UserEvent& event) {
-  if (event.type == UCI::Events::ENEMY_SPAWNED && event.data1 == this) {
+  if (event.type == UCI::Events::ENEMY_COMPLETE_EXIT && event.data1 == this) {
     _lives = 3;
   }
-  if (event.data1 == this) {
-    Enemy::OnSDLUserEvent(event);
+  if (event.type == UCI::Events::ENEMY_DESTROYED && event.data1 == this) {
+    _echelonState = EchelonItem::EchelonState::Solo;
   }
+  Enemy::OnSDLUserEvent(event);
 }

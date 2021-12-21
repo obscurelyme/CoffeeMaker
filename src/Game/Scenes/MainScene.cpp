@@ -84,7 +84,7 @@ void MainScene::Init() {
   CM_LOGGER_DEBUG("============== Initialize Main Scene ==================");
   ScoreManager::ResetScore();
   _music = CoffeeMaker::Audio::LoadMusic("music/AsTheWorldTurns.ogg");
-  CoffeeMaker::Audio::PlayMusic(_music);
+  // CoffeeMaker::Audio::PlayMusic(_music);
   SDL_ShowCursor(SDL_DISABLE);
   _hud = new HeadsUpDisplay();
   _menu = new Menu();

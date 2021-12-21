@@ -33,7 +33,7 @@ void TitleScene::Unpause() {}
 
 void TitleScene::Init() {
   _music = CoffeeMaker::Audio::LoadMusic("music/CoolTrace.ogg");
-  CoffeeMaker::Audio::PlayMusic(_music);
+  // CoffeeMaker::Audio::PlayMusic(_music);
   SDL_ShowCursor(SDL_ENABLE);
 
   _backgroundSpaceTiles =

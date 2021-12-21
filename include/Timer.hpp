@@ -90,6 +90,8 @@ namespace CoffeeMaker {
 
     Uint32 GetInterval() { return _interval; }
 
+    void SetInterval(int interval) { _interval = interval; }
+
     private:
     CoffeeMaker::Timer _timer;
     Uint32 _interval{0};

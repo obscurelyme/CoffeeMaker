@@ -95,11 +95,35 @@ class Kamakase : public EchelonEnemy {
   Kamakase();
   virtual ~Kamakase();
 
+  void Update(float deltaTime) override {
+    if (_hit) {
+      _sprite->SetAlpha(_oscillation->Update());
+    }
+    EchelonEnemy::Update(deltaTime);
+  }
+
+  void Pause() override {
+    _fireMissileTask->Pause();
+    _exitTimeoutTask->Pause();
+    _respawnTimeoutTask->Pause();
+    _oscillationTimeout->Pause();
+  }
+
+  void Unpause() override {
+    _fireMissileTask->Unpause();
+    _exitTimeoutTask->Unpause();
+    _respawnTimeoutTask->Unpause();
+    _oscillationTimeout->Unpause();
+  }
+
   void OnCollision(Collider* collider) override;
   void OnSDLUserEvent(const SDL_UserEvent& event) override;
 
   private:
+  bool _hit;
   int _lives;
+  Scope<CoffeeMaker::Math::Oscillate> _oscillation;
+  Scope<CoffeeMaker::Async::TimeoutTask> _oscillationTimeout;
 };
 
 #endif

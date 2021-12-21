@@ -163,6 +163,11 @@ namespace CoffeeMaker {
         _running = false;
       }
 
+      void SetTimeoutDuration(int duration) {
+        std::lock_guard<std::mutex> lk(*_timeoutMutex);
+        _timer->SetInterval(duration);
+      }
+
       void Cancel() {
         std::lock_guard<std::mutex> lk(*_timeoutMutex);
         _canceled = true;
@@ -215,6 +220,11 @@ namespace CoffeeMaker {
           _thread = nullptr;
         }
         delete _mutex;
+      }
+
+      void SetIntervalDuration(int duration) {
+        std::lock_guard<std::mutex> lk(*_mutex);
+        _timer->SetInterval(duration);
       }
 
       void Start() {
