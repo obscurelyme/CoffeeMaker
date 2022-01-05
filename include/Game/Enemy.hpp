@@ -97,7 +97,7 @@ class Kamakase : public EchelonEnemy {
 
   void Update(float deltaTime) override {
     if (_hit) {
-      _sprite->SetAlpha(_oscillation->Update());
+      _sprite->SetAlpha(static_cast<Uint8>(_oscillation->Update()));
     }
     EchelonEnemy::Update(deltaTime);
   }
